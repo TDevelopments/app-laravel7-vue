@@ -75,4 +75,9 @@ class CategoryController extends Controller
         $category->delete();
         return response()->json(null, 204);
     }
+    
+    public function list()
+    {
+        return response()->json(["data" => $this->category->select('id', 'name')->get()], 200);
+    }
 }

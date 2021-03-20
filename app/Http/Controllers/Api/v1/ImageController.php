@@ -46,6 +46,7 @@ class ImageController extends Controller
             $fileModal->name = $name;
             $fileModal->path = '/uploads/'.$name ;
             $fileModal->save();
+            $fileModal->original_name = $file->getClientOriginalName();
             $data[] = $fileModal;
         }
         return response()->json($data);

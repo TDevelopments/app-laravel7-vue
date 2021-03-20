@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class CatalogueAdminResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        return[
+            'id' => $this->id,
+            'name' => $this->name,
+            'is_available' => $this->is_available,
+            'coin' => $this->coin,
+            'quota_date' => $this->quota_date,
+            'quota_price' => $this->quota_price,
+            'minimum_investment' => $this->minimum_investment,
+            'first_payment' => $this->first_payment,
+            'date_first_payment' => $this->date_first_payment,
+            'second_payment' => $this->second_payment,
+            'date_second_payment' => $this->date_second_payment,
+            'created_at' => (string) $this->created_at,
+            'updated_at' => (string) $this->updated_at,
+            'arrivals' => $this->arrivals,
+            'products' => $this->products,
+            'productRanges' => $this->productRanges,
+            'orders' => $this->orders,
+        ];
+    }
+}

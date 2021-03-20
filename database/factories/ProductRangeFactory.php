@@ -35,9 +35,10 @@ use Faker\Generator as Faker;
 $factory->define(ProductRange::class, function (Faker $faker) {
     return [
         'model'         => $this->faker->bothify('??-####'),
+        'sku'           => $this->faker->bothify('SKU-??####'),
         'stock'         => $this->faker->randomNumber(3, true),
         'brand'         => $this->faker->word(),
-        'catalogue_id'  => 1,
+        'catalogue_id'  => $this->faker->numberBetween(1, 2),
         'category_id'   => rand(1, 4),
     ];
 });

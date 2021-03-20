@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Catalogue;
 use App\Http\Requests\CatalogueRequest;
 use App\Http\Resources\CatalogueResource;
+use App\Http\Resources\CatalogueAdminResource;
 
 class CatalogueController extends Controller
 {
@@ -15,7 +16,7 @@ class CatalogueController extends Controller
 
     public function __construct(Catalogue $catalogue)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->middleware('api.admin')->except(['availables']);
         $this->catalogue = $catalogue;
     }
 
@@ -75,5 +76,15 @@ class CatalogueController extends Controller
     {
         $catalogue->delete();
         return response()->json(null, 204);
+    }
+
+    public function availables()
+    {
+        return CatalogueResource::collection($this->catalogue->where('is_available', true)->get());
+    }
+
+    public function list()
+    {
+        return response()->json(["data" => $this->catalogue->select('id', 'name')->get()], 200);
     }
 }

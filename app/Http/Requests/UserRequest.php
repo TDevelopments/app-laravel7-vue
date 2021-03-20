@@ -26,13 +26,13 @@ class UserRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             'lastname' => ['required','string'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'min:8', 'confirmed', 'string'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'min:8', 'confirmed', 'max:255','string'],
             'address' => ['required','string'],
-            'ruc' => ['integer'],
-            'dni' => ['required', 'integer'],
+            'ruc' => ['integer' ,'unique:users,ruc'],
+            'dni' => ['required', 'integer', 'unique:users,dni'],
             'phone' => ['required','integer'],
-            'gender' => ['required', 'string', 'in:masculine,female'],
+            'gender' => ['string', 'in:masculine,female'],
             'city' => ['required', 'string'],
         ];
     }

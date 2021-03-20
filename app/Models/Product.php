@@ -21,8 +21,10 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'sku',
         'description',
         'images',
+        'video',
         'model',
         'colors',
         'stock',
@@ -55,6 +57,11 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function setSkuAttribute($value)
+    {
+         $this->attributes['sku'] = strtoupper($value);
     }
 
 }

@@ -13,7 +13,6 @@
                     :rules="emailRules"
                     label="E-mail"
                     required
-                    
                   ></v-text-field>
 
                   <v-text-field
@@ -32,8 +31,8 @@
                     <v-btn
                       :disabled="!valid"
                       color="primary"
-                      class="mt-6 "
-                      @click="login"
+                      class="mt-6"
+                      @click="login({ email, password })"
                       rounded
                       x-large
                       width="50%"
@@ -41,7 +40,7 @@
                       Login
                     </v-btn>
                   </div>
-                </div> 
+                </div>
               </v-form>
             </div>
           </div>
@@ -57,23 +56,19 @@
               Dolores magni sint, ex totam, quas vitae unde sit tenetur esse nam
               sapiente amet!
             </p>
-            <v-btn
-              color="white"
-              class="mr-4"
-              outlined
-              rounded
-              dark
-            >
+            <v-btn color="white" class="mr-4" outlined rounded dark>
               Sign up
             </v-btn>
           </div>
-          <img src="images/log.svg" class="image"/>
+          <img src="images/log.svg" class="image" />
         </div>
       </div>
     </div>
   </v-app>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data: () => ({
     w_with: window.innerWidth * 0.6,
@@ -81,8 +76,8 @@ export default {
     valid: true,
     email: "",
     emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      v => !!v || "E-mail is required",
+      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
     ],
     select: null,
     show1: false,
@@ -91,13 +86,14 @@ export default {
     show4: false,
     password: "",
     rules: {
-      required: (value) => !!value || "Required.",
-      min: (v) => v.length >= 8 || "Min 8 characters",
-      emailMatch: () => `The email and password you entered don't match`,
-    },
+      required: value => !!value || "Required.",
+      min: v => v.length >= 8 || "Min 8 characters",
+      emailMatch: () => `The email and password you entered don't match`
+    }
   }),
 
   methods: {
+    ...mapActions("account", ["login"]),
     validate() {
       this.$refs.form.validate();
     },
@@ -107,23 +103,10 @@ export default {
     resetValidation() {
       this.$refs.form.resetValidation();
     },
-    register(){
-      this.$router.push({name:'register'})
-    },
-    login() {
-      this.$store
-        .dispatch("retrieveToken", {
-          email: this.email,
-          password: this.password
-        })
-        .then(response => {
-          this.$router.push({ name: "Home" });
-        })
-        .catch(error => {
-          this.error = error.response.data;
-        });
+    register() {
+      this.$router.push({ name: "register" });
     }
-  },
+  }
 };
 </script>
 <style scoped>
@@ -133,8 +116,9 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
-h1{
-  font-family: "Poppins", sans-serif;  text-align: center;
+h1 {
+  font-family: "Poppins", sans-serif;
+  text-align: center;
   font-size: 2.5rem;
   font-weight: 500;
   color: #444;
@@ -188,7 +172,7 @@ h1{
   z-index: 5;
 }
 
-.panels-container{
+.panels-container {
   position: absolute;
   width: 100%;
   height: 100;
@@ -197,7 +181,7 @@ h1{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-.panel{
+.panel {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -205,27 +189,27 @@ h1{
   text-align: center;
   z-index: 7;
 }
-.left-panel{
+.left-panel {
   pointer-events: all;
-  padding: 3rem 17% 2rem 12% ;
+  padding: 3rem 17% 2rem 12%;
 }
 
-.panel .content{
+.panel .content {
   color: #fff;
 }
 
-.panel h3{
+.panel h3 {
   font-weight: 600;
   line-height: 1;
   font-size: 1.5rem;
 }
 
-.panel p{
+.panel p {
   font-size: 0.95rem;
   padding: 0.7rem 0;
 }
 
-.image{
+.image {
   width: 110%;
   margin-top: 5%;
 }
@@ -317,6 +301,6 @@ h1{
     bottom: 72%;
     left: 50%;
   }
-
 }
-</style>>
+</style>
+>

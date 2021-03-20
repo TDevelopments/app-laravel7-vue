@@ -4,157 +4,234 @@ Vue.use(Router);
 
 // Pages Login
 import Login from "./components/login/Login";
-import Home from "./components/admin/navigation/index";
+import Home from "./components/admin/navigation";
 import NotFound from "./components/login/NotFound";
 import Logout from "./components/login/Logout";
 import Register from "./components/login/Register";
 import Dashboard from "./components/admin/dashboard/Dashboard";
+
 // Pages View CRUD Catalogues
-import ListCatalogue from "./components/admin/catalogues/list";
-import AddCatalogue from "./components/admin/catalogues/add";
-import EditCatalogue from "./components/admin/catalogues/edit";
+import ListCatalogue from "./components/admin/catalogues/List";
+import AddCatalogue from "./components/admin/catalogues/Add";
+import EditCatalogue from "./components/admin/catalogues/Edit";
 
 // Pages View CRUD Products
-import ListProduct from "./components/admin/products/list";
-import AddProduct from "./components/admin/products/add";
-import EditProduct from "./components/admin/products/edit";
+import ListProduct from "./components/admin/products/List";
+import AddProduct from "./components/admin/products/Add";
+import EditProduct from "./components/admin/products/Edit";
 
 // Pages View CRUD ProductsRange
-import AddProductRange from "./components/admin/products/addRange";
-import EditProductRange from "./components/admin/products/editRange";
+import AddProductRange from "./components/admin/products/AddRange";
+import EditProductRange from "./components/admin/products/EditRange";
 
 // Pages View CRUD Categories
-import ListCategory from "./components/admin/categories/list";
-import AddCategory from "./components/admin/categories/add";
-import EditCategory from "./components/admin/categories/edit";
+import ListCategory from "./components/admin/categories/List";
+import AddCategory from "./components/admin/categories/Add";
+import EditCategory from "./components/admin/categories/Edit";
 
 // Pages View CRUD Categories
-import ListUser from "./components/admin/users/list";
-import AddUser from "./components/admin/users/add";
-import EditUser from "./components/admin/users/edit";
+import ListUser from "./components/admin/users/List";
+import AddUser from "./components/admin/users/Add";
+import EditUser from "./components/admin/users/Edit";
+
+// Pages View Orders
+import ListOrder from "./components/admin/orders/List";
+import EditOrder from "./components/admin/orders/Edit";
+
+// Pages Product For Catalogue
+import ProductCatalogue from "./components/admin/catalogues/ProductForCatalogue";
+
+// Pages User
+import Welcome from "./components/Welcome";
+import GroupImport from "./components/group-imports";
+import HomeGroupImport from "./components/group-imports/ListCatalogues";
+import ListProductCatalogue from "./components/group-imports/ListProduct";
+import ProductDetail from "./components/group-imports/ProductDetail";
+
+// Page Cart
+import CartGroupImport from "./components/group-imports/CartGroupImport";
+import UserSetting from "./components/user";
 
 export default new Router({
-    routes: [
+  routes: [
+    {
+      path: "/",
+      name: "welcome",
+      component: Welcome
+    },
+    {
+      path: "/importaciones-grupales",
+      name: "group-import",
+      redirect: "/importaciones-grupales/catalogue-available",
+      component: GroupImport,
+      children: [
         {
-            path: "/login",
-            name: "login",
-            component: Login
+          path: "/importaciones-grupales/catalogue-available",
+          name: "homeGroupImport",
+          component: HomeGroupImport
         },
         {
-            path: "/register",
-            name: "register",
-            component: Register
+          path: "/importaciones-grupales/catalogue-available/:id/",
+          name: "listProductforCatalogue",
+          component: ListProductCatalogue
         },
         {
-            path: "/logout",
-            name: "logout",
-            component: Logout,
-            meta: {
-                requiresAuth: true
-            }
+          path: "/importaciones-grupales/catalogue-available/:id/:type/:sku",
+          name: "ProductDetail",
+          component: ProductDetail
         },
         {
-            path: "/",
-            name: "Home",
-            redirect: "/dashboard",
-            component: Home,
-            meta: {
-                requiresAuth: true
-            },
-            children: [
-                // Dashboard
-                {
-                    path: "/dashboard",
-                    name: "dashboard",
-                    component: Dashboard
-                },
-                // Catalogues
-                {
-                    path: "/catalogues",
-                    name: "listCatalogue",
-                    component: ListCatalogue
-                },
-                {
-                    path: "/catalogue/add",
-                    name: "addCatalogue",
-                    component: AddCatalogue
-                },
-                {
-                    path: "/catalogue/:id/edit",
-                    name: "editCatalogue",
-                    component: EditCatalogue
-                },
-                // Products
-                {
-                    path: "/products",
-                    name: "listProduct",
-                    component: ListProduct
-                },
-                {
-                    path: "/product/add",
-                    name: "addProduct",
-                    component: AddProduct
-                },
-                {
-                    path: "/product/:id/edit",
-                    name: "editProduct",
-                    component: EditProduct
-                },
-                // Products Range
-                {
-                    path: "/product-range/add",
-                    name: "addProductRange",
-                    component: AddProductRange
-                },
-                {
-                    path: "/product-range/:id/edit",
-                    name: "editProductRange",
-                    component: EditProductRange
-                },
-                // Categories
-                {
-                    path: "/categories",
-                    name: "listCategory",
-                    component: ListCategory
-                },
-                {
-                    path: "/category/add",
-                    name: "addCategory",
-                    component: AddCategory
-                },
-                {
-                    path: "/category/:id/edit",
-                    name: "editCategory",
-                    component: EditCategory
-                },
-                // Users
-                {
-                    path: "/users",
-                    name: "listUser",
-                    component: ListUser
-                },
-                {
-                    path: "/user/add",
-                    name: "addUser",
-                    component: AddUser
-                },
-                {
-                    path: "/user/:id/edit",
-                    name: "editUser",
-                    component: EditUser
-                }
-            ]
+          path: "/importaciones-grupales/cart",
+          name: "cartGroupImport",
+          component: CartGroupImport
         },
         {
-            path: "/404",
-            name: "404",
-            component: NotFound
-        },
-        {
-            path: "*",
-            redirect: "/404"
+          path: "/user-account",
+          name: "UserSettingIG",
+          component: UserSetting,
+          meta: {
+            requiresAuth: true
+          }
         }
-    ],
-    linkActiveClass: "is-active",
-    mode: "history"
+      ]
+    },
+    {
+      path: "/login",
+      name: "loginRouter",
+      component: Login
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: Register
+    },
+    {
+      path: "/logout",
+      name: "logout",
+      component: Logout,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      // Routes Admin
+      path: "/admin",
+      name: "Home",
+      redirect: "/admin/dashboard",
+      component: Home,
+      meta: {
+        requiresAuth: true
+      },
+      children: [
+        // Dashboard
+        {
+          path: "/admin/dashboard",
+          name: "dashboard",
+          component: Dashboard
+        },
+        // Catalogues
+        {
+          path: "/admin/catalogues",
+          name: "listCatalogue",
+          component: ListCatalogue
+        },
+        {
+          path: "/admin/catalogue/add",
+          name: "addCatalogue",
+          component: AddCatalogue
+        },
+        {
+          path: "/admin/catalogue/:id/edit",
+          name: "editCatalogue",
+          component: EditCatalogue
+        },
+        {
+          path: "/admin/catalogue/:id/products",
+          name: "productCatalogue",
+          component: ProductCatalogue
+        },
+        // Products
+        {
+          path: "/admin/products",
+          name: "listProduct",
+          component: ListProduct
+        },
+        {
+          path: "/admin/product/add",
+          name: "addProduct",
+          component: AddProduct
+        },
+        {
+          path: "/admin/product/:id/edit",
+          name: "editProduct",
+          component: EditProduct
+        },
+        // Products Range
+        {
+          path: "/admin/product-range/add",
+          name: "addProductRange",
+          component: AddProductRange
+        },
+        {
+          path: "/admin/product-range/:id/edit",
+          name: "editProductRange",
+          component: EditProductRange
+        },
+        // Categories
+        {
+          path: "/admin/categories",
+          name: "listCategory",
+          component: ListCategory
+        },
+        {
+          path: "/admin/category/add",
+          name: "addCategory",
+          component: AddCategory
+        },
+        {
+          path: "/admin/category/:id/edit",
+          name: "editCategory",
+          component: EditCategory
+        },
+        // Users
+        {
+          path: "/admin/users",
+          name: "listUser",
+          component: ListUser
+        },
+        {
+          path: "/admin/user/add",
+          name: "addUser",
+          component: AddUser
+        },
+        {
+          path: "/admin/user/:id/edit",
+          name: "editUser",
+          component: EditUser
+        },
+        // Orders
+        {
+          path: "/admin/order",
+          name: "listOrder",
+          component: ListOrder
+        },
+        {
+          path: "/admin/order/:id/edit",
+          name: "editOrder",
+          component: EditOrder
+        }
+      ]
+    },
+    {
+      path: "/404",
+      name: "404",
+      component: NotFound
+    },
+    {
+      path: "*",
+      redirect: "/404"
+    }
+  ],
+  linkActiveClass: "is-active",
+  mode: "history"
 });

@@ -11,8 +11,8 @@
     </v-card>
     <div class="pt-5">
       <div class="mb-7">
-        <h1 class="font-weight-thin">Admin Dashboard</h1>
-        <h5>Welcome, Love to see you back.</h5>
+        <h1 class="font-weight-thin">Dashboard</h1>
+        <h5>Bienvenido, nos encanta verte de nuevo.</h5>
       </div>
       <v-row>
         <v-col sm="12" md="6" lg="3">
@@ -26,14 +26,14 @@
               <v-col class="text-right my-auto">
                 <div class="pr-5">
                   <h1>{{ xCatalogues }}</h1>
-                  <h5>Catalogues</h5>
+                  <h5>Catálogos</h5>
                 </div>
               </v-col>
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn elevation="0" small color="primary">
-                View More
+                Ver Más
                 <v-icon class="ml-2" small>mdi-send</v-icon>
               </v-btn>
             </v-card-actions>
@@ -50,14 +50,14 @@
               <v-col class="text-right my-auto">
                 <div class="pr-5">
                   <h1>{{ xProducts }}</h1>
-                  <h5>Products</h5>
+                  <h5>Productos</h5>
                 </div>
               </v-col>
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn elevation="0" small color="#28B779" dark>
-                View More
+                Ver Más
                 <v-icon class="ml-2" small>mdi-send</v-icon>
               </v-btn>
             </v-card-actions>
@@ -74,14 +74,14 @@
               <v-col class="text-right my-auto">
                 <div class="pr-5">
                   <h1>{{ xCategories }}</h1>
-                  <h5>Categories</h5>
+                  <h5>Categorias</h5>
                 </div>
               </v-col>
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn elevation="0" small color="#832B98" dark>
-                View More
+                Ver Más
                 <v-icon class="ml-2" small>mdi-send</v-icon>
               </v-btn>
             </v-card-actions>
@@ -98,14 +98,14 @@
               <v-col class="text-right my-auto">
                 <div class="pr-5">
                   <h1>{{ xUsers }}</h1>
-                  <h5>Users</h5>
+                  <h5>Usuarios</h5>
                 </div>
               </v-col>
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn elevation="0" small color="#FFB849" dark>
-                View More
+                Ver Más
                 <v-icon class="ml-2" small>mdi-send</v-icon>
               </v-btn>
             </v-card-actions>
@@ -128,19 +128,19 @@ export default {
       {
         text: "Dashboard",
         disabled: false,
-        href: "breadcrumbs_dashboard",
+        href: "breadcrumbs_dashboard"
       },
       {
         text: "Link 1",
         disabled: false,
-        href: "breadcrumbs_link_1",
+        href: "breadcrumbs_link_1"
       },
       {
         text: "Link 2",
         disabled: true,
-        href: "breadcrumbs_link_2",
-      },
-    ],
+        href: "breadcrumbs_link_2"
+      }
+    ]
   }),
   mounted() {
     this.getCatalogues();
@@ -151,61 +151,53 @@ export default {
   methods: {
     getCatalogues() {
       axios
-        .get("/api/v1/catalogues", {
-          headers: { Authorization: "Bearer " + this.$store.getters.getToken },
-        })
-        .then((response) => {
+        .get("/api/v1/catalogues")
+        .then(response => {
           console.log(response);
           this.xCatalogues = response.data.meta.total;
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log(error)
           // reject(error);
         });
     },
     getProducts() {
       axios
-        .get("/api/v1/products", {
-          headers: { Authorization: "Bearer " + this.$store.getters.getToken },
-        })
-        .then((response) => {
+        .get("/api/v1/products")
+        .then(response => {
           console.log(response);
           this.xProducts = response.data.meta.total;
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log(error)
           // reject(error);
         });
     },
     getCategories() {
       axios
-        .get("/api/v1/categories", {
-          headers: { Authorization: "Bearer " + this.$store.getters.getToken },
-        })
-        .then((response) => {
+        .get("/api/v1/categories")
+        .then(response => {
           console.log(response);
           this.xCategories = response.data.meta.total;
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log(error)
           // reject(error);
         });
     },
     getUsers() {
       axios
-        .get("/api/v1/users", {
-          headers: { Authorization: "Bearer " + this.$store.getters.getToken },
-        })
-        .then((response) => {
+        .get("/api/v1/users")
+        .then(response => {
           console.log(response);
           this.xUsers = response.data.meta.total;
           this.loading = false;
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log(error)
           // reject(error);
         });
-    },
-  },
+    }
+  }
 };
 </script>

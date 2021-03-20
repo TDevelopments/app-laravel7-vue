@@ -38,12 +38,14 @@ use Faker\Generator as Faker;
 $factory->define(Catalogue::class, function (Faker $faker) {
     return [
         'name'                  => $this->faker->name(),
-            'quota_price'           => 200,
-            'quota_date'            => $this->faker->dateTime(),
-            'minimum_investment'    => 2000,
-            'first_payment'         => 0.4,
-            'date_first_payment'    => $this->faker->dateTime(),
-            'second_payment'        => 0.6,
-            'date_second_payment'   => $this->faker->dateTime(),
+        'coin'                  => $this->faker->randomElement(['soles', 'dolares']),
+        'is_available'          => 1,
+        'quota_price'           => 200,
+        'quota_date'            => $this->faker->dateTime(),
+        'minimum_investment'    => 2000,
+        'first_payment'         => 0.4,
+        'date_first_payment'    => $this->faker->dateTime(),
+        'second_payment'        => 0.6,
+        'date_second_payment'   => $this->faker->dateTime(),
     ];
 });

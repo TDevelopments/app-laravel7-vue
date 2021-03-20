@@ -16,12 +16,14 @@ class CreateProductRangesTable extends Migration
         Schema::create('product_ranges', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('sku')->unique();
             $table->json('description')->nullable();
             $table->json('images')->nullable();
             $table->string('model')->unique();
             $table->string('slug')->unique();
             $table->json('colors')->nullable();
             $table->integer('stock');
+            $table->integer('count')->default(0);
             $table->string('brand')->default('Sin marca');
             $table->float('price_sale', 8, 2)->nullable();
             $table->boolean('on_sale')->default(0);

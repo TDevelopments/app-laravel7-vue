@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 use App\Http\Resources\ArrivalResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ProductRangeResource;
 
 class CatalogueResource extends JsonResource
 {
@@ -18,6 +19,8 @@ class CatalogueResource extends JsonResource
         return[
             'id' => $this->id,
             'name' => $this->name,
+            'is_available' => $this->is_available,
+            'coin' => $this->coin,
             'quota_date' => $this->quota_date,
             'quota_price' => $this->quota_price,
             'minimum_investment' => $this->minimum_investment,
@@ -28,6 +31,9 @@ class CatalogueResource extends JsonResource
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
             'arrivals' => $this->arrivals,
+            'products' => $this->products,
+            // 'productRanges' => $this->productRanges,
+            'productRanges' => ProductRangeResource::collection($this->productRanges)
         ];
     }
 }

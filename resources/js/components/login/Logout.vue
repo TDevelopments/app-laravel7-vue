@@ -3,8 +3,8 @@
 <script>
 export default {
   created() {
-    this.$store.dispatch("destroyToken").then((response) => {
-      this.$router.push({ name: "login" });
+    this.$store.dispatch("logout").then((response) => {
+      this.$router.push({ name: "welcome" });
     });
   },
 };

@@ -22,6 +22,7 @@ class ProductRange extends Model
 
     protected $fillable = [
         'name',
+        'sku',
         'description',
         'images',
         'model',

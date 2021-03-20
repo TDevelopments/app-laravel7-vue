@@ -25,6 +25,8 @@ class CatalogueRequest extends FormRequest
     {
         return [
             'name' => ['required'],
+            'is_available' => ['boolean'],
+            'coin' => ['required', 'in:soles,dolares'],
             'quota_date' => ['required'],
             'quota_price' => ['required'],
             'minimum_investment' => ['required'],
