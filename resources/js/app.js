@@ -9,6 +9,7 @@ import App from "./components/App";
 import Axios from "axios";
 
 Vue.prototype.$http = Axios;
+Vue.prototype.$http.defaults.baseURL = process.env.APP_URL;
 const token = localStorage.getItem("token");
 if (token) {
   Vue.prototype.$http.defaults.headers.common[
