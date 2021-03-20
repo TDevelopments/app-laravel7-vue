@@ -40,12 +40,43 @@ Route::group(['prefix' => 'v1'], function () {
         Route::put('user-update', [AuthController::class, "update"]);
         Route::get('user-order', [AuthController::class, "orderByUser"]);
 
-        Route::apiResource('users', UserController::class);
-        Route::apiResource('products', ProductController::class);
+        // Route::apiResource('users', UserController::class);
+        Route::get('users', [UserController::class, 'index']);
+        Route::post('users', [UserController::class, 'store']);
+        Route::get('users/{user}', [UserController::class, 'show']);
+        Route::put('users/{user}', [UserController::class, 'update']);
+        Route::delete('users/{user}', [UserController::class, 'destroy']);
+        
+        // Route::apiResource('products', ProductController::class);
+        Route::get('products', [ProductController::class, 'index']);
+        Route::post('products', [ProductController::class, 'store']);
+        Route::get('products/{product}', [ProductController::class, 'show']);
+        Route::put('products/{product}', [ProductController::class, 'update']);
+        Route::delete('products/{product}', [ProductController::class, 'destroy']);
+        
+        // Route::apiResource('categories', CategoryController::class);
+        Route::get('categories', [CategoryController::class, 'index']);
+        Route::post('categories', [CategoryController::class, 'store']);
+        Route::get('categories/{category}', [CategoryController::class, 'show']);
+        Route::put('categories/{category}', [CategoryController::class, 'update']);
+        Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
+
+        // Route::apiResource('catalogues', CatalogueController::class);
+        Route::get('catalogues', [CatalogueController::class, 'index']);
+        Route::post('catalogues', [CatalogueController::class, 'store']);
+        Route::get('catalogues/{catalogue}', [CatalogueController::class, 'show']);
+        Route::put('catalogues/{catalogue}', [CatalogueController::class, 'update']);
+        Route::delete('catalogues/{catalogue}', [CatalogueController::class, 'destroy']);
+        
+        // Route::apiResource('product-ranges', ProductRangeController::class);
+        Route::get('product-ranges', [ProductRangeController::class, 'index']);
+        Route::post('product-ranges', [ProductRangeController::class, 'store']);
+        Route::get('product-ranges/{product_range}', [ProductRangeController::class, 'show']);
+        Route::put('product-ranges/{product_range}', [ProductRangeController::class, 'update']);
+        Route::delete('product-ranges/{product_range}', [ProductRangeController::class, 'destroy']);
+
         Route::post('products-massive', [ProductController::class, 'createMassive']);
         Route::post('product-ranges-massive', [ProductRangeController::class, 'createMassive']);
-        Route::apiResource('categories', CategoryController::class);
-        Route::apiResource('catalogues', CatalogueController::class);
         
         Route::get('list-catalogues', [CatalogueController::class, 'list']);
         Route::get('list-categories', [CategoryController::class, 'list']);
@@ -53,7 +84,6 @@ Route::group(['prefix' => 'v1'], function () {
         // Route::post('catalogues/{catalogue}/arrivals/multiple', [ArrivalController::class, 'create']);
         // Route::put('arrivals/{arrival}', [ArrivalController::class, 'update']);
         Route::delete('arrivals', [ArrivalController::class, 'destroy']);
-        Route::apiResource('product-ranges', ProductRangeController::class);
         Route::post('product-ranges/{product_range}/ranges', [RangeController::class, 'store']);
         // Route::put('ranges/{range}', [RangeController::class, 'update']);
         // Route::delete('ranges/{range}', [RangeController::class, 'destroy']);
