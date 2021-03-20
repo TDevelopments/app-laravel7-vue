@@ -9,9 +9,9 @@
                 <div class="container">
                   <h1 class="h1">Sign in</h1>
                   <v-text-field
-                    v-model="email"
-                    :rules="emailRules"
-                    label="E-mail"
+                    v-model="dni"
+                    :rules="[rules.required]"
+                    label="DNI"
                     required
                   ></v-text-field>
 
@@ -32,7 +32,7 @@
                       :disabled="!valid"
                       color="primary"
                       class="mt-6"
-                      @click="login({ email, password })"
+                      @click="login({ dni, password })"
                       rounded
                       x-large
                       width="50%"
@@ -49,14 +49,14 @@
       <div class="panels-container">
         <div class="panel left-panel">
           <div class="content">
-            <h3>New here?</h3>
+            <h3>Nuevo por aqui?</h3>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
               consequuntur quos, dolorem quam voluptatum voluptates labore.
               Dolores magni sint, ex totam, quas vitae unde sit tenetur esse nam
               sapiente amet!
             </p>
-            <v-btn color="white" class="mr-4" outlined rounded dark>
+            <v-btn color="white" class="mr-4" outlined rounded dark @click="register">
               Sign up
             </v-btn>
           </div>
@@ -74,11 +74,7 @@ export default {
     w_with: window.innerWidth * 0.6,
     w_height: window.innerHeight,
     valid: true,
-    email: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-    ],
+    dni: "",
     select: null,
     show1: false,
     show2: true,

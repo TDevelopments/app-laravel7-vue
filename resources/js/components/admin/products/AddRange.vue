@@ -91,7 +91,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6">
+      <v-col cols="12" sm="12" md="6" lg="6" v-if="!varBoolean">
         <h3>Colores de Producto</h3>
         <v-card class="text-center">
           <v-card-text>
@@ -127,7 +127,12 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6">
+      <v-col
+        cols="12"
+        sm="12"
+        :md="!varBoolean ? '6' : '12'"
+        :lg="!varBoolean ? '6' : '12'"
+      >
         <h3>Detalles del Producto</h3>
         <v-card>
           <v-card-text>
@@ -158,7 +163,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col v-if="!varBoolean">
         <h3>Subir Imagenes</h3>
         <v-card class="mt-5">
           <v-card-text>
@@ -192,8 +197,8 @@
               label="Imagen del Producto"
               multiple
               prepend-icon="mdi-paperclip"
-              @change="Preview_image"
-              @click="Preview_image"
+              @change="previewImages"
+              @click="previewImages"
               @click:clear="clear"
             >
               <template v-slot:selection="{ text }">
@@ -285,15 +290,12 @@
                 <v-select :items="varSelection" v-model="selection"></v-select>
               </td>
               <td>
-                <div class="table-responsive-lg">
+                <div class="table-responsive-sm">
                   <table class="table">
                     <thead class="bg-primary text-white">
                       <tr>
-                        <th scope="col" class="wth">SKU</th>
-                        <th scope="col" class="wth">Color</th>
-                        <th scope="col" v-if="selection != 'color'" class="wth">
-                          Talla/Tamaño
-                        </th>
+                        <th scope="col">Model</th>
+                        <th scope="col">Colores</th>
                         <th scope="col">Imagen</th>
                         <th scope="col">Video</th>
                         <th scope="col">
@@ -310,17 +312,122 @@
                       </tr>
                     </thead>
                     <tr v-for="(itemV, indexV) in variaciones" :key="indexV">
-                      <td scope="col" v-if="selection != 'color'">
+                      <td>
                         <v-text-field
+                          v-model="itemV.model"
                           solo
                           dense
                           required
-                          type="number"
-                          class="wtf"
                         ></v-text-field>
                       </td>
-                      <td class="wi"><input type="file" /></td>
-                      <td class="wi"><input type="file" /></td>
+                      <td>
+                        <v-dialog
+                          transition="dialog-bottom-transition"
+                          max-width="600"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              small
+                              color="primary"
+                              v-bind="attrs"
+                              v-on="on"
+                              class="mt-1"
+                            >
+                              + Colores
+                            </v-btn>
+                          </template>
+                          <template v-slot:default="dialog">
+                            <v-card>
+                              <v-toolbar color="primary" dark>
+                                Añadir Colores
+                              </v-toolbar>
+                              <v-card-text class="mt-5">
+                                <v-row>
+                                  <v-col cols="12" md="6">
+                                    <v-color-picker
+                                      hide-inputs
+                                      v-model="color"
+                                      class="mx-auto"
+                                    ></v-color-picker>
+                                  </v-col>
+                                  <v-col cols="12" md="6">
+                                    <v-row>
+                                      <v-col>
+                                        <v-btn
+                                          class="mb-5 my-auto mt-2"
+                                          @click="addColorMultiple(indexV)"
+                                        >
+                                          Añadir Color
+                                        </v-btn>
+                                      </v-col>
+                                      <v-col>
+                                        <v-sheet dark class="pa-1">
+                                          <p class="mt-2 text-white">
+                                            {{ showColor }}
+                                          </p>
+                                        </v-sheet>
+                                      </v-col>
+                                    </v-row>
+                                    <v-col>
+                                      <h5>Colores</h5>
+                                    </v-col>
+                                    <v-row class="pr-3">
+                                      <v-col
+                                        v-for="(item, index) in itemV.colors"
+                                        :key="index"
+                                        cols="1"
+                                      >
+                                        <v-avatar
+                                          :color="item"
+                                          size="15"
+                                          @click="
+                                            deleteColorMultiple(indexV, index)
+                                          "
+                                        ></v-avatar>
+                                      </v-col>
+                                    </v-row>
+                                  </v-col>
+                                </v-row>
+                              </v-card-text>
+                              <v-card-actions class="justify-end">
+                                <v-btn text @click="dialog.value = false"
+                                  >Close</v-btn
+                                >
+                              </v-card-actions>
+                            </v-card>
+                          </template>
+                        </v-dialog>
+                      </td>
+                      <td>
+                        <v-file-input
+                          v-model="itemV.images_upload"
+                          label="Imagen"
+                          multiple
+                          solo
+                          counter
+                          dense
+                          accept="image/png, image/jpeg"
+                          prepend-icon="mdi-camera"
+                          @change="uploadImage(itemV.images_upload, indexV)"
+                          @click="uploadImage(itemV.images_upload, indexV)"
+                          @click:clear="clearImage(indexV)"
+                        >
+                        </v-file-input>
+                      </td>
+                      <td>
+                        <v-file-input
+                          v-model="itemV.video"
+                          label="Video"
+                          multiple
+                          solo
+                          counter
+                          dense
+                          prepend-icon="mdi-video"
+                          @change="previewImages"
+                          @click:clear="clear"
+                        >
+                        </v-file-input>
+                      </td>
                       <td>
                         <v-btn
                           small
@@ -404,18 +511,22 @@ export default {
     valid: true,
     // Variaciones
     variaciones: [],
-    varSelection: ["color", "T/T"],
+    varSelection: ["color", "Tamaño/Talla"],
     selection: "color",
     varBoolean: false,
-    variaciones: [],
+    cont: 0,
   }),
   methods: {
     // Validation of Request Images
     validation() {
-      if (this.files.length != 0) {
-        this.addImages();
-      } else {
+      if (this.varBoolean) {
         this.addProductRange();
+      } else {
+        if (this.files.length != 0) {
+          this.addImages();
+        } else {
+          this.addProductRange();
+        }
       }
     },
 
@@ -437,37 +548,53 @@ export default {
         .then((response) => {
           this.imageResponse = response.data;
           this.addProductRange();
+          console.log(response);
         })
         .catch((error) => {});
     },
 
     // Post Product Range
     addProductRange() {
-      axios
-        .post(
-          "/api/v1/product-ranges",
-          {
-            model: this.productRange.model,
-            stock: this.productRange.stock,
-            sku: this.productRange.sku,
-            brand: this.productRange.brand,
-            category_id: this.productRange.category,
-            catalogue_id: this.productRange.catalogue,
-            images: this.imageResponse,
-            description: this.description,
-            colors: this.colors,
-            ranges: this.inputs,
-          },
-          {
-            headers: {
-              Accept: "application/json",
+      if (this.varBoolean) {
+        axios
+          .post("/api/v1/product-ranges-massive", {
+            products: this.variaciones,
+          })
+          .then((response) => {
+            console.log(response);
+            this.$router.replace({ name: "listProduct" });
+          })
+          .catch((error) => {
+            console.log(error);
+            // reject(error);
+          });
+      } else {
+        axios
+          .post(
+            "/api/v1/product-ranges",
+            {
+              model: this.productRange.model,
+              stock: this.productRange.stock,
+              sku: this.productRange.sku,
+              brand: this.productRange.brand,
+              category_id: this.productRange.category,
+              catalogue_id: this.productRange.catalogue,
+              images: this.imageResponse,
+              description: this.description,
+              colors: this.colors,
             },
-          }
-        )
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {});
+            {
+              headers: {
+                Accept: "application/json",
+              },
+            }
+          )
+          .then((response) => {
+            console.log(response);
+            this.$router.replace({ name: "listProduct" });
+          })
+          .catch((error) => {});
+      }
     },
 
     // Get Categories
@@ -511,31 +638,30 @@ export default {
       if (
         this.productRange.model != "" &&
         this.productRange.stock != "" &&
-        this.productRanges.sku != "" &&
+        this.productRange.sku != "" &&
         this.productRange.brand != "" &&
         this.productRange.category != "" &&
         this.productRange.catalogue != "" &&
-        this.imageResponse != "" &&
         this.description != "" &&
-        this.colors != "" &&
         this.inputs != ""
       ) {
         this.variaciones.push({
-          model: "",
+          model: this.productRange.model + this.cont,
           stock: this.productRange.stock,
-          sku: "",
+          sku: this.productRange.sku + this.cont,
           brand: this.productRange.brand,
           category_id: this.productRange.category,
           catalogue_id: this.productRange.catalogue,
           images: [],
           images_upload: [],
           description: this.description,
-          colors: this.colors,
+          colors: [],
           ranges: this.inputs,
         });
       } else {
         alert("Tienes que llenar los datos Generales Primero");
       }
+      this.cont++;
     },
 
     // Delete Component Variation
@@ -544,7 +670,7 @@ export default {
     },
 
     // Preview Images Product
-    Preview_image() {
+    previewImages() {
       if (this.files.length == 0) {
         console.log("Esta vacio");
       } else {
@@ -579,12 +705,47 @@ export default {
       this.colors.splice(index, 1);
     },
 
+    // Delete Color M
+    addColorMultiple(id) {
+      this.variaciones[id].colors.push(this.showColor);
+    },
+
+    // Delete Color M
+    deleteColorMultiple(id, index) {
+      this.variaciones[id].colors.splice(index, 1);
+    },
+
     // Return List
     returnList() {
       this.$router.replace({ name: "listProduct" });
     },
 
     valueInitial() {},
+
+    uploadImage(images, id) {
+      if (images != 0) {
+        const data = new FormData();
+        images.forEach((elements, index) => {
+          data.append(`image_uploads[${index}]`, elements);
+        });
+        axios
+          .post(`/api/v1/uploads`, data, {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            this.variaciones[id].images = response.data;
+            console.log(id, this.variaciones[id].images);
+            console.log(this.variaciones);
+          })
+          .catch((error) => {
+            console.log(error);
+            // reject(error);
+          });
+      }
+    },
   },
   mounted() {
     this.getCatalogues();

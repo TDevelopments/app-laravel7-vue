@@ -375,14 +375,13 @@ export default {
     },
   },
   mounted() {
+    this.getProduct();
     this.getCatalogues();
     this.getCategories();
-    this.getProduct();
   },
   methods: {
     // Validation
     validate() {
-      console.log(this.images);
       if (this.files.length != 0) {
         this.addImages();
       } else {

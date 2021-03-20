@@ -1,32 +1,143 @@
 <template>
-  <div>
-    <v-col cols="auto">
-      <v-dialog transition="dialog-bottom-transition" max-width="600" v-model="show">
-        <v-card>
-          <v-toolbar color="primary" dark
-            >Opening from the bottom {{ product.model }}</v-toolbar
-          >
-          <v-card-text>
-            
-          </v-card-text>
-        </v-card>
-      </v-dialog>
-    </v-col>
-  </div>
+  <v-dialog
+    transition="dialog-bottom-transition"
+    max-width="900"
+    v-model="show"
+  >
+    <v-toolbar color="primary" dark>Opening from the bottom</v-toolbar>
+    <v-card>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12" sm="12" md="6" lg="6">
+            <v-img
+              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+              contain
+              v-if="product.images == null || product.images.length == 0"
+            />
+            <v-img
+              :src="product.images[model].path"
+              height="250"
+              contain
+              v-else
+            />
+            <v-sheet class="mx-auto" max-width="800">
+              <v-slide-group v-model="model" class="pa-4" show-arrows>
+                <v-slide-item
+                  v-if="product.images == null || product.images.length == 0"
+                  v-slot="{ active, toggle }"
+                >
+                  <v-img
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="70"
+                    height="60"
+                    contain
+                    class="m-1"
+                    @click="toggle"
+                  />
+                </v-slide-item>
+                <v-slide-item
+                  v-else
+                  v-slot="{ active, toggle }"
+                  v-for="(item, index) in product.images"
+                  :key="index"
+                >
+                  <v-img
+                    :src="item.path"
+                    max-width="70"
+                    height="60"
+                    contain
+                    class="m-1"
+                    @click="toggle"
+                  />
+                </v-slide-item>
+              </v-slide-group>
+            </v-sheet>
+          </v-col>
+          <v-col cols="12" sm="12" md="6" lg="6">
+            <v-card-text>
+              <div class="my-4 text-h4">
+                {{ product.model }}
+              </div>
+              <div>
+                <p v-for="(item, index) in product.description" :key="index">
+                  <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                  {{ item }}
+                </p>
+              </div>
+              <div>
+                Small plates, salads & sandwiches - an intimate setting with 12
+                indoor seats plus patio seating.
+              </div>
+              <v-row>
+                <v-col class="mt-3 pb-0 text-subtitle-1">
+                  <strong>PRECIO POR {{ product.quantity_group }} U.</strong>
+                  <div class="form-inline">
+                    <v-avatar
+                      color="#0D52D6"
+                      size="35"
+                      class="text-white mr-1 t-0"
+                    >
+                      {{ catalogue.coin == "soles" ? "S./" : "$" }}
+                    </v-avatar>
+                    <p class="mt-4 ml-2 font-weight-bold">
+                      {{ product.price_group | currency }}
+                    </p>
+                  </div>
+                </v-col>
+                <v-col class="mt-5 pb-0">
+                  <strong>PRECIO UNITARIO</strong>
+                  <div class="form-inline">
+                    <v-avatar
+                      color="#0D52D6"
+                      size="30"
+                      class="text-white mr-1 my-2"
+                    >
+                      {{ catalogue.coin == "soles" ? "S./" : "$" }}
+                    </v-avatar>
+                    <p class="mt-3 ml-2">{{ product.price_unit | currency }}</p>
+                  </div>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="3">
+                  <v-text-field
+                    v-model="product.quantity_group"
+                    type="number"
+                    solo
+                    dense
+                    class="mt-0 pt-0"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6" class="pl-0">
+                  <v-btn
+                    color="#0D52D6"
+                    dark
+                    @click="addCart({ product, catalogue })"
+                  >
+                    <v-icon class="mr-1">mdi-cart</v-icon>Añadir
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+</template>
+    </v-dialog>
+  </v-col>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  props: [
-    "product",
-    "catalogue",
-    "value"
-  ],
+  props: ["product", "catalogue", "value"],
   data: () => ({
     quantity: 1,
     loading: false,
     selection: 1,
+    model: 0,
   }),
   methods: {
     ...mapActions("groupImport", ["addCart"]),
@@ -69,9 +180,9 @@ export default {
       },
     },
   },
-  mounted(){
-    console.log("Component",this.product);
-  }
+  mounted() {
+    console.log("Component", this.product);
+  },
 };
 </script>
 <style scoped>

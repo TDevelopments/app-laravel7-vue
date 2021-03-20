@@ -146,6 +146,57 @@
           </v-card-text>
         </v-card>
       </v-col>
+      <v-col cols="12" sm="12" md="6" lg="6">
+        <h3>Subir Imagenes</h3>
+        <v-card class="mt-5">
+          <v-item-group v-model="selectedDelete" multiple>
+            <v-row>
+              <v-col
+                v-for="(item, i) in images"
+                :key="i"
+                cols="12"
+                sm="3"
+                md="3"
+              >
+                <v-item v-slot="{ active, toggle }" class="mx-3">
+                  <v-img
+                    :src="item.path"
+                    height="150"
+                    class="text-right"
+                    @click="toggle"
+                    contain
+                  >
+                    <v-btn icon>
+                      <v-icon color="red" @click="deleteImage(i, item)">
+                        mdi-delete
+                      </v-icon>
+                    </v-btn>
+                  </v-img>
+                </v-item>
+              </v-col>
+            </v-row>
+          </v-item-group>
+          <v-col>
+            <v-file-input
+              class="mt-5"
+              v-model="files"
+              label="Images Product"
+              multiple
+              prepend-icon="mdi-paperclip"
+              @change="previewImages"
+              @click="previewImages"
+              @click:clear="clear"
+              ref="fileupload"
+            >
+              <template v-slot:selection="{ text }">
+                <v-chip small label color="primary">
+                  {{ text }}
+                </v-chip>
+              </template>
+            </v-file-input>
+          </v-col>
+        </v-card>
+      </v-col>
     </v-row>
     <v-col class="ma-2 mx-4">
       <v-row>
@@ -196,7 +247,12 @@
                 ></v-text-field>
               </td>
               <td class="text-right">
-                <v-btn color="error" small @click="deleteRow(index)" icon>
+                <v-btn
+                  color="error"
+                  small
+                  @click="deleteRow(index, input.id)"
+                  icon
+                >
                   <v-icon small>mdi-minus</v-icon>
                 </v-btn>
               </td>
@@ -233,32 +289,37 @@
 import axios from "axios";
 export default {
   data: () => ({
-    inputs: [],
-    files: [],
-    valid: true,
     productRange: {
       model: "",
       slug: "",
+      sku: "",
       stock: "",
       brand: "",
       category: "",
       catalogue: "",
       images: "",
     },
+    // Object Catalogue
     catalogues: [],
+    // Object Categorie
     categories: [],
-    select: null,
-    url: null,
-    urls: [],
-    inputs: [],
-    selected: [],
-    selectedDelete: [],
+    // Object of Images
+    files: [],
+    // Chip of Description
     description: [],
-    condition: false,
+    selected: [],
+    select: null,
+    // Data of Color Picker
     type: "hex",
     hex: "#FF00FF",
     colors: [],
+    inputs: [],
+    // Items Image Delete
+    selectedDelete: [],
+    // Items Image Show
     images: [],
+    valid: true,
+    idDelete: [],
   }),
   mounted() {
     this.getProductRange();
@@ -267,8 +328,6 @@ export default {
   },
   methods: {
     validation() {
-      console.log(this.images);
-      console.log(this.productRange.images);
       if (this.files.length) {
         this.addImages();
       } else {
@@ -276,28 +335,29 @@ export default {
       }
     },
 
-    // Post Images
-    addImages() {
-      // Declaring Forma Data
-      const data = new FormData();
-      this.files.forEach((elements, index) => {
-        data.append(`image_uploads[${index}]`, elements);
-      });
-
+    getCategories() {
       axios
-        .post(`/api/v1/uploads`, data, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .get("/api/v1/categories")
         .then((response) => {
-          this.productRange.images = response.data;
-          console.log("imagenes", this.productRange.images);
-          this.editProductRange();
+          console.log(response);
+          this.loading = false;
+          this.categories = response.data.data;
+          console.log(this.categories);
+        })
+        .catch((error) => {});
+    },
+
+    getCatalogues() {
+      axios
+        .get("/api/v1/catalogues")
+        .then((response) => {
+          console.log(response);
+          this.loading = false;
+          this.catalogues = response.data.data;
+          console.log(this.catalogues);
         })
         .catch((error) => {
-          console.log(error);
+          //console.log(error)
           // reject(error);
         });
     },
@@ -330,6 +390,35 @@ export default {
           // reject(error);
         });
     },
+
+    // Post Images
+    addImages() {
+      // Declaring Forma Data
+      const data = new FormData();
+      this.files.forEach((elements, index) => {
+        data.append(`image_uploads[${index}]`, elements);
+      });
+
+      axios
+        .post(`/api/v1/uploads`, data, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          response.data.forEach((elements) => {
+            this.productRange.images.push(elements);
+            console.log(elements);
+          });
+          this.editProductRange();
+        })
+        .catch((error) => {
+          console.log(error);
+          // reject(error);
+        });
+    },
+
     editProductRange() {
       axios
         .put(
@@ -337,6 +426,7 @@ export default {
           {
             model: this.productRange.model,
             slug: this.productRange.slug,
+            sku: this.productRange.sku,
             stock: this.productRange.stock,
             brand: this.productRange.brand,
             category_id: this.productRange.category,
@@ -353,7 +443,12 @@ export default {
         )
         .then((response) => {
           console.log(response);
-          this.addRange(response.data.data.id);
+          if (this.idDelete.length != 0) {
+            this.deleteRanges();
+            this.addRange(response.data.data.id);
+          } else {
+            this.addRange(response.data.data.id);
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -380,6 +475,19 @@ export default {
           // reject(error);
         });
     },
+    deleteRanges() {
+      axios
+        .delete(`/api/v1/ranges`, {
+          headers: {
+            Accept: "application/json",
+          },
+          data: {
+            items: this.idDelete,
+          },
+        })
+        .then((response) => {})
+        .catch((error) => {});
+    },
     add() {
       this.inputs.push({
         min: "",
@@ -387,7 +495,7 @@ export default {
         price: "",
       });
     },
-    Preview_image() {
+    previewImages() {
       if (this.files.length == 0) {
         console.log("esta vacio");
       } else {
@@ -398,11 +506,12 @@ export default {
             id: index,
           });
         });
-        console.log(this.urls);
       }
     },
-    deleteRow(index) {
+    deleteRow(index, id) {
       this.inputs.splice(index, 1);
+      this.idDelete.push(id);
+      console.log(this.inputs);
     },
     clear() {
       this.files = [];
@@ -410,31 +519,7 @@ export default {
     clearOneImage(index) {
       this.files.splice(index, 1);
     },
-    getCategories() {
-      axios
-        .get("/api/v1/categories")
-        .then((response) => {
-          console.log(response);
-          this.loading = false;
-          this.categories = response.data.data;
-          console.log(this.categories);
-        })
-        .catch((error) => {});
-    },
-    getCatalogues() {
-      axios
-        .get("/api/v1/catalogues")
-        .then((response) => {
-          console.log(response);
-          this.loading = false;
-          this.catalogues = response.data.data;
-          console.log(this.catalogues);
-        })
-        .catch((error) => {
-          //console.log(error)
-          // reject(error);
-        });
-    },
+
     addPColor() {
       this.colors.push(this.showColor);
     },

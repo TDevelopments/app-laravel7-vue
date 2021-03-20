@@ -21,14 +21,21 @@ export async function getCatalogue({ commit, getters, dispatch }, id) {
     await dispatch("getCatalogues");
   }
   let catalogue = {};
+
   getters.catalogues.forEach(element => {
     if (element.id == id) {
       catalogue = element;
+
       element.products.forEach(product => {
         product.quantity = product.quantity_group;
       })
+
+      element.productRanges.forEach(productRange => {
+        productRange.quantity = 1;
+      })
     }
   });
+  console.log(catalogue.productRanges);
   commit("setCatalogue", catalogue);
 }
 

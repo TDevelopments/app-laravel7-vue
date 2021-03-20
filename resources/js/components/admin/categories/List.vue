@@ -1,10 +1,13 @@
 <template>
-  <v-card>
+  <div>
     <v-data-table
       :headers="headers"
       :items="categories"
       :loading="loading"
       loading-text="Loading... Please wait"
+      :page.sync="page"
+      :items-per-page="itemsPerPage"
+      hide-default-footer
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -47,7 +50,14 @@
         </v-icon>
       </template>
     </v-data-table>
-  </v-card>
+    <div class="text-center pt-2">
+      <v-pagination
+        v-model="page"
+        :length="pagination"
+        @input="next"
+      ></v-pagination>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -60,30 +70,35 @@ export default {
         text: "Nombre Categoria",
         value: "name",
         align: "center",
-        sortable: false
+        sortable: false,
       },
-      { text: "Acciones", value: "actions", sortable: false, align: "center" }
+      { text: "Acciones", value: "actions", sortable: false, align: "center" },
     ],
     categories: [],
     idDelete: null,
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 15,
+    pagination: null,
   }),
   methods: {
     getList() {
       axios
         .get("/api/v1/categories")
-        .then(response => {
+        .then((response) => {
           this.loading = false;
           this.categories = response.data.data;
+          this.pagination = response.data.meta.last_page;
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
 
     editItem(item) {
       this.$router.push({
         name: "editCategory",
         params: {
-          id: item.id
-        }
+          id: item.id,
+        },
       });
     },
 
@@ -95,12 +110,11 @@ export default {
     deleteItemConfirm() {
       axios
         .delete(`/api/v1/categories/${this.idDelete}`)
-        .then(response => {
+        .then((response) => {
           this.getList();
           this.closeDelete();
         })
-        .catch(error => {
-        });
+        .catch((error) => {});
     },
 
     closeDelete() {
@@ -108,9 +122,20 @@ export default {
     },
     newCategory() {
       this.$router.push({
-        name: "addCategory"
+        name: "addCategory",
       });
-    }
+    },
+    next(page) {
+      axios
+        .get(`/api/v1/categories?page=${page}`)
+        .then((response) => {
+          this.loading = false;
+          this.catalogues = response.data.data;
+          this.pagination = response.data.meta.last_page;
+          console.log(response);
+        })
+        .catch((error) => {});
+    },
   },
   mounted() {
     this.getList();

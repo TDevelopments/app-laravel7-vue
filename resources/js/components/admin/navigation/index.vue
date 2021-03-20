@@ -4,13 +4,13 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>BizzPeru</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn @click="pageGroupImport"> Importaciones Grupales </v-btn>
-      <v-spacer></v-spacer>
-      <v-btn> Ventas Stock </v-btn>
-      <v-spacer></v-spacer>
-      <v-btn icon @click="logout()">
-        <v-icon>mdi-export</v-icon>
-      </v-btn>
+      <v-toolbar-items>
+        <v-btn text @click="iG"> Importaciones Grupales</v-btn>
+        <v-btn text @click="sS"> Ventas en Stock</v-btn>
+        <v-btn icon @click="logout()">
+          <v-icon>mdi-export</v-icon>
+        </v-btn>
+      </v-toolbar-items>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -41,7 +41,8 @@
         </v-list-item>
       </v-list>
 
-      <v-list dense nav shaped>
+      <v-list dense nav shaped v-if="module == 'ImportGroup'">
+        <v-subheader>Importaciones Grupales</v-subheader>
         <v-list-item-group>
           <v-list-item :to="{ name: 'dashboard' }">
             <v-list-item-icon>
@@ -71,7 +72,10 @@
             <v-list-item-title>Listar Productos</v-list-item-title>
           </v-list-item>
           <v-list-item link :to="{ name: 'addProduct' }">
-            <v-list-item-title>Crear Producto</v-list-item-title>
+            <v-list-item-title>Crear Producto Conjunto</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'addProductRange' }">
+            <v-list-item-title>Crear Producto Rango</v-list-item-title>
           </v-list-item>
         </v-list-group>
         <v-list-group prepend-icon="mdi-view-list" no-action color="#FCF3F3">
@@ -109,6 +113,26 @@
           </v-list-item>
         </v-list-group>
       </v-list>
+
+      <v-list dense nav shaped v-if="module == 'SellStock'">
+        <v-subheader>Ventas en Stock</v-subheader>
+        <v-list-item-group>
+          <v-list-item :to="{ name: 'dashboard' }">
+            <v-list-item-icon>
+              <v-icon>mdi-speedometer </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Dashboard</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn color="#1867C0" block class="text-capitalize"><v-icon class="mr-2">mdi-eye</v-icon> Ver Como Usuario </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-main class="main">
@@ -129,6 +153,7 @@ export default {
     wheight: window.innerHeight,
     drawer: null,
     permanent: null,
+    module: "ImportGroup",
   }),
   computed: {
     ...mapGetters("account", ["user"]),
@@ -142,6 +167,12 @@ export default {
       this.$router.push({
         name: "group-import",
       });
+    },
+    iG() {
+      this.module = "ImportGroup";
+    },
+    sS() {
+      this.module = "SellStock";
     },
   },
 };

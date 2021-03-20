@@ -7,41 +7,137 @@
             <div class="signin">
               <v-form ref="form" v-model="valid" lazy-validation>
                 <div class="container">
-                  <h1 class="h1">Sign in</h1>
-                  <v-text-field
-                    v-model="email"
-                    :rules="emailRules"
-                    label="E-mail"
-                    required
-                    
-                  ></v-text-field>
+                  <h1 class="h1">Sign up</h1>
+                  <v-stepper v-model="e6" vertical>
+                    <v-stepper-step :complete="e6 > 1" step="1" @click="e6 = 1">
+                      Ingresa tus datos
+                    </v-stepper-step>
 
-                  <v-text-field
-                    v-model="password"
-                    :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                    :rules="[rules.required, rules.min]"
-                    :type="show1 ? 'text' : 'password'"
-                    name="input-10-1"
-                    label="Password"
-                    hint="At least 8 characters"
-                    counter
-                    @click:append="show1 = !show1"
-                    v-on:keyup.enter="login"
-                  ></v-text-field>
-                  <div class="text-center">
-                    <v-btn
-                      :disabled="!valid"
-                      color="primary"
-                      class="mt-6 "
-                      @click="login"
-                      rounded
-                      x-large
-                      width="50%"
-                    >
-                      Login
-                    </v-btn>
-                  </div>
-                </div> 
+                    <v-stepper-content step="1">
+                      Nombre
+                      <v-text-field
+                        v-model="name"
+                        solo
+                        required
+                        :rules="generalRules"
+                        placeholder="Juan"
+                      ></v-text-field>
+
+                      Apellidos
+                      <v-text-field
+                        v-model="lastname"
+                        solo
+                        required
+                        :rules="generalRules"
+                        placeholder="Perez"
+                      ></v-text-field>
+
+                      DNI
+                      <v-text-field
+                        v-model="dni"
+                        solo
+                        required
+                        :rules="generalRules"
+                        placeholder="77777777"
+                      ></v-text-field>
+
+                      Teléfono
+                      <v-text-field
+                        v-model="phone"
+                        solo
+                        required
+                        :rules="generalRules"
+                        placeholder="98546789"
+                      ></v-text-field>
+
+                      <v-btn color="primary" @click="e6 = 2"> Continue </v-btn>
+                    </v-stepper-content>
+
+                    <v-stepper-step :complete="e6 > 2" step="2" @click="e6 = 2">
+                      Ingresa mas Informacíon
+                    </v-stepper-step>
+
+                    <v-stepper-content step="2">
+                      Direccion
+                      <v-text-field
+                        v-model="address"
+                        solo
+                        required
+                        :rules="generalRules"
+                        placeholder="Av. example"
+                      ></v-text-field>
+
+                      RUC
+                      <v-text-field
+                        v-model="ruc"
+                        solo
+                        required
+                        placeholder="7777777777"
+                      ></v-text-field>
+
+                      Genero
+                      <v-select
+                        v-model="gender"
+                        :items="items"
+                        item-text="name"
+                        item-value="send"
+                        solo
+                        required
+                        placeholder="98546789"
+                      ></v-select>
+
+                      Cuidad
+                      <v-text-field
+                        v-model="city"
+                        solo
+                        :rules="generalRules"
+                        required
+                        placeholder="98546789"
+                      ></v-text-field>
+
+                      <v-btn color="primary" @click="e6 = 3"> Continue </v-btn>
+                    </v-stepper-content>
+
+                    <v-stepper-step :complete="e6 > 3" step="3" @click="e6 = 3">
+                      Datos finales
+                    </v-stepper-step>
+
+                    <v-stepper-content step="3">
+                      E-mail
+                      <v-text-field
+                        v-model="email"
+                        solo
+                        :rules="emailRules"
+                        required
+                        placeholder="example@gmail.com"
+                      ></v-text-field>
+
+                      Password
+                      <v-text-field
+                        solo
+                        v-model="password"
+                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :rules="[rules.required, rules.min]"
+                        :type="show1 ? 'text' : 'password'"
+                        name="input-10-1"
+                        hint="At least 8 characters"
+                        counter
+                        @click:append="show1 = !show1"
+                        v-on:keyup.enter="login"
+                        placeholder="*********"
+                      ></v-text-field>
+
+                      <v-btn
+                        :disabled="!valid"
+                        color="primary"
+                        class="my-3"
+                        @click="register"
+                      >
+                        Registrarse
+                      </v-btn>
+                    </v-stepper-content>
+                  </v-stepper>
+                </div>
               </v-form>
             </div>
           </div>
@@ -50,10 +146,12 @@
       <div class="panels-container">
         <div class="panel left-panel">
           <div class="content">
-            <h3>New here?</h3>
+            <h3>Ya tienes una cuenta?</h3>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
               consequuntur quos, dolorem quam voluptatum voluptates labore.
+              Dolores magni sint, ex totam, quas vitae unde sit tenetur esse nam
+              sapiente amet!
             </p>
             <v-btn
               color="white"
@@ -61,17 +159,20 @@
               outlined
               rounded
               dark
+              @click="loginRouter"
             >
-              Sign up
+              Sign in
             </v-btn>
           </div>
-          <img src="images/log.svg" class="image"/>
+          <img src="images/delivery.svg" class="image" />
         </div>
       </div>
     </div>
   </v-app>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data: () => ({
     w_with: window.innerWidth * 0.6,
@@ -91,11 +192,33 @@ export default {
     rules: {
       required: (value) => !!value || "Required.",
       min: (v) => v.length >= 8 || "Min 8 characters",
-      emailMatch: () => `The email and password you entered don't match`,
     },
+    generalRules: [(v) => !!v || "Este campo no puede ir vacio"],
+    e6: 1,
+    name: "",
+    lastname: "",
+    email: "",
+    password_confirmation: "",
+    address: "",
+    ruc: "",
+    dni: "",
+    phone: "",
+    gender: "",
+    city: "",
+    items: [
+      {
+        name: "Masculino",
+        send: "masculine",
+      },
+      {
+        name: "Femenino",
+        send: "female",
+      },
+    ],
   }),
 
   methods: {
+    ...mapActions("account", ["login"]),
     validate() {
       this.$refs.form.validate();
     },
@@ -105,228 +228,120 @@ export default {
     resetValidation() {
       this.$refs.form.resetValidation();
     },
-    login() {
-      this.$store
-        .dispatch("retrieveToken", {
+    loginRouter() {
+      this.$router.push({ name: "loginRouter" });
+    },
+    register() {
+      axios
+        .post("/api/v1/signup", {
+          name: this.name,
+          lastname: this.lastname,
           email: this.email,
-          password: this.password
+          password: this.password,
+          password_confirmation: this.password,
+          address: this.address,
+          ruc: this.ruc,
+          dni: this.dni,
+          phone: this.phone,
+          gender: this.gender,
+          city: this.city,
         })
-        .then(response => {
-          this.$router.push({ name: "dashboard" });
+        .then((response) => {
+          console.log(response);
+          this.loginRouter();
         })
-        .catch(error => {
-          this.error = error.response.data;
-        });
-    }
+        .catch((error) => {});
+    },
   },
 };
 </script>
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-body,
-input {
+h1 {
   font-family: "Poppins", sans-serif;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 40px;
+  font-weight: bold;
 }
-
-.container {
+.containers {
   position: relative;
   width: 100%;
-  background-color: #fff;
   min-height: 100vh;
+  background-color: #fff;
   overflow: hidden;
 }
-
-.forms-container {
+.containers:before {
+  content: "";
+  position: absolute;
+  width: 2500px;
+  height: 2500px;
+  border-radius: 50%;
+  background: linear-gradient(-45deg, #4481eb, #04befe);
+  top: -10%;
+  right: 48%;
+  transform: translateY(-50%);
+  z-index: 6;
+}
+.form-container {
   position: absolute;
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.signin-signup {
-  position: absolute;
   top: 50%;
-  transform: translate(-50%, -50%);
   left: 75%;
-  width: 50%;
-  transition: 1s 0.7s ease-in-out;
-  display: grid;
-  grid-template-columns: 1fr;
-  z-index: 5;
+  transform: translate(-50%, -50%);
+  /* background-color: red; */
 }
-
-form {
+.form {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0rem 5rem;
-  transition: all 0.2s 0.7s;
-  overflow: hidden;
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
 }
-
-form.sign-up-form {
-  opacity: 0;
-  z-index: 1;
-}
-
-form.sign-in-form {
-  z-index: 2;
-}
-
-.title {
-  font-size: 2.2rem;
-  color: #444;
-  margin-bottom: 10px;
-}
-
-.input-field {
+.form-with {
   max-width: 380px;
   width: 100%;
-  background-color: #f0f0f0;
-  margin: 10px 0;
-  height: 55px;
-  border-radius: 55px;
-  display: grid;
-  grid-template-columns: 15% 85%;
-  padding: 0 0.4rem;
-  position: relative;
+}
+.signin {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  z-index: 5;
 }
 
-.input-field i {
-  text-align: center;
-  line-height: 55px;
-  color: #acacac;
-  transition: 0.5s;
-  font-size: 1.1rem;
-}
-
-.input-field input {
-  background: none;
-  outline: none;
-  border: none;
-  line-height: 1;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-.input-field input::placeholder {
-  color: #aaa;
-  font-weight: 500;
-}
-
-.social-text {
-  padding: 0.7rem 0;
-  font-size: 1rem;
-}
-
-.social-media {
-  display: flex;
-  justify-content: center;
-}
-
-.social-icon {
-  height: 46px;
-  width: 46px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 0.45rem;
-  color: #333;
-  border-radius: 50%;
-  border: 1px solid #333;
-  text-decoration: none;
-  font-size: 1.1rem;
-  transition: 0.3s;
-}
-
-.social-icon:hover {
-  color: #4481eb;
-  border-color: #4481eb;
-}
-
-.btn {
-  width: 150px;
-  background-color: #5995fd;
-  border: none;
-  outline: none;
-  height: 49px;
-  border-radius: 49px;
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: 600;
-  margin: 10px 0;
-  cursor: pointer;
-  transition: 0.5s;
-}
-
-.btn:hover {
-  background-color: #4d84e2;
-}
 .panels-container {
   position: absolute;
-  height: 100%;
   width: 100%;
+  height: 100;
   top: 0;
   left: 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-
-.container:before {
-  content: "";
-  position: absolute;
-  height: 2000px;
-  width: 2000px;
-  top: -10%;
-  right: 48%;
-  transform: translateY(-50%);
-  background-image: linear-gradient(-45deg, #4481eb 0%, #04befe 100%);
-  transition: 1.8s ease-in-out;
-  border-radius: 50%;
-  z-index: 6;
-}
-
-.image {
-  width: 100%;
-  transition: transform 1.1s ease-in-out;
-  transition-delay: 0.4s;
-}
-
 .panel {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: space-around;
   text-align: center;
-  z-index: 6;
+  z-index: 7;
 }
-
 .left-panel {
   pointer-events: all;
   padding: 3rem 17% 2rem 12%;
 }
 
-.right-panel {
-  pointer-events: none;
-  padding: 3rem 12% 2rem 17%;
-}
-
 .panel .content {
   color: #fff;
-  transition: transform 0.9s ease-in-out;
-  transition-delay: 0.6s;
 }
 
 .panel h3 {
@@ -340,74 +355,25 @@ form.sign-in-form {
   padding: 0.7rem 0;
 }
 
-.btn.transparent {
-  margin: 0;
-  background: none;
-  border: 2px solid #fff;
-  width: 130px;
-  height: 41px;
-  font-weight: 600;
-  font-size: 0.8rem;
-}
-
-.right-panel .image,
-.right-panel .content {
-  transform: translateX(800px);
-}
-
-/* ANIMATION */
-
-.container.sign-up-mode:before {
-  transform: translate(100%, -50%);
-  right: 52%;
-}
-
-.container.sign-up-mode .left-panel .image,
-.container.sign-up-mode .left-panel .content {
-  transform: translateX(-800px);
-}
-
-.container.sign-up-mode .signin-signup {
-  left: 25%;
-}
-
-.container.sign-up-mode form.sign-up-form {
-  opacity: 1;
-  z-index: 2;
-}
-
-.container.sign-up-mode form.sign-in-form {
-  opacity: 0;
-  z-index: 1;
-}
-
-.container.sign-up-mode .right-panel .image,
-.container.sign-up-mode .right-panel .content {
-  transform: translateX(0%);
-}
-
-.container.sign-up-mode .left-panel {
-  pointer-events: none;
-}
-
-.container.sign-up-mode .right-panel {
-  pointer-events: all;
+.image {
+  width: 110%;
+  margin-top: 5%;
 }
 
 @media (max-width: 870px) {
-  .container {
+  .containers {
     min-height: 800px;
     height: 100vh;
   }
-  .signin-signup {
-    width: 100%;
+  .signin {
+    width: 70%;
     top: 95%;
     transform: translate(-50%, -100%);
     transition: 1s 0.8s ease-in-out;
   }
 
-  .signin-signup,
-  .container.sign-up-mode .signin-signup {
+  .signin,
+  .containers .signin {
     left: 50%;
   }
 
@@ -424,18 +390,15 @@ form.sign-in-form {
     grid-column: 1 / 2;
   }
 
-  .right-panel {
-    grid-row: 3 / 4;
-  }
-
   .left-panel {
     grid-row: 1 / 2;
   }
 
   .image {
-    width: 200px;
+    width: 300px;
     transition: transform 0.9s ease-in-out;
     transition-delay: 0.6s;
+    margin-top: 0%;
   }
 
   .panel .content {
@@ -445,7 +408,7 @@ form.sign-in-form {
   }
 
   .panel h3 {
-    font-size: 1.2rem;
+    font-size: 1.9rem;
   }
 
   .panel p {
@@ -453,13 +416,7 @@ form.sign-in-form {
     padding: 0.5rem 0;
   }
 
-  .btn.transparent {
-    width: 110px;
-    height: 35px;
-    font-size: 0.7rem;
-  }
-
-  .container:before {
+  .containers:before {
     width: 1500px;
     height: 1500px;
     transform: translateX(-50%);
@@ -469,36 +426,10 @@ form.sign-in-form {
     top: initial;
     transition: 2s ease-in-out;
   }
-
-  .container.sign-up-mode:before {
-    transform: translate(-50%, 100%);
-    bottom: 32%;
-    right: initial;
-  }
-
-  .container.sign-up-mode .left-panel .image,
-  .container.sign-up-mode .left-panel .content {
-    transform: translateY(-300px);
-  }
-
-  .container.sign-up-mode .right-panel .image,
-  .container.sign-up-mode .right-panel .content {
-    transform: translateY(0px);
-  }
-
-  .right-panel .image,
-  .right-panel .content {
-    transform: translateY(300px);
-  }
-
-  .container.sign-up-mode .signin-signup {
-    top: 5%;
-    transform: translate(-50%, 0);
-  }
 }
 
 @media (max-width: 570px) {
-  form {
+  .form {
     padding: 0 1.5rem;
   }
 
@@ -508,18 +439,14 @@ form.sign-in-form {
   .panel .content {
     padding: 0.5rem 1rem;
   }
-  .container {
+  .containers {
     padding: 1.5rem;
   }
 
-  .container:before {
+  .containers:before {
     bottom: 72%;
     left: 50%;
   }
-
-  .container.sign-up-mode:before {
-    bottom: 28%;
-    left: 50%;
-  }
 }
-</style>>
+</style>
+>

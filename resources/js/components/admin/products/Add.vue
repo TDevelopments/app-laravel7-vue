@@ -369,7 +369,7 @@
               </td>
               <td>
                 <v-text-field
-                  v-model="itemV.price_group"
+                  v-model="itemV.quantity_group"
                   solo
                   dense
                   required
@@ -377,7 +377,7 @@
               </td>
               <td>
                 <v-text-field
-                  v-model="itemV.quantity_group"
+                  v-model="itemV.price_group"
                   solo
                   dense
                   required

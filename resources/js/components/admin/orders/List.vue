@@ -8,7 +8,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Users</v-toolbar-title>
+          <v-toolbar-title>Ordenes de Clientes</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
         </v-toolbar>
@@ -32,7 +32,6 @@
 import axios from "axios";
 
 export default {
-    
   data: () => ({
     orders: [],
     headers: [
@@ -51,12 +50,6 @@ export default {
       {
         text: "Estado",
         value: "status",
-        align: "center",
-        sortable: false,
-      },
-      {
-        text: "Detalles de Orden",
-        value: "orderDetails",
         align: "center",
         sortable: false,
       },

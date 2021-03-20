@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <div>
     <v-tabs fixed-tabs background-color="#546E7A" v-model="currentTab" dark>
       <v-tab> Producto por conjunto </v-tab>
       <v-tab> Producto por rango </v-tab>
@@ -12,6 +12,9 @@
             :items="products"
             :loading="loading"
             loading-text="Loading... Please wait"
+            :page.sync="page0"
+            :items-per-page="itemsPerPage"
+            hide-default-footer
           >
             <template v-slot:top>
               <v-toolbar flat>
@@ -74,6 +77,13 @@
             </template>
           </v-data-table>
         </v-card>
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="page0"
+            :length="pagination0"
+            @input="next0"
+          ></v-pagination>
+        </div>
       </v-tab-item>
       <v-tab-item>
         <v-card flat>
@@ -87,6 +97,9 @@
               :expanded.sync="expanded"
               show-expand
               class="elevation-1"
+              :page.sync="page"
+              :items-per-page="itemsPerPage"
+              hide-default-footer
             >
               <template v-slot:top>
                 <v-toolbar flat>
@@ -164,9 +177,16 @@
             </v-data-table>
           </v-card>
         </v-card>
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="page"
+            :length="pagination"
+            @input="next"
+          ></v-pagination>
+        </div>
       </v-tab-item>
     </v-tabs-items>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -275,26 +295,60 @@ export default {
     singleExpand: false,
     idDeleteProduct: null,
     idDeleteProductRange: null,
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 15,
+    pagination: null,
+    page0: 1,
+    pagination0: null,
   }),
   methods: {
     getList() {
-      axios
-        .get("/api/v1/products")
-        .then((response) => {
-          this.loading = false;
-          this.products = response.data.data;
-        })
-        .catch((error) => {});
+      if (this.page0 == 1) {
+        axios
+          .get("/api/v1/products")
+          .then((response) => {
+            this.loading = false;
+            this.products = response.data.data;
+            this.pagination0 = response.data.meta.last_page;
+          })
+          .catch((error) => {});
+      } else {
+        axios
+          .get(`/api/v1/products?page=${page}`)
+          .then((response) => {
+            this.loading = false;
+            this.products = response.data.data;
+            this.pagination = response.data.meta.last_page;
+            console.log(response);
+          })
+          .catch((error) => {});
+      }
     },
 
     getListForRange() {
-      axios
-        .get("/api/v1/product-ranges")
-        .then((response) => {
-          this.loading = false;
-          this.productForRange = response.data.data;
-        })
-        .catch((error) => {});
+      if (this.page == 1) {
+        axios
+          .get("/api/v1/product-ranges")
+          .then((response) => {
+            this.loading = false;
+            this.productForRange = response.data.data;
+            this.pagination = response.data.meta.last_page;
+            console.log(this.pagination);
+            console.log(response);
+          })
+          .catch((error) => {});
+      } else {
+        axios
+          .get(`/api/v1/product-ranges?page=${this.page}`)
+          .then((response) => {
+            this.loading = false;
+            this.productForRange = response.data.data;
+            this.pagination = response.data.meta.last_page;
+            console.log(response);
+          })
+          .catch((error) => {});
+      }
     },
 
     deleteItem(item) {
@@ -358,6 +412,28 @@ export default {
           name: "addProductRange",
         });
       }
+    },
+    next(page) {
+      axios
+        .get(`/api/v1/product-ranges?page=${page}`)
+        .then((response) => {
+          this.loading = false;
+          this.productForRange = response.data.data;
+          this.pagination = response.data.meta.last_page;
+          console.log(response);
+        })
+        .catch((error) => {});
+    },
+    next0(page) {
+      axios
+        .get(`/api/v1/products?page=${page}`)
+        .then((response) => {
+          this.loading = false;
+          this.products = response.data.data;
+          this.pagination = response.data.meta.last_page;
+          console.log(response);
+        })
+        .catch((error) => {});
     },
   },
   computed: {},

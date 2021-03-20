@@ -34,21 +34,15 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:item.image="{ item }">
-        <v-img
-          lazy-src="https://picsum.photos/id/11/10/6"
-          max-height="50"
-          max-width="100"
-          src="https://picsum.photos/id/11/500/300"
-          class="mt-1 mb-1"
-        ></v-img>
+      <template v-slot:[`item.gender`]="{ item }">
+        {{ item.gender == "masculine" ? "Masculino" : "Femenino" }}
       </template>
-      <template v-slot:item.arrivals="{ item }">
-        <p v-for="ar in item.arrivals">
+      <template v-slot:[`item.arrivals`]="{ item }">
+        <p v-for="ar in item.arrivals" :key="ar.id">
           {{ ar.city }} -> {{ ar.arrival_date }}
         </p>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-icon small @click="deleteItem(item)" color="black">
           mdi-delete
         </v-icon>
@@ -65,15 +59,14 @@ export default {
     page: 5,
     loading: false,
     headers: [
-      { text: "Image", value: "image", align: "center", sortable: false },
       {
-        text: "Name",
+        text: "Nombre",
         value: "name",
         align: "center",
         sortable: false
       },
       {
-        text: "Lastname",
+        text: "Apellido",
         value: "lastname",
         align: "center",
         sortable: false
@@ -85,7 +78,7 @@ export default {
         sortable: false
       },
       {
-        text: "Address",
+        text: "Dirección",
         value: "address",
         align: "center",
         sortable: false
@@ -97,24 +90,24 @@ export default {
         sortable: false
       },
       {
-        text: "Phone",
+        text: "Celular",
         value: "phone",
         align: "center",
         sortable: false
       },
       {
-        text: "Gender",
+        text: "Género",
         value: "gender",
         align: "center",
         sortable: false
       },
       {
-        text: "City",
+        text: "Cuidad",
         value: "city",
         align: "center",
         sortable: false
       },
-      { text: "Actions", value: "actions", sortable: false, align: "center" }
+      { text: "Acciones", value: "actions", sortable: false, align: "center" }
     ],
     users: [],
     editedIndex: -1,

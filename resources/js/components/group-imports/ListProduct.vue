@@ -87,75 +87,195 @@
         </v-col>
       </v-row>
       <v-avatar></v-avatar>
-      <v-data-table
-        v-model="selected"
-        :single-select="singleSelect"
-        show-select
-        :headers="headers"
-        :items="catalogue.products"
-        hide-default-footer
-        class="elevation-1"
-        @click:row="prueba"
-      >
-        <template v-slot:[`item.images`]="{ item }">
-          <v-img
-            v-if="item.images == null || item.images.length == 0"
-            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-            max-width="150"
-            contain
-            class="m-1"
-          />
-          <v-img
-            v-else
-            contain
-            :src="item.images[0].path"
-            max-width="150"
-            class="text-center align-center"
-          />
-        </template>
-        <template v-slot:[`item.quantity`]="{ item }">
-          <v-text-field
-            class="m-3"
-            solo
-            dense
-            append-outer-icon="mdi-plus"
-            prepend-icon="mdi-minus"
-            @click:append-outer="plusFunctionO(item)"
-            @click:prepend="minusFunction(item)"
-            readonly
-            v-model="item.quantity"
-            hide-details
-            ></v-text-field>
-        </template>
-        <template v-slot:[`item.cart`]="{ item }">
-          <v-row>
-            <v-icon
-              small
-              class="mx-auto"
-              color="#D6B331"
-              @click="prueba"
-            >
-              mdi-cart
-            </v-icon>
-          </v-row>
-        </template>
-      </v-data-table>
-      <div class="mx-auto">
-        Probando
-        <v-card>
-          <p class="py-3 px-3">Resumen de mi pedido</p>
-          <div v-for="catalogue in cart" :key="catalogue.id">
-            <p class="py-3 px-3">{{ catalogue.name }}</p>
-            <p class="py-3 px-3">
-              Total:
+      <v-row>
+        <v-col cols="12" sm="12" md="9" lg="9">
+          <v-data-table
+            v-model="selected"
+            :single-select="singleSelect"
+            show-select
+            :headers="headers"
+            :items="catalogue.products"
+            hide-default-footer
+            class="elevation-1"
+            @click:row="prueba"
+          >
+            <template v-slot:[`item.images`]="{ item }">
+              <v-img
+                v-if="item.images == null || item.images.length == 0"
+                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                max-width="150"
+                contain
+                class="m-1"
+              />
+              <v-img
+                v-else
+                contain
+                :src="item.images[0].path"
+                max-width="150"
+                class="text-center align-center"
+              />
+            </template>
+            <template v-slot:[`item.quantity`]="{ item }">
+              {{
+                item.quantity +
+                " " +
+                (item.type_group == "units"
+                  ? "unidades"
+                  : item.quantity == 1
+                  ? "caja"
+                  : "cajas")
+              }}
+            </template>
+            <template v-slot:[`item.quantity_order`]="{ item, index }">
+              <v-text-field
+                class="m-3"
+                solo
+                dense
+                append-outer-icon="mdi-plus"
+                prepend-icon="mdi-minus"
+                @click:append-outer="plusFunctionO(index)"
+                @click:prepend="minusFunction(item, index)"
+                readonly
+                v-model="item.quantity_group"
+                hide-details
+              ></v-text-field>
+            </template>
+            <template v-slot:[`item.cart`]="{ item }">
+              <v-row>
+                <v-icon small class="mx-auto" color="#D6B331" @click="prueba">
+                  mdi-cart
+                </v-icon>
+              </v-row>
+            </template>
+          </v-data-table>
+          <v-data-table
+            v-model="selectedRange"
+            :single-select="singleSelectRange"
+            show-select
+            :headers="headersItem"
+            :items="catalogue.productRanges"
+            hide-default-footer
+            class="elevation-1 mt-3"
+            @click:row="prueba"
+          >
+            <template v-slot:[`item.images`]="{ item }">
+              <v-img
+                v-if="item.images == null || item.images.length == 0"
+                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                max-width="150"
+                contain
+                class="m-1"
+              />
+              <v-img
+                v-else
+                contain
+                :src="item.images[0].path"
+                max-width="150"
+                class="text-center align-center"
+              />
+            </template>
+            <template v-slot:[`item.ranges`]="{ item, index }">
+              <div v-for="range in item.ranges" :key="range.id">
+                <v-icon>mdi-unfold-more-vertical</v-icon> De {{ range.min }} a
+                {{ range.max }} el precio es {{ range.price }}
+              </div>
+            </template>
+            <template v-slot:[`item.quantity_order`]="{ item, index }">
+              <v-text-field
+                class="m-3"
+                solo
+                dense
+                append-outer-icon="mdi-plus"
+                prepend-icon="mdi-minus"
+                @click:append-outer="plusFunctionR(index)"
+                @click:prepend="minusFunctionR(item, index)"
+                readonly
+                hide-details
+              ></v-text-field>
+            </template>
+          </v-data-table>
+        </v-col>
+        <v-col cols="12" sm="12" md="3" lg="3">
+          <v-card>
+            <p class="py-3 px-3 text-h6">Resumen de mi pedido</p>
+            <p class="pb-3 px-3 text-subtitle-1">
+              Minima Inversión:
+              <strong>
+                {{ (catalogue.coin == "soles" ? "S/." : "$") + " " }}
+                {{ catalogue.minimum_investment | currency }}
+              </strong>
             </p>
-            <v-btn @click="generateOrderAction(catalogue)">
+            <v-divider></v-divider>
+            <v-card-text
+              v-for="product in selected"
+              :key="product.id"
+              class="py-0"
+            >
+              <v-row>
+                <v-col cols="4">
+                  <v-img
+                    v-if="product.images == null || product.images.length == 0"
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="75"
+                    height="50"
+                    contain
+                    class="m-1"
+                  />
+                  <v-img
+                    v-else
+                    contain
+                    :src="product.images[0].path"
+                    max-width="75"
+                    height="50"
+                    class="text-center align-center"
+                  />
+                </v-col>
+                <v-col cols="8">
+                  Modelo:{{ product.model }}
+                  <br />
+                  Pago:{{ catalogue.coin == "soles" ? "S/." : "$"
+                  }}{{
+                    (product.quantity_group * product.price_unit) | currency
+                  }}
+                  <br />
+                  Cantidad
+                  {{
+                    product.quantity_group +
+                    " " +
+                    (product.type_group == "units"
+                      ? "unidades"
+                      : product.quantity == 1
+                      ? "caja"
+                      : "cajas")
+                  }}
+                  <br />
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-row class="text-right mx-2">
+              <v-spacer></v-spacer>
+              <v-col class="text-subtitle-1"
+                >Total: {{ total | currency }}</v-col
+              >
+            </v-row>
+            <br />
+            <v-btn
+              @click="generateOrderAction(catalogue)"
+              class="mt-3"
+              :disabled="validate"
+            >
               Generar Orden
             </v-btn>
-          </div>
-        </v-card>
-      </div>
-      <Product v-model="showScheduleForm" :product="itemSelected" v-if="showScheduleForm"/>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <Product
+        v-model="showScheduleForm"
+        :product="itemSelected"
+        v-if="showScheduleForm"
+        :catalogue="catalogue"
+      />
     </v-col>
   </div>
 </template>
@@ -165,15 +285,19 @@ import { mapActions, mapGetters } from "vuex";
 import moment from "moment";
 
 export default {
-  comments:{
-    Product
+  comments: {
+    Product,
   },
   data: () => ({
+    totalItems: 0,
     itemSelected: null,
     showScheduleForm: false,
     singleSelect: false,
     selected: [],
+    singleSelectRange: false,
+    selectedRange: [],
     description: [],
+    number: 1,
     headers: [
       { text: "Imagen", value: "images", align: "center", sortable: false },
       {
@@ -196,7 +320,7 @@ export default {
       },
       {
         text: "Cantidad Mínima de Pedido(B)",
-        value: "quantity_group",
+        value: "quantity",
         align: "center",
         sortable: false,
       },
@@ -207,18 +331,38 @@ export default {
         sortable: false,
       },
       {
-        text: "Unidad Medida",
-        value: "type_group",
+        text: "Cantidad de Pedido",
+        value: "quantity_order",
+        align: "center",
+        sortable: false,
+      },
+    ],
+    headersItem: [
+      { text: "Imagen", value: "images", align: "center", sortable: false },
+      {
+        text: "Modelo",
+        value: "model",
+        align: "center",
+        sortable: false,
+      },
+      {
+        text: "Marca",
+        value: "brand",
+        align: "center",
+        sortable: false,
+      },
+      {
+        text: "Precio por cantidad de Pedido",
+        value: "ranges",
         align: "center",
         sortable: false,
       },
       {
         text: "Cantidad de Pedido",
-        value: "quantity",
+        value: "quantity_order",
         align: "center",
         sortable: false,
       },
-      { text: "Carrito", value: "cart", sortable: false, align: "center" },
     ],
   }),
   components: {
@@ -226,33 +370,62 @@ export default {
   },
   computed: {
     ...mapGetters("groupImport", ["catalogue", "cart"]),
+    total() {
+      let t = 0;
+      this.selected.forEach((element) => {
+        t += element.quantity_group * element.price_unit;
+      });
+      this.totalItems = t;
+      return t;
+    },
+    validate() {
+      if (this.totalItems < this.catalogue.minimum_investment) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   methods: {
     ...mapActions("groupImport", ["getCatalogue", "addCart"]),
-    minusFunction(item) {
-      // this.product.quantity--;
-      let productId = item.id;
-      this.catalogue.products.forEach(product => {
-        if (product.id === productId)
-        {
-          product.quantity--;
-        }
-      });
+    minusFunction(item, index) {
+      if (item.quantity_group <= item.quantity) {
+        alert(
+          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity}`
+        );
+      } else {
+        this.catalogue.products[index].quantity_group--;
+      }
     },
-    plusFunctionO(item) {
-      // this.product.quantity++;
-      console.log("test", item);
-      item.quantity++;
+    plusFunctionO(index) {
+      console.log(this.catalogue.products[index]);
+      this.catalogue.products[index].quantity_group++;
     },
+
+    minusFunctionR(item, index) {
+      if (item.quantity <= 1) {
+        alert(
+          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity}`
+        );
+      } else {
+        this.catalogue.productRanges[index].quantity--;
+      }
+    },
+    plusFunctionR(index) {
+      console.log(this.catalogue.productRanges[index]);
+      this.catalogue.productRanges[index].quantity = 0
+      ;
+    },
+
     reserve() {
       this.loading = true;
       setTimeout(() => (this.loading = false), 2000);
     },
-    prueba(value){
+    prueba(value) {
       this.itemSelected = value;
       this.showScheduleForm = true;
       console.log(this.itemSelected);
-    }
+    },
   },
   mounted() {
     this.getCatalogue(this.$route.params.id);
@@ -260,7 +433,6 @@ export default {
   filters: {
     currency: function (value) {
       return parseFloat(value).toFixed(2);
-      moment(element.arrival_date).format("YYYY-MM-DD");
     },
     date: function (value) {
       return moment(value).format("YYYY-MM-DD");
