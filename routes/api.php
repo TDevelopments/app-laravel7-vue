@@ -12,6 +12,9 @@ use App\Http\Controllers\Api\v1\ArrivalController;
 use App\Http\Controllers\Api\v1\ProductRangeController;
 use App\Http\Controllers\Api\v1\RangeController;
 use App\Http\Controllers\Api\v1\ImageController;
+use App\Http\Controllers\Api\v1\OrderController;
+use App\Http\Controllers\Api\v1\OrderDetailController;
+use App\Http\Controllers\Api\v1\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
