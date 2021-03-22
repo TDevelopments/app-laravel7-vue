@@ -1,4 +1,5 @@
 import axios from "axios";
+import Vue from "vue";
 import router from "../../router";
 
 export async function getCatalogues({ commit, getters }) {
@@ -16,25 +17,37 @@ export async function getCatalogues({ commit, getters }) {
   }
 }
 
-export async function getCatalogue({ commit, getters, dispatch }, id) {
+export async function getCatalogue({ commit, getters, dispatch, state }, id) {
   if (!getters.catalogues.length) {
     await dispatch("getCatalogues");
   }
   let catalogue = {};
 
-  getters.catalogues.forEach(element => {
+  getters.catalogues.forEach((element, indexCatalogue) => {
     if (element.id == id) {
       catalogue = element;
 
-      element.products.forEach(product => {
-        product.quantity = product.quantity_group;
+      element.products.forEach((product, index) => {
+        Vue.set(state.catalogues[indexCatalogue].products[index], 'quantity', product.quantity_group)
       })
 
-      element.productRanges.forEach(productRange => {
-        productRange.quantity = 1;
+      element.productRanges.forEach((productRange, index) => {
+        var minRange = 1;
+        if (productRange.ranges.length != 0) {
+          minRange = productRange.ranges[0].min;
+          productRange.ranges.forEach((range, index) => {
+            if (range.min < minRange) {
+              minRange = range.min;
+            }
+          })
+        }
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'quantity', minRange)
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'min', minRange)
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'total', 0)
       })
     }
   });
+  console.log(catalogue.products);
   console.log(catalogue.productRanges);
   commit("setCatalogue", catalogue);
 }

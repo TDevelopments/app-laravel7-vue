@@ -86,114 +86,137 @@
           </v-card-text>
         </v-col>
       </v-row>
-      <v-avatar></v-avatar>
       <v-row>
         <v-col cols="12" sm="12" md="9" lg="9">
-          <v-data-table
-            v-model="selected"
-            :single-select="singleSelect"
-            show-select
-            :headers="headers"
-            :items="catalogue.products"
-            hide-default-footer
-            class="elevation-1"
-            @click:row="prueba"
+          <v-tabs
+            fixed-tabs
+            background-color="#546E7A"
+            v-model="currentTab"
+            dark
           >
-            <template v-slot:[`item.images`]="{ item }">
-              <v-img
-                v-if="item.images == null || item.images.length == 0"
-                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                max-width="150"
-                contain
-                class="m-1"
-              />
-              <v-img
-                v-else
-                contain
-                :src="item.images[0].path"
-                max-width="150"
-                class="text-center align-center"
-              />
-            </template>
-            <template v-slot:[`item.quantity`]="{ item }">
-              {{
-                item.quantity +
-                " " +
-                (item.type_group == "units"
-                  ? "unidades"
-                  : item.quantity == 1
-                  ? "caja"
-                  : "cajas")
-              }}
-            </template>
-            <template v-slot:[`item.quantity_order`]="{ item, index }">
-              <v-text-field
-                class="m-3"
-                solo
-                dense
-                append-outer-icon="mdi-plus"
-                prepend-icon="mdi-minus"
-                @click:append-outer="plusFunctionO(index)"
-                @click:prepend="minusFunction(item, index)"
-                readonly
-                v-model="item.quantity_group"
-                hide-details
-              ></v-text-field>
-            </template>
-            <template v-slot:[`item.cart`]="{ item }">
-              <v-row>
-                <v-icon small class="mx-auto" color="#D6B331" @click="prueba">
-                  mdi-cart
-                </v-icon>
-              </v-row>
-            </template>
-          </v-data-table>
-          <v-data-table
-            v-model="selectedRange"
-            :single-select="singleSelectRange"
-            show-select
-            :headers="headersItem"
-            :items="catalogue.productRanges"
-            hide-default-footer
-            class="elevation-1 mt-3"
-            @click:row="prueba"
-          >
-            <template v-slot:[`item.images`]="{ item }">
-              <v-img
-                v-if="item.images == null || item.images.length == 0"
-                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                max-width="150"
-                contain
-                class="m-1"
-              />
-              <v-img
-                v-else
-                contain
-                :src="item.images[0].path"
-                max-width="150"
-                class="text-center align-center"
-              />
-            </template>
-            <template v-slot:[`item.ranges`]="{ item, index }">
-              <div v-for="range in item.ranges" :key="range.id">
-                <v-icon>mdi-unfold-more-vertical</v-icon> De {{ range.min }} a
-                {{ range.max }} el precio es {{ range.price }}
-              </div>
-            </template>
-            <template v-slot:[`item.quantity_order`]="{ item, index }">
-              <v-text-field
-                class="m-3"
-                solo
-                dense
-                append-outer-icon="mdi-plus"
-                prepend-icon="mdi-minus"
-                @click:append-outer="plusFunctionR(index)"
-                @click:prepend="minusFunctionR(item, index)"
-                readonly
-                hide-details
-              ></v-text-field>
-            </template>
-          </v-data-table>
+            <v-tab> Productos por conjunto </v-tab>
+            <v-tab> Productos por rango </v-tab>
+          </v-tabs>
+          <v-tabs-items v-model="currentTab">
+            <v-tab-item>
+              <v-data-table
+                v-model="selected"
+                :single-select="singleSelect"
+                show-select
+                :headers="headers"
+                :items="catalogue.products"
+                hide-default-footer
+                class="elevation-1"
+                @click:row="prueba"
+                disable-paginati
+              >
+                <template v-slot:[`item.images`]="{ item }">
+                  <v-img
+                    v-if="item.images == null || item.images.length == 0"
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="150"
+                    contain
+                    class="m-1"
+                  />
+                  <v-img
+                    v-else
+                    contain
+                    :src="item.images[0].path"
+                    max-width="150"
+                    class="text-center align-center"
+                  />
+                </template>
+                <template v-slot:[`item.quantity_group`]="{ item }">
+                  {{ item.quantity_group + " " }}
+                  <br />
+                  {{
+                    item.type_group == "units"
+                      ? "unidades"
+                      : item.quantity_group == 1
+                      ? "caja"
+                      : "cajas"
+                  }}
+                </template>
+                <template v-slot:[`item.quantity_order`]="{ item, index }">
+                  <v-text-field
+                    class="m-3"
+                    solo
+                    dense
+                    append-outer-icon="mdi-plus"
+                    prepend-icon="mdi-minus"
+                    @click:append-outer="plusFunctionO(index)"
+                    @click:prepend="minusFunction(item, index)"
+                    readonly
+                    v-model="item.quantity"
+                    hide-details
+                  ></v-text-field>
+                </template>
+                <template v-slot:[`item.cart`]="{ item }">
+                  <v-row>
+                    <v-icon
+                      small
+                      class="mx-auto"
+                      color="#D6B331"
+                      @click="prueba"
+                    >
+                      mdi-cart
+                    </v-icon>
+                  </v-row>
+                </template>
+              </v-data-table>
+            </v-tab-item>
+            <v-tab-item>
+              <v-data-table
+                v-model="selectedRange"
+                :single-select="singleSelectRange"
+                show-select
+                :headers="headersItem"
+                :items="catalogue.productRanges"
+                hide-default-footer
+                disable-pagination
+                class="elevation-1 mt-3"
+                @click:row="prueba"
+              >
+                <template v-slot:[`item.images`]="{ item }">
+                  <v-img
+                    v-if="item.images == null || item.images.length == 0"
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="150"
+                    contain
+                    class="m-1"
+                  />
+                  <v-img
+                    v-else
+                    contain
+                    :src="item.images[0].path"
+                    max-width="150"
+                    class="text-center align-center"
+                  />
+                </template>
+                <template v-slot:[`item.ranges`]="{ item, index }">
+                  <div v-for="range in item.ranges" :key="range.id">
+                    <v-icon>mdi-unfold-more-vertical</v-icon> De
+                    {{ range.min }} a {{ range.max }} el precio es
+                    {{ range.price }}
+                  </div>
+                </template>
+                <template v-slot:[`item.quantity_order`]="{ item, index }">
+                  <v-text-field
+                    class="m-3"
+                    solo
+                    dense
+                    append-outer-icon="mdi-plus"
+                    prepend-icon="mdi-minus"
+                    @click:append-outer="plusFunctionR(index)"
+                    @click:prepend="minusFunctionR(item, index)"
+                    readonly
+                    v-model="item.quantity"
+                    hide-details
+                  ></v-text-field>
+                </template>
+              </v-data-table>
+            </v-tab-item>
+          </v-tabs-items>
         </v-col>
         <v-col cols="12" sm="12" md="3" lg="3">
           <v-card>
@@ -207,8 +230,8 @@
             </p>
             <v-divider></v-divider>
             <v-card-text
-              v-for="product in selected"
-              :key="product.id"
+              v-for="(product, index) in selected"
+              :key="'A' + index"
               class="py-0"
             >
               <v-row>
@@ -234,13 +257,11 @@
                   Modelo:{{ product.model }}
                   <br />
                   Pago:{{ catalogue.coin == "soles" ? "S/." : "$"
-                  }}{{
-                    (product.quantity_group * product.price_unit) | currency
-                  }}
+                  }}{{ (product.quantity * product.price_unit) | currency }}
                   <br />
                   Cantidad
                   {{
-                    product.quantity_group +
+                    product.quantity +
                     " " +
                     (product.type_group == "units"
                       ? "unidades"
@@ -252,10 +273,66 @@
                 </v-col>
               </v-row>
             </v-card-text>
+
+            <v-card-text
+              v-for="(productRange, index) in selectedRange"
+              :key="index"
+              class="py-0"
+            >
+              <v-row>
+                <v-col cols="4">
+                  <v-img
+                    v-if="
+                      productRange.images == null ||
+                      productRange.images.length == 0
+                    "
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="75"
+                    height="50"
+                    contain
+                    class="m-1"
+                  />
+                  <v-img
+                    v-else
+                    contain
+                    :src="productRange.images[0].path"
+                    max-width="75"
+                    height="50"
+                    class="text-center align-center"
+                  />
+                </v-col>
+                <v-col cols="8">
+                  Modelo:{{ productRange.model }}
+                  <br />
+                  Pago:{{ catalogue.coin == "soles" ? "S/." : "$" }}
+                  {{ productRange.total }}
+                  <br />
+                  Cantidad
+                  {{
+                    productRange.quantity +
+                    " " +
+                    (productRange.quantity == 1 ? "Unidad" : "Unidades")
+                  }}
+                  <br />
+                </v-col>
+              </v-row>
+            </v-card-text>
             <v-row class="text-right mx-2">
               <v-spacer></v-spacer>
               <v-col class="text-subtitle-1"
                 >Total: {{ total | currency }}</v-col
+              >
+            </v-row>
+            <v-row class="text-right mx-2">
+              <v-spacer></v-spacer>
+              <v-col class="text-subtitle-1"
+                >Total: {{ totalRange | currency }}</v-col
+              >
+            </v-row>
+            <v-row class="text-right mx-2">
+              <v-spacer></v-spacer>
+              <v-col class="text-subtitle-1"
+                >Total: {{ totalGeneral | currency }}</v-col
               >
             </v-row>
             <br />
@@ -269,7 +346,6 @@
           </v-card>
         </v-col>
       </v-row>
-
       <Product
         v-model="showScheduleForm"
         :product="itemSelected"
@@ -298,6 +374,7 @@ export default {
     selectedRange: [],
     description: [],
     number: 1,
+    currentTab: 0,
     headers: [
       { text: "Imagen", value: "images", align: "center", sortable: false },
       {
@@ -320,7 +397,7 @@ export default {
       },
       {
         text: "Cantidad Mínima de Pedido(B)",
-        value: "quantity",
+        value: "quantity_group",
         align: "center",
         sortable: false,
       },
@@ -364,20 +441,23 @@ export default {
         sortable: false,
       },
     ],
+    catalogueGet: null,
   }),
   components: {
     Product,
   },
   computed: {
     ...mapGetters("groupImport", ["catalogue", "cart"]),
+
     total() {
       let t = 0;
       this.selected.forEach((element) => {
-        t += element.quantity_group * element.price_unit;
+        t += element.quantity * element.price_unit;
       });
-      this.totalItems = t;
+      this.totalItems += t;
       return t;
     },
+
     validate() {
       if (this.totalItems < this.catalogue.minimum_investment) {
         return true;
@@ -385,27 +465,61 @@ export default {
         return false;
       }
     },
+
+    totalRange() {
+      let t = 0;
+      let q = 0;
+      let p = 0;
+      let tot = 0;
+      this.selectedRange.forEach((element) => {
+        q = element.quantity;
+        if (element.ranges.length != 0) {
+          element.ranges.forEach((range) => {
+            if ((q >= range.min) & (q <= range.max)) {
+              t = range.price * q;
+            }
+            p = range.price;
+            console.log(range.price);
+          });
+        }
+
+        element.total = t;
+
+        if (element.total == 0) {
+          element.total = p * element.quantity;
+        }
+
+        tot += element.total;
+      });
+      return tot;
+    },
+
+    totalGeneral() {
+      let t = this.total + this.totalRange;
+      return t;
+    },
   },
   methods: {
-    ...mapActions("groupImport", ["getCatalogue", "addCart"]),
+    ...mapActions("groupImport", ["removeCart"]),
+    ...mapActions("groupImport", ["getCatalogue", "addCart", "setCart"]),
     minusFunction(item, index) {
-      if (item.quantity_group <= item.quantity) {
+      if (item.quantity <= item.quantity_group) {
         alert(
-          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity}`
+          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity_group}`
         );
       } else {
-        this.catalogue.products[index].quantity_group--;
+        this.catalogue.products[index].quantity--;
       }
     },
     plusFunctionO(index) {
       console.log(this.catalogue.products[index]);
-      this.catalogue.products[index].quantity_group++;
+      this.catalogue.products[index].quantity++;
     },
 
     minusFunctionR(item, index) {
-      if (item.quantity <= 1) {
+      if (item.quantity <= item.min) {
         alert(
-          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity}`
+          `Lo sentimos, la candidad minima de de compra de este producto es ${item.min}`
         );
       } else {
         this.catalogue.productRanges[index].quantity--;
@@ -413,8 +527,7 @@ export default {
     },
     plusFunctionR(index) {
       console.log(this.catalogue.productRanges[index]);
-      this.catalogue.productRanges[index].quantity = 0
-      ;
+      this.catalogue.productRanges[index].quantity++;
     },
 
     reserve() {
@@ -425,6 +538,10 @@ export default {
       this.itemSelected = value;
       this.showScheduleForm = true;
       console.log(this.itemSelected);
+    },
+    mas() {
+      this.catalogue.productRanges[1].quantity++;
+      console.log(this.catalogue.productRanges[1].quantity);
     },
   },
   mounted() {

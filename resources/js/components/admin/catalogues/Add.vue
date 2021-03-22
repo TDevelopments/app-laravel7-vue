@@ -202,8 +202,32 @@
                       Ciudad
                       <v-select
                         v-model="input.city"
-                        :items="states"
-                        menu-props="auto"
+                        cities: [
+      "Amazonas",
+      "Ancash",
+      "Apurímac",
+      "Arequipa",
+      "Ayacucho",
+      "Cajamarca",
+      "Cusco",
+      "Huancavelica",
+      "Huánuco",
+      "Ica",
+      "Junín",
+      "La Libertad",
+      "Lambayeque",
+      "Lima",
+      "Loreto",
+      "Madre de Dios",
+      "Moquegua",
+      "Pasco",
+      "Piura",
+      "Puno",
+      "San Martín",
+      "Tacna",
+      "Tumbes",
+      "Ucayali",
+    ],="auto"
                         hide-details
                         prepend-inner-icon="mdi-map"
                         solo
@@ -292,12 +316,37 @@ export default {
       second_payment: null,
       date_second_payment: new Date().toISOString().substr(0, 10),
       coin: "soles",
-      is_available: true,
+      is_available: false,
     },
     coins: ["soles", "dolares"],
     select: null,
     url: null,
-    states: ["Arequipa", "Lima"],
+    cities: [
+      "Amazonas",
+      "Ancash",
+      "Apurímac",
+      "Arequipa",
+      "Ayacucho",
+      "Cajamarca",
+      "Cusco",
+      "Huancavelica",
+      "Huánuco",
+      "Ica",
+      "Junín",
+      "La Libertad",
+      "Lambayeque",
+      "Lima",
+      "Loreto",
+      "Madre de Dios",
+      "Moquegua",
+      "Pasco",
+      "Piura",
+      "Puno",
+      "San Martín",
+      "Tacna",
+      "Tumbes",
+      "Ucayali",
+    ],
     iconCoin: "S/ .",
   }),
   watch: {
@@ -331,8 +380,7 @@ export default {
         .then((response) => {
           this.addArrivals(response.data.data.id);
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     addArrivals(id) {
       axios
@@ -349,8 +397,7 @@ export default {
         .then((response) => {
           this.$router.push({ name: "listCatalogue" });
         })
-        .catch((error) => {
-        });
+        .catch((error) => {});
     },
     add() {
       this.inputs.push({

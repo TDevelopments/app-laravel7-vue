@@ -44,10 +44,10 @@
             </v-card-text>
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
-              Primera Cuota: {{ item.first_payment }}
+              Primera Cuota:
               <v-chip class="mr-2">
                 <v-icon left> mdi-percent </v-icon>
-                {{ item.first_payment * 100 }}
+                {{ item.first_payment }}
               </v-chip>
             </v-card-text>
             <v-card-text class="font-weight-medium pb-0 pt-1">
@@ -55,7 +55,7 @@
               Segunda Cuota:
               <v-chip class="mr-2">
                 <v-icon left> mdi-percent </v-icon>
-                {{ item.second_payment * 100 }}
+                {{ item.second_payment }}
               </v-chip>
             </v-card-text>
             <v-card-text class="font-weight-medium pb-0 pt-1">

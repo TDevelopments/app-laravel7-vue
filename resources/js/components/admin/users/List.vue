@@ -48,7 +48,7 @@
         </p>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small @click="editItem(item)" color="black">
+        <v-icon small @click="editItem(item)" color="#D6B331">
           mdi-pencil
         </v-icon>
         <v-icon small @click="deleteItem(item)" color="black">
@@ -140,9 +140,10 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete(`/api/user/${this.idDelete}`)
+        .delete(`/api/v1/users/${this.idDelete}`)
         .then((response) => {
           console.log(response);
+          this.getList();
           this.closeDelete();
         })
         .catch((error) => {});

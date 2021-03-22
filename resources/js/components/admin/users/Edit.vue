@@ -42,7 +42,7 @@
                     prepend-inner-icon="mdi-shield-account"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="6">
+                <!-- <v-col cols="12" sm="6" md="6">
                   Contraseña (*)
                   <v-text-field v-model="user.password" solo></v-text-field>
                 </v-col>
@@ -52,7 +52,7 @@
                     v-model="user.password_confirmation"
                     solo
                   ></v-text-field>
-                </v-col>
+                </v-col> -->
                 <v-col cols="12" sm="6" md="6">
                   Dirección (*)
                   <v-text-field v-model="user.address" solo></v-text-field>
@@ -181,21 +181,30 @@ export default {
       "Ucayali",
     ],
   }),
-  mounted() {},
+  mounted() {
+    this.getUser();
+  },
   methods: {
     validate() {
-      this.addUser();
+      this.updateUser();
     },
-    addUser() {
+    getUser() {
       axios
-        .post("/api/v1/users", this.user, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        })
+        .get(`/api/v1/users/${this.$route.params.id}`)
         .then((response) => {
-          this.$router.replace({name: "listUser"})
+          console.log(response);
+          this.user = response.data.data;
+          this.user.roles = response.data.data.roles[0].id;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    updateUser() {
+      axios
+        .put(`/api/v1/users/${this.$route.params.id}`, this.user)
+        .then((response) => {
+          this.$router.replace({name: "listUser"});
         })
         .catch((error) => {
           console.log(error);
