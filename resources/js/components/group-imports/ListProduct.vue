@@ -394,19 +394,47 @@
               >
             </v-row>
             <br />
-            <v-btn
-              @click="
-                generateOrder({
-                  id: catalogue.id,
-                  products: selected,
-                  product_ranges: selectedRange,
-                })
-              "
-              class="mt-3"
-              :disabled="validate"
-            >
-              Generar Orden
-            </v-btn>
+            <v-dialog v-model="dialog" persistent max-width="290">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  v-bind="attrs"
+                  v-on="on"
+                  class="mt-3"
+                  :disabled="validate"
+                >
+                  Generar Orden
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline"> Generar Orden </v-card-title>
+                <v-card-text>
+                  Antes de generar esta orden, tienes que estar seguro de que
+                  los datos con los que te registraste son validos, ya que
+                  mediante estos estaremos generando una orden de compra.
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="dialog = false">
+                    Cancelar
+                  </v-btn>
+                  <v-btn
+                    color="green darken-1"
+                    text
+                    @click="
+                      generateOrder({
+                        id: catalogue.id,
+                        products: selected,
+                        product_ranges: selectedRange,
+                      }),
+                      dialog = false,
+                      alert = false
+                    "
+                  >
+                    Generar
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card>
         </v-col>
       </v-row>
@@ -416,6 +444,9 @@
         v-if="showScheduleForm"
         :catalogue="catalogue"
       />
+      <v-alert dense text type="success" :hidden="alert" dismissible>
+        Se genero correctamente su orden      
+      </v-alert>
     </v-col>
   </div>
 </template>
@@ -429,6 +460,7 @@ export default {
     Product,
   },
   data: () => ({
+    dialog: false,
     baseURL: "",
     totalItems: 0,
     itemSelected: null,
@@ -507,6 +539,7 @@ export default {
       },
     ],
     catalogueGet: null,
+    alert: true,
   }),
   components: {
     Product,

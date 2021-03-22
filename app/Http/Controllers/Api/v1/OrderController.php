@@ -25,7 +25,7 @@ class OrderController extends Controller
 
     public function __construct(Order $order, Catalogue $catalogue, Product $product, OrderDetail $orderDetail, ProductRange $productRange, Range $range)
     {
-        $this->middleware('api.admin')->except(['create']);
+        $this->middleware('api.admin')->except(['store']);
         $this->order = $order;
         $this->catalogue = $catalogue;
         $this->product = $product;
