@@ -41,6 +41,16 @@
                     solo
                     prepend-inner-icon="mdi-shield-account"
                   ></v-select>
+                  <v-combobox
+                    v-model="user.roles"
+                    :items="rol_user"
+                    hide-selected
+                    label="Add some tags"
+                    multiple
+                    persistent-hint
+                    small-chips
+                  >
+                  </v-combobox>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Contraseña (*)
@@ -195,7 +205,7 @@ export default {
           },
         })
         .then((response) => {
-          this.$router.replace({name: "listUser"})
+          this.$router.replace({ name: "listUser" });
         })
         .catch((error) => {
           console.log(error);

@@ -134,9 +134,14 @@
             background-color="#546E7A"
             v-model="currentTab"
             dark
+            show-arrows
           >
-            <v-tab v-if="catalogue.products.length != 0"> Productos por conjunto </v-tab>
-            <v-tab v-if="catalogue.productRanges.length != 0"> Productos por rango </v-tab>
+            <v-tab v-if="catalogue.products.length != 0">
+              Productos por conjunto
+            </v-tab>
+            <v-tab v-if="catalogue.productRanges.length != 0">
+              Productos por rango
+            </v-tab>
           </v-tabs>
           <v-tabs-items v-model="currentTab">
             <v-tab-item>
@@ -152,6 +157,16 @@
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
+                <template v-slot:top>
+                  <v-toolbar flat>
+                    <v-toolbar-title>Productos</v-toolbar-title>
+                  </v-toolbar>
+                </template>
+                <template v-slot:headers>
+                  <tr>
+                    HOla Mundo
+                  </tr>
+                </template>
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
                     v-if="item.images == null || item.images.length == 0"
@@ -618,7 +633,7 @@ export default {
 };
 </script>
 <style scoped>
-.mouse{
+.mouse {
   cursor: pointer;
 }
 .m-page {
