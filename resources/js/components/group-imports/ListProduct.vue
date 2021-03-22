@@ -134,7 +134,6 @@
             background-color="#546E7A"
             v-model="currentTab"
             dark
-            show-arrows
           >
             <v-tab v-if="catalogue.products.length != 0">
               Productos por conjunto
@@ -157,16 +156,6 @@
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
-                <template v-slot:top>
-                  <v-toolbar flat>
-                    <v-toolbar-title>Productos</v-toolbar-title>
-                  </v-toolbar>
-                </template>
-                <template v-slot:headers>
-                  <tr>
-                    HOla Mundo
-                  </tr>
-                </template>
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
                     v-if="item.images == null || item.images.length == 0"
@@ -186,13 +175,7 @@
                 <template v-slot:[`item.quantity_group`]="{ item }">
                   {{ item.quantity_group + " " }}
                   <br />
-                  {{
-                    item.type_group == "units"
-                      ? "unidades"
-                      : item.quantity_group == 1
-                      ? "caja"
-                      : "cajas"
-                  }}
+                  {{ item.type_group }}
                 </template>
                 <template v-slot:[`item.quantity_order`]="{ item, index }">
                   <v-text-field
@@ -318,15 +301,7 @@
                   }}{{ (product.quantity * product.price_unit) | currency }}
                   <br />
                   Cantidad
-                  {{
-                    product.quantity +
-                      " " +
-                      (product.type_group == "units"
-                        ? "unidades"
-                        : product.quantity == 1
-                        ? "caja"
-                        : "cajas")
-                  }}
+                  {{ product.quantity + " " + product.type_group }}
                   <br />
                 </v-col>
               </v-row>

@@ -172,6 +172,38 @@ v<template>
                 </v-menu>
               </v-col>
             </v-row>
+            <!-- <v-row>
+              <v-col cols="12" sm="12" md="8" lg="6">
+                <p>Detalles del producto</p>
+                <v-card-text>
+                  <v-combobox
+                    v-model="catalogue.description"
+                    chips
+                    clearable
+                    label="Inserta los detalles del producto"
+                    multiple
+                    solo
+                  >
+                    <template
+                      v-slot:selection="{ attrs, item, select, selected }"
+                    >
+                      <v-chip
+                        v-bind="attrs"
+                        :input-value="selected"
+                        close
+                        label
+                        class="my-2"
+                        @click="select"
+                        @click:close="remove(item)"
+                        color="primary"
+                      >
+                        {{ item }}
+                      </v-chip>
+                    </template>
+                  </v-combobox>
+                </v-card-text>
+              </v-col>
+            </v-row> -->
           </v-col>
         </v-form>
       </v-card-text>
@@ -291,7 +323,7 @@ export default {
       date_first_payment: "",
       second_payment: "",
       date_second_payment: "",
-      coins: "",
+      coins: ""
     },
     select: null,
     url: null,
@@ -299,27 +331,27 @@ export default {
     idDelete: [],
     coins: ["soles", "dolares"],
     states: ["Arequipa", "Lima"],
-    iconCoin: "",
+    iconCoin: ""
   }),
   mounted() {
     this.getCatalogue();
     this.typeCoin();
   },
   computed: {
-    productQG: function () {
+    productQG: function() {
       // `this` points to the vm instance
       this.product.price_group =
         this.product.price_unit * this.product.quantity_group;
       return this.product.price_group;
-    },
+    }
   },
   watch: {
-    "catalogue.first_payment": function (val) {
+    "catalogue.first_payment": function(val) {
       this.catalogue.second_payment = parseInt(100 - val).toFixed();
     },
-    "catalogue.second_payment": function (val) {
+    "catalogue.second_payment": function(val) {
       this.catalogue.first_payment = parseInt(100 - val).toFixed();
-    },
+    }
   },
   methods: {
     validate() {},
@@ -328,10 +360,10 @@ export default {
         .get(`/api/v1/catalogues/${this.$route.params.id}`, {
           headers: {
             Accept: "application/json",
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         })
-        .then((response) => {
+        .then(response => {
           this.catalogue = response.data.data;
           (this.catalogue.quota_date = moment(
             response.data.data.quota_date
@@ -342,17 +374,17 @@ export default {
             (this.catalogue.date_second_payment = moment(
               response.data.data.date_second_payment
             ).format("YYYY-MM-DD")),
-            this.catalogue.arrivals.forEach((element) => {
+            this.catalogue.arrivals.forEach(element => {
               this.arrivalsDates.push({
                 id: element.id,
                 calendar: false,
                 city: element.city,
                 new: true,
-                arrival_date: moment(element.arrival_date).format("YYYY-MM-DD"),
+                arrival_date: moment(element.arrival_date).format("YYYY-MM-DD")
               });
             });
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     addArrivals(id) {
@@ -363,34 +395,34 @@ export default {
           {
             headers: {
               Accept: "application/json",
-              "Content-Type": "application/json",
-            },
+              "Content-Type": "application/json"
+            }
           }
         )
-        .then((response) => {
+        .then(response => {
           this.$router.replace({ name: "listCatalogue" });
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     deleteArrivals() {
       axios
         .delete("/api/v1/arrivals", {
           headers: {
-            Accept: "application/json",
+            Accept: "application/json"
           },
           data: {
-            items: this.idDelete,
-          },
+            items: this.idDelete
+          }
         })
-        .then((response) => {})
-        .catch((error) => {});
+        .then(response => {})
+        .catch(error => {});
     },
     add() {
       this.arrivalsDates.push({
         calendar: "",
         city: "",
         arrival_date: "",
-        new: false,
+        new: false
       });
     },
 
@@ -399,10 +431,10 @@ export default {
         .put(`/api/v1/catalogues/${this.$route.params.id}`, this.catalogue, {
           headers: {
             Accept: "application/json",
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         })
-        .then((response) => {
+        .then(response => {
           if (this.idDelete.length != 0) {
             this.deleteArrivals();
             this.addArrivals(response.data.data.id);
@@ -410,7 +442,7 @@ export default {
             this.addArrivals(response.data.data.id);
           }
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     deleteRow(index, id) {
       this.arrivalsDates.splice(index, 1);
@@ -419,7 +451,7 @@ export default {
     typeCoin() {
       if (this.catalogue.coin == "soles") this.iconCoin = "S/.";
       else this.iconCoin = "$";
-    },
-  },
+    }
+  }
 };
 </script>
