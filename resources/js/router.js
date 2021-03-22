@@ -61,28 +61,28 @@ export default new Router({
       component: Welcome
     },
     {
-      path: "/importaciones-grupales",
+      path: "/importaciones",
       name: "group-import",
-      redirect: "/importaciones-grupales/catalogue-available",
+      redirect: "/importaciones/catalogos",
       component: GroupImport,
       children: [
         {
-          path: "/importaciones-grupales/catalogue-available",
+          path: "/importaciones/catalogos",
           name: "homeGroupImport",
           component: HomeGroupImport
         },
         {
-          path: "/importaciones-grupales/catalogue-available/:id/",
+          path: "/importaciones/catalogos/:id/",
           name: "listProductforCatalogue",
           component: ListProductCatalogue
         },
         {
-          path: "/importaciones-grupales/catalogue-available/:id/:type/:sku",
+          path: "/importaciones/catalogos/:id/:type/:sku",
           name: "ProductDetail",
           component: ProductDetail
         },
         {
-          path: "/importaciones-grupales/cart",
+          path: "/importaciones/cart",
           name: "cartGroupImport",
           component: CartGroupImport
         },
