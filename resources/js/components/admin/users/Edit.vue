@@ -2,7 +2,7 @@
   <v-col>
     <v-card flat>
       <v-card-text>
-        <h3>Añadir Nuevo Usuario</h3>
+        <h3>Editar Nuevo Usuario</h3>
         <p>(*) Campos Obligatorios</p>
         <v-divider></v-divider>
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -31,16 +31,16 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Rol de Usuario
-                  <v-select
-                    v-model="user.roles"
+                  <v-combobox
+                    v-model="roles"
                     :items="rol_user"
-                    item-text="name"
-                    item-value="id"
-                    menu-props="auto"
-                    solo-details
+                    hide-selected
+                    multiple
+                    persistent-hint
+                    small-chips
                     solo
                     prepend-inner-icon="mdi-shield-account"
-                  ></v-select>
+                  />
                 </v-col>
                 <!-- <v-col cols="12" sm="6" md="6">
                   Contraseña (*)
@@ -132,6 +132,7 @@
 import axios from "axios";
 export default {
   data: () => ({
+    roles: [],
     gender: [
       {
         name: "Masculino",
@@ -142,16 +143,7 @@ export default {
         send: "female",
       },
     ],
-    rol_user: [
-      {
-        name: "Administrador",
-        id: 1,
-      },
-      {
-        name: "Cliente",
-        id: 2,
-      },
-    ],
+    rol_user: ["admin", "user"],
     valid: true,
     user: {},
     cities: [
@@ -194,17 +186,20 @@ export default {
         .then((response) => {
           console.log(response);
           this.user = response.data.data;
-          this.user.roles = response.data.data.roles[0].id;
+          response.data.data.roles.forEach((element, index) => {
+            this.roles.push(element.name);
+          });
         })
         .catch((error) => {
           console.log(error);
         });
     },
     updateUser() {
+      console.log(this.user.roles);
       axios
-        .put(`/api/v1/users/${this.$route.params.id}`, this.user)
+        .put(`/api/v1/users/${this.$route.params.id}`, {...this.user, roles: this.roles})
         .then((response) => {
-          this.$router.replace({name: "listUser"});
+          this.$router.replace({ name: "listUser" });
         })
         .catch((error) => {
           console.log(error);

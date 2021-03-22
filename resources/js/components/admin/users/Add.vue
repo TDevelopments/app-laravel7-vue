@@ -31,24 +31,17 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Rol de Usuario
-                  <v-select
-                    v-model="user.roles"
-                    :items="rol_user"
-                    item-text="name"
-                    item-value="id"
-                    menu-props="auto"
-                    solo-details
-                    solo
-                    prepend-inner-icon="mdi-shield-account"
-                  ></v-select>
                   <v-combobox
                     v-model="user.roles"
                     :items="rol_user"
+                    item-text="name"
+                    item-value="send"
                     hide-selected
-                    label="Add some tags"
                     multiple
                     persistent-hint
                     small-chips
+                    solo
+                    prepend-inner-icon="mdi-shield-account"
                   >
                   </v-combobox>
                 </v-col>
@@ -152,16 +145,7 @@ export default {
         send: "female",
       },
     ],
-    rol_user: [
-      {
-        name: "Administrador",
-        id: 1,
-      },
-      {
-        name: "Cliente",
-        id: 2,
-      },
-    ],
+    rol_user: ["admin","user"],
     valid: true,
     user: {},
     cities: [
@@ -198,14 +182,10 @@ export default {
     },
     addUser() {
       axios
-        .post("/api/v1/users", this.user, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        })
+        .post("/api/v1/users", this.user)
         .then((response) => {
           this.$router.replace({ name: "listUser" });
+          console.log(response);
         })
         .catch((error) => {
           console.log(error);
