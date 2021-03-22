@@ -24,6 +24,7 @@ class Catalogue extends Model
 
     protected $fillable = [
         'name',
+        'image',
         'is_available',
         'coin',
         'quota_price',

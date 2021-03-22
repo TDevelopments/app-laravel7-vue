@@ -53,7 +53,6 @@ import CartGroupImport from "./components/group-imports/CartGroupImport";
 import UserSetting from "./components/user";
 
 export default new Router({
-  base: "/app/public",
   routes: [
     {
       path: "/",
