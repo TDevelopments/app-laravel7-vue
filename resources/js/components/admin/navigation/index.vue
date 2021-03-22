@@ -130,7 +130,7 @@
 
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn color="#1867C0" block class="text-capitalize"><v-icon class="mr-2">mdi-eye</v-icon> Ver Como Usuario </v-btn>
+          <v-btn color="#1867C0" block class="text-capitalize" @click="viewUser"><v-icon class="mr-2">mdi-eye</v-icon> Ver Como Usuario </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -173,6 +173,9 @@ export default {
     },
     sS() {
       this.module = "SellStock";
+    },
+    viewUser(){
+      this.$router.push({name: "group-import"})
     },
   },
 };

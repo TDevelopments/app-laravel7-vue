@@ -595,7 +595,7 @@ export default {
     selected: [],
     select: null,
     // Options of Types Group
-    types: ["units", "sets"],
+    types: ["unidades", "sets", "cajas"],
     // Url of Images
     urls: [],
     // Data Images(Response to peticion post save images)

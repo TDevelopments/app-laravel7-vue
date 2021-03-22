@@ -1,6 +1,6 @@
 <template>
   <div class="m-page">
-    <v-col>
+    <v-col class="mt-5">
       <h2>{{ catalogue.name }}</h2>
       <v-divider></v-divider>
       <v-row>
@@ -11,189 +11,259 @@
           />
         </v-col>
         <v-col cols="12" sm="12" md="7" lg="7">
-          <v-card-title class="pt-0">
-            Información y Condiciones
-            <v-spacer></v-spacer>
-            Moneda &nbsp;
-            <v-avatar size="40" color="#0D52D6" class="text-white">{{
-              catalogue.coin == "soles" ? "S./" : "$"
-            }}</v-avatar>
+          <v-card-title>
+            <v-row>
+              <v-col cols="12">
+                Información y Condiciones &nbsp;<strong
+                  >{{ catalogue.name }}
+                </strong>
+                <v-spacer></v-spacer>
+              </v-col>
+              <v-col cols="12">
+                Moneda &nbsp;
+                <v-avatar size="40" color="#0D52D6" class="text-white">{{
+                  catalogue.coin == "soles" ? "S./" : "$"
+                }}</v-avatar>
+              </v-col>
+            </v-row>
           </v-card-title>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El monto para separar un <strong>cupo</strong> es de:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-cash </v-icon>
-              {{ catalogue.quota_price | currency }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Monto de separación de cupo:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-cash </v-icon>
+                  {{ catalogue.quota_price | currency }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El ultimo dia para separar un <strong>cupo</strong> es:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-calendar-month </v-icon>
-              {{ catalogue.quota_date | date }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Ultimo día para la separación de cupo:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-calendar-month </v-icon>
+                  {{ catalogue.quota_date | date }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El ultimo dia para pagar el monto de separación de un
-            <strong>cupo</strong> es:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-calendar-month </v-icon>
-              {{ catalogue.quota_date | date }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Inversión minima:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-cash </v-icon>
+                  {{ catalogue.minimum_investment | currency }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El <strong>monto minimo</strong> de inversión es de:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-cash </v-icon>
-              {{ catalogue.minimum_investment | currency }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
+                Primera cuota:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-percent </v-icon>
+                  {{ catalogue.first_payment }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El porcentaje de la primera cuota es de:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-percent </v-icon>
-              {{ catalogue.first_payment * 100 }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
+                Segunda cuota:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-percent </v-icon>
+                  {{ catalogue.second_payment }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El porcentaje de la segunda cuota es de:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-percent </v-icon>
-              {{ catalogue.second_payment * 100 }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Fecha limite para el pago de la primera cuota:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-calendar-month </v-icon>
+                  {{ catalogue.date_first_payment | date }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            La fecha limite para pagar la primera cuota es:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-calendar-month </v-icon>
-              {{ catalogue.date_first_payment | date }}
-            </v-chip>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            La fecha limite para pagar la segunda cuota es:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-calendar-month </v-icon>
-              {{ catalogue.date_second_payment | date }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Fecha Limite Segunda Cuota:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-calendar-month </v-icon>
+                  {{ catalogue.date_second_payment | date }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-col>
       </v-row>
-      <v-avatar></v-avatar>
       <v-row>
         <v-col cols="12" sm="12" md="9" lg="9">
-          <v-data-table
-            v-model="selected"
-            :single-select="singleSelect"
-            show-select
-            :headers="headers"
-            :items="catalogue.products"
-            hide-default-footer
-            class="elevation-1"
-            @click:row="prueba"
+          <v-tabs
+            fixed-tabs
+            background-color="#546E7A"
+            v-model="currentTab"
+            dark
           >
-            <template v-slot:[`item.images`]="{ item }">
-              <v-img
-                v-if="item.images == null || item.images.length == 0"
-                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                max-width="150"
-                contain
-                class="m-1"
-              />
-              <v-img
-                v-else
-                contain
-                :src="item.images[0].path"
-                max-width="150"
-                class="text-center align-center"
-              />
-            </template>
-            <template v-slot:[`item.quantity`]="{ item }">
-              {{
-                item.quantity +
-                " " +
-                (item.type_group == "units"
-                  ? "unidades"
-                  : item.quantity == 1
-                  ? "caja"
-                  : "cajas")
-              }}
-            </template>
-            <template v-slot:[`item.quantity_order`]="{ item, index }">
-              <v-text-field
-                class="m-3"
-                solo
-                dense
-                append-outer-icon="mdi-plus"
-                prepend-icon="mdi-minus"
-                @click:append-outer="plusFunctionO(index)"
-                @click:prepend="minusFunction(item, index)"
-                readonly
-                v-model="item.quantity_group"
-                hide-details
-              ></v-text-field>
-            </template>
-            <template v-slot:[`item.cart`]="{ item }">
-              <v-row>
-                <v-icon small class="mx-auto" color="#D6B331" @click="prueba">
-                  mdi-cart
-                </v-icon>
-              </v-row>
-            </template>
-          </v-data-table>
-          <v-data-table
-            v-model="selectedRange"
-            :single-select="singleSelectRange"
-            show-select
-            :headers="headersItem"
-            :items="catalogue.productRanges"
-            hide-default-footer
-            class="elevation-1 mt-3"
-            @click:row="prueba"
-          >
-            <template v-slot:[`item.images`]="{ item }">
-              <v-img
-                v-if="item.images == null || item.images.length == 0"
-                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                max-width="150"
-                contain
-                class="m-1"
-              />
-              <v-img
-                v-else
-                contain
-                :src="item.images[0].path"
-                max-width="150"
-                class="text-center align-center"
-              />
-            </template>
-            <template v-slot:[`item.ranges`]="{ item, index }">
-              <div v-for="range in item.ranges" :key="range.id">
-                <v-icon>mdi-unfold-more-vertical</v-icon> De {{ range.min }} a
-                {{ range.max }} el precio es {{ range.price }}
-              </div>
-            </template>
-            <template v-slot:[`item.quantity_order`]="{ item, index }">
-              <v-text-field
-                class="m-3"
-                solo
-                dense
-                append-outer-icon="mdi-plus"
-                prepend-icon="mdi-minus"
-                @click:append-outer="plusFunctionR(index)"
-                @click:prepend="minusFunctionR(item, index)"
-                readonly
-                hide-details
-              ></v-text-field>
-            </template>
-          </v-data-table>
+            <v-tab v-if="catalogue.products.length != 0">
+              Productos por conjunto
+            </v-tab>
+            <v-tab v-if="catalogue.productRanges.length != 0">
+              Productos por rango
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items v-model="currentTab">
+            <v-tab-item>
+              <v-data-table
+                v-model="selected"
+                :single-select="singleSelect"
+                show-select
+                :headers="headers"
+                :items="catalogue.products"
+                hide-default-footer
+                class="elevation-1 mouse"
+                @click:row="prueba"
+                disable-pagination
+                v-if="catalogue.products.length != 0"
+              >
+                <template v-slot:[`item.images`]="{ item }">
+                  <v-img
+                    v-if="item.images == null || item.images.length == 0"
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="150"
+                    contain
+                    class="m-1"
+                  />
+                  <v-img
+                    v-else
+                    contain
+                    :src="item.images[0].path"
+                    max-width="150"
+                    class="text-center align-center"
+                  />
+                </template>
+                <template v-slot:[`item.quantity_group`]="{ item }">
+                  {{ item.quantity_group + " " }}
+                  <br />
+                  {{
+                    item.type_group == "units"
+                      ? "unidades"
+                      : item.quantity_group == 1
+                      ? "caja"
+                      : "cajas"
+                  }}
+                </template>
+                <template v-slot:[`item.quantity_order`]="{ item, index }">
+                  <v-text-field
+                    class="m-3"
+                    solo
+                    dense
+                    append-outer-icon="mdi-plus"
+                    prepend-icon="mdi-minus"
+                    @click:append-outer="plusFunctionO(index)"
+                    @click:prepend="minusFunction(item, index)"
+                    readonly
+                    v-model="item.quantity"
+                    hide-details
+                  ></v-text-field>
+                </template>
+                <template v-slot:[`item.cart`]="{ item }">
+                  <v-row>
+                    <v-icon
+                      small
+                      class="mx-auto"
+                      color="#D6B331"
+                      @click="prueba"
+                    >
+                      mdi-cart
+                    </v-icon>
+                  </v-row>
+                </template>
+              </v-data-table>
+            </v-tab-item>
+            <v-tab-item>
+              <v-data-table
+                v-model="selectedRange"
+                :single-select="singleSelectRange"
+                show-select
+                :headers="headersItem"
+                :items="catalogue.productRanges"
+                hide-default-footer
+                disable-pagination
+                class="elevation-1 mt-3"
+                @click:row="prueba"
+                v-if="catalogue.productRanges.length != 0"
+              >
+                <template v-slot:[`item.images`]="{ item }">
+                  <v-img
+                    v-if="item.images == null || item.images.length == 0"
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="150"
+                    contain
+                    class="m-1"
+                  />
+                  <v-img
+                    v-else
+                    contain
+                    :src="item.images[0].path"
+                    max-width="150"
+                    class="text-center align-center"
+                  />
+                </template>
+                <template v-slot:[`item.ranges`]="{ item, index }">
+                  <div v-for="range in item.ranges" :key="range.id">
+                    <v-icon>mdi-unfold-more-vertical</v-icon> De
+                    {{ range.min }} a {{ range.max }} el precio es
+                    {{ range.price }}
+                  </div>
+                </template>
+                <template v-slot:[`item.quantity_order`]="{ item, index }">
+                  <v-text-field
+                    class="m-3"
+                    solo
+                    dense
+                    append-outer-icon="mdi-plus"
+                    prepend-icon="mdi-minus"
+                    @click:append-outer="plusFunctionR(index)"
+                    @click:prepend="minusFunctionR(item, index)"
+                    readonly
+                    v-model="item.quantity"
+                    hide-details
+                  ></v-text-field>
+                </template>
+              </v-data-table>
+            </v-tab-item>
+          </v-tabs-items>
         </v-col>
         <v-col cols="12" sm="12" md="3" lg="3">
           <v-card>
@@ -207,8 +277,8 @@
             </p>
             <v-divider></v-divider>
             <v-card-text
-              v-for="product in selected"
-              :key="product.id"
+              v-for="(product, index) in selected"
+              :key="'A' + index"
               class="py-0"
             >
               <v-row>
@@ -234,19 +304,61 @@
                   Modelo:{{ product.model }}
                   <br />
                   Pago:{{ catalogue.coin == "soles" ? "S/." : "$"
-                  }}{{
-                    (product.quantity_group * product.price_unit) | currency
-                  }}
+                  }}{{ (product.quantity * product.price_unit) | currency }}
                   <br />
                   Cantidad
                   {{
-                    product.quantity_group +
-                    " " +
-                    (product.type_group == "units"
-                      ? "unidades"
-                      : product.quantity == 1
-                      ? "caja"
-                      : "cajas")
+                    product.quantity +
+                      " " +
+                      (product.type_group == "units"
+                        ? "unidades"
+                        : product.quantity == 1
+                        ? "caja"
+                        : "cajas")
+                  }}
+                  <br />
+                </v-col>
+              </v-row>
+            </v-card-text>
+
+            <v-card-text
+              v-for="(productRange, index) in selectedRange"
+              :key="index"
+              class="py-0"
+            >
+              <v-row>
+                <v-col cols="4">
+                  <v-img
+                    v-if="
+                      productRange.images == null ||
+                        productRange.images.length == 0
+                    "
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="75"
+                    height="50"
+                    contain
+                    class="m-1"
+                  />
+                  <v-img
+                    v-else
+                    contain
+                    :src="productRange.images[0].path"
+                    max-width="75"
+                    height="50"
+                    class="text-center align-center"
+                  />
+                </v-col>
+                <v-col cols="8">
+                  Modelo:{{ productRange.model }}
+                  <br />
+                  Pago:{{ catalogue.coin == "soles" ? "S/." : "$" }}
+                  {{ productRange.total }}
+                  <br />
+                  Cantidad
+                  {{
+                    productRange.quantity +
+                      " " +
+                      (productRange.quantity == 1 ? "Unidad" : "Unidades")
                   }}
                   <br />
                 </v-col>
@@ -258,9 +370,27 @@
                 >Total: {{ total | currency }}</v-col
               >
             </v-row>
+            <v-row class="text-right mx-2">
+              <v-spacer></v-spacer>
+              <v-col class="text-subtitle-1"
+                >Total: {{ totalRange | currency }}</v-col
+              >
+            </v-row>
+            <v-row class="text-right mx-2">
+              <v-spacer></v-spacer>
+              <v-col class="text-subtitle-1"
+                >Total: {{ totalGeneral | currency }}</v-col
+              >
+            </v-row>
             <br />
             <v-btn
-              @click="generateOrderAction(catalogue)"
+              @click="
+                generateOrder({
+                  id: catalogue.id,
+                  products: selected,
+                  product_ranges: selectedRange
+                })
+              "
               class="mt-3"
               :disabled="validate"
             >
@@ -269,7 +399,6 @@
           </v-card>
         </v-col>
       </v-row>
-
       <Product
         v-model="showScheduleForm"
         :product="itemSelected"
@@ -286,7 +415,7 @@ import moment from "moment";
 
 export default {
   comments: {
-    Product,
+    Product
   },
   data: () => ({
     totalItems: 0,
@@ -298,44 +427,45 @@ export default {
     selectedRange: [],
     description: [],
     number: 1,
+    currentTab: 0,
     headers: [
       { text: "Imagen", value: "images", align: "center", sortable: false },
       {
         text: "Modelo",
         value: "model",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Marca",
         value: "brand",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Precio unitario(A)",
         value: "price_unit",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Cantidad Mínima de Pedido(B)",
-        value: "quantity",
+        value: "quantity_group",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Precio Total por Cantidad Mínima(AxB)",
         value: "price_group",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Cantidad de Pedido",
         value: "quantity_order",
         align: "center",
-        sortable: false,
-      },
+        sortable: false
+      }
     ],
     headersItem: [
       { text: "Imagen", value: "images", align: "center", sortable: false },
@@ -343,41 +473,44 @@ export default {
         text: "Modelo",
         value: "model",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Marca",
         value: "brand",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Precio por cantidad de Pedido",
         value: "ranges",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Cantidad de Pedido",
         value: "quantity_order",
         align: "center",
-        sortable: false,
-      },
+        sortable: false
+      }
     ],
+    catalogueGet: null
   }),
   components: {
-    Product,
+    Product
   },
   computed: {
     ...mapGetters("groupImport", ["catalogue", "cart"]),
+
     total() {
       let t = 0;
-      this.selected.forEach((element) => {
-        t += element.quantity_group * element.price_unit;
+      this.selected.forEach(element => {
+        t += element.quantity * element.price_unit;
       });
-      this.totalItems = t;
+      this.totalItems += t;
       return t;
     },
+
     validate() {
       if (this.totalItems < this.catalogue.minimum_investment) {
         return true;
@@ -385,27 +518,66 @@ export default {
         return false;
       }
     },
+
+    totalRange() {
+      let t = 0;
+      let q = 0;
+      let p = 0;
+      let tot = 0;
+      this.selectedRange.forEach(element => {
+        q = element.quantity;
+        if (element.ranges.length != 0) {
+          element.ranges.forEach(range => {
+            if ((q >= range.min) & (q <= range.max)) {
+              t = range.price * q;
+            }
+            p = range.price;
+            console.log(range.price);
+          });
+        }
+
+        element.total = t;
+
+        if (element.total == 0) {
+          element.total = p * element.quantity;
+        }
+
+        tot += element.total;
+      });
+      return tot;
+    },
+
+    totalGeneral() {
+      let t = this.total + this.totalRange;
+      return t;
+    }
   },
   methods: {
-    ...mapActions("groupImport", ["getCatalogue", "addCart"]),
+    ...mapActions("groupImport", ["removeCart"]),
+    ...mapActions("groupImport", [
+      "getCatalogue",
+      "addCart",
+      "setCart",
+      "generateOrder"
+    ]),
     minusFunction(item, index) {
-      if (item.quantity_group <= item.quantity) {
+      if (item.quantity <= item.quantity_group) {
         alert(
-          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity}`
+          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity_group}`
         );
       } else {
-        this.catalogue.products[index].quantity_group--;
+        this.catalogue.products[index].quantity--;
       }
     },
     plusFunctionO(index) {
       console.log(this.catalogue.products[index]);
-      this.catalogue.products[index].quantity_group++;
+      this.catalogue.products[index].quantity++;
     },
 
     minusFunctionR(item, index) {
-      if (item.quantity <= 1) {
+      if (item.quantity <= item.min) {
         alert(
-          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity}`
+          `Lo sentimos, la candidad minima de de compra de este producto es ${item.min}`
         );
       } else {
         this.catalogue.productRanges[index].quantity--;
@@ -413,8 +585,7 @@ export default {
     },
     plusFunctionR(index) {
       console.log(this.catalogue.productRanges[index]);
-      this.catalogue.productRanges[index].quantity = 0
-      ;
+      this.catalogue.productRanges[index].quantity++;
     },
 
     reserve() {
@@ -426,24 +597,31 @@ export default {
       this.showScheduleForm = true;
       console.log(this.itemSelected);
     },
+    mas() {
+      this.catalogue.productRanges[1].quantity++;
+      console.log(this.catalogue.productRanges[1].quantity);
+    }
   },
   mounted() {
     this.getCatalogue(this.$route.params.id);
   },
   filters: {
-    currency: function (value) {
+    currency: function(value) {
       return parseFloat(value).toFixed(2);
     },
-    date: function (value) {
+    date: function(value) {
       return moment(value).format("YYYY-MM-DD");
     },
-    porcent: function (value) {
+    porcent: function(value) {
       return parseFloat(value) * 100 + " %";
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
+.mouse {
+  cursor: pointer;
+}
 .m-page {
   margin-right: 10%;
   margin-left: 10%;
