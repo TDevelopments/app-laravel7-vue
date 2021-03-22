@@ -134,6 +134,7 @@
             background-color="#546E7A"
             v-model="currentTab"
             dark
+            show-arrows
           >
             <v-tab v-if="catalogue.products.length != 0">
               Productos por conjunto
@@ -156,6 +157,16 @@
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
+                <template v-slot:top>
+                  <v-toolbar flat>
+                    <v-toolbar-title>Productos</v-toolbar-title>
+                  </v-toolbar>
+                </template>
+                <template v-slot:headers>
+                  <tr>
+                    HOla Mundo
+                  </tr>
+                </template>
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
                     v-if="item.images == null || item.images.length == 0"

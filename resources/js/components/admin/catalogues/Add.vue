@@ -202,32 +202,8 @@
                       Ciudad
                       <v-select
                         v-model="input.city"
-                        cities: [
-      "Amazonas",
-      "Ancash",
-      "Apurímac",
-      "Arequipa",
-      "Ayacucho",
-      "Cajamarca",
-      "Cusco",
-      "Huancavelica",
-      "Huánuco",
-      "Ica",
-      "Junín",
-      "La Libertad",
-      "Lambayeque",
-      "Lima",
-      "Loreto",
-      "Madre de Dios",
-      "Moquegua",
-      "Pasco",
-      "Piura",
-      "Puno",
-      "San Martín",
-      "Tacna",
-      "Tumbes",
-      "Ucayali",
-    ],="auto"
+                        menu-props="auto"
+                        :items="cities"
                         hide-details
                         prepend-inner-icon="mdi-map"
                         solo
