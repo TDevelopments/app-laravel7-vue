@@ -114,7 +114,12 @@ class AuthController extends Controller
     public function update(UpdateUserRequest $request)
     { 
         $user = $request->user();
-        $user->update($request->all());
+        if ($request['password'])
+        {
+            $request['password']=Hash::make($request['password']);
+            $request['remember_token'] = Str::random(10);
+        }
+        $user->update($request->toArray());
         return new UserResource($user);
     }
 

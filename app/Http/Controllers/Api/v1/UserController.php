@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\UpdateUserRequestAdmin;
+use App\Http\Requests\StoreUserRequestAdmin;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Str;
 
@@ -41,7 +42,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(StoreUserRequestAdmin $request)
     {   
         $request['password']=Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
@@ -68,11 +69,29 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, User $user)
+    public function update(UpdateUserRequestAdmin $request, User $user)
     {
-        $request['password']=Hash::make($request['password']);
-        $request['remember_token'] = Str::random(10);
-        $user->update($request->all());
+        if($request['password'])
+        {
+            $request['password']=Hash::make($request['password']);
+            $request['remember_token'] = Str::random(10);
+        }
+        if ($request['roles'])
+        {
+            $user->roles()->detach();
+            $roles = $request['roles'];
+            if (!$user->hasAnyRole($roles))
+            {
+                foreach ($roles as $role)
+                {
+                    if ($user->hasRole($role))
+                        continue;
+                    else
+                        $user->roles()->attach(Role::where('name', $role)->first());
+                }
+            }
+        }
+        $user->update($request->toArray());
         return new UserResource($user);
     }
 
