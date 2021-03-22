@@ -303,7 +303,7 @@
     </v-row>
   </div>
 </template>
-      
+
 <script>
 export default {
   data: () => ({
@@ -320,7 +320,7 @@ export default {
       type_group: "",
       category: "",
       catalogue: "",
-      images: null,
+      images: null
     },
     // Object Catalogue
     catalogues: [],
@@ -333,7 +333,7 @@ export default {
     selected: [],
     select: null,
     // Options of Types Group
-    types: ["units", "sets"],
+    types: ["unidades", "sets", "cajas"],
     // Url of Images
     urls: [],
     // Data of Color Picker
@@ -345,10 +345,10 @@ export default {
     // Items Image Show
     images: [],
     // Validation
-    valid: true,
+    valid: true
   }),
   computed: {
-    productQG: function () {
+    productQG: function() {
       this.product.price_group =
         this.product.price_unit * this.product.quantity_group;
       return this.product.price_group;
@@ -359,7 +359,7 @@ export default {
       },
       set(v) {
         this[this.type] = v;
-      },
+      }
     },
     showColor() {
       if (typeof this.color === "string") return this.color;
@@ -372,7 +372,7 @@ export default {
         null,
         2
       );
-    },
+    }
   },
   mounted() {
     this.getProduct();
@@ -393,26 +393,26 @@ export default {
     getCategories() {
       axios
         .get("/api/v1/categories")
-        .then((response) => {
+        .then(response => {
           console.log(response);
           this.loading = false;
           this.categories = response.data.data;
           console.log(this.categories);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     // Peticion Get Catalogues
     getCatalogues() {
       axios
         .get("/api/v1/catalogues")
-        .then((response) => {
+        .then(response => {
           console.log(response);
           this.loading = false;
           this.catalogues = response.data.data;
           console.log(this.catalogues);
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log(error)
           // reject(error);
         });
@@ -424,25 +424,25 @@ export default {
         .get(`/api/v1/products/${this.$route.params.id}`, {
           headers: {
             Accept: "application/json",
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         })
-        .then((response) => {
+        .then(response => {
           console.log(response);
           this.product = response.data.data;
           this.product.catalogue = response.data.data.catalogue.id;
           this.product.category = response.data.data.category.id;
-          response.data.data.description.forEach((element) => {
+          response.data.data.description.forEach(element => {
             this.description.push(element);
           });
-          response.data.data.colors.forEach((element) => {
+          response.data.data.colors.forEach(element => {
             this.colors.push(element);
           });
-          response.data.data.images.forEach((element) => {
+          response.data.data.images.forEach(element => {
             this.images.push(element);
           });
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
           // reject(error);
         });
@@ -460,18 +460,18 @@ export default {
         .post(`/api/v1/uploads`, data, {
           headers: {
             Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-          },
+            "Content-Type": "multipart/form-data"
+          }
         })
-        .then((response) => {
-          response.data.forEach((elements) => {
+        .then(response => {
+          response.data.forEach(elements => {
             this.product.images.push(elements);
             console.log(elements);
           });
           console.log("imagenes", this.product.images);
           this.editProduct();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
           // reject(error);
         });
@@ -494,20 +494,20 @@ export default {
         catalogue_id: this.product.catalogue,
         description: this.description,
         colors: this.colors,
-        images: this.product.images,
+        images: this.product.images
       };
 
       axios
         .put(`/api/v1/products/${this.$route.params.id}`, data, {
           headers: {
-            Accept: "application/json",
-          },
+            Accept: "application/json"
+          }
         })
-        .then((response) => {
+        .then(response => {
           console.log("Response", response);
           this.$router.replace({ name: "listProduct" });
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
           // reject(error);
         });
@@ -528,7 +528,7 @@ export default {
           this.images.push({
             path: URL.createObjectURL(element),
             new: true,
-            id: index,
+            id: index
           });
         });
         console.log(this.urls);
@@ -570,7 +570,7 @@ export default {
     // Return List Product
     listRouter() {
       this.$router.replace({ name: "listProduct" });
-    },
-  },
+    }
+  }
 };
 </script>

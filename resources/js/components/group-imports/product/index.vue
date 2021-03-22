@@ -66,7 +66,7 @@
               </div>
               <v-row>
                 <v-col class="mt-3 pb-0 text-subtitle-1">
-                  <strong>PRECIO POR {{ product.quantity_group }} U.</strong>
+                  <strong>PRECIO POR {{ product.quantity_group }} {{ type_group.toUpperCase() }}</strong>
                   <div class="form-inline">
                     <v-avatar
                       color="#0D52D6"
@@ -155,9 +155,30 @@ export default {
         this.$emit("input", value);
       },
     },
+    type_group(){
+      let valor = '';
+      if ( this.product.quantity_group > 1 ){
+        valor = this.product.type_group;
+      }else{
+        switch (this.product.type_group) {
+          case 'unidades':
+            valor = 'unidades'
+            break;
+          case 'sets':
+            valor = 'set'
+            break;
+          case 'cajas':
+            valor = 'caja'
+            break;
+          default:
+            break;
+        } 
+      }
+      return valor;
+    }
   },
   mounted() {
-    console.log("Component", this.product);
+    // console.log("Component", this.product);
   },
 };
 </script>

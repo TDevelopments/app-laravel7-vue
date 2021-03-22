@@ -47,7 +47,7 @@ $factory->define(Product::class, function (Faker $faker) {
         'price_unit'    => $this->faker->randomFloat(2, 10, 100),
         'price_group'   => $this->faker->randomFloat(2, 100, 1000),
         'quantity_group'=> $this->faker->numberBetween(10, 20),
-        'type_group'    => $this->faker->randomElement(['units', 'sets']),
+        'type_group'    => $this->faker->randomElement(['unidades', 'sets']),
         'catalogue_id'  => $this->faker->numberBetween(1, 2),
         'category_id'   => rand(1, 4),
     ];
