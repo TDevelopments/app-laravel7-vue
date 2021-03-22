@@ -13,11 +13,8 @@
           <v-spacer></v-spacer>
         </v-toolbar>
       </template>
-      <template v-slot:item.actions="{ item }">
+      <template v-slot:[`item.actions`]="{ item }">
         <v-row>
-          <v-col class="px-0">
-            <ProductForCatalogue :idCatalogue="item.catalogue.id" />
-          </v-col>
           <v-col class="px-0">
             <v-icon small @click="editItem(item)" color="#D6B331">
               mdi-pencil

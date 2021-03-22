@@ -152,12 +152,17 @@ export function generateOrder({ commit, getters, rootGetters }, catalogue) {
     catalogue.products.forEach(product => {
       product.product_id = product.id;
     });
+    catalogue.product_ranges.forEach(product_range => {
+      product_range.product_id = product_range.id;
+      console.log(product_range.id);
+    });
     axios({
       url: "/api/v1/orders",
       method: "POST",
       data: {
         catalogue_id: catalogue.id,
-        products: catalogue.products
+        products: catalogue.products,
+        product_ranges: catalogue.product_ranges
       }
     })
       .then(resp => {

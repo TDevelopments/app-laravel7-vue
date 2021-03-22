@@ -4,7 +4,7 @@
     max-width="900"
     v-model="show"
   >
-    <v-toolbar color="primary" dark>Opening from the bottom</v-toolbar>
+    <v-toolbar color="primary" dark class="text-h6 mb-2">Detalles del producto</v-toolbar>
     <v-card>
       <v-card-text>
         <v-row>
@@ -64,10 +64,6 @@
                   {{ item }}
                 </p>
               </div>
-              <div>
-                Small plates, salads & sandwiches - an intimate setting with 12
-                indoor seats plus patio seating.
-              </div>
               <v-row>
                 <v-col class="mt-3 pb-0 text-subtitle-1">
                   <strong>PRECIO POR {{ product.quantity_group }} U.</strong>
@@ -96,26 +92,6 @@
                     </v-avatar>
                     <p class="mt-3 ml-2">{{ product.price_unit | currency }}</p>
                   </div>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="3">
-                  <v-text-field
-                    v-model="product.quantity_group"
-                    type="number"
-                    solo
-                    dense
-                    class="mt-0 pt-0"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="6" class="pl-0">
-                  <v-btn
-                    color="#0D52D6"
-                    dark
-                    @click="addCart({ product, catalogue })"
-                  >
-                    <v-icon class="mr-1">mdi-cart</v-icon>Añadir
-                  </v-btn>
                 </v-col>
               </v-row>
             </v-card-text>

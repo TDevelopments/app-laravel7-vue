@@ -7,6 +7,7 @@ import router from "./router";
 import store from "./store";
 import App from "./components/App";
 import Axios from "axios";
+import Vue from "vue";
 
 Vue.prototype.$http = Axios;
 Vue.prototype.$http.defaults.baseURL = process.env.APP_URL;

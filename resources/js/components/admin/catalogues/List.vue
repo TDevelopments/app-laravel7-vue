@@ -191,6 +191,7 @@ export default {
     pageCount: 0,
     itemsPerPage: 15,
     pagination: null,
+    baseURL: "",
   }),
   methods: {
     getList() {
@@ -253,6 +254,7 @@ export default {
   },
   mounted() {
     this.getList();
+    this.baseURL = process.env.MIX_NODE_URL;
   },
 
   filters: {

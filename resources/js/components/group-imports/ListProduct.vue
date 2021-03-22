@@ -1,6 +1,6 @@
 <template>
   <div class="m-page">
-    <v-col>
+    <v-col class="mt-5">
       <h2>{{ catalogue.name }}</h2>
       <v-divider></v-divider>
       <v-row>
@@ -11,78 +11,119 @@
           />
         </v-col>
         <v-col cols="12" sm="12" md="7" lg="7">
-          <v-card-title class="pt-0">
-            Información y Condiciones
-            <v-spacer></v-spacer>
-            Moneda &nbsp;
-            <v-avatar size="40" color="#0D52D6" class="text-white">{{
-              catalogue.coin == "soles" ? "S./" : "$"
-            }}</v-avatar>
+          <v-card-title>
+            <v-row>
+              <v-col cols="12">
+                Información y Condiciones &nbsp;<strong
+                  >{{ catalogue.name }}
+                </strong>
+                <v-spacer></v-spacer>
+              </v-col>
+              <v-col cols="12">
+                Moneda &nbsp;
+                <v-avatar size="40" color="#0D52D6" class="text-white">{{
+                  catalogue.coin == "soles" ? "S./" : "$"
+                }}</v-avatar>
+              </v-col>
+            </v-row>
           </v-card-title>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El monto para separar un <strong>cupo</strong> es de:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-cash </v-icon>
-              {{ catalogue.quota_price | currency }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Monto de separación de cupo:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-cash </v-icon>
+                  {{ catalogue.quota_price | currency }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El ultimo dia para separar un <strong>cupo</strong> es:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-calendar-month </v-icon>
-              {{ catalogue.quota_date | date }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Ultimo día para la separación de cupo:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-calendar-month </v-icon>
+                  {{ catalogue.quota_date | date }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El ultimo dia para pagar el monto de separación de un
-            <strong>cupo</strong> es:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-calendar-month </v-icon>
-              {{ catalogue.quota_date | date }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Inversión minima:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-cash </v-icon>
+                  {{ catalogue.minimum_investment | currency }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El <strong>monto minimo</strong> de inversión es de:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-cash </v-icon>
-              {{ catalogue.minimum_investment | currency }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
+                Primera cuota:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-percent </v-icon>
+                  {{ catalogue.first_payment }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El porcentaje de la primera cuota es de:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-percent </v-icon>
-              {{ catalogue.first_payment * 100 }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
+                Segunda cuota:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-percent </v-icon>
+                  {{ catalogue.second_payment }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            El porcentaje de la segunda cuota es de:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-percent </v-icon>
-              {{ catalogue.second_payment * 100 }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Fecha limite para el pago de la primera cuota:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-calendar-month </v-icon>
+                  {{ catalogue.date_first_payment | date }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            La fecha limite para pagar la primera cuota es:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-calendar-month </v-icon>
-              {{ catalogue.date_first_payment | date }}
-            </v-chip>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-icon color="black">mdi-unfold-more-vertical</v-icon>
-            La fecha limite para pagar la segunda cuota es:
-            <v-chip class="mr-2">
-              <v-icon left> mdi-calendar-month </v-icon>
-              {{ catalogue.date_second_payment | date }}
-            </v-chip>
+            <v-row>
+              <v-col cols="12" sm="8">
+                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                Fecha Limite Segunda Cuota:
+              </v-col>
+              <v-col cols="12" sm="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-calendar-month </v-icon>
+                  {{ catalogue.date_second_payment | date }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-col>
       </v-row>
@@ -94,8 +135,8 @@
             v-model="currentTab"
             dark
           >
-            <v-tab> Productos por conjunto </v-tab>
-            <v-tab> Productos por rango </v-tab>
+            <v-tab v-if="catalogue.products.length != 0"> Productos por conjunto </v-tab>
+            <v-tab v-if="catalogue.productRanges.length != 0"> Productos por rango </v-tab>
           </v-tabs>
           <v-tabs-items v-model="currentTab">
             <v-tab-item>
@@ -106,9 +147,10 @@
                 :headers="headers"
                 :items="catalogue.products"
                 hide-default-footer
-                class="elevation-1"
+                class="elevation-1 mouse"
                 @click:row="prueba"
-                disable-paginati
+                disable-pagination
+                v-if="catalogue.products.length != 0"
               >
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
@@ -121,7 +163,7 @@
                   <v-img
                     v-else
                     contain
-                    :src="item.images[0].path"
+                    :src="baseURL + item.images[0].path"
                     max-width="150"
                     class="text-center align-center"
                   />
@@ -176,6 +218,7 @@
                 disable-pagination
                 class="elevation-1 mt-3"
                 @click:row="prueba"
+                v-if="catalogue.productRanges.length != 0"
               >
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
@@ -188,7 +231,7 @@
                   <v-img
                     v-else
                     contain
-                    :src="item.images[0].path"
+                    :src="baseURL + item.images[0].path"
                     max-width="150"
                     class="text-center align-center"
                   />
@@ -247,7 +290,7 @@
                   <v-img
                     v-else
                     contain
-                    :src="product.images[0].path"
+                    :src="baseURL + product.images[0].path"
                     max-width="75"
                     height="50"
                     class="text-center align-center"
@@ -295,7 +338,7 @@
                   <v-img
                     v-else
                     contain
-                    :src="productRange.images[0].path"
+                    :src="baseURL + productRange.images[0].path"
                     max-width="75"
                     height="50"
                     class="text-center align-center"
@@ -337,7 +380,13 @@
             </v-row>
             <br />
             <v-btn
-              @click="generateOrderAction(catalogue)"
+              @click="
+                generateOrder({
+                  id: catalogue.id,
+                  products: selected,
+                  product_ranges: selectedRange,
+                })
+              "
               class="mt-3"
               :disabled="validate"
             >
@@ -365,6 +414,7 @@ export default {
     Product,
   },
   data: () => ({
+    baseURL: "",
     totalItems: 0,
     itemSelected: null,
     showScheduleForm: false,
@@ -501,7 +551,12 @@ export default {
   },
   methods: {
     ...mapActions("groupImport", ["removeCart"]),
-    ...mapActions("groupImport", ["getCatalogue", "addCart", "setCart"]),
+    ...mapActions("groupImport", [
+      "getCatalogue",
+      "addCart",
+      "setCart",
+      "generateOrder",
+    ]),
     minusFunction(item, index) {
       if (item.quantity <= item.quantity_group) {
         alert(
@@ -546,6 +601,8 @@ export default {
   },
   mounted() {
     this.getCatalogue(this.$route.params.id);
+    console.log("Imbesil", process.env.MIX_NODE_URL);
+    this.baseURL = process.env.MIX_NODE_URL;
   },
   filters: {
     currency: function (value) {
@@ -561,6 +618,9 @@ export default {
 };
 </script>
 <style scoped>
+.mouse{
+  cursor: pointer;
+}
 .m-page {
   margin-right: 10%;
   margin-left: 10%;
