@@ -35,7 +35,7 @@ class CatalogueResource extends JsonResource
             'arrivals' => $this->arrivals,
             'products' => $this->products,
             // 'productRanges' => $this->productRanges,
-            'productRanges' => ProductRangeResource::collection($this->productRanges)
+            'productRanges' => ProductRangeResource::collection($this->productRanges)->sortBy('model')
         ];
     }
 }

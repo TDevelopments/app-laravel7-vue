@@ -80,7 +80,8 @@ class CatalogueController extends Controller
 
     public function availables()
     {
-        return CatalogueResource::collection($this->catalogue->where('is_available', true)->get());
+        $availables = $this->catalogue->where('is_available', true)->get();
+        return CatalogueResource::collection($availables);
     }
 
     public function list()
