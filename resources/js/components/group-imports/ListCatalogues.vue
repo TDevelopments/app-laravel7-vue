@@ -19,7 +19,7 @@
             <v-card-title>
               <v-row>
                 <v-col cols="12">
-                  Catálogo &nbsp;<strong>{{ item.name }} </strong>
+                  <strong>{{ item.name }} </strong>
                   <v-spacer></v-spacer>
                 </v-col>
                 <v-col cols="12" class="text-capitalize">
@@ -29,11 +29,11 @@
             </v-card-title>
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
-                <v-col cols="12" sm="8">
+                <v-col sm="6" md="8">
                   <v-icon color="black" x-small>mdi-circle</v-icon>
                   Monto de separación de cupo:
                 </v-col>
-                <v-col cols="12" sm="4" class="text-right">
+                <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
                     {{ item.coin == "soles" ? "S./" : "$" }}
                     {{ item.quota_price | currency }}
@@ -43,25 +43,11 @@
             </v-card-text>
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
-                <v-col cols="12" sm="8">
-                  <v-icon color="black" x-small>mdi-circle</v-icon>
-                  Ultimo día para la separación de cupo:
-                </v-col>
-                <v-col cols="12" sm="4" class="text-right">
-                  <v-chip class="mr-2">
-                    <v-icon left> mdi-calendar-month </v-icon>
-                    {{ item.quota_date | date }}
-                  </v-chip>
-                </v-col>
-              </v-row>
-            </v-card-text>
-            <v-card-text class="font-weight-medium pb-0 pt-1">
-              <v-row>
-                <v-col cols="12" sm="8">
+                <v-col sm="6" md="8">
                   <v-icon color="black" x-small>mdi-circle</v-icon>
                   Inversión minima:
                 </v-col>
-                <v-col cols="12" sm="4" class="text-right">
+                <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
                     {{ item.coin == "soles" ? "S./" : "$" }}
                     {{ item.minimum_investment | currency }}
@@ -71,11 +57,11 @@
             </v-card-text>
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
-                <v-col cols="12" sm="8">
+                <v-col sm="6" md="8">
                   <v-icon color="black" x-small>mdi-circle</v-icon> % de Primera
                   cuota:
                 </v-col>
-                <v-col cols="12" sm="4" class="text-right">
+                <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
                     <v-icon left> mdi-percent </v-icon>
                     {{ item.first_payment }}
@@ -85,11 +71,11 @@
             </v-card-text>
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
-                <v-col cols="12" sm="8">
+                <v-col sm="6" md="8">
                   <v-icon color="black" x-small>mdi-circle</v-icon> % de Segunda
                   cuota:
                 </v-col>
-                <v-col cols="12" sm="4" class="text-right">
+                <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
                     <v-icon left> mdi-percent </v-icon>
                     {{ item.second_payment }}
@@ -99,11 +85,25 @@
             </v-card-text>
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
-                <v-col cols="12" sm="8">
+                <v-col sm="6" md="8">
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
+                  Ultimo día para la separación de cupo:
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    <v-icon left> mdi-calendar-month </v-icon>
+                    {{ item.quota_date | date }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-card-text class="font-weight-medium pb-0 pt-1">
+              <v-row>
+                <v-col sm="6" md="8">
                   <v-icon color="black" x-small>mdi-circle</v-icon>
                   Fecha limite para el pago de la primera cuota:
                 </v-col>
-                <v-col cols="12" sm="4" class="text-right">
+                <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
                     <v-icon left> mdi-calendar-month </v-icon>
                     {{ item.date_first_payment | date }}
@@ -113,11 +113,11 @@
             </v-card-text>
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
-                <v-col cols="12" sm="8">
+                <v-col sm="6" md="8">
                   <v-icon color="black" x-small>mdi-circle</v-icon>
-                  Fecha Limite Segunda Cuota:
+                  Fecha limite para el pago de la segunda cuota:
                 </v-col>
-                <v-col cols="12" sm="4" class="text-right">
+                <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
                     <v-icon left> mdi-calendar-month </v-icon>
                     {{ item.date_second_payment | date }}
