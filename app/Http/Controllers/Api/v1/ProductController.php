@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -31,9 +33,9 @@ class ProductController extends Controller
     {
         if ($request->query("model")) {
             $value = $request->query("model");
-            return ProductResource::collection($this->product->where('model', 'like', "%$value%")->get());
+            return ProductResource::collection($this->product->where('model', 'like', "%$value%")->orderBy('model')->get());
         }
-        return ProductResource::collection($this->product->paginate());
+        return ProductResource::collection($this->product->orderBy('model')->paginate());
     }
 
     /**
@@ -42,15 +44,15 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRequest $request)
+    public function store(StoreProductRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'sku' => ['unique:products'],
-            'model' => ['required','unique:products'],
-        ]);
-        if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error'], 422);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'sku' => ['unique:products'],
+        //     'model' => ['required','unique:products'],
+        // ]);
+        // if ($validator->fails()) {
+        //     return response(['error' => $validator->errors(), 'Validation Error'], 422);
+        // }
         if(!isset($request->sku)){
             $request->merge(['sku' => $this->randomId()]);
         }
@@ -76,15 +78,15 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $validator = Validator::make($request->all(), [
-            'sku' => ['required', 'exists:App\Models\Product,sku'],
-            'model' => ['required','exists:App\Models\Product,model'],
-        ]);
-        if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error'], 422);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'sku' => ['required', 'exists:App\Models\Product,sku'],
+        //     'model' => ['required','exists:App\Models\Product,model'],
+        // ]);
+        // if ($validator->fails()) {
+        //     return response(['error' => $validator->errors(), 'Validation Error'], 422);
+        // }
         $product->update($request->all());
         return new ProductResource($product);
     }

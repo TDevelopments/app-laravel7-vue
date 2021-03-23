@@ -181,19 +181,7 @@ export default {
       if (this.product.quantity_group > 1) {
         valor = this.product.type_group;
       } else {
-        switch (this.product.type_group) {
-          case "unidades":
-            valor = "unidades";
-            break;
-          case "sets":
-            valor = "set";
-            break;
-          case "cajas":
-            valor = "caja";
-            break;
-          default:
-            break;
-        }
+        valor = this.product.type_group;
       }
       return valor;
     },
