@@ -413,12 +413,7 @@ export default {
     addCatalogue() {
       axios
         .post(
-          "/api/v1/catalogues",
-          {
-            ...this.catalogue,
-            first_payment: this.catalogue.first_payment / 100,
-            second_payment: this.catalogue.second_payment / 100,
-          },
+          "/api/v1/catalogues",this.catalogue,
           {
             headers: {
               Accept: "application/json",
