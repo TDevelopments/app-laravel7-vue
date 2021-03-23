@@ -7,7 +7,7 @@
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-row>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="3">
                   Modelo
                   <v-text-field
                     solo
@@ -15,7 +15,7 @@
                     required
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="3">
                   Marca
                   <v-text-field
                     solo
@@ -23,13 +23,23 @@
                     required
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="3">
                   SKU
                   <v-text-field
                     solo
                     v-model="product.sku"
                     required
                     readonly
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="3">
+                  Incremento
+                  <v-text-field
+                    solo
+                    v-model="product.magnifying"
+                    required
+                    type="number"
+                    placeholder="0"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="3">
@@ -52,7 +62,6 @@
                   Precio por unidad
                   <v-text-field
                     v-model="product.price_unit"
-                    prefix="$"
                     type="number"
                     solo
                   ></v-text-field>
@@ -61,7 +70,6 @@
                   Precio por conjunto
                   <v-text-field
                     v-model="productQG"
-                    prefix="$"
                     type="number"
                     solo
                     readonly
@@ -511,7 +519,8 @@ export default {
         catalogue_id: this.product.catalogue,
         description: this.description,
         colors: this.colors,
-        images: this.product.images
+        images: this.product.images,
+        magnifying: this.product.magnifying
       };
 
       axios

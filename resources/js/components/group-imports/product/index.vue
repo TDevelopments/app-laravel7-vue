@@ -4,23 +4,28 @@
     max-width="1200"
     v-model="show"
   >
-    <v-toolbar color="primary" dark class="text-h6 mb-2">Detalles del producto</v-toolbar>
+    <v-toolbar color="primary" dark class="text-h6 mb-2"
+      >Detalles del producto</v-toolbar
+    >
     <v-card>
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="12" md="6" lg="6">
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              contain
-              v-if="product.images == null || product.images.length == 0"
-            />
-            <v-img
-              :src="product.images[model].path"
-              max-width="500"
-              height="350"
-              contain
-              v-else
-            />
+            <div class="text-center">
+              <v-img
+                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                contain
+                v-if="product.images == null || product.images.length == 0"
+              />
+              <v-img
+                :src="product.images[model].path"
+                max-width="500"
+                height="350"
+                contain
+                v-else
+                class="mx-auto"
+              />
+            </div>
             <v-sheet class="mx-auto" max-width="800">
               <v-slide-group v-model="model" show-arrows>
                 <v-slide-item
@@ -65,9 +70,24 @@
                   {{ item }}
                 </p>
               </div>
+              <div>
+                Colores:
+                <v-row>
+                  <v-col
+                    cols="1"
+                    v-for="(color, index) in product.colors"
+                    :key="index"
+                  >
+                    <v-avatar :color="color" size="15"> </v-avatar>
+                  </v-col>
+                </v-row>
+              </div>
               <v-row>
                 <v-col class="mt-3 pb-0 text-subtitle-1">
-                  <strong>PRECIO POR {{ product.quantity_group }} {{ type_group.toUpperCase() }}</strong>
+                  <strong
+                    >PRECIO POR {{ product.quantity_group }}
+                    {{ type_group.toUpperCase() }}</strong
+                  >
                   <div class="form-inline">
                     <v-avatar
                       color="#0D52D6"
@@ -156,27 +176,27 @@ export default {
         this.$emit("input", value);
       },
     },
-    type_group(){
-      let valor = '';
-      if ( this.product.quantity_group > 1 ){
+    type_group() {
+      let valor = "";
+      if (this.product.quantity_group > 1) {
         valor = this.product.type_group;
-      }else{
+      } else {
         switch (this.product.type_group) {
-          case 'unidades':
-            valor = 'unidades'
+          case "unidades":
+            valor = "unidades";
             break;
-          case 'sets':
-            valor = 'set'
+          case "sets":
+            valor = "set";
             break;
-          case 'cajas':
-            valor = 'caja'
+          case "cajas":
+            valor = "caja";
             break;
           default:
             break;
-        } 
+        }
       }
       return valor;
-    }
+    },
   },
   mounted() {
     // console.log("Component", this.product);

@@ -17,7 +17,7 @@
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-row>
-                <v-col cols="12" sm="4" md="4" v-if="!varBoolean">
+                <v-col cols="12" sm="3" md="0" v-if="!varBoolean">
                   Modelo
                   <v-text-field
                     solo
@@ -26,7 +26,7 @@
                     placeholder="Example"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="4" md="4" v-if="!varBoolean">
+                <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
                   Marca
                   <v-text-field
                     solo
@@ -35,13 +35,23 @@
                     placeholder="Example"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="4" md="4" v-if="!varBoolean">
+                <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
                   SKU
                   <v-text-field
                     solo
                     v-model="product.sku"
                     required
                     placeholder="Example"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
+                  Incremento
+                  <v-text-field
+                    solo
+                    v-model="product.magnifying"
+                    required
+                    type="number"
+                    placeholder="0"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="3" v-if="!varBoolean">
@@ -66,7 +76,6 @@
                   Precio por unidad
                   <v-text-field
                     v-model="product.price_unit"
-                    prefix="S/."
                     type="number"
                     solo
                     placeholder="0"
@@ -76,7 +85,6 @@
                   Precio por conjunto
                   <v-text-field
                     v-model="productQG"
-                    prefix="S/."
                     type="number"
                     solo
                     readonly
@@ -733,6 +741,7 @@ export default {
               images: this.image,
               description: this.description,
               colors: this.colors,
+              magnifying: this.product.magnifying
             },
             {
               headers: {

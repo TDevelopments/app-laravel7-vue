@@ -301,11 +301,12 @@ v<template>
     </v-col>
     <v-btn
       :disabled="!valid"
-      color="success"
+      color="#0D52D6"
+      dark
       class="mr-4"
-      @click="udpdateCatalogue"
+      @click="validate"
     >
-      Validate
+      Guardar
     </v-btn>
   </div>
 </template>
@@ -368,7 +369,7 @@ export default {
     idDelete: [],
     coins: ["soles", "dolares"],
     iconCoin: "",
-    imagesCatalogue: null,
+    imagesCatalogue: [],
   }),
   mounted() {
     this.getCatalogue();
@@ -391,7 +392,14 @@ export default {
     },
   },
   methods: {
-    validate() {},
+    validate() {
+      if (this.imagesCatalogue.length != 0) {
+        this.addImages();
+      }
+      else {
+        this.udpdateCatalogue();
+      }
+    },
     getCatalogue() {
       axios
         .get(`/api/v1/catalogues/${this.$route.params.id}`, {
@@ -424,6 +432,30 @@ export default {
           console.log("asd", response.data.data.conditions);
         })
         .catch((error) => {});
+    },
+    addImages() {
+      const data = new FormData();
+      this.imagesCatalogue.forEach((elements, index) => {
+        console.log(index);
+        console.log(elements);
+        data.append(`image_uploads[${index}]`, elements);
+      });
+      axios
+        .post(`/api/v1/uploads`, data, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          this.catalogue.image = response.data[0];
+          console.log("aqui", response.data[0]);
+          this.udpdateCatalogue();
+        })
+        .catch((error) => {
+          console.log(error);
+          // reject(error);
+        });
     },
 
     addArrivals(id) {

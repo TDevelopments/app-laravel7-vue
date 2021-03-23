@@ -8,6 +8,15 @@
           <v-img
             contain
             src="https://ep01.epimg.net/elpais/imagenes/2020/11/30/escaparate/1606750893_769867_1606751114_noticia_normal_recorte1.jpg"
+            v-if="catalogue.image == null || catalogue.image.length == 0"
+            height="400"
+          />
+          <v-img
+            v-else
+            contain
+            :src="catalogue.image.path"
+            class="text-center align-center"
+            height="400"
           />
         </v-col>
         <v-col cols="12" sm="12" md="7" lg="7">
@@ -19,11 +28,8 @@
                 </strong>
                 <v-spacer></v-spacer>
               </v-col>
-              <v-col cols="12">
-                Moneda &nbsp;
-                <v-avatar size="40" color="#0D52D6" class="text-white">{{
-                  catalogue.coin == "soles" ? "S./" : "$"
-                }}</v-avatar>
+              <v-col cols="12" class="text-capitalize">
+                Moneda &nbsp; {{ catalogue.coin }}
               </v-col>
             </v-row>
           </v-card-title>
@@ -35,7 +41,7 @@
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
                 <v-chip class="mr-2">
-                  <v-icon left> mdi-cash </v-icon>
+                  {{ catalogue.coin == "soles" ? "S./" : "$" }}
                   {{ catalogue.quota_price | currency }}
                 </v-chip>
               </v-col>
@@ -63,7 +69,7 @@
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
                 <v-chip class="mr-2">
-                  <v-icon left> mdi-cash </v-icon>
+                  {{ catalogue.coin == "soles" ? "S./" : "$" }}
                   {{ catalogue.minimum_investment | currency }}
                 </v-chip>
               </v-col>
@@ -72,8 +78,8 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon> % de
-                Primera cuota:
+                <v-icon color="black" x-small>mdi-circle</v-icon> % de Primera
+                cuota:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
                 <v-chip class="mr-2">
@@ -86,8 +92,8 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon> % de
-                Segunda cuota:
+                <v-icon color="black" x-small>mdi-circle</v-icon> % de Segunda
+                cuota:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
                 <v-chip class="mr-2">
@@ -235,8 +241,8 @@
                 </template>
                 <template v-slot:[`item.ranges`]="{ item, index }">
                   <div v-for="range in item.ranges" :key="range.id">
-                    <v-icon x-small>mdi-circle</v-icon> De
-                    {{ range.min }} a {{ range.max }} el precio es
+                    <v-icon x-small>mdi-circle</v-icon> De {{ range.min }} a
+                    {{ range.max }} el precio es
                     {{ range.price }}
                   </div>
                 </template>
@@ -315,7 +321,7 @@
                   <v-img
                     v-if="
                       productRange.images == null ||
-                        productRange.images.length == 0
+                      productRange.images.length == 0
                     "
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                     max-width="75"
@@ -341,8 +347,8 @@
                   Cantidad
                   {{
                     productRange.quantity +
-                      " " +
-                      (productRange.quantity == 1 ? "Unidad" : "Unidades")
+                    " " +
+                    (productRange.quantity == 1 ? "Unidad" : "Unidades")
                   }}
                   <br />
                 </v-col>
@@ -381,9 +387,12 @@
               <v-card>
                 <v-card-title class="headline"> Generar Orden </v-card-title>
                 <v-card-text>
-                  Antes de generar esta orden, <strong class="text-red">tienes que estar seguro de que
-                  los datos con los que te registraste son validos</strong>, ya que
-                  mediante estos estaremos generando una orden de compra.
+                  Antes de generar esta orden,
+                  <strong class="text-red"
+                    >tienes que estar seguro de que los datos con los que te
+                    registraste son validos</strong
+                  >, ya que mediante estos estaremos generando una orden de
+                  compra.
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
@@ -399,8 +408,8 @@
                         products: selected,
                         product_ranges: selectedRange,
                       }),
-                      dialog = false,
-                      alert = false
+                        (dialog = false),
+                        (alert = false)
                     "
                   >
                     Generar
@@ -418,7 +427,7 @@
         :catalogue="catalogue"
       />
       <v-alert dense text type="success" :hidden="alert" dismissible>
-        Se genero correctamente su orden      
+        Se genero correctamente su orden
       </v-alert>
     </v-col>
   </div>
@@ -430,7 +439,7 @@ import moment from "moment";
 
 export default {
   comments: {
-    Product
+    Product,
   },
   data: () => ({
     dialog: false,
@@ -451,38 +460,38 @@ export default {
         text: "Modelo",
         value: "model",
         align: "center",
-        sortable: false
+        sortable: false,
       },
       {
         text: "Marca",
         value: "brand",
         align: "center",
-        sortable: false
+        sortable: false,
       },
       {
         text: "Precio unitario(A)",
         value: "price_unit",
         align: "center",
-        sortable: false
+        sortable: false,
       },
       {
         text: "Cantidad Mínima de Pedido(B)",
         value: "quantity_group",
         align: "center",
-        sortable: false
+        sortable: false,
       },
       {
         text: "Precio Total por Cantidad Mínima(AxB)",
         value: "price_group",
         align: "center",
-        sortable: false
+        sortable: false,
       },
       {
         text: "Cantidad de Pedido",
         value: "quantity_order",
         align: "center",
-        sortable: false
-      }
+        sortable: false,
+      },
     ],
     headersItem: [
       { text: "Imagen", value: "images", align: "center", sortable: false },
@@ -490,39 +499,39 @@ export default {
         text: "Modelo",
         value: "model",
         align: "center",
-        sortable: false
+        sortable: false,
       },
       {
         text: "Marca",
         value: "brand",
         align: "center",
-        sortable: false
+        sortable: false,
       },
       {
         text: "Precio por cantidad de Pedido",
         value: "ranges",
         align: "center",
-        sortable: false
+        sortable: false,
       },
       {
         text: "Cantidad de Pedido",
         value: "quantity_order",
         align: "center",
-        sortable: false
-      }
+        sortable: false,
+      },
     ],
     catalogueGet: null,
     alert: true,
   }),
   components: {
-    Product
+    Product,
   },
   computed: {
     ...mapGetters("groupImport", ["catalogue", "cart"]),
 
     total() {
       let t = 0;
-      this.selected.forEach(element => {
+      this.selected.forEach((element) => {
         t += element.quantity * element.price_unit;
       });
       this.totalItems += t;
@@ -542,10 +551,10 @@ export default {
       let q = 0;
       let p = 0;
       let tot = 0;
-      this.selectedRange.forEach(element => {
+      this.selectedRange.forEach((element) => {
         q = element.quantity;
         if (element.ranges.length != 0) {
-          element.ranges.forEach(range => {
+          element.ranges.forEach((range) => {
             if ((q >= range.min) & (q <= range.max)) {
               t = range.price * q;
             }
@@ -568,7 +577,7 @@ export default {
     totalGeneral() {
       let t = this.total + this.totalRange;
       return t;
-    }
+    },
   },
   methods: {
     ...mapActions("groupImport", ["removeCart"]),
@@ -576,7 +585,7 @@ export default {
       "getCatalogue",
       "addCart",
       "setCart",
-      "generateOrder"
+      "generateOrder",
     ]),
     minusFunction(item, index) {
       if (item.quantity <= item.quantity_group) {
@@ -618,22 +627,23 @@ export default {
     mas() {
       this.catalogue.productRanges[1].quantity++;
       console.log(this.catalogue.productRanges[1].quantity);
-    }
+    },
   },
   mounted() {
     this.getCatalogue(this.$route.params.id);
+    console.log(this.catalogue);
   },
   filters: {
-    currency: function(value) {
+    currency: function (value) {
       return parseFloat(value).toFixed(2);
     },
-    date: function(value) {
+    date: function (value) {
       return moment(value).format("YYYY-MM-DD");
     },
-    porcent: function(value) {
+    porcent: function (value) {
       return parseFloat(value) * 100 + " %";
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

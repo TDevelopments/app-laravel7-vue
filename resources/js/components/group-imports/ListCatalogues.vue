@@ -2,7 +2,14 @@
   <div>
     <v-container class="mx-auto">
       <v-row class="mt-5">
-        <v-col v-for="(item, index) in catalogues" :key="index" cols="12" sm="12" md="6" lg="6">
+        <v-col
+          v-for="(item, index) in catalogues"
+          :key="index"
+          cols="12"
+          sm="12"
+          md="6"
+          lg="6"
+        >
           <v-card class="mx-auto" max-width="500">
             <v-img
               src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
@@ -15,11 +22,8 @@
                   Catálogo &nbsp;<strong>{{ item.name }} </strong>
                   <v-spacer></v-spacer>
                 </v-col>
-                <v-col cols="12">
-                  Moneda &nbsp;
-                  <v-avatar size="40" color="#0D52D6" class="text-white">{{
-                    item.coin == "soles" ? "S./" : "$"
-                  }}</v-avatar>
+                <v-col cols="12" class="text-capitalize">
+                  Moneda &nbsp; {{ item.coin }}
                 </v-col>
               </v-row>
             </v-card-title>
@@ -31,7 +35,7 @@
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
                   <v-chip class="mr-2">
-                    <v-icon left> mdi-cash </v-icon>
+                    {{ item.coin == "soles" ? "S./" : "$" }}
                     {{ item.quota_price | currency }}
                   </v-chip>
                 </v-col>
@@ -59,7 +63,7 @@
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
                   <v-chip class="mr-2">
-                    <v-icon left> mdi-cash </v-icon>
+                    {{ item.coin == "soles" ? "S./" : "$" }}
                     {{ item.minimum_investment | currency }}
                   </v-chip>
                 </v-col>
@@ -68,8 +72,8 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black" x-small>mdi-circle</v-icon> % de
-                  Primera cuota:
+                  <v-icon color="black" x-small>mdi-circle</v-icon> % de Primera
+                  cuota:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
                   <v-chip class="mr-2">
@@ -82,8 +86,8 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black" x-small>mdi-circle</v-icon> % de
-                  Segunda cuota:
+                  <v-icon color="black" x-small>mdi-circle</v-icon> % de Segunda
+                  cuota:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
                   <v-chip class="mr-2">
