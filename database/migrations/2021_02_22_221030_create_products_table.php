@@ -33,7 +33,7 @@ class CreateProductsTable extends Migration
             $table->float('price_unit', 8, 2);
             $table->float('price_group', 8, 2);
             $table->integer('quantity_group');
-            $table->enum('type_group', ['units', 'sets']);
+            $table->enum('type_group', ['unidades', 'sets', 'cajas']);
 
             $table->foreignId('catalogue_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');

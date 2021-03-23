@@ -557,7 +557,8 @@
       </v-btn>
       <v-btn
         :disabled="!valid"
-        color="success"
+        color="#0D52D6"
+        dark
         class="mr-3 my-5"
         @click="validate"
       >

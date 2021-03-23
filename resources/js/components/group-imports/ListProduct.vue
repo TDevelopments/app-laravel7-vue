@@ -30,7 +30,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                <v-icon color="black" x-small>mdi-circle</v-icon>
                 Monto de separación de cupo:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
@@ -44,7 +44,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                <v-icon color="black" x-small>mdi-circle</v-icon>
                 Ultimo día para la separación de cupo:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
@@ -58,7 +58,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                <v-icon color="black" x-small>mdi-circle</v-icon>
                 Inversión minima:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
@@ -72,7 +72,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
+                <v-icon color="black" x-small>mdi-circle</v-icon> % de
                 Primera cuota:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
@@ -86,7 +86,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
+                <v-icon color="black" x-small>mdi-circle</v-icon> % de
                 Segunda cuota:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
@@ -100,7 +100,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                <v-icon color="black" x-small>mdi-circle</v-icon>
                 Fecha limite para el pago de la primera cuota:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
@@ -114,7 +114,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col cols="12" sm="8">
-                <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                <v-icon color="black" x-small>mdi-circle</v-icon>
                 Fecha Limite Segunda Cuota:
               </v-col>
               <v-col cols="12" sm="4" class="text-right">
@@ -134,7 +134,6 @@
             background-color="#546E7A"
             v-model="currentTab"
             dark
-            show-arrows
           >
             <v-tab v-if="catalogue.products.length != 0">
               Productos por conjunto
@@ -157,16 +156,6 @@
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
-                <template v-slot:top>
-                  <v-toolbar flat>
-                    <v-toolbar-title>Productos</v-toolbar-title>
-                  </v-toolbar>
-                </template>
-                <template v-slot:headers>
-                  <tr>
-                    HOla Mundo
-                  </tr>
-                </template>
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
                     v-if="item.images == null || item.images.length == 0"
@@ -178,7 +167,7 @@
                   <v-img
                     v-else
                     contain
-                    :src="baseURL + item.images[0].path"
+                    :src="item.images[0].path"
                     max-width="150"
                     class="text-center align-center"
                   />
@@ -186,13 +175,7 @@
                 <template v-slot:[`item.quantity_group`]="{ item }">
                   {{ item.quantity_group + " " }}
                   <br />
-                  {{
-                    item.type_group == "units"
-                      ? "unidades"
-                      : item.quantity_group == 1
-                      ? "caja"
-                      : "cajas"
-                  }}
+                  {{ item.type_group }}
                 </template>
                 <template v-slot:[`item.quantity_order`]="{ item, index }">
                   <v-text-field
@@ -203,7 +186,6 @@
                     prepend-icon="mdi-minus"
                     @click:append-outer="plusFunctionO(index)"
                     @click:prepend="minusFunction(item, index)"
-                    readonly
                     v-model="item.quantity"
                     hide-details
                   ></v-text-field>
@@ -246,14 +228,14 @@
                   <v-img
                     v-else
                     contain
-                    :src="baseURL + item.images[0].path"
+                    :src="item.images[0].path"
                     max-width="150"
                     class="text-center align-center"
                   />
                 </template>
                 <template v-slot:[`item.ranges`]="{ item, index }">
                   <div v-for="range in item.ranges" :key="range.id">
-                    <v-icon>mdi-unfold-more-vertical</v-icon> De
+                    <v-icon x-small>mdi-circle</v-icon> De
                     {{ range.min }} a {{ range.max }} el precio es
                     {{ range.price }}
                   </div>
@@ -267,7 +249,6 @@
                     prepend-icon="mdi-minus"
                     @click:append-outer="plusFunctionR(index)"
                     @click:prepend="minusFunctionR(item, index)"
-                    readonly
                     v-model="item.quantity"
                     hide-details
                   ></v-text-field>
@@ -305,7 +286,7 @@
                   <v-img
                     v-else
                     contain
-                    :src="baseURL + product.images[0].path"
+                    :src="product.images[0].path"
                     max-width="75"
                     height="50"
                     class="text-center align-center"
@@ -318,15 +299,7 @@
                   }}{{ (product.quantity * product.price_unit) | currency }}
                   <br />
                   Cantidad
-                  {{
-                    product.quantity +
-                    " " +
-                    (product.type_group == "units"
-                      ? "unidades"
-                      : product.quantity == 1
-                      ? "caja"
-                      : "cajas")
-                  }}
+                  {{ product.quantity + " " + product.type_group }}
                   <br />
                 </v-col>
               </v-row>
@@ -342,7 +315,7 @@
                   <v-img
                     v-if="
                       productRange.images == null ||
-                      productRange.images.length == 0
+                        productRange.images.length == 0
                     "
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                     max-width="75"
@@ -353,7 +326,7 @@
                   <v-img
                     v-else
                     contain
-                    :src="baseURL + productRange.images[0].path"
+                    :src="productRange.images[0].path"
                     max-width="75"
                     height="50"
                     class="text-center align-center"
@@ -368,8 +341,8 @@
                   Cantidad
                   {{
                     productRange.quantity +
-                    " " +
-                    (productRange.quantity == 1 ? "Unidad" : "Unidades")
+                      " " +
+                      (productRange.quantity == 1 ? "Unidad" : "Unidades")
                   }}
                   <br />
                 </v-col>
@@ -408,8 +381,8 @@
               <v-card>
                 <v-card-title class="headline"> Generar Orden </v-card-title>
                 <v-card-text>
-                  Antes de generar esta orden, tienes que estar seguro de que
-                  los datos con los que te registraste son validos, ya que
+                  Antes de generar esta orden, <strong class="text-red">tienes que estar seguro de que
+                  los datos con los que te registraste son validos</strong>, ya que
                   mediante estos estaremos generando una orden de compra.
                 </v-card-text>
                 <v-card-actions>
@@ -457,7 +430,7 @@ import moment from "moment";
 
 export default {
   comments: {
-    Product,
+    Product
   },
   data: () => ({
     dialog: false,
@@ -478,38 +451,38 @@ export default {
         text: "Modelo",
         value: "model",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Marca",
         value: "brand",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Precio unitario(A)",
         value: "price_unit",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Cantidad Mínima de Pedido(B)",
         value: "quantity_group",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Precio Total por Cantidad Mínima(AxB)",
         value: "price_group",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Cantidad de Pedido",
         value: "quantity_order",
         align: "center",
-        sortable: false,
-      },
+        sortable: false
+      }
     ],
     headersItem: [
       { text: "Imagen", value: "images", align: "center", sortable: false },
@@ -517,39 +490,39 @@ export default {
         text: "Modelo",
         value: "model",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Marca",
         value: "brand",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Precio por cantidad de Pedido",
         value: "ranges",
         align: "center",
-        sortable: false,
+        sortable: false
       },
       {
         text: "Cantidad de Pedido",
         value: "quantity_order",
         align: "center",
-        sortable: false,
-      },
+        sortable: false
+      }
     ],
     catalogueGet: null,
     alert: true,
   }),
   components: {
-    Product,
+    Product
   },
   computed: {
     ...mapGetters("groupImport", ["catalogue", "cart"]),
 
     total() {
       let t = 0;
-      this.selected.forEach((element) => {
+      this.selected.forEach(element => {
         t += element.quantity * element.price_unit;
       });
       this.totalItems += t;
@@ -569,10 +542,10 @@ export default {
       let q = 0;
       let p = 0;
       let tot = 0;
-      this.selectedRange.forEach((element) => {
+      this.selectedRange.forEach(element => {
         q = element.quantity;
         if (element.ranges.length != 0) {
-          element.ranges.forEach((range) => {
+          element.ranges.forEach(range => {
             if ((q >= range.min) & (q <= range.max)) {
               t = range.price * q;
             }
@@ -595,7 +568,7 @@ export default {
     totalGeneral() {
       let t = this.total + this.totalRange;
       return t;
-    },
+    }
   },
   methods: {
     ...mapActions("groupImport", ["removeCart"]),
@@ -603,7 +576,7 @@ export default {
       "getCatalogue",
       "addCart",
       "setCart",
-      "generateOrder",
+      "generateOrder"
     ]),
     minusFunction(item, index) {
       if (item.quantity <= item.quantity_group) {
@@ -645,24 +618,22 @@ export default {
     mas() {
       this.catalogue.productRanges[1].quantity++;
       console.log(this.catalogue.productRanges[1].quantity);
-    },
+    }
   },
   mounted() {
     this.getCatalogue(this.$route.params.id);
-    console.log("Imbesil", process.env.MIX_NODE_URL);
-    this.baseURL = process.env.MIX_NODE_URL;
   },
   filters: {
-    currency: function (value) {
+    currency: function(value) {
       return parseFloat(value).toFixed(2);
     },
-    date: function (value) {
+    date: function(value) {
       return moment(value).format("YYYY-MM-DD");
     },
-    porcent: function (value) {
+    porcent: function(value) {
       return parseFloat(value) * 100 + " %";
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>

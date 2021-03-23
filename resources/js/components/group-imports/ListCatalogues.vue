@@ -26,7 +26,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
                   Monto de separación de cupo:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
@@ -40,7 +40,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
                   Ultimo día para la separación de cupo:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
@@ -54,7 +54,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
                   Inversión minima:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
@@ -68,7 +68,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
+                  <v-icon color="black" x-small>mdi-circle</v-icon> % de
                   Primera cuota:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
@@ -82,7 +82,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black">mdi-unfold-more-vertical</v-icon> % de
+                  <v-icon color="black" x-small>mdi-circle</v-icon> % de
                   Segunda cuota:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
@@ -96,7 +96,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
                   Fecha limite para el pago de la primera cuota:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">
@@ -110,7 +110,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col cols="12" sm="8">
-                  <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
                   Fecha Limite Segunda Cuota:
                 </v-col>
                 <v-col cols="12" sm="4" class="text-right">

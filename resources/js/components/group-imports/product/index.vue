@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     transition="dialog-bottom-transition"
-    max-width="900"
+    max-width="1200"
     v-model="show"
   >
     <v-toolbar color="primary" dark class="text-h6 mb-2">Detalles del producto</v-toolbar>
@@ -16,20 +16,21 @@
             />
             <v-img
               :src="product.images[model].path"
-              height="250"
+              max-width="500"
+              height="350"
               contain
               v-else
             />
             <v-sheet class="mx-auto" max-width="800">
-              <v-slide-group v-model="model" class="pa-4" show-arrows>
+              <v-slide-group v-model="model" show-arrows>
                 <v-slide-item
                   v-if="product.images == null || product.images.length == 0"
                   v-slot="{ active, toggle }"
                 >
                   <v-img
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    max-width="70"
-                    height="60"
+                    max-width="120"
+                    height="90"
                     contain
                     class="m-1"
                     @click="toggle"
@@ -43,8 +44,8 @@
                 >
                   <v-img
                     :src="item.path"
-                    max-width="70"
-                    height="60"
+                    max-width="140"
+                    height="90"
                     contain
                     class="m-1"
                     @click="toggle"
@@ -66,7 +67,7 @@
               </div>
               <v-row>
                 <v-col class="mt-3 pb-0 text-subtitle-1">
-                  <strong>PRECIO POR {{ product.quantity_group }} U.</strong>
+                  <strong>PRECIO POR {{ product.quantity_group }} {{ type_group.toUpperCase() }}</strong>
                   <div class="form-inline">
                     <v-avatar
                       color="#0D52D6"
@@ -155,9 +156,30 @@ export default {
         this.$emit("input", value);
       },
     },
+    type_group(){
+      let valor = '';
+      if ( this.product.quantity_group > 1 ){
+        valor = this.product.type_group;
+      }else{
+        switch (this.product.type_group) {
+          case 'unidades':
+            valor = 'unidades'
+            break;
+          case 'sets':
+            valor = 'set'
+            break;
+          case 'cajas':
+            valor = 'caja'
+            break;
+          default:
+            break;
+        } 
+      }
+      return valor;
+    }
   },
   mounted() {
-    console.log("Component", this.product);
+    // console.log("Component", this.product);
   },
 };
 </script>

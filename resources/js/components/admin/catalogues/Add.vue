@@ -15,164 +15,207 @@
     <v-card flat elevation="2">
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
-          <v-col cols="12">
-            <v-row>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                Nombre de Catálogo
-                <v-text-field
-                  v-model="catalogue.name"
-                  required
-                  solo
-                  placeholder="Example"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                TIpo de Moneda
-                <v-select
-                  v-model="catalogue.coin"
-                  :items="coins"
-                  menu-props="auto"
-                  hide-details
-                  prepend-inner-icon="mdi-cash-multiple"
-                  solo
-                  @change="typeCoin"
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                Inversión Minima
-                <v-text-field
-                  v-model="catalogue.minimum_investment"
-                  required
-                  :prefix="iconCoin"
-                  solo
-                  type="number"
-                  ref="minimum_investment"
-                  placeholder="0"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                Monto de Separación
-                <v-text-field
-                  v-model="catalogue.quota_price"
-                  :prefix="iconCoin"
-                  required
-                  solo
-                  type="number"
-                  ref="quota_price"
-                  placeholder="0"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                <v-menu
-                  v-model="menu1"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    Fecha Pago Monto de Separación
-                    <v-text-field
+          <v-row>
+            <v-col cols="12">
+              <v-row>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  Nombre de Catálogo
+                  <v-text-field
+                    v-model="catalogue.name"
+                    required
+                    solo
+                    placeholder="Example"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  TIpo de Moneda
+                  <v-select
+                    v-model="catalogue.coin"
+                    :items="coins"
+                    menu-props="auto"
+                    hide-details
+                    prepend-inner-icon="mdi-cash-multiple"
+                    solo
+                    @change="typeCoin"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  Inversión Minima
+                  <v-text-field
+                    v-model="catalogue.minimum_investment"
+                    required
+                    :prefix="iconCoin"
+                    solo
+                    type="number"
+                    ref="minimum_investment"
+                    placeholder="0"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  Monto de Separación
+                  <v-text-field
+                    v-model="catalogue.quota_price"
+                    :prefix="iconCoin"
+                    required
+                    solo
+                    type="number"
+                    ref="quota_price"
+                    placeholder="0"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  <v-menu
+                    v-model="menu1"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      Fecha Pago Monto de Separación
+                      <v-text-field
+                        v-model="catalogue.quota_date"
+                        label="Quota Date"
+                        prepend-inner-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        solo
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
                       v-model="catalogue.quota_date"
-                      label="Quota Date"
-                      prepend-inner-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                      solo
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="catalogue.quota_date"
-                    @input="menu1 = false"
-                  ></v-date-picker>
-                </v-menu>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                % Primer Pago
-                <v-text-field
-                  v-model="catalogue.first_payment"
-                  type="number"
-                  prefix="%"
-                  required
-                  solo
-                  placeholder="0"
-                  maxlength="3"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                <v-menu
-                  v-model="menu2"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    Fecha Primer Pago
-                    <v-text-field
+                      @input="menu1 = false"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  % Primer Pago
+                  <v-text-field
+                    v-model="catalogue.first_payment"
+                    type="number"
+                    prefix="%"
+                    required
+                    solo
+                    placeholder="0"
+                    maxlength="3"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  <v-menu
+                    v-model="menu2"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      Fecha Primer Pago
+                      <v-text-field
+                        v-model="catalogue.date_first_payment"
+                        prepend-inner-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        solo
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
                       v-model="catalogue.date_first_payment"
-                      prepend-inner-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                      solo
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="catalogue.date_first_payment"
-                    @input="menu2 = false"
-                  ></v-date-picker>
-                </v-menu>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                % Segundo Pago
-                <v-text-field
-                  v-model="catalogue.second_payment"
-                  prefix="%"
-                  required
-                  solo
-                  placeholder="0"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4" lg="3">
-                <v-menu
-                  v-model="menu3"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  transition="scale-transition"
-                  offset-y
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    Fecha Segundo Pago
-                    <v-text-field
+                      @input="menu2 = false"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  % Segundo Pago
+                  <v-text-field
+                    v-model="catalogue.second_payment"
+                    prefix="%"
+                    required
+                    solo
+                    placeholder="0"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="4" lg="3">
+                  <v-menu
+                    v-model="menu3"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      Fecha Segundo Pago
+                      <v-text-field
+                        v-model="catalogue.date_second_payment"
+                        prepend-inner-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        solo
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
                       v-model="catalogue.date_second_payment"
-                      prepend-inner-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                      solo
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="catalogue.date_second_payment"
-                    @input="menu3 = false"
-                  ></v-date-picker>
-                </v-menu>
-              </v-col>
-            </v-row>
-          </v-col>
+                      @input="menu3 = false"
+                    ></v-date-picker>
+                  </v-menu>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="12" md="6" lg="6">
+                  Condiciones de Cátalogo
+                  <v-combobox
+                    v-model="catalogue.conditions"
+                    chips
+                    clearable
+                    multiple
+                    solo
+                  >
+                    <template
+                      v-slot:selection="{ attrs, item, select, selected }"
+                    >
+                      <v-chip
+                        v-bind="attrs"
+                        :input-value="selected"
+                        close
+                        label
+                        class="my-2"
+                        @click="select"
+                        @click:close="remove(item)"
+                        color="primary"
+                      >
+                        {{ item }}
+                      </v-chip>
+                    </template>
+                  </v-combobox>
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col>
+              <v-file-input
+                v-model="imagesCatalogue"
+                label="Imagen"
+                multiple
+                solo
+                counter
+                dense
+                prepend-icon="mdi-camera"
+              >
+              </v-file-input>
+            </v-col>
+          </v-row>
         </v-form>
       </v-card-text>
     </v-card>
@@ -256,8 +299,8 @@
         </v-window-item>
       </v-window>
     </v-col>
-    <v-btn :disabled="!valid" color="success" class="mr-4" @click="validate">
-      Validate
+    <v-btn :disabled="!valid" color="#0D52D6" class="mr-4" @click="validate" dark>
+      Guardar
     </v-btn>
   </div>
 </template>
@@ -265,6 +308,7 @@
 <script>
 export default {
   data: () => ({
+    imagesCatalogue: null,
     e1: null,
     inputs: [
       {
@@ -335,7 +379,36 @@ export default {
   },
   methods: {
     validate() {
-      this.addCatalogue();
+      if (this.imagesCatalogue.length != 0) {
+        this.addImages();
+      }
+      else {
+        this.addCatalogue();
+      }
+    },
+    addImages() {
+      const data = new FormData();
+      this.imagesCatalogue.forEach((elements, index) => {
+        console.log(index);
+        console.log(elements);
+        data.append(`image_uploads[${index}]`, elements);
+      });
+      axios
+        .post(`/api/v1/uploads`, data, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          this.catalogue.image = response.data;
+          console.log("aqui", response.data);
+          this.addCatalogue();
+        })
+        .catch((error) => {
+          console.log(error);
+          // reject(error);
+        });
     },
     addCatalogue() {
       axios
@@ -388,6 +461,14 @@ export default {
     typeCoin() {
       if (this.catalogue.coin == "soles") this.iconCoin = "S/.";
       else this.iconCoin = "$";
+    },
+
+    remove(item) {
+      this.catalogue.conditions.splice(
+        this.catalogue.conditions.indexOf(item),
+        1
+      );
+      this.catalogue.conditions = [...this.catalogue.conditions];
     },
   },
 };

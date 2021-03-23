@@ -47,7 +47,16 @@ class UserController extends Controller
         $request['password']=Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
         $user = $this->user->create($request->toArray());
-        $user->roles()->attach($this->role->where('name', 'user')->first());
+        if ($request['roles'])
+        {
+            $roles = $request['roles'];
+            foreach ($roles as $role)
+            {
+                $user->roles()->attach(Role::where('name', $role)->first());
+            }
+        }
+        else
+            $user->roles()->attach($this->role->where('name', 'user')->first());
         return new UserResource($user);
     }
 

@@ -25,7 +25,7 @@
                     hint="At least 8 characters"
                     counter
                     @click:append="show1 = !show1"
-                    v-on:keyup.enter="login"
+                    v-on:keyup.enter="login({ dni, password })"
                   ></v-text-field>
                   <div class="text-center">
                     <v-btn

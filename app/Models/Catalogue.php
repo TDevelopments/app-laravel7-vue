@@ -19,11 +19,13 @@ class Catalogue extends Model
      */
 
     protected $casts = [
-        // 'arrival_places' => 'array'
+        'conditions' => 'array'
     ];
 
     protected $fillable = [
         'name',
+        'conditions',
+        'image',
         'is_available',
         'coin',
         'quota_price',
