@@ -148,10 +148,6 @@
           <div class="content">
             <h3>Ya tienes una cuenta?</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
-              consequuntur quos, dolorem quam voluptatum voluptates labore.
-              Dolores magni sint, ex totam, quas vitae unde sit tenetur esse nam
-              sapiente amet!
             </p>
             <v-btn
               color="white"
@@ -272,7 +268,6 @@ h1 {
   font-weight: bold;
 }
 .containers {
-  position: relative;
   width: 100%;
   min-height: 100vh;
   background-color: #fff;
@@ -367,7 +362,7 @@ h1 {
   }
   .signin {
     width: 70%;
-    top: 95%;
+    top: 120%;
     transform: translate(-50%, -100%);
     transition: 1s 0.8s ease-in-out;
   }
@@ -431,6 +426,7 @@ h1 {
 @media (max-width: 570px) {
   .form {
     padding: 0 1.5rem;
+    margin-bottom: 2000px;
   }
 
   .image {
@@ -446,6 +442,12 @@ h1 {
   .containers:before {
     bottom: 72%;
     left: 50%;
+  }
+  .signin {
+    top: 125%;
+    transform: translate(-50%, -100%);
+    transition: 1s 0.8s ease-in-out;
+    margin-bottom: 300px;
   }
 }
 </style>
