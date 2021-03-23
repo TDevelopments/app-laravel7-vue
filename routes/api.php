@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\v1\ImageController;
 use App\Http\Controllers\Api\v1\OrderController;
 use App\Http\Controllers\Api\v1\OrderDetailController;
 use App\Http\Controllers\Api\v1\PaymentController;
+use App\Http\Controllers\Api\v1\MeasureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,13 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('product-ranges/{product_range}', [ProductRangeController::class, 'show']);
         Route::put('product-ranges/{product_range}', [ProductRangeController::class, 'update']);
         Route::delete('product-ranges/{product_range}', [ProductRangeController::class, 'destroy']);
+
+        // Measure
+        Route::get('measures', [MeasureController::class, 'index']);
+        Route::post('measures', [MeasureController::class, 'store']);
+        Route::get('measures/{measure}', [MeasureController::class, 'show']);
+        Route::put('measures/{measure}', [MeasureController::class, 'update']);
+        Route::delete('measures/{measure}', [MeasureController::class, 'destroy']);
 
         Route::post('products-massive', [ProductController::class, 'createMassive']);
         Route::post('product-ranges-massive', [ProductRangeController::class, 'createMassive']);

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(RoleTableSeeder::class);
+        $this->call(MeasureSeeder::class);
 
         $user = User::create([
             'name' => 'George Miguel',

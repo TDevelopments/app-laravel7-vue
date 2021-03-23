@@ -19,6 +19,8 @@ class CatalogueResource extends JsonResource
         return[
             'id' => $this->id,
             'name' => $this->name,
+            'coditions' => $this->conditions,
+            'image' => $this->image,
             'is_available' => $this->is_available,
             'coin' => $this->coin,
             'quota_date' => $this->quota_date,
