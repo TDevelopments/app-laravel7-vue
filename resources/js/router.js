@@ -34,6 +34,11 @@ import ListUser from "./components/admin/users/List";
 import AddUser from "./components/admin/users/Add";
 import EditUser from "./components/admin/users/Edit";
 
+// Pages View CRUD Measures
+import ListMeasure from "./components/admin/measure/List";
+import AddMeasure from "./components/admin/measure/Add";
+import EditMeasure from "./components/admin/measure/Edit";
+
 // Pages View Orders
 import ListOrder from "./components/admin/orders/List";
 import EditOrder from "./components/admin/orders/Edit";
@@ -208,6 +213,22 @@ export default new Router({
           path: "/admin/user/:id/edit",
           name: "editUser",
           component: EditUser
+        },
+        // Measures
+        {
+          path: "/admin/measures",
+          name: "listMeasure",
+          component: ListMeasure
+        },
+        {
+          path: "/admin/measure/add",
+          name: "addMeasure",
+          component: AddMeasure
+        },
+        {
+          path: "/admin/measure/:id/edit",
+          name: "editMeasure",
+          component: EditMeasure
         },
         // Orders
         {

@@ -25,9 +25,9 @@ class CatalogueRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'image.id' => ['required', 'exists:App\Models\Image,id'],
-            'image.name' => ['required', 'exists:App\Models\Image,name'],
-            'image.path' => ['required', 'exists:App\Models\Image,path'],
+            'image.id' => ['exists:App\Models\Image,id'],
+            'image.name' => ['exists:App\Models\Image,name'],
+            'image.path' => ['exists:App\Models\Image,path'],
             'conditions' => ['array'],
             'conditions.*' => ['string'],
             'is_available' => ['boolean'],

@@ -89,7 +89,7 @@
                     v-model="product.type_group"
                     Types
                     Group
-                    :items="types"
+                    :items="measures"
                     menu-props="auto"
                     solo
                     hide-details
@@ -613,6 +613,7 @@ export default {
     selection: "color",
     dialogColor: false,
     dialgoDescripciones: false,
+    measures: [],
   }),
   computed: {
     productQG: function () {
@@ -644,6 +645,7 @@ export default {
   mounted() {
     this.getCatalogues();
     this.getCategories();
+    this.getMeasures();
   },
 
   methods: {
@@ -665,7 +667,6 @@ export default {
       axios
         .get("/api/v1/categories")
         .then((response) => {
-          this.loading = false;
           this.categories = response.data.data;
         })
         .catch((error) => {});
@@ -677,9 +678,23 @@ export default {
         .get("/api/v1/catalogues")
         .then((response) => {
           console.log(response);
-          this.loading = false;
           this.catalogues = response.data.data;
           console.log(this.catalogues);
+        })
+        .catch((error) => {
+          //console.log(error)
+          // reject(error);
+        });
+    },
+
+    getMeasures() {
+      axios
+        .get("/api/v1/measures")
+        .then((response) => {
+          console.log(response.data);
+          response.data.forEach(element => {
+            this.measures.push(element.name)
+          })
         })
         .catch((error) => {
           //console.log(error)

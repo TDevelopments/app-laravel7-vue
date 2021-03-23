@@ -104,6 +104,22 @@
             <v-list-item-title>Crear Usuarios</v-list-item-title>
           </v-list-item>
         </v-list-group>
+
+        <v-list-group
+          prepend-icon="mdi-account-circle"
+          no-action
+          color="#FCF3F3"
+        >
+          <template v-slot:activator>
+            <v-list-item-title>Unidades</v-list-item-title>
+          </template>
+          <v-list-item link :to="{ name: 'listMeasure' }">
+            <v-list-item-title>Listar Unidades</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'addMeasure' }">
+            <v-list-item-title>Crear Unidad</v-list-item-title>
+          </v-list-item>
+        </v-list-group>
         <v-list-group prepend-icon="mdi-view-list" no-action color="#FCF3F3">
           <template v-slot:activator>
             <v-list-item-title>Ordenes</v-list-item-title>
@@ -130,7 +146,9 @@
 
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn color="#1867C0" block class="text-capitalize" @click="viewUser"><v-icon class="mr-2">mdi-eye</v-icon> Ver Como Usuario </v-btn>
+          <v-btn color="#1867C0" block class="text-capitalize" @click="viewUser"
+            ><v-icon class="mr-2">mdi-eye</v-icon> Ver Como Usuario
+          </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -174,8 +192,8 @@ export default {
     sS() {
       this.module = "SellStock";
     },
-    viewUser(){
-      this.$router.push({name: "group-import"})
+    viewUser() {
+      this.$router.push({ name: "group-import" });
     },
   },
 };

@@ -59,7 +59,7 @@ class MeasureController extends Controller
      */
     public function update(MeasureRequest $request, Measure $measure)
     {
-        $measure->update($request->toArray);
+        $measure->update($request->toArray());
         return response()->json($measure, 200);
     }
 

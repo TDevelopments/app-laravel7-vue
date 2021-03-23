@@ -41,7 +41,7 @@ class ProductRequest extends FormRequest
             'price_unit' => ['required','numeric'],
             'price_group' => ['required','numeric'],
             'quantity_group' => ['required','integer'],
-            'type_group' => ['required', 'string','in:unidades,sets,cajas'],
+            'type_group' => ['required', 'string'],
             'catalogue_id' => ['required', 'integer', 'exists:App\Models\Catalogue,id'],
             'category_id' => ['required', 'integer', 'exists:App\Models\Category,id'],
         ];

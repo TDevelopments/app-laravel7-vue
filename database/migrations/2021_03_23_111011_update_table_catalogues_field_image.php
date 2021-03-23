@@ -14,7 +14,7 @@ class UpdateTableCataloguesFieldImage extends Migration
     public function up()
     {
         Schema::table('catalogues', function (Blueprint $table) {
-            $table->json('image')->nullable();
+            $table->json('image')->nullable()->change();
         });
     }
 

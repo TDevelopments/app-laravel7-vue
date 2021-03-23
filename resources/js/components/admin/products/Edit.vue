@@ -73,7 +73,7 @@
                     v-model="product.type_group"
                     Types
                     Group
-                    :items="types"
+                    :items="measures"
                     menu-props="auto"
                     solo
                     hide-details
@@ -345,7 +345,8 @@ export default {
     // Items Image Show
     images: [],
     // Validation
-    valid: true
+    valid: true,
+    measures: [],
   }),
   computed: {
     productQG: function() {
@@ -378,6 +379,7 @@ export default {
     this.getProduct();
     this.getCatalogues();
     this.getCategories();
+    this.getMeasures();
   },
   methods: {
     // Validation
@@ -413,6 +415,21 @@ export default {
           console.log(this.catalogues);
         })
         .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
+    },
+
+    getMeasures() {
+      axios
+        .get("/api/v1/measures")
+        .then((response) => {
+          console.log(response.data);
+          response.data.forEach(element => {
+            this.measures.push(element.name)
+          })
+        })
+        .catch((error) => {
           //console.log(error)
           // reject(error);
         });

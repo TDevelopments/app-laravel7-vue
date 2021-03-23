@@ -245,7 +245,7 @@ v<template>
                       Ciudad
                       <v-select
                         v-model="input.city"
-                        :items="states"
+                        :items="cities"
                         menu-props="auto"
                         hide-details
                         prepend-inner-icon="mdi-map"
@@ -335,13 +335,38 @@ export default {
       second_payment: "",
       date_second_payment: "",
       coins: "",
+      conditions: [],
     },
     select: null,
     url: null,
-    states: ["Arequipa", "Lima"],
+    cities: [
+      "Amazonas",
+      "Ancash",
+      "Apurímac",
+      "Arequipa",
+      "Ayacucho",
+      "Cajamarca",
+      "Cusco",
+      "Huancavelica",
+      "Huánuco",
+      "Ica",
+      "Junín",
+      "La Libertad",
+      "Lambayeque",
+      "Lima",
+      "Loreto",
+      "Madre de Dios",
+      "Moquegua",
+      "Pasco",
+      "Piura",
+      "Puno",
+      "San Martín",
+      "Tacna",
+      "Tumbes",
+      "Ucayali",
+    ],
     idDelete: [],
     coins: ["soles", "dolares"],
-    states: ["Arequipa", "Lima"],
     iconCoin: "",
     imagesCatalogue: null,
   }),
@@ -396,6 +421,7 @@ export default {
                 arrival_date: moment(element.arrival_date).format("YYYY-MM-DD"),
               });
             });
+          console.log("asd", response.data.data.conditions);
         })
         .catch((error) => {});
     },
@@ -464,6 +490,10 @@ export default {
     typeCoin() {
       if (this.catalogue.coin == "soles") this.iconCoin = "S/.";
       else this.iconCoin = "$";
+    },
+    remove(item) {
+      this.catalogue.conditions.splice(this.catalogue.conditions.indexOf(item));
+      this.catalogue.conditions = [...this.catalogue.conditions];
     },
   },
 };

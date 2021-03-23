@@ -221,7 +221,7 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete(`http://applaravel.test/api/v1/catalogues/${this.idDelete}`)
+        .delete(`/api/v1/catalogues/${this.idDelete}`)
         .then((response) => {
           this.closeDelete();
           this.getList();

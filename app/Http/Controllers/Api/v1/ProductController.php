@@ -122,7 +122,7 @@ class ProductController extends Controller
             'products.*.price_unit' => ['required','numeric'],
             'products.*.price_group' => ['required','numeric'],
             'products.*.quantity_group' => ['required','integer'],
-            'products.*.type_group' => ['required', 'string','in:units,sets'],
+            'products.*.type_group' => ['required', 'string'],
             'products.*.catalogue_id' => ['required', 'integer', 'exists:App\Models\Catalogue,id'],
             'products.*category_id' => ['required', 'integer', 'exists:App\Models\Category,id'],
         ]);

@@ -308,7 +308,7 @@
 <script>
 export default {
   data: () => ({
-    imagesCatalogue: null,
+    imagesCatalogue: [],
     e1: null,
     inputs: [
       {
@@ -401,8 +401,8 @@ export default {
           },
         })
         .then((response) => {
-          this.catalogue.image = response.data;
-          console.log("aqui", response.data);
+          this.catalogue.image = response.data[0];
+          console.log("aqui", response.data[0]);
           this.addCatalogue();
         })
         .catch((error) => {
