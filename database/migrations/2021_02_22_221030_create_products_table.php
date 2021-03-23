@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->string('sku')->unique();
             // $table->string('video')->nullable();
             $table->json('description')->nullable();
+            $table->integer('magnifying')->default(1);
             $table->json('images')->nullable();
             $table->string('model')->unique();
             $table->string('slug')->unique();

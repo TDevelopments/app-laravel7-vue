@@ -15,7 +15,7 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string('image');
+            $table->json('image');
             $table->float('mount', 8, 2);
             $table->dateTime('payment_date');
             $table->foreignId('order_id')

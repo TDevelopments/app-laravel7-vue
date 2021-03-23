@@ -30,6 +30,7 @@ class ProductRequest extends FormRequest
             'description' => ['array'],
             'description.*' => ['string'],
             'images' => ['array'],
+            'magnifying' => ['integer'],
             'images.*.id' => ['required', 'exists:App\Models\Image,id'],
             'images.*.name' => ['required', 'exists:App\Models\Image,name'],
             'images.*.path' => ['required', 'exists:App\Models\Image,path'],

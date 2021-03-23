@@ -16,7 +16,7 @@ class CreateCataloguesTable extends Migration
         Schema::create('catalogues', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('image')->nullable();
+            $table->json('image')->nullable();
             $table->boolean('is_available')->default(0);
             $table->enum('coin', ['soles', 'dolares']);
             $table->dateTime('quota_date');
