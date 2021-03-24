@@ -171,7 +171,7 @@
                 :headers="headers"
                 :items="catalogue.products"
                 hide-default-footer
-                class="elevation-1"
+                class="elevation-1 hidden-xs-only p-page"
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
@@ -207,13 +207,12 @@
                     >
                       <v-icon>mdi-minus</v-icon>
                     </v-btn>
-                    <v-text-field
+                    <input
+                      type="text"
                       class="w mx-2"
-                      solo
-                      dense
                       v-model="item.quantity"
-                      hide-details
-                    ></v-text-field>
+                    />
+
                     <v-btn
                       @click="plusFunctionO(index)"
                       color="secondary"
@@ -236,6 +235,89 @@
                       mdi-cart
                     </v-icon>
                   </v-row>
+                </template>
+              </v-data-table>
+              <v-data-table
+                v-model="selected"
+                :single-select="singleSelect"
+                :headers="headers"
+                :items="catalogue.products"
+                hide-default-footer
+                hide-default-header
+                class="elevation-1 hidden-sm-and-up"
+                disable-pagination
+                v-if="catalogue.products.length != 0"
+              >
+                <template v-slot:item="props">
+                  <tr class="mt-5">
+                    <td class="px-0">
+                      <v-checkbox
+                        :input-value="props.isSelected"
+                        @change="props.select($event)"
+                      ></v-checkbox>
+                      <v-img
+                        v-if="
+                          props.item.images == null ||
+                          props.item.images.length == 0
+                        "
+                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                        max-width="100"
+                        max-height="75"
+                        contain
+                        class="m-1"
+                      />
+                      <v-img
+                        v-else
+                        contain
+                        :src="props.item.images[0].path"
+                        max-width="100"
+                        max-height="75"
+                        class="text-center align-center"
+                      />
+                    </td>
+                    <td class="px-0 py-5">
+                      <strong>Modelo:</strong> {{ props.item.model }}
+                      <br />
+                      <strong>Marca:</strong> {{ props.item.brand }}
+                      <br />
+                      <strong>P.U:</strong> {{ props.item.price_unit }}
+                      <br />
+                      <strong>Cant.Min:</strong> {{ props.item.quantity_group }}
+                      <br />
+                      <strong>Total:</strong> {{ props.item.price_group }}
+                    </td>
+                    <td class="px-0 py-5">
+                      <v-btn small class="my-5" @click="prueba(props.item)"
+                        >Ver Mas</v-btn
+                      >
+                      <br />
+                      <v-row class="mx-auto my-2">
+                        <v-btn
+                          @click="minusFunction(props.item, props.index)"
+                          color="#000"
+                          icon
+                          x-small
+                          elevation="1"
+                        >
+                          <v-icon>mdi-minus</v-icon>
+                        </v-btn>
+                        <input
+                          type="text"
+                          class="w mx-2"
+                          v-model="props.item.quantity"
+                        />
+                        <v-btn
+                          @click="plusFunctionO(props.index)"
+                          color="#000"
+                          icon
+                          elevation="1"
+                          x-small
+                        >
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </v-row>
+                    </td>
+                  </tr>
                 </template>
               </v-data-table>
             </v-tab-item>
@@ -683,6 +765,14 @@ export default {
 };
 </script>
 <style scoped>
+.w {
+  display: flex;
+  max-width: 20px;
+}
+.w {
+  display: flex;
+  max-width: 25px;
+}
 .header-card {
   background-color: black;
   color: white;
@@ -705,9 +795,6 @@ export default {
 .p-page {
   padding-right: 10%;
   padding-left: 10%;
-}
-.w {
-  width: 1px;
 }
 @media (max-width: 360px) {
   .m-page {
