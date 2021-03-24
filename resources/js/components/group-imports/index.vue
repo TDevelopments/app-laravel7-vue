@@ -50,7 +50,7 @@
           <v-btn class="text-capitalize" text @click="cartView">
             <v-icon class="mr-1">mdi-cart</v-icon>Carrito</v-btn
           >
-          <v-btn class="text-capitalize" text>
+          <v-btn class="text-capitalize" text @click="registerRoute">
             <v-icon class="mr-1">mdi-pencil</v-icon> Register
           </v-btn>
           <v-btn class="text-capitalize" text @click="login"
