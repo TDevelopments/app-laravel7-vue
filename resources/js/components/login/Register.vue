@@ -180,8 +180,8 @@ export default {
     valid: true,
     email: "",
     emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      v => !!v || "E-mail is required",
+      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
     ],
     select: null,
     show1: false,
@@ -190,10 +190,10 @@ export default {
     show4: false,
     password: "",
     rules: {
-      required: (value) => !!value || "Required.",
-      min: (v) => v.length >= 8 || "Min 8 characters",
+      required: value => !!value || "Required.",
+      min: v => v.length >= 8 || "Min 8 characters"
     },
-    generalRules: [(v) => !!v || "Este campo no puede ir vacio"],
+    generalRules: [v => !!v || "Este campo no puede ir vacio"],
     e6: 1,
     name: "",
     lastname: "",
@@ -208,13 +208,13 @@ export default {
     items: [
       {
         name: "Masculino",
-        send: "masculine",
+        send: "masculine"
       },
       {
         name: "Femenino",
-        send: "female",
-      },
-    ],
+        send: "female"
+      }
+    ]
   }),
 
   methods: {
@@ -240,19 +240,19 @@ export default {
           password: this.password,
           password_confirmation: this.password,
           address: this.address,
-          ruc: this.ruc,
-          dni: this.dni,
+          ruc: parseInt(this.ruc),
+          dni: parseInt(this.dni),
           phone: this.phone,
           gender: this.gender,
-          city: this.city,
+          city: this.city
         })
-        .then((response) => {
+        .then(response => {
           console.log(response);
           this.loginRouter();
         })
-        .catch((error) => {});
-    },
-  },
+        .catch(error => {});
+    }
+  }
 };
 </script>
 <style scoped>

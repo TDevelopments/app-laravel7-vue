@@ -40,7 +40,7 @@
         <v-btn icon><v-icon>mdi-magnify</v-icon></v-btn>
         <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
-          <v-btn text @click="cartView">Carrito</v-btn>
+          <!-- <v-btn text @click="cartView">Carrito</v-btn> -->
           <v-btn text> {{ user.name }}</v-btn>
           <v-btn text @click="userRoute"> User Setting </v-btn>
           <v-btn text v-if="role" @click="dashboardRoute"> Administrar </v-btn>
@@ -65,9 +65,8 @@
         class="hidden-sm-and-up"
         max-height="64"
       >
-        <v-toolbar-title>BizzPeru</v-toolbar-title>
+        <v-toolbar-title @click="welcomeRoute">BizzPeru</v-toolbar-title>
         <v-spacer></v-spacer>
-
         <v-dialog
           v-model="dialog"
           fullscreen
@@ -79,7 +78,7 @@
           </template>
           <v-card>
             <v-toolbar flat color="blue-grey darken-2">
-              <v-toolbar-title>Mobile Menu</v-toolbar-title>
+              <v-toolbar-title>BizzPeru</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn icon @click.native="dialog = false">
                 <v-icon>mdi-close</v-icon>
@@ -87,13 +86,58 @@
             </v-toolbar>
 
             <v-list shaped>
-              <v-list-item-group color="primary">
+              <v-list-item-group v-if="isLoggedIn" color="primary">
                 <v-list-item>
                   <v-list-item-icon>
                     <v-icon> mdi-account</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
+                    <v-list-item-title> {{ user.name }} </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon> mdi-account</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content @click="userRoute">
+                    <v-list-item-title
+                      >Configuracion de Usuario</v-list-item-title
+                    >
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item v-if="role">
+                  <v-list-item-icon>
+                    <v-icon> mdi-account</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content @click="dashboardRoute">
+                    <v-list-item-title>Administrar</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon> mdi-account</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content @click="logout">
+                    <v-list-item-title>Cerrar Sesión</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+
+              <v-list-item-group v-else color="primary">
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon> mdi-account</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content @click="login">
                     <v-list-item-title>Login</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon> mdi-account</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content @click="registerRoute">
+                    <v-list-item-title>Register</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
@@ -124,13 +168,13 @@ export default {
     drawer: null,
     dialog: false,
     select: ["All", "12345678", "12345", "asdasdasdasdkhabsd"],
-    categorie: "All",
+    categorie: "All"
   }),
   computed: {
     ...mapGetters("account", ["user", "isLoggedIn", "authStatus"]),
     role() {
       let value = false;
-      this.user.roles.forEach((rol) => {
+      this.user.roles.forEach(rol => {
         if (rol.name === "admin") {
           value = true;
         } else {
@@ -138,41 +182,47 @@ export default {
         }
       });
       return value;
-    },
+    }
   },
   methods: {
     ...mapActions("account", ["getUser", "logout"]),
     login() {
       this.$router.push({
-        name: "loginRouter",
+        name: "loginRouter"
+      });
+    },
+    registerRoute() {
+      this.$router.push({
+        name: "register"
       });
     },
     welcomeRoute() {
       this.$router.push({
-        name: "welcome",
+        name: "welcome"
       });
     },
     dashboardRoute() {
       this.$router.push({
-        name: "Home",
+        name: "Home"
       });
     },
     cartView() {
       this.$router.push({
-        name: "cartGroupImport",
+        name: "cartGroupImport"
       });
     },
     userRoute() {
       this.$router.push({
-        name: "UserSettingIG",
+        name: "UserSettingIG"
       });
-    },
+      this.dialog = false;
+    }
   },
   async mounted() {
     if (this.isLoggedIn) {
       await this.getUser();
     }
-  },
+  }
 };
 </script>
 
