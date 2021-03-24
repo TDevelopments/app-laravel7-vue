@@ -12,10 +12,20 @@
         >
           <v-card class="mx-auto" max-width="500">
             <v-img
+              v-if="
+                item.image == null || item.image.length == 0
+              "
               src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
               height="200px"
-            ></v-img>
-
+              contain
+              class="m-1"
+            />
+            <v-img
+              v-else
+              contain
+              :src="item.image.path"
+              height="200px"
+            />
             <v-card-title>
               <v-row>
                 <v-col cols="12">
@@ -167,7 +177,7 @@ export default {
       moment(element.arrival_date).format("YYYY-MM-DD");
     },
     date: function (value) {
-      return moment(value).format("YYYY-MM-DD");
+      return moment(value).format("DD-MM-YYYY");
     },
     porcent: function (value) {
       return parseFloat(value) * 100 + " %";

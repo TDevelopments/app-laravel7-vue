@@ -22,14 +22,11 @@
         <v-col cols="12" sm="12" md="7" lg="7">
           <v-card-title>
             <v-row>
-              <v-col cols="12">
-                Información y Condiciones &nbsp;<strong
-                  >{{ catalogue.name }}
-                </strong>
-                <v-spacer></v-spacer>
-              </v-col>
-              <v-col cols="12" class="text-capitalize">
+              <v-col cols="12" class="pb-0 text-capitalize">
                 Moneda &nbsp; {{ catalogue.coin }}
+              </v-col>
+              <v-col cols="12">
+                Información y Condiciones
               </v-col>
             </v-row>
           </v-card-title>
@@ -89,6 +86,13 @@
               </v-col>
             </v-row>
           </v-card-text>
+          <v-card-title>
+            <v-row>
+              <v-col cols="12">
+                Fechas
+              </v-col>
+            </v-row>
+          </v-card-title>
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col sm="6" md="8">
@@ -131,6 +135,24 @@
               </v-col>
             </v-row>
           </v-card-text>
+          <v-card-text
+            class="font-weight-medium pb-0 pt-1"
+            v-for="(arrival, index) in catalogue.arrivals"
+            :key="index"
+          >
+            <v-row>
+              <v-col sm="6" md="8">
+                <v-icon color="black" x-small>mdi-circle</v-icon>
+                Fecha estimada para recojos y envios desde {{ arrival.city }}
+              </v-col>
+              <v-col sm="6" md="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-calendar-month </v-icon>
+                  {{ arrival.arrival_date | date }}
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-card-text>
         </v-col>
       </v-row>
       <v-col class="px-0 content-card pt-0 mt-5">
@@ -147,13 +169,16 @@
         </v-card-text>
       </v-col>
       <v-row class="mt-5">
-        <v-col cols="12" sm="12" md="9" lg="9">
+        <v-col cols="12" sm="12" md="10" lg="10">
           <v-tabs
             fixed-tabs
             background-color="#546E7A"
             v-model="currentTab"
             dark
             show-arrows=""
+            v-if="
+              catalogue.products.length != 0 || catalogue.productRanges != 0
+            "
           >
             <v-tab v-if="catalogue.products.length != 0">
               Productos por conjunto
@@ -171,7 +196,7 @@
                 :headers="headers"
                 :items="catalogue.products"
                 hide-default-footer
-                class="elevation-1 hidden-xs-only p-page"
+                class="elevation-1 hidden-xs-only p-page px-0"
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
@@ -207,11 +232,7 @@
                     >
                       <v-icon>mdi-minus</v-icon>
                     </v-btn>
-                    <input
-                      type="text"
-                      class="w mx-2"
-                      v-model="item.quantity"
-                    />
+                    <input type="text" class="w mx-2" v-model="item.quantity" />
 
                     <v-btn
                       @click="plusFunctionO(index)"
@@ -374,162 +395,164 @@
             </v-tab-item>
           </v-tabs-items>
         </v-col>
-        <v-col cols="12" sm="12" md="3" lg="3">
-          <v-card class="float">
-            <p class="py-3 px-3 text-h6">Resumen de mi pedido</p>
-            <v-expansion-panels flat>
-              <v-expansion-panel>
-                <v-expansion-panel-header>
-                  <p class="pb-3 px-3 text-subtitle-1">
-                    Minima Inversión:
-                    <strong>
-                      {{ (catalogue.coin == "soles" ? "S/." : "$") + " " }}
-                      {{ catalogue.minimum_investment | currency }}
-                    </strong>
-                  </p>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-card-text
-                    v-for="(product, index) in selected"
-                    :key="'A' + index"
-                    class="py-0"
-                  >
-                    <v-row>
-                      <v-col cols="4">
-                        <v-img
-                          v-if="
-                            product.images == null || product.images.length == 0
-                          "
-                          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                          max-width="75"
-                          height="50"
-                          contain
-                          class="m-1"
-                        />
-                        <v-img
-                          v-else
-                          contain
-                          :src="product.images[0].path"
-                          max-width="75"
-                          height="50"
-                          class="text-center align-center"
-                        />
-                      </v-col>
-                      <v-col cols="8">
-                        Modelo:{{ product.model }}
-                        <br />
-                        Pago:{{ catalogue.coin == "soles" ? "S/." : "$"
-                        }}{{
-                          (product.quantity * product.price_unit) | currency
-                        }}
-                        <br />
-                        Cantidad
-                        {{ product.quantity + " " + product.type_group }}
-                        <br />
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-
-                  <v-card-text
-                    v-for="(productRange, index) in selectedRange"
-                    :key="index"
-                    class="py-0"
-                  >
-                    <v-row>
-                      <v-col cols="4">
-                        <v-img
-                          v-if="
-                            productRange.images == null ||
-                            productRange.images.length == 0
-                          "
-                          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                          max-width="75"
-                          height="50"
-                          contain
-                          class="m-1"
-                        />
-                        <v-img
-                          v-else
-                          contain
-                          :src="productRange.images[0].path"
-                          max-width="75"
-                          height="50"
-                          class="text-center align-center"
-                        />
-                      </v-col>
-                      <v-col cols="8">
-                        Modelo:{{ productRange.model }}
-                        <br />
-                        Pago:{{ catalogue.coin == "soles" ? "S/." : "$" }}
-                        {{ productRange.total }}
-                        <br />
-                        Cantidad
-                        {{
-                          productRange.quantity +
-                          " " +
-                          (productRange.quantity == 1 ? "Unidad" : "Unidades")
-                        }}
-                        <br />
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-            <v-row class="text-right mx-2">
-              <v-spacer></v-spacer>
-              <v-col class="text-subtitle-1"
-                >Total: {{ totalGeneral | currency }}</v-col
-              >
-            </v-row>
-            <br />
-            <v-dialog v-model="dialog" persistent max-width="290">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-bind="attrs"
-                  v-on="on"
-                  class="mt-3"
-                  :disabled="validate"
-                >
-                  Generar Orden
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title class="headline"> Generar Orden </v-card-title>
-                <v-card-text>
-                  Antes de generar esta orden,
-                  <strong class="text-red"
-                    >tienes que estar seguro de que los datos con los que te
-                    registraste son validos</strong
-                  >, ya que mediante estos estaremos generando una orden de
-                  compra.
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="dialog = false">
-                    Cancelar
-                  </v-btn>
-                  <v-btn
-                    color="green darken-1"
-                    text
-                    @click="
-                      generateOrder({
-                        id: catalogue.id,
-                        products: selected,
-                        product_ranges: selectedRange,
-                      }),
-                        (dialog = false),
-                        (alert = false)
-                    "
-                  >
-                    Generar
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-card>
-        </v-col>
       </v-row>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <v-col cols="12" sm="12" md="3" lg="3">
+        <v-card class="float">
+          <p class="py-3 px-3 text-h6">Resumen de mi pedido</p>
+          <v-expansion-panels flat>
+            <v-expansion-panel>
+              <v-expansion-panel-header>
+                <p class="pb-3 px-3 text-subtitle-1">
+                  Minima Inversión:
+                  <strong>
+                    {{ (catalogue.coin == "soles" ? "S/." : "$") + " " }}
+                    {{ catalogue.minimum_investment | currency }}
+                  </strong>
+                </p>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text
+                  v-for="(product, index) in selected"
+                  :key="'A' + index"
+                  class="py-0"
+                >
+                  <v-row>
+                    <v-col cols="4">
+                      <v-img
+                        v-if="
+                          product.images == null || product.images.length == 0
+                        "
+                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                        max-width="75"
+                        height="50"
+                        contain
+                        class="m-1"
+                      />
+                      <v-img
+                        v-else
+                        contain
+                        :src="product.images[0].path"
+                        max-width="75"
+                        height="50"
+                        class="text-center align-center"
+                      />
+                    </v-col>
+                    <v-col cols="8">
+                      Modelo:{{ product.model }}
+                      <br />
+                      Pago:{{ catalogue.coin == "soles" ? "S/." : "$"
+                      }}{{ (product.quantity * product.price_unit) | currency }}
+                      <br />
+                      Cantidad
+                      {{ product.quantity + " " + product.type_group }}
+                      <br />
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+
+                <v-card-text
+                  v-for="(productRange, index) in selectedRange"
+                  :key="index"
+                  class="py-0"
+                >
+                  <v-row>
+                    <v-col cols="4">
+                      <v-img
+                        v-if="
+                          productRange.images == null ||
+                          productRange.images.length == 0
+                        "
+                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                        max-width="75"
+                        height="50"
+                        contain
+                        class="m-1"
+                      />
+                      <v-img
+                        v-else
+                        contain
+                        :src="productRange.images[0].path"
+                        max-width="75"
+                        height="50"
+                        class="text-center align-center"
+                      />
+                    </v-col>
+                    <v-col cols="8">
+                      Modelo:{{ productRange.model }}
+                      <br />
+                      Pago:{{ catalogue.coin == "soles" ? "S/." : "$" }}
+                      {{ productRange.total }}
+                      <br />
+                      Cantidad
+                      {{
+                        productRange.quantity +
+                        " " +
+                        (productRange.quantity == 1 ? "Unidad" : "Unidades")
+                      }}
+                      <br />
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+          <v-row class="text-right mx-2">
+            <v-spacer></v-spacer>
+            <v-col class="text-subtitle-1"
+              >Total: {{ totalGeneral | currency }}</v-col
+            >
+          </v-row>
+          <br />
+          <v-dialog v-model="dialog" persistent max-width="290">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on" class="mt-3" :disabled="validate">
+                Generar Orden
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="headline"> Generar Orden </v-card-title>
+              <v-card-text>
+                Antes de generar esta orden,
+                <strong class="text-red"
+                  >tienes que estar seguro de que los datos con los que te
+                  registraste son validos</strong
+                >, ya que mediante estos estaremos generando una orden de
+                compra.
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" text @click="dialog = false">
+                  Cancelar
+                </v-btn>
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="
+                    generateOrder({
+                      id: catalogue.id,
+                      products: selected,
+                      product_ranges: selectedRange,
+                    }),
+                      (dialog = false),
+                      (alert = false)
+                  "
+                >
+                  Generar
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-card>
+      </v-col>
       <Product
         v-model="showScheduleForm"
         :product="itemSelected"
@@ -756,7 +779,7 @@ export default {
       return parseFloat(value).toFixed(2);
     },
     date: function (value) {
-      return moment(value).format("YYYY-MM-DD");
+      return moment(value).format("DD-MM-YYYY");
     },
     porcent: function (value) {
       return parseFloat(value) * 100 + " %";
@@ -769,7 +792,7 @@ export default {
   display: flex;
   max-width: 20px;
 }
-.w {
+.w1 {
   display: flex;
   max-width: 25px;
 }
@@ -784,6 +807,7 @@ export default {
 .float {
   position: fixed;
   bottom: 0px;
+  right: 0px;
 }
 .float-movil {
   visibility: hidden;

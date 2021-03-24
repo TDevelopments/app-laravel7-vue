@@ -1,12 +1,14 @@
 <template>
   <div>
-    <v-container class="mx-auto my-auto ">
-      <v-row class="mt-12">
-        <v-col>
-          <v-card class="mx-auto" max-width="400">
+    <v-container>
+      <v-row class="mt-5">
+        <v-col cols="12" sm="12" md="6" lg="6">
+          <v-card class="mx-auto" max-width="500">
             <v-card-title>
-              <v-icon class="ml-5 mr-2 my-5" left> mdi-twitter </v-icon>
-              <span>Importaciones Grupales</span>
+              <div class="mx-auto">
+                <v-icon class="my-5" left> mdi-twitter </v-icon>
+                <span>Importaciones Grupales</span>
+              </div>
             </v-card-title>
 
             <v-card-text class="font-weight-bold px-5 py-5">
@@ -44,11 +46,13 @@
             </v-expand-transition>
           </v-card>
         </v-col>
-        <v-col>
-          <v-card class="mx-auto" max-width="400">
+        <v-col cols="12" sm="12" md="6" lg="6">
+          <v-card class="mx-auto" max-width="500">
             <v-card-title>
-              <v-icon class="ml-5 mr-2 my-5" left> mdi-twitter </v-icon>
-              <span>Venta de Prodcutos</span>
+              <div class="mx-auto">
+                <v-icon class="my-5" left> mdi-twitter </v-icon>
+                <span>Venta de Prodcutos</span>
+              </div>
             </v-card-title>
 
             <v-card-text class="font-weight-bold px-5 py-5">
@@ -93,12 +97,12 @@
 export default {
   data: () => ({
     show1: false,
-    show2: false
+    show2: false,
   }),
   methods: {
     showCatalogues() {
       this.$router.push({ name: "group-import" });
-    }
-  }
+    },
+  },
 };
 </script>
