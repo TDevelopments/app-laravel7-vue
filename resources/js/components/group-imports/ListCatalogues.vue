@@ -9,31 +9,22 @@
           sm="12"
           md="6"
           lg="6"
+          class="mx-auto"
         >
-          <v-card class="mx-auto" max-width="500">
+          <v-card class="mx-auto" max-width="700">
             <v-img
-              v-if="
-                item.image == null || item.image.length == 0
-              "
+              v-if="item.image == null || item.image.length == 0"
               src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
               height="200px"
               contain
               class="m-1"
             />
-            <v-img
-              v-else
-              contain
-              :src="item.image.path"
-              height="200px"
-            />
+            <v-img v-else contain :src="item.image.path" />
             <v-card-title>
               <v-row>
                 <v-col cols="12">
                   <strong>{{ item.name }} </strong>
                   <v-spacer></v-spacer>
-                </v-col>
-                <v-col cols="12" class="text-capitalize">
-                  Moneda &nbsp; {{ item.coin }}
                 </v-col>
               </v-row>
             </v-card-title>
@@ -93,6 +84,11 @@
                 </v-col>
               </v-row>
             </v-card-text>
+            <v-card-title>
+              <v-row>
+                <v-col cols="12"> Fechas </v-col>
+              </v-row>
+            </v-card-title>
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col sm="6" md="8">
@@ -131,6 +127,24 @@
                   <v-chip class="mr-2">
                     <v-icon left> mdi-calendar-month </v-icon>
                     {{ item.date_second_payment | date }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-card-text
+              class="font-weight-medium pb-0 pt-1"
+              v-for="(arrival, index) in item.arrivals"
+              :key="index"
+            >
+              <v-row>
+                <v-col sm="6" md="8">
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
+                  Fecha estimada para recojos y envios desde {{ arrival.city }}
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    <v-icon left> mdi-calendar-month </v-icon>
+                    {{ arrival.arrival_date | date }}
                   </v-chip>
                 </v-col>
               </v-row>

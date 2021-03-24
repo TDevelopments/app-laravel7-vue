@@ -4,9 +4,13 @@
     max-width="1200"
     v-model="show"
   >
-    <v-toolbar color="primary" dark class="text-h6 mb-2"
-      >Detalles del producto</v-toolbar
-    >
+    <v-toolbar color="primary" dark class="text-h6 mb-2">
+      Detalles del producto
+      <v-spacer></v-spacer>
+      <v-btn icon @click="show = false">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </v-toolbar>
     <v-card>
       <v-card-text>
         <v-row>
@@ -83,7 +87,7 @@
                 </v-row>
               </div>
               <v-row>
-                <v-col class="mt-3 pb-0 text-subtitle-1">
+                <v-col class="mt-5 pb-0">
                   <strong
                     >PRECIO POR {{ product.quantity_group }}
                     {{ type_group.toUpperCase() }}</strong
@@ -91,7 +95,7 @@
                   <div class="form-inline">
                     <v-avatar
                       color="#0D52D6"
-                      size="35"
+                      size="30"
                       class="text-white mr-1 t-0"
                     >
                       {{ catalogue.coin == "soles" ? "S./" : "$" }}
@@ -115,6 +119,9 @@
                   </div>
                 </v-col>
               </v-row>
+              <v-col class="mt-5 pb-0 text-right pr-0">
+                <v-btn @click="show = false"> Cerrar </v-btn>
+              </v-col>
             </v-card-text>
           </v-col>
         </v-row>
