@@ -11,20 +11,11 @@
             v-if="catalogue.image == null || catalogue.image.length == 0"
             height="400"
           />
-          <v-img
-            v-else
-            contain
-            :src="catalogue.image.path"
-            class="text-center align-center"
-            height="400"
-          />
+          <v-img v-else contain :src="catalogue.image.path" height="400" />
         </v-col>
         <v-col cols="12" sm="12" md="7" lg="7">
           <v-card-title>
             <v-row>
-              <v-col cols="12" class="pb-0 text-capitalize">
-                Moneda &nbsp; {{ catalogue.coin }}
-              </v-col>
               <v-col cols="12"> Información y Condiciones </v-col>
             </v-row>
           </v-card-title>
@@ -32,7 +23,24 @@
             <v-row>
               <v-col sm="6" md="8">
                 <v-icon color="black" x-small>mdi-circle</v-icon>
-                Monto de separación de cupo:
+                Todos los montos se encuentran en:
+              </v-col>
+              <v-col sm="6" md="4" class="text-right">
+                <v-chip class="mr-2 text-capitalize">
+                  {{ catalogue.coin }}
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-text class="font-weight-medium pb-0 pt-1">
+            <v-row>
+              <v-col sm="6" md="8">
+                <v-icon color="black" x-small>mdi-circle</v-icon>
+                Monto de separación de cupo / Garantía de participación:
+
+                <br />
+                <v-icon color="black" x-small>mdi-circle</v-icon>
+                (El monto de separación es parte de la primera cuota)
               </v-col>
               <v-col sm="6" md="4" class="text-right">
                 <v-chip class="mr-2">
@@ -176,9 +184,7 @@
               catalogue.products.length != 0 || catalogue.productRanges != 0
             "
           >
-            <v-tab v-if="catalogue.products.length != 0">
-              Productos por conjunto
-            </v-tab>
+            <v-tab v-if="catalogue.products.length != 0"> Productos </v-tab>
             <v-tab v-if="catalogue.productRanges.length != 0">
               Productos por rango
             </v-tab>
@@ -196,96 +202,12 @@
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
-                <template v-slot:item="props">
-                  <tr class="mt-2 bb">
-                    <td class="text-center">
-                      <v-checkbox
-                        :input-value="props.isSelected"
-                        @change="props.select($event)"
-                        hide-details
-                      ></v-checkbox>
-                    </td>
-                    <td class="text-center px-1">
-                      <v-img
-                        v-if="
-                          props.item.images == null ||
-                          props.item.images.length == 0
-                        "
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="300"
-                        contain
-                        class="m-1 my-5"
-                      />
-                      <v-img
-                        v-else
-                        contain
-                        :src="props.item.images[0].path"
-                        max-width="300"
-                        class="text-center align-center my-5"
-                      />
-                    </td>
-                    <td class="text-center px-1">
-                      {{ props.item.model }}
-                      <v-btn
-                        small
-                        class="mt-2 mx-2"
-                        @click="prueba(props.item)"
-                      >
-                        Ver Mas
-                      </v-btn>
-                    </td>
-                    <td class="text-center px-1">
-                      {{ props.item.brand }}
-                    </td>
-                    <td class="text-center px-1">
-                      {{ props.item.price_unit }}
-                    </td>
-                    <td class="text-center px-1">
-                      {{ props.item.quantity_group + " " }}
-                      <br />
-                      {{ props.item.type_group }}
-                    </td>
-                    <td class="text-center px-1">
-                      {{ props.item.price_group }}
-                    </td>
-                    <td class="text-center px-1">
-                      <div class="mx-2">
-                        <v-row>
-                          <v-btn
-                            @click="minusFunction(props.item, props.index)"
-                            color="secondary"
-                            fab
-                            x-small
-                            elevation="1"
-                          >
-                            <v-icon>mdi-minus</v-icon>
-                          </v-btn>
-                          <input
-                            type="text"
-                            class="mx-2 w1"
-                            v-model="props.item.quantity"
-                          />
-
-                          <v-btn
-                            @click="plusFunctionO(props.index)"
-                            color="secondary"
-                            fab
-                            elevation="1"
-                            x-small
-                          >
-                            <v-icon>mdi-plus</v-icon>
-                          </v-btn>
-                        </v-row>
-                      </div>
-                    </td>
-                  </tr>
-                </template>
-
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
                     v-if="item.images == null || item.images.length == 0"
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                     max-width="150"
+                    max-height="150"
                     contain
                     class="m-1 my-5"
                   />
@@ -611,10 +533,21 @@
             <br />
             <v-dialog v-model="dialog" persistent max-width="290">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-if="!isLoggedIn" color="blue" small :to="{name: 'register'}">
+                <v-btn
+                  v-if="!isLoggedIn"
+                  color="blue"
+                  small
+                  :to="{ name: 'register' }"
+                >
                   Registraste
                 </v-btn>
-                <v-btn v-if="!isLoggedIn" v-bind="attrs" v-on="on" small>
+                <v-btn
+                  v-if="!isLoggedIn"
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  class="mx-2"
+                >
                   Generar Orden
                 </v-btn>
                 <v-btn
@@ -623,6 +556,7 @@
                   v-on="on"
                   :disabled="validate"
                   small
+                  class="mx-2"
                 >
                   Generar Orden
                 </v-btn>
@@ -677,7 +611,7 @@
         </v-col>
         <v-col cols="12" sm="12" md="3" lg="3" class="content-cart display-sm">
           <v-card class="float mx-auto">
-            <p class="py-3 px-3 text-h6">Resumen de mi pedido</p>
+            <p class="py-3 px-3 text-h6">RESUMEN DE MI PEDIDO</p>
             <v-expansion-panels flat class="color">
               <v-expansion-panel class="color">
                 <v-expansion-panel-header class="color p-2">
@@ -796,10 +730,22 @@
             <br />
             <v-dialog v-model="dialog" persistent max-width="290">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-if="!isLoggedIn" color="blue" small :to="{name: 'register'}">
+                <v-btn
+                  v-if="!isLoggedIn"
+                  color="blue"
+                  small
+                  :to="{ name: 'register' }"
+                  class="mx-2 mb-3"
+                >
                   Registraste
                 </v-btn>
-                <v-btn v-if="!isLoggedIn" v-bind="attrs" v-on="on" small>
+                <v-btn
+                  v-if="!isLoggedIn"
+                  v-bind="attrs"
+                  v-on="on"
+                  small
+                  class="mx-2 mb-3"
+                >
                   Generar Orden
                 </v-btn>
                 <v-btn
@@ -808,6 +754,7 @@
                   v-on="on"
                   :disabled="validate"
                   small
+                  class="mx-2 mb-3"
                 >
                   Generar Orden
                 </v-btn>
@@ -824,7 +771,7 @@
                 </v-card-text>
                 <v-card-text v-else>
                   Para generar su orden debe registrarse
-                  <strong class="text-red">¡ES FASILISIMO!</strong>.
+                  <strong class="text-red">¡ES FACILISIMO!</strong>.
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
@@ -1092,9 +1039,23 @@ export default {
   },
 };
 </script>
+
 <style scoped>
+.v-data-table
+  /deep/
+  tbody
+  /deep/
+  tr:hover:not(.v-data-table__expanded__content) {
+  background: #ff7676 !important;
+}
+.v-data-table /deep/ tbody /deep/ tr:not(.v-data-table__expanded__content) {
+  border-top: 2px solid black;
+}
 .display-md {
   visibility: hidden;
+}
+.bb:hover {
+  background-color: chartreuse;
 }
 .bb {
   border-bottom: 2px solid rgb(124, 121, 121);
@@ -1179,3 +1140,5 @@ export default {
   }
 }
 </style>
+
+

@@ -25,10 +25,10 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'lastname' => ['required','string'],
-            'email' => ['required', 'email', 'unique:users,email'],
+            'lastname' => ['string'],
+            'email' => ['email', 'unique:users,email'],
             'password' => ['required', 'min:8', 'confirmed', 'max:255','string'],
-            'address' => ['required','string'],
+            'address' => ['string'],
             'ruc' => ['integer' ,'unique:users,ruc'],
             'dni' => ['required', 'integer', 'unique:users,dni'],
             'phone' => ['required','integer'],

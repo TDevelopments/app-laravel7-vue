@@ -22,7 +22,7 @@
             <v-img v-else contain :src="item.image.path" />
             <v-card-title>
               <v-row>
-                <v-col cols="12">
+                <v-col cols="12" class="pb-0">
                   <strong>{{ item.name }} </strong>
                   <v-spacer></v-spacer>
                 </v-col>
@@ -86,7 +86,7 @@
             </v-card-text>
             <v-card-title>
               <v-row>
-                <v-col cols="12"> Fechas </v-col>
+                <v-col cols="12" class="pt-0"> Fechas </v-col>
               </v-row>
             </v-card-title>
             <v-card-text class="font-weight-medium pb-0 pt-1">

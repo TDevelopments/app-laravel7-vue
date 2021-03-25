@@ -256,7 +256,6 @@ export default {
     this.getList();
     this.baseURL = process.env.MIX_NODE_URL;
   },
-
   filters: {
     currency: function (value) {
       return parseFloat(value).toFixed(2);

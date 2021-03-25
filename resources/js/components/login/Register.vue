@@ -3,127 +3,64 @@
     <div class="container">
       <div class="register-content">
         <h1 class="h1">Registro de Usuario</h1>
-        <v-stepper v-model="e6" vertical>
-          <v-stepper-step :complete="e6 > 1" step="1" @click="e6 = 1">
-            Ingresa tus datos
-          </v-stepper-step>
+        Nombre Completo
+        <v-text-field
+          v-model="name"
+          solo
+          required
+          :rules="generalRules"
+          placeholder="Juan Perez Makoto"
+        ></v-text-field>
 
-          <v-stepper-content step="1">
-            Nombre
-            <v-text-field
-              v-model="name"
-              solo
-              required
-              :rules="generalRules"
-              placeholder="Juan"
-            ></v-text-field>
+        DNI
+        <v-text-field
+          v-model="dni"
+          solo
+          required
+          :rules="generalRules"
+          placeholder="75632449"
+        ></v-text-field>
 
-            Apellidos
-            <v-text-field
-              v-model="lastname"
-              solo
-              required
-              :rules="generalRules"
-              placeholder="Perez"
-            ></v-text-field>
+        Contraseña
+        <v-text-field
+          solo
+          v-model="password"
+          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+          :rules="[rules.required, rules.min]"
+          :type="show1 ? 'text' : 'password'"
+          name="input-10-1"
+          hint="At least 8 characters"
+          @click:append="show1 = !show1"
+          v-on:keyup.enter="login"
+          placeholder="*********"
+        ></v-text-field>
 
-            DNI
-            <v-text-field
-              v-model="dni"
-              solo
-              required
-              :rules="generalRules"
-              placeholder="77777777"
-            ></v-text-field>
+        Celular / Whatsapp
+        <v-text-field
+          v-model="phone"
+          solo
+          required
+          :rules="generalRules"
+          placeholder="98546789"
+        ></v-text-field>
 
-            Teléfono
-            <v-text-field
-              v-model="phone"
-              solo
-              required
-              :rules="generalRules"
-              placeholder="98546789"
-            ></v-text-field>
+        Cuidad de recojo / envio
+        <v-text-field
+          v-model="city"
+          solo
+          required
+          :rules="generalRules"
+          placeholder="Av. example"
+        ></v-text-field>
 
-            <v-btn color="primary" @click="e6 = 2"> Continue </v-btn>
-          </v-stepper-content>
-
-          <v-stepper-step :complete="e6 > 2" step="2" @click="e6 = 2">
-            Ingresa mas Informacíon
-          </v-stepper-step>
-
-          <v-stepper-content step="2">
-            Direccion
-            <v-text-field
-              v-model="address"
-              solo
-              required
-              :rules="generalRules"
-              placeholder="Av. example"
-            ></v-text-field>
-
-            Genero
-            <v-select
-              v-model="gender"
-              :items="items"
-              item-text="name"
-              item-value="send"
-              solo
-              required
-              placeholder="Seleccionar Genero"
-            ></v-select>
-
-            Cuidad
-            <v-text-field
-              v-model="city"
-              solo
-              :rules="generalRules"
-              required
-              placeholder="Arequipa"
-            ></v-text-field>
-
-            <v-btn color="primary" @click="e6 = 3"> Continue </v-btn>
-          </v-stepper-content>
-
-          <v-stepper-step :complete="e6 > 3" step="3" @click="e6 = 3">
-            Datos finales
-          </v-stepper-step>
-
-          <v-stepper-content step="3">
-            E-mail
-            <v-text-field
-              v-model="email"
-              solo
-              :rules="emailRules"
-              required
-              placeholder="example@gmail.com"
-            ></v-text-field>
-
-            Password
-            <v-text-field
-              solo
-              v-model="password"
-              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-              :rules="[rules.required, rules.min]"
-              :type="show1 ? 'text' : 'password'"
-              name="input-10-1"
-              hint="At least 8 characters"
-              counter
-              @click:append="show1 = !show1"
-              v-on:keyup.enter="login"
-              placeholder="*********"
-            ></v-text-field>
-
-            <v-btn
-              :disabled="!valid"
-              color="primary"
-              class="my-3"
-              @click="register"
-            >
-              Registrarse
-            </v-btn>
-          </v-stepper-content>
-        </v-stepper>
+        <v-btn
+          :disabled="!valid"
+          color="primary"
+          class="my-3"
+          @click="register"
+        >
+          Registrarse
+        </v-btn>
       </div>
     </div>
   </v-app>
@@ -138,8 +75,8 @@ export default {
     valid: true,
     email: "",
     emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      (v) => !!v || "E-mail is required",
+      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
     ],
     select: null,
     show1: false,
@@ -148,10 +85,10 @@ export default {
     show4: false,
     password: "",
     rules: {
-      required: value => !!value || "Required.",
-      min: v => v.length >= 8 || "Min 8 characters"
+      required: (value) => !!value || "Required.",
+      min: (v) => v.length >= 8 || "Min 8 characters",
     },
-    generalRules: [v => !!v || "Este campo no puede ir vacio"],
+    generalRules: [(v) => !!v || "Este campo no puede ir vacio"],
     e6: 1,
     name: "",
     lastname: "",
@@ -166,13 +103,13 @@ export default {
     items: [
       {
         name: "Masculino",
-        send: "masculine"
+        send: "masculine",
       },
       {
         name: "Femenino",
-        send: "female"
-      }
-    ]
+        send: "female",
+      },
+    ],
   }),
 
   methods: {
@@ -193,24 +130,19 @@ export default {
       axios
         .post("/api/v1/signup", {
           name: this.name,
-          lastname: this.lastname,
-          email: this.email,
           password: this.password,
           password_confirmation: this.password,
-          address: this.address,
-          ruc: parseInt(this.ruc),
           dni: parseInt(this.dni),
           phone: this.phone,
-          gender: this.gender,
-          city: this.city
+          city: this.city,
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
-          this.loginRouter();
+          
         })
-        .catch(error => {});
-    }
-  }
+        .catch((error) => {});
+    },
+  },
 };
 </script>
 <style scoped>
