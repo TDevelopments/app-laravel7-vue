@@ -1,166 +1,129 @@
 <template>
   <v-app>
-    <div class="containers">
-      <div class="forms-containers">
-        <div class="form">
-          <div class="form-with">
-            <div class="signin">
-              <v-form ref="form" v-model="valid" lazy-validation>
-                <div class="container">
-                  <h1 class="h1">Sign up</h1>
-                  <v-stepper v-model="e6" vertical>
-                    <v-stepper-step :complete="e6 > 1" step="1" @click="e6 = 1">
-                      Ingresa tus datos
-                    </v-stepper-step>
+    <div class="container">
+      <div class="register-content">
+        <h1 class="h1">Registro de Usuario</h1>
+        <v-stepper v-model="e6" vertical>
+          <v-stepper-step :complete="e6 > 1" step="1" @click="e6 = 1">
+            Ingresa tus datos
+          </v-stepper-step>
 
-                    <v-stepper-content step="1">
-                      Nombre
-                      <v-text-field
-                        v-model="name"
-                        solo
-                        required
-                        :rules="generalRules"
-                        placeholder="Juan"
-                      ></v-text-field>
+          <v-stepper-content step="1">
+            Nombre
+            <v-text-field
+              v-model="name"
+              solo
+              required
+              :rules="generalRules"
+              placeholder="Juan"
+            ></v-text-field>
 
-                      Apellidos
-                      <v-text-field
-                        v-model="lastname"
-                        solo
-                        required
-                        :rules="generalRules"
-                        placeholder="Perez"
-                      ></v-text-field>
+            Apellidos
+            <v-text-field
+              v-model="lastname"
+              solo
+              required
+              :rules="generalRules"
+              placeholder="Perez"
+            ></v-text-field>
 
-                      DNI
-                      <v-text-field
-                        v-model="dni"
-                        solo
-                        required
-                        :rules="generalRules"
-                        placeholder="77777777"
-                      ></v-text-field>
+            DNI
+            <v-text-field
+              v-model="dni"
+              solo
+              required
+              :rules="generalRules"
+              placeholder="77777777"
+            ></v-text-field>
 
-                      Teléfono
-                      <v-text-field
-                        v-model="phone"
-                        solo
-                        required
-                        :rules="generalRules"
-                        placeholder="98546789"
-                      ></v-text-field>
+            Teléfono
+            <v-text-field
+              v-model="phone"
+              solo
+              required
+              :rules="generalRules"
+              placeholder="98546789"
+            ></v-text-field>
 
-                      <v-btn color="primary" @click="e6 = 2"> Continue </v-btn>
-                    </v-stepper-content>
+            <v-btn color="primary" @click="e6 = 2"> Continue </v-btn>
+          </v-stepper-content>
 
-                    <v-stepper-step :complete="e6 > 2" step="2" @click="e6 = 2">
-                      Ingresa mas Informacíon
-                    </v-stepper-step>
+          <v-stepper-step :complete="e6 > 2" step="2" @click="e6 = 2">
+            Ingresa mas Informacíon
+          </v-stepper-step>
 
-                    <v-stepper-content step="2">
-                      Direccion
-                      <v-text-field
-                        v-model="address"
-                        solo
-                        required
-                        :rules="generalRules"
-                        placeholder="Av. example"
-                      ></v-text-field>
+          <v-stepper-content step="2">
+            Direccion
+            <v-text-field
+              v-model="address"
+              solo
+              required
+              :rules="generalRules"
+              placeholder="Av. example"
+            ></v-text-field>
 
-                      RUC
-                      <v-text-field
-                        v-model="ruc"
-                        solo
-                        required
-                        placeholder="7777777777"
-                      ></v-text-field>
+            Genero
+            <v-select
+              v-model="gender"
+              :items="items"
+              item-text="name"
+              item-value="send"
+              solo
+              required
+              placeholder="Seleccionar Genero"
+            ></v-select>
 
-                      Genero
-                      <v-select
-                        v-model="gender"
-                        :items="items"
-                        item-text="name"
-                        item-value="send"
-                        solo
-                        required
-                        placeholder="98546789"
-                      ></v-select>
+            Cuidad
+            <v-text-field
+              v-model="city"
+              solo
+              :rules="generalRules"
+              required
+              placeholder="Arequipa"
+            ></v-text-field>
 
-                      Cuidad
-                      <v-text-field
-                        v-model="city"
-                        solo
-                        :rules="generalRules"
-                        required
-                        placeholder="98546789"
-                      ></v-text-field>
+            <v-btn color="primary" @click="e6 = 3"> Continue </v-btn>
+          </v-stepper-content>
 
-                      <v-btn color="primary" @click="e6 = 3"> Continue </v-btn>
-                    </v-stepper-content>
+          <v-stepper-step :complete="e6 > 3" step="3" @click="e6 = 3">
+            Datos finales
+          </v-stepper-step>
 
-                    <v-stepper-step :complete="e6 > 3" step="3" @click="e6 = 3">
-                      Datos finales
-                    </v-stepper-step>
+          <v-stepper-content step="3">
+            E-mail
+            <v-text-field
+              v-model="email"
+              solo
+              :rules="emailRules"
+              required
+              placeholder="example@gmail.com"
+            ></v-text-field>
 
-                    <v-stepper-content step="3">
-                      E-mail
-                      <v-text-field
-                        v-model="email"
-                        solo
-                        :rules="emailRules"
-                        required
-                        placeholder="example@gmail.com"
-                      ></v-text-field>
+            Password
+            <v-text-field
+              solo
+              v-model="password"
+              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :rules="[rules.required, rules.min]"
+              :type="show1 ? 'text' : 'password'"
+              name="input-10-1"
+              hint="At least 8 characters"
+              counter
+              @click:append="show1 = !show1"
+              v-on:keyup.enter="login"
+              placeholder="*********"
+            ></v-text-field>
 
-                      Password
-                      <v-text-field
-                        solo
-                        v-model="password"
-                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[rules.required, rules.min]"
-                        :type="show1 ? 'text' : 'password'"
-                        name="input-10-1"
-                        hint="At least 8 characters"
-                        counter
-                        @click:append="show1 = !show1"
-                        placeholder="*********"
-                      ></v-text-field>
-
-                      <v-btn
-                        :disabled="!valid"
-                        color="primary"
-                        class="my-3"
-                        @click="register"
-                      >
-                        Registrarse
-                      </v-btn>
-                    </v-stepper-content>
-                  </v-stepper>
-                </div>
-              </v-form>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="panels-container">
-        <div class="panel left-panel">
-          <div class="content">
-            <h3>Ya tienes una cuenta?</h3>
-            <p>
-            </p>
             <v-btn
-              color="white"
-              class="mr-4"
-              outlined
-              rounded
-              dark
-              @click="loginRouter"
+              :disabled="!valid"
+              color="primary"
+              class="my-3"
+              @click="register"
             >
-              Sign in
+              Registrarse
             </v-btn>
-          </div>
-          <img src="images/delivery.svg" class="image" />
-        </div>
+          </v-stepper-content>
+        </v-stepper>
       </div>
     </div>
   </v-app>
@@ -251,12 +214,11 @@ export default {
 };
 </script>
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.container {
+  width: 100%;
+  height: 100%;
 }
+
 h1 {
   font-family: "Poppins", sans-serif;
   text-align: center;
@@ -266,187 +228,24 @@ h1 {
   margin-bottom: 40px;
   font-weight: bold;
 }
-.containers {
-  width: 100%;
-  min-height: 100vh;
-  background-color: #fff;
-  overflow: hidden;
-}
-.containers:before {
-  content: "";
-  position: absolute;
-  width: 2500px;
-  height: 2500px;
-  border-radius: 50%;
-  background: linear-gradient(-45deg, #4481eb, #04befe);
-  top: -10%;
-  right: 48%;
-  transform: translateY(-50%);
-  z-index: 6;
-}
-.form-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 50%;
-  left: 75%;
-  transform: translate(-50%, -50%);
-  /* background-color: red; */
-}
-.form {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-.form-with {
-  max-width: 380px;
-  width: 100%;
-}
-.signin {
-  position: absolute;
-  top: 50%;
-  left: 75%;
-  transform: translate(-50%, -50%);
-  width: 30%;
-  z-index: 5;
+.register-content {
+  margin: auto;
+  max-width: 60%;
 }
 
-.panels-container {
-  position: absolute;
-  width: 100%;
-  height: 100;
-  top: 0;
-  left: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
-.panel {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: space-around;
-  text-align: center;
-  z-index: 7;
-}
-.left-panel {
-  pointer-events: all;
-  padding: 3rem 17% 2rem 12%;
-}
-
-.panel .content {
-  color: #fff;
-}
-
-.panel h3 {
-  font-weight: 600;
-  line-height: 1;
-  font-size: 1.5rem;
-}
-
-.panel p {
-  font-size: 0.95rem;
-  padding: 0.7rem 0;
-}
-
-.image {
-  width: 110%;
-  margin-top: 5%;
-}
-
-@media (max-width: 870px) {
-  .containers {
-    min-height: 800px;
-    height: 100vh;
-  }
-  .signin {
-    width: 70%;
-    top: 120%;
-    transform: translate(-50%, -100%);
-    transition: 1s 0.8s ease-in-out;
-  }
-
-  .signin,
-  .containers .signin {
-    left: 50%;
-  }
-
-  .panels-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 2fr 1fr;
-  }
-
-  .panel {
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    padding: 2.5rem 8%;
-    grid-column: 1 / 2;
-  }
-
-  .left-panel {
-    grid-row: 1 / 2;
-  }
-
-  .image {
-    width: 300px;
-    transition: transform 0.9s ease-in-out;
-    transition-delay: 0.6s;
-    margin-top: 0%;
-  }
-
-  .panel .content {
-    padding-right: 15%;
-    transition: transform 0.9s ease-in-out;
-    transition-delay: 0.8s;
-  }
-
-  .panel h3 {
-    font-size: 1.9rem;
-  }
-
-  .panel p {
-    font-size: 0.7rem;
-    padding: 0.5rem 0;
-  }
-
-  .containers:before {
-    width: 1500px;
-    height: 1500px;
-    transform: translateX(-50%);
-    left: 30%;
-    bottom: 68%;
-    right: initial;
-    top: initial;
-    transition: 2s ease-in-out;
+@media screen and (max-width: 1024px) {
+  .register-content {
+    max-width: 80%;
   }
 }
-
-@media (max-width: 570px) {
-  .form {
-    padding: 0 1.5rem;
-    margin-bottom: 2000px;
+@media screen and (max-width: 767px) {
+  .register-content {
+    max-width: 100%;
   }
-
-  .image {
-    display: none;
-  }
-  .panel .content {
-    padding: 0.5rem 1rem;
-  }
-  .containers {
-    padding: 1.5rem;
-  }
-
-  .containers:before {
-    bottom: 72%;
-    left: 50%;
-  }
-  .signin {
-    top: 125%;
-    transform: translate(-50%, -100%);
-    transition: 1s 0.8s ease-in-out;
-    margin-bottom: 300px;
+}
+@media screen and (max-width: 480px) {
+  .register-content {
+    max-width: 100%;
   }
 }
 </style>
