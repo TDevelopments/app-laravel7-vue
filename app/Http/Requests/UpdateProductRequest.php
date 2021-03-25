@@ -29,6 +29,7 @@ class UpdateProductRequest extends FormRequest
             'model' => ['required', 'string', 'unique:products,model,'.$this->product->id],
             'description' => ['array'],
             'description.*' => ['string'],
+            'gender' => ['string', 'in:masculine,female,none'],
             'images' => ['array'],
             'magnifying' => ['integer'],
             'images.*.id' => ['required', 'exists:App\Models\Image,id'],

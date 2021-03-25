@@ -113,6 +113,7 @@ class ProductController extends Controller
             'products.*.magnifying' => ['integer'],
             'products.*.description' => ['array'],
             'products.*.description.*' => ['string'],
+            'products.*.gender' => ['string', 'in:masculine,female,none'],
             'products.*.images' => ['array'],
             'products.*.images.*.id' => ['required', 'exists:App\Models\Image,id'],
             'products.*.images.*.name' => ['required', 'exists:App\Models\Image,name'],
