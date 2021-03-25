@@ -3,9 +3,7 @@
     <v-app>
       <v-system-bar height="35" window color="#fff" class="px-0">
         <v-container class="px-0 m-page">
-          <v-btn small text class="text-capitalize">
-            <v-icon>mdi-home-outline</v-icon>Home</v-btn
-          >
+          <v-btn small text class="text-capitalize"> <v-icon>mdi-home-outline</v-icon>Home</v-btn>
           <v-btn small text class="text-capitalize">
             <v-icon>mdi-information-outline</v-icon>Acerca</v-btn
           >
@@ -14,12 +12,7 @@
           >
         </v-container>
       </v-system-bar>
-      <v-app-bar
-        dark
-        color="blue-grey darken-1"
-        class="hidden-xs-only p-page"
-        max-height="64"
-      >
+      <v-app-bar dark color="blue-grey darken-1" class="hidden-xs-only p-page" max-height="64">
         <v-toolbar-title @click="welcomeRoute">BizzPeru</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
@@ -42,20 +35,10 @@
         </v-toolbar-items>
       </v-app-bar>
 
-      <v-app-bar
-        dark
-        color="blue-grey darken-3"
-        class="hidden-sm-and-up"
-        max-height="64"
-      >
+      <v-app-bar dark color="blue-grey darken-3" class="hidden-sm-and-up" max-height="64">
         <v-toolbar-title @click="welcomeRoute">BizzPeru</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-dialog
-          v-model="dialog"
-          fullscreen
-          hide-overlay
-          transition="dialog-bottom-transition"
-        >
+        <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
           <template v-slot:activator="{ on }">
             <v-app-bar-nav-icon v-on="on"></v-app-bar-nav-icon>
           </template>
@@ -83,9 +66,7 @@
                     <v-icon> mdi-account</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content @click="userRoute">
-                    <v-list-item-title
-                      >Configuracion de Usuario</v-list-item-title
-                    >
+                    <v-list-item-title>Configuracion de Usuario</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item v-if="role">
@@ -140,7 +121,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex';
 export default {
   data: () => ({
     isLoading: false,
@@ -150,62 +131,62 @@ export default {
     tab: null,
     drawer: null,
     dialog: false,
-    select: ["All", "12345678", "12345", "asdasdasdasdkhabsd"],
-    categorie: "All"
+    select: ['All', '12345678', '12345', 'asdasdasdasdkhabsd'],
+    categorie: 'All',
   }),
   computed: {
-    ...mapGetters("account", ["user", "isLoggedIn", "authStatus"]),
+    ...mapGetters('account', ['user', 'isLoggedIn', 'authStatus']),
     role() {
       let value = false;
       this.user.roles.forEach(rol => {
-        if (rol.name === "admin") {
+        if (rol.name === 'admin') {
           value = true;
         } else {
           value = false;
         }
       });
       return value;
-    }
+    },
   },
   methods: {
-    ...mapActions("account", ["getUser", "logout"]),
+    ...mapActions('account', ['getUser', 'logout']),
     login() {
       this.$router.push({
-        name: "loginRouter"
+        name: 'loginRouter',
       });
     },
     registerRoute() {
       this.$router.push({
-        name: "register"
+        name: 'register',
       });
     },
     welcomeRoute() {
       this.$router.push({
-        name: "welcome"
+        name: 'welcome',
       });
     },
     dashboardRoute() {
       this.$router.push({
-        name: "Home"
+        name: 'Home',
       });
     },
     cartView() {
       this.$router.push({
-        name: "cartGroupImport"
+        name: 'cartGroupImport',
       });
     },
     userRoute() {
       this.$router.push({
-        name: "UserSettingIG"
+        name: 'UserSettingIG',
       });
       this.dialog = false;
-    }
+    },
   },
   async mounted() {
     if (this.isLoggedIn) {
       await this.getUser();
     }
-  }
+  },
 };
 </script>
 

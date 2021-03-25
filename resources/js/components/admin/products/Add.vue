@@ -45,6 +45,19 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
+                  Género
+                  <v-select
+                    v-model="product.gender"
+                    item-text="name"
+                    item-value="send"
+                    :items="genderItems"
+                    menu-props="auto"
+                    solo
+                    hide-details
+                    placeholder="Selecciona"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
                   Incremento
                   <v-text-field
                     solo
@@ -141,11 +154,7 @@
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
-                <v-color-picker
-                  hide-inputs
-                  v-model="color"
-                  class="mx-auto"
-                ></v-color-picker>
+                <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
               </v-col>
               <v-col cols="12" md="6">
                 <v-row>
@@ -165,11 +174,7 @@
                 </v-col>
                 <v-row class="pr-3">
                   <v-col v-for="(item, index) in colors" :key="index" cols="1">
-                    <v-avatar
-                      :color="item"
-                      size="15"
-                      @click="deleteColor(index)"
-                    ></v-avatar>
+                    <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
                   </v-col>
                 </v-row>
               </v-col>
@@ -206,13 +211,7 @@
           <v-card-text>
             <v-item-group v-model="selected" multiple>
               <v-row>
-                <v-col
-                  v-for="(item, i) in urls"
-                  :key="i"
-                  cols="12"
-                  md="3"
-                  sm="3"
-                >
+                <v-col v-for="(item, i) in urls" :key="i" cols="12" md="3" sm="3">
                   <v-item v-slot="{ active, toggle }">
                     <v-img
                       :src="item.src"
@@ -223,7 +222,7 @@
                     >
                       <v-btn icon>
                         <v-icon>
-                          {{ active ? "mdi-heart" : "mdi-heart-outline" }}
+                          {{ active ? 'mdi-heart' : 'mdi-heart-outline' }}
                         </v-icon>
                       </v-btn>
                     </v-img>
@@ -258,13 +257,7 @@
           <v-card-text>
             <v-item-group v-model="selected" multiple>
               <v-row>
-                <v-col
-                  v-for="(item, i) in urls"
-                  :key="i"
-                  cols="12"
-                  md="3"
-                  sm="3"
-                >
+                <v-col v-for="(item, i) in urls" :key="i" cols="12" md="3" sm="3">
                   <v-item v-slot="{ active, toggle }">
                     <v-img
                       :src="item.src"
@@ -275,7 +268,7 @@
                     >
                       <v-btn icon>
                         <v-icon>
-                          {{ active ? "mdi-heart" : "mdi-heart-outline" }}
+                          {{ active ? 'mdi-heart' : 'mdi-heart-outline' }}
                         </v-icon>
                       </v-btn>
                     </v-img>
@@ -336,71 +329,30 @@
             </thead>
             <tr v-for="(itemV, indexV) in variaciones" :key="indexV">
               <td>
-                <v-text-field
-                  v-model="itemV.model"
-                  solo
-                  dense
-                  required
-                ></v-text-field>
+                <v-text-field v-model="itemV.model" solo dense required></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model="itemV.sku"
-                  solo
-                  dense
-                  required
-                ></v-text-field>
+                <v-text-field v-model="itemV.sku" solo dense required></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model="itemV.stock"
-                  solo
-                  dense
-                  required
-                ></v-text-field>
+                <v-text-field v-model="itemV.stock" solo dense required></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model="itemV.brand"
-                  solo
-                  dense
-                  required
-                ></v-text-field>
+                <v-text-field v-model="itemV.brand" solo dense required></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model="itemV.price_unit"
-                  solo
-                  dense
-                  required
-                ></v-text-field>
+                <v-text-field v-model="itemV.price_unit" solo dense required></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model="itemV.quantity_group"
-                  solo
-                  dense
-                  required
-                ></v-text-field>
+                <v-text-field v-model="itemV.quantity_group" solo dense required></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model="itemV.price_group"
-                  solo
-                  dense
-                  required
-                ></v-text-field>
+                <v-text-field v-model="itemV.price_group" solo dense required></v-text-field>
               </td>
               <td>
                 <v-dialog transition="dialog-bottom-transition" max-width="600">
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      small
-                      color="primary"
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mt-1"
-                    >
+                    <v-btn small color="primary" v-bind="attrs" v-on="on" class="mt-1">
                       + Colores
                     </v-btn>
                   </template>
@@ -421,10 +373,7 @@
                           <v-col cols="12" md="6">
                             <v-row>
                               <v-col>
-                                <v-btn
-                                  class="mb-5 my-auto mt-2"
-                                  @click="addColorMultiple(indexV)"
-                                >
+                                <v-btn class="mb-5 my-auto mt-2" @click="addColorMultiple(indexV)">
                                   Añadir Color
                                 </v-btn>
                               </v-col>
@@ -438,11 +387,7 @@
                               <h5>Colores</h5>
                             </v-col>
                             <v-row class="pr-3">
-                              <v-col
-                                v-for="(item, index) in itemV.colors"
-                                :key="index"
-                                cols="1"
-                              >
+                              <v-col v-for="(item, index) in itemV.colors" :key="index" cols="1">
                                 <v-avatar
                                   :color="item"
                                   size="15"
@@ -463,32 +408,16 @@
               <td>
                 <v-dialog transition="dialog-bottom-transition" max-width="600">
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      color="primary"
-                      small
-                      v-bind="attrs"
-                      v-on="on"
-                      class="mt-1"
-                    >
+                    <v-btn color="primary" small v-bind="attrs" v-on="on" class="mt-1">
                       + Detalles
                     </v-btn>
                   </template>
                   <template v-slot:default="dialog">
                     <v-card>
-                      <v-toolbar color="primary" dark
-                        >Añadir Descripcion</v-toolbar
-                      >
+                      <v-toolbar color="primary" dark>Añadir Descripcion</v-toolbar>
                       <v-card-text>
-                        <v-combobox
-                          v-model="itemV.description"
-                          chips
-                          clearable
-                          multiple
-                          solo
-                        >
-                          <template
-                            v-slot:selection="{ attrs, item, select, selected }"
-                          >
+                        <v-combobox v-model="itemV.description" chips clearable multiple solo>
+                          <template v-slot:selection="{ attrs, item, select, selected }">
                             <v-chip
                               v-bind="attrs"
                               :input-value="selected"
@@ -542,13 +471,7 @@
                 </v-file-input>
               </td>
               <td>
-                <v-btn
-                  small
-                  icon
-                  dark
-                  color="red"
-                  @click="deleteVariation(indexV)"
-                >
+                <v-btn small icon dark color="red" @click="deleteVariation(indexV)">
                   <v-icon small>mdi-minus </v-icon>
                 </v-btn>
               </td>
@@ -563,13 +486,7 @@
         <v-icon left> mdi-delete </v-icon>
         Cancelar
       </v-btn>
-      <v-btn
-        :disabled="!valid"
-        color="#0D52D6"
-        dark
-        class="mr-3 my-5"
-        @click="validate"
-      >
+      <v-btn :disabled="!valid" color="#0D52D6" dark class="mr-3 my-5" @click="validate">
         <v-icon left> mdi-content-save </v-icon>
         Guardar
       </v-btn>
@@ -581,17 +498,17 @@ export default {
   data: () => ({
     // Object Product
     product: {
-      model: "",
-      slug: "",
-      stock: "",
-      sku: "",
-      brand: "",
-      price_unit: "",
-      price_group: "",
-      quantity_group: "",
-      type_group: "",
-      category: "",
-      catalogue: "",
+      model: '',
+      slug: '',
+      stock: '',
+      sku: '',
+      brand: '',
+      price_unit: '',
+      price_group: '',
+      quantity_group: '',
+      type_group: '',
+      category: '',
+      catalogue: '',
     },
     // Object Catalogue
     catalogues: [],
@@ -604,29 +521,43 @@ export default {
     selected: [],
     select: null,
     // Options of Types Group
-    types: ["unidades", "sets", "cajas"],
+    types: ['unidades', 'sets', 'cajas'],
     // Url of Images
     urls: [],
     // Data Images(Response to peticion post save images)
     image: [],
     // Data of Color Picker
     colors: [],
-    type: "hex",
-    hex: "#FF00FF",
+    type: 'hex',
+    hex: '#FF00FF',
     // Validation
     valid: true,
     varBoolean: false,
     variaciones: [],
-    varSelection: ["color", "T/T"],
-    selection: "color",
+    varSelection: ['color', 'T/T'],
+    selection: 'color',
     dialogColor: false,
     dialgoDescripciones: false,
     measures: [],
+    gender: 'none',
+    genderItems: [
+      {
+        name: 'Ninguno',
+        send: 'none',
+      },
+      {
+        name: 'Masculino',
+        send: 'masculine',
+      },
+      {
+        name: 'Femenino',
+        send: 'female',
+      },
+    ],
   }),
   computed: {
-    productQG: function () {
-      this.product.price_group =
-        this.product.price_unit * this.product.quantity_group;
+    productQG: function() {
+      this.product.price_group = this.product.price_unit * this.product.quantity_group;
       return this.product.price_group;
     },
     color: {
@@ -638,7 +569,7 @@ export default {
       },
     },
     showColor() {
-      if (typeof this.color === "string") return this.color;
+      if (typeof this.color === 'string') return this.color;
 
       return JSON.stringify(
         Object.keys(this.color).reduce((color, key) => {
@@ -673,23 +604,23 @@ export default {
     // Peticion Get Categories
     getCategories() {
       axios
-        .get("/api/v1/categories")
-        .then((response) => {
+        .get('/api/v1/categories')
+        .then(response => {
           this.categories = response.data.data;
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     // Peticion Get Catalogues
     getCatalogues() {
       axios
-        .get("/api/v1/catalogues")
-        .then((response) => {
+        .get('/api/v1/catalogues')
+        .then(response => {
           console.log(response);
           this.catalogues = response.data.data;
           console.log(this.catalogues);
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log(error)
           // reject(error);
         });
@@ -697,14 +628,14 @@ export default {
 
     getMeasures() {
       axios
-        .get("/api/v1/measures")
-        .then((response) => {
+        .get('/api/v1/measures')
+        .then(response => {
           console.log(response.data);
           response.data.forEach(element => {
-            this.measures.push(element.name)
-          })
+            this.measures.push(element.name);
+          });
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log(error)
           // reject(error);
         });
@@ -714,19 +645,19 @@ export default {
     addProduct() {
       if (this.varBoolean) {
         axios
-          .post("/api/v1/products-massive", { products: this.variaciones })
-          .then((response) => {
+          .post('/api/v1/products-massive', { products: this.variaciones })
+          .then(response => {
             console.log(response);
-            this.$router.replace({ name: "listProduct" });
+            this.$router.replace({ name: 'listProduct' });
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
             // reject(error);
           });
       } else {
         axios
           .post(
-            "/api/v1/products",
+            '/api/v1/products',
             {
               model: this.product.model,
               sku: this.product.sku,
@@ -741,19 +672,20 @@ export default {
               images: this.image,
               description: this.description,
               colors: this.colors,
-              magnifying: this.product.magnifying
+              magnifying: this.product.magnifying,
+              gender: this.gender,
             },
             {
               headers: {
-                Accept: "application/json",
+                Accept: 'application/json',
               },
             }
           )
-          .then((response) => {
+          .then(response => {
             console.log(response);
-            this.$router.replace({ name: "listProduct" });
+            this.$router.replace({ name: 'listProduct' });
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
             // reject(error);
           });
@@ -771,16 +703,16 @@ export default {
       axios
         .post(`/api/v1/uploads`, data, {
           headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
           },
         })
-        .then((response) => {
+        .then(response => {
           this.image = response.data;
-          console.log("aqui", response.data);
+          console.log('aqui', response.data);
           this.addProduct();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
           // reject(error);
         });
@@ -795,7 +727,7 @@ export default {
     // Preview Images
     previewImages() {
       if (this.files.length != 0) {
-        this.files.forEach((element) => {
+        this.files.forEach(element => {
           this.urls.push({
             src: URL.createObjectURL(element),
             checkbox: false,
@@ -831,23 +763,23 @@ export default {
 
     // Return List Product
     listRouter() {
-      this.$router.replace({ name: "listProduct" });
+      this.$router.replace({ name: 'listProduct' });
     },
     // Add New Component Variation
     addVariation() {
       if (
-        this.product.catalogue != "" &&
-        this.product.category != "" &&
-        this.product.type_group != ""
+        this.product.catalogue != '' &&
+        this.product.category != '' &&
+        this.product.type_group != ''
       ) {
         this.variaciones.push({
-          model: "",
-          sku: "",
-          stock: "",
-          brand: "",
-          price_unit: "",
-          price_group: "",
-          quantity_group: "",
+          model: '',
+          sku: '',
+          stock: '',
+          brand: '',
+          price_unit: '',
+          price_group: '',
+          quantity_group: '',
           type_group: this.product.type_group,
           category_id: this.product.category,
           catalogue_id: this.product.catalogue,
@@ -857,7 +789,7 @@ export default {
           colors: [],
         });
       } else {
-        alert("Tienes que llenar los datos Generales Primero");
+        alert('Tienes que llenar los datos Generales Primero');
       }
     },
 
@@ -875,16 +807,16 @@ export default {
         axios
           .post(`/api/v1/uploads`, data, {
             headers: {
-              Accept: "application/json",
-              "Content-Type": "multipart/form-data",
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
             },
           })
-          .then((response) => {
+          .then(response => {
             this.variaciones[id].images = response.data;
             console.log(id, this.variaciones[id].images);
             console.log(this.variaciones);
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
             // reject(error);
           });

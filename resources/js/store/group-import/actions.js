@@ -1,15 +1,15 @@
-import axios from "axios";
-import Vue from "vue";
-import router from "../../router";
+import axios from 'axios';
+import Vue from 'vue';
+import router from '../../router';
 
 export async function getCatalogues({ commit, getters }) {
   if (!getters.catalogues.length) {
     await axios({
-      url: "/api/v1/catalogues-availables",
-      method: "GET"
+      url: '/api/v1/catalogues-availables',
+      method: 'GET',
     })
       .then(response => {
-        commit("setCatalogues", response.data.data);
+        commit('setCatalogues', response.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -19,7 +19,7 @@ export async function getCatalogues({ commit, getters }) {
 
 export async function getCatalogue({ commit, getters, dispatch, state }, id) {
   if (!getters.catalogues.length) {
-    await dispatch("getCatalogues");
+    await dispatch('getCatalogues');
   }
   let catalogue = {};
 
@@ -28,8 +28,12 @@ export async function getCatalogue({ commit, getters, dispatch, state }, id) {
       catalogue = element;
 
       element.products.forEach((product, index) => {
-        Vue.set(state.catalogues[indexCatalogue].products[index], 'quantity', product.quantity_group)
-      })
+        Vue.set(
+          state.catalogues[indexCatalogue].products[index],
+          'quantity',
+          product.quantity_group
+        );
+      });
 
       element.productRanges.forEach((productRange, index) => {
         var minRange = 1;
@@ -39,28 +43,28 @@ export async function getCatalogue({ commit, getters, dispatch, state }, id) {
             if (range.min < minRange) {
               minRange = range.min;
             }
-          })
+          });
         }
-        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'quantity', minRange)
-        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'min', minRange)
-        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'total', 0)
-      })
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'quantity', minRange);
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'min', minRange);
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'total', 0);
+      });
     }
   });
   console.log(catalogue.products);
   console.log(catalogue.productRanges);
-  commit("setCatalogue", catalogue);
+  commit('setCatalogue', catalogue);
 }
 
 export async function getProduct({ commit, getters, dispatch }, data) {
   if (!getters.catalogues.length) {
-    await dispatch("getCatalogue", data.id);
+    await dispatch('getCatalogue', data.id);
   }
-  console.log("tipo", data.type, data.id, data.sku);
+  console.log('tipo', data.type, data.id, data.sku);
   let product = {};
   getters.catalogues.forEach(element => {
     if (element.id == data.id) {
-      if (data.type == "product") {
+      if (data.type == 'product') {
         element.products.forEach(productUnit => {
           if (productUnit.sku == data.sku) {
             product = productUnit;
@@ -75,20 +79,18 @@ export async function getProduct({ commit, getters, dispatch }, data) {
       }
     }
   });
-  commit("setProduct", product);
+  commit('setProduct', product);
 }
 
 export function addCart({ commit, getters }, payload) {
   let cart = getters.cart;
   let product = payload.product;
-  product.quantity = product.quantity_group;
-  product.total = product.quantity_group * product.price_unit;
   if (!cart.length) {
     cart.push({
       id: payload.catalogue.id,
       name: payload.catalogue.name,
       minimum_investment: payload.catalogue.minimum_investment,
-      products: [product]
+      products: [product],
     });
   } else {
     let access = false;
@@ -106,16 +108,16 @@ export function addCart({ commit, getters }, payload) {
             id: payload.catalogue.id,
             name: payload.catalogue.name,
             minimum_investment: payload.catalogue.minimum_investment,
-            products: [product]
+            products: [product],
           });
         }
       }
     });
   }
-  console.log("cart", cart);
+  console.log('cart', cart);
   // let json = JSON.stringify(cart);
   // localStorage.setItem("cart-group-import", json);
-  commit("setCart", cart);
+  commit('setCart', cart);
 }
 
 export function removeCart({ commit, getters }, data) {
@@ -141,13 +143,13 @@ export function removeCart({ commit, getters }, data) {
     }
   }
   // console.log("mi carrito", cart);
-  commit("setCart", cart);
+  commit('setCart', cart);
   // let json = JSON.stringify(cart);
   // localStorage.setItem("cart-group-import", json);
 }
 
 export function generateOrder({ commit, getters, rootGetters }, catalogue) {
-  let auth = rootGetters["account/isLoggedIn"];
+  let auth = rootGetters['account/isLoggedIn'];
   if (auth) {
     catalogue.products.forEach(product => {
       product.product_id = product.id;
@@ -157,13 +159,13 @@ export function generateOrder({ commit, getters, rootGetters }, catalogue) {
       console.log(product_range.id);
     });
     axios({
-      url: "/api/v1/orders",
-      method: "POST",
+      url: '/api/v1/orders',
+      method: 'POST',
       data: {
         catalogue_id: catalogue.id,
         products: catalogue.products,
-        product_ranges: catalogue.product_ranges
-      }
+        product_ranges: catalogue.product_ranges,
+      },
     })
       .then(resp => {
         let cart = [];
@@ -171,11 +173,11 @@ export function generateOrder({ commit, getters, rootGetters }, catalogue) {
           if (cata.id !== catalogue.id) {
             cart.push(cata);
           }
-          commit("setCart", cart);
+          commit('setCart', cart);
         });
       })
       .catch(err => console.log(err));
   } else {
-    router.push({ name: "loginRouter" });
+    router.push({ name: 'loginRouter' });
   }
 }

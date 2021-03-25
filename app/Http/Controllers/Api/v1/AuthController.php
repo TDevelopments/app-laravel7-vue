@@ -41,8 +41,16 @@ class AuthController extends Controller
         $request['remember_token'] = Str::random(10);
         $user = User::create($request->toArray());
         $user->roles()->attach(Role::where('name', 'user')->first());
-        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-        $response = ['token' => $token];
+        // $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+        $tokenResult = $user->createToken('Personal Access Token');
+        $response = [
+            'access_token' => $tokenResult->accessToken,
+            'token_type' => 'Bearer',
+            'expires_at' => Carbon::parse(
+                $tokenResult->token->expires_at)
+                ->toDateTimeString(),
+            'user' => new UserResource($user),
+        ];
         return response($response, 200);
     }
 

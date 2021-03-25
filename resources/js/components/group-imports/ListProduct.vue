@@ -44,7 +44,7 @@
               </v-col>
               <v-col sm="6" md="4" class="text-right">
                 <v-chip class="mr-2">
-                  {{ catalogue.coin == "soles" ? "S./" : "$" }}
+                  {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
                   {{ catalogue.quota_price | currency }}
                 </v-chip>
               </v-col>
@@ -58,7 +58,7 @@
               </v-col>
               <v-col sm="6" md="4" class="text-right">
                 <v-chip class="mr-2">
-                  {{ catalogue.coin == "soles" ? "S./" : "$" }}
+                  {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
                   {{ catalogue.minimum_investment | currency }}
                 </v-chip>
               </v-col>
@@ -67,8 +67,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon> % de Primera
-                cuota:
+                <v-icon color="black" x-small>mdi-circle</v-icon> % de Primera cuota:
               </v-col>
               <v-col sm="6" md="4" class="text-right">
                 <v-chip class="mr-2">
@@ -81,8 +80,7 @@
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon> % de Segunda
-                cuota:
+                <v-icon color="black" x-small>mdi-circle</v-icon> % de Segunda cuota:
               </v-col>
               <v-col sm="6" md="4" class="text-right">
                 <v-chip class="mr-2">
@@ -160,13 +158,11 @@
         </v-col>
       </v-row>
       <v-col class="px-0 content-card pt-0 mt-5">
-        <v-toolbar color="black" class="px-0 text-h6" dark flat
-          >Términos y Condiciones</v-toolbar
-        >
+        <v-toolbar color="black" class="px-0 text-h6" dark flat>Términos y Condiciones</v-toolbar>
         <v-card-text
           v-for="(element, index) in catalogue.conditions"
           :key="index"
-          class="pb-0 pt-1"
+          class="pb-0 pt-1 text-justify"
         >
           <v-icon color="black" x-small>mdi-circle</v-icon>
           {{ element }}
@@ -176,13 +172,11 @@
         <v-col cols="12" sm="12" md="9" lg="9">
           <v-tabs
             fixed-tabs
-            background-color="#546E7A"
+            background-color="#6694BB"
             v-model="currentTab"
             dark
             show-arrows=""
-            v-if="
-              catalogue.products.length != 0 || catalogue.productRanges != 0
-            "
+            v-if="catalogue.products.length != 0 || catalogue.productRanges != 0"
           >
             <v-tab v-if="catalogue.products.length != 0"> Productos </v-tab>
             <v-tab v-if="catalogue.productRanges.length != 0">
@@ -221,17 +215,18 @@
                 </template>
                 <template v-slot:[`item.model`]="{ item }">
                   {{ item.model }}
+                  <br />
                   <v-btn small class="mt-2 mx-2" @click="prueba(item)">
                     Ver Mas
                   </v-btn>
                 </template>
                 <template v-slot:[`item.quantity_group`]="{ item }">
-                  {{ item.quantity_group + " " }}
+                  {{ item.quantity_group + ' ' }}
                   <br />
                   {{ item.type_group }}
                 </template>
                 <template v-slot:[`item.quantity_order`]="{ item, index }">
-                  <v-row>
+                  <div class="form-inline justify-content-center">
                     <v-btn
                       @click="minusFunction(item, index)"
                       color="secondary"
@@ -241,8 +236,7 @@
                     >
                       <v-icon>mdi-minus</v-icon>
                     </v-btn>
-                    <input type="text" class="w mx-2" v-model="item.quantity" />
-
+                    <input type="text" class="w mx-2 text-center" v-model="item.quantity" />
                     <v-btn
                       @click="plusFunctionO(index)"
                       color="secondary"
@@ -252,16 +246,11 @@
                     >
                       <v-icon>mdi-plus</v-icon>
                     </v-btn>
-                  </v-row>
+                  </div>
                 </template>
                 <template class="bb" v-slot:[`item.cart`]="{ item }">
                   <v-row>
-                    <v-icon
-                      small
-                      class="mx-auto"
-                      color="#D6B331"
-                      @click="prueba"
-                    >
+                    <v-icon small class="mx-auto" color="#D6B331" @click="prueba">
                       mdi-cart
                     </v-icon>
                   </v-row>
@@ -294,10 +283,7 @@
                         </div>
                         <div sm="11" md="11" lg="11">
                           <v-img
-                            v-if="
-                              props.item.images == null ||
-                              props.item.images.length == 0
-                            "
+                            v-if="props.item.images == null || props.item.images.length == 0"
                             src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                             max-width="75"
                             max-height="75"
@@ -327,11 +313,9 @@
                       <strong>Total:</strong> {{ props.item.price_group }}
                     </td>
                     <td class="px-0 py-5">
-                      <v-btn small class="my-5" @click="prueba(props.item)"
-                        >Ver Mas</v-btn
-                      >
+                      <v-btn small class="my-5" @click="prueba(props.item)">Ver Mas</v-btn>
                       <br />
-                      <v-row class="mx-auto my-2">
+                      <div class="form-inline justify-content-center">
                         <v-btn
                           @click="minusFunction(props.item, props.index)"
                           color="#000"
@@ -341,11 +325,7 @@
                         >
                           <v-icon>mdi-minus</v-icon>
                         </v-btn>
-                        <input
-                          type="text"
-                          class="w mx-2"
-                          v-model="props.item.quantity"
-                        />
+                        <input type="text" class="w mx-2" v-model="props.item.quantity" />
                         <v-btn
                           @click="plusFunctionO(props.index)"
                           color="#000"
@@ -355,7 +335,7 @@
                         >
                           <v-icon>mdi-plus</v-icon>
                         </v-btn>
-                      </v-row>
+                      </div>
                     </td>
                   </tr>
                 </template>
@@ -392,8 +372,8 @@
                 </template>
                 <template v-slot:[`item.ranges`]="{ item, index }">
                   <div v-for="range in item.ranges" :key="range.id">
-                    <v-icon x-small>mdi-circle</v-icon> De {{ range.min }} a
-                    {{ range.max }} el precio es
+                    <v-icon x-small>mdi-circle</v-icon> De {{ range.min }} a {{ range.max }} el
+                    precio es
                     {{ range.price }}
                   </div>
                 </template>
@@ -413,26 +393,28 @@
               </v-data-table>
             </v-tab-item>
           </v-tabs-items>
-          <v-card class="float mx-auto display-md">
-            <p class="px-3 text-h6 mb-0">Resumen de mi pedido</p>
+          <br />
+          <br />
+          <v-card class="float mx-auto display-md" max-width="80%">
+            <p class="font-text text-center mb-0">
+              RESUMEN DE MI PEDIDO
+            </p>
+            <p class="px-3 pb-0 mb-0 text-subtitle-1">
+              Minima Inversión:
+              <strong>
+                {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                {{ catalogue.minimum_investment | currency }}
+              </strong>
+            </p>
             <v-expansion-panels flat class="color">
               <v-expansion-panel class="color">
                 <v-expansion-panel-header class="color p-2">
-                  <p class="pb-3 px-3 text-subtitle-1">
-                    Minima Inversión:
-                    <strong>
-                      {{ (catalogue.coin == "soles" ? "S/." : "$") + " " }}
-                      {{ catalogue.minimum_investment | currency }}
-                    </strong>
-                  </p>
-                  <template v-slot:actions>
-                    <v-btn small dark color="black" class="mr-2">Ver</v-btn>
-                  </template>
+                  <v-btn small dark color="black" class="mr-2">Ver Productos</v-btn>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content
                   class="color"
                   style="
-                    max-height: 500px;
+                    max-height: 400px;
                     overflow: scroll;
                     overflow-x: hidden;
                   "
@@ -445,9 +427,7 @@
                     <v-row>
                       <v-col cols="4">
                         <v-img
-                          v-if="
-                            product.images == null || product.images.length == 0
-                          "
+                          v-if="product.images == null || product.images.length == 0"
                           src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                           max-width="75"
                           height="50"
@@ -466,13 +446,11 @@
                       <v-col cols="8">
                         Modelo:{{ product.model }}
                         <br />
-                        Pago:{{ catalogue.coin == "soles" ? "S/." : "$"
-                        }}{{
-                          (product.quantity * product.price_unit) | currency
-                        }}
+                        Pago:{{ catalogue.coin == 'soles' ? 'S/.' : '$'
+                        }}{{ (product.quantity * product.price_unit) | currency }}
                         <br />
                         Cantidad
-                        {{ product.quantity + " " + product.type_group }}
+                        {{ product.quantity + ' ' + product.type_group }}
                         <br />
                       </v-col>
                     </v-row>
@@ -486,10 +464,7 @@
                     <v-row>
                       <v-col cols="4">
                         <v-img
-                          v-if="
-                            productRange.images == null ||
-                            productRange.images.length == 0
-                          "
+                          v-if="productRange.images == null || productRange.images.length == 0"
                           src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                           max-width="75"
                           height="50"
@@ -508,14 +483,14 @@
                       <v-col cols="8">
                         Modelo:{{ productRange.model }}
                         <br />
-                        Pago:{{ catalogue.coin == "soles" ? "S/." : "$" }}
+                        Pago:{{ catalogue.coin == 'soles' ? 'S/.' : '$' }}
                         {{ productRange.total }}
                         <br />
                         Cantidad
                         {{
                           productRange.quantity +
-                          " " +
-                          (productRange.quantity == 1 ? "Unidad" : "Unidades")
+                            ' ' +
+                            (productRange.quantity == 1 ? 'Unidad' : 'Unidades')
                         }}
                         <br />
                       </v-col>
@@ -526,248 +501,50 @@
             </v-expansion-panels>
             <v-row class="text-right mx-2">
               <v-spacer></v-spacer>
-              <v-col class="text-subtitle-1"
-                >Total: {{ totalGeneral | currency }}</v-col
-              >
+              <v-col class="text-subtitle-1 pb-0">Total: {{ totalGeneral | currency }}</v-col>
             </v-row>
             <br />
             <v-dialog v-model="dialog" persistent max-width="290">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-if="!isLoggedIn"
-                  color="blue"
-                  small
-                  :to="{ name: 'register' }"
-                >
-                  Registraste
-                </v-btn>
-                <v-btn
-                  v-if="!isLoggedIn"
-                  v-bind="attrs"
-                  v-on="on"
-                  small
-                  class="mx-2"
-                >
-                  Generar Orden
-                </v-btn>
-                <v-btn
-                  v-if="isLoggedIn"
-                  v-bind="attrs"
-                  v-on="on"
-                  :disabled="validate"
-                  small
-                  class="mx-2"
-                >
-                  Generar Orden
-                </v-btn>
+                <div class="d-flex justify-space-around pb-5">
+                  <div>
+                    <v-btn v-if="!isLoggedIn" v-bind="attrs" v-on="on" small class="px-2">
+                      Generar Orden
+                    </v-btn>
+                  </div>
+                  <div>
+                    <v-btn
+                      v-if="isLoggedIn"
+                      v-bind="attrs"
+                      v-on="on"
+                      :disabled="validate"
+                      small
+                      class="px-2"
+                    >
+                      Generar Orden
+                    </v-btn>
+                  </div>
+                  <div>
+                    <v-btn
+                      v-if="!isLoggedIn"
+                      color="blue"
+                      small
+                      :to="{ name: 'register' }"
+                      class="px-2"
+                    >
+                      Registraste
+                    </v-btn>
+                  </div>
+                </div>
               </template>
               <v-card>
                 <v-card-title class="headline"> Generar Orden </v-card-title>
                 <v-card-text v-if="isLoggedIn">
                   Antes de generar esta orden,
                   <strong class="text-red"
-                    >tienes que estar seguro de que los datos con los que te
-                    registraste son validos</strong
-                  >, ya que mediante estos estaremos generando una orden de
-                  compra.
-                </v-card-text>
-                <v-card-text v-else>
-                  Para generar su orden debe registrarse
-                  <strong class="text-red">¡ES FASILISIMO!</strong>.
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="dialog = false">
-                    Cancelar
-                  </v-btn>
-                  <v-btn
-                    v-if="isLoggedIn"
-                    color="green darken-1"
-                    text
-                    @click="
-                      generateOrder({
-                        id: catalogue.id,
-                        products: selected,
-                        product_ranges: selectedRange,
-                      }),
-                        (dialog = false),
-                        (alert = false)
-                    "
-                  >
-                    Generar
-                  </v-btn>
-                  <v-btn
-                    v-else
-                    color="green darken-1"
-                    text
-                    :to="{ name: 'register' }"
-                  >
-                    registrarse
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="12" md="3" lg="3" class="content-cart display-sm">
-          <v-card class="float mx-auto">
-            <p class="py-3 px-3 text-h6">RESUMEN DE MI PEDIDO</p>
-            <v-expansion-panels flat class="color">
-              <v-expansion-panel class="color">
-                <v-expansion-panel-header class="color p-2">
-                  <p class="pb-3 px-3 text-subtitle-1">
-                    Minima Inversión:
-                    <strong>
-                      {{ (catalogue.coin == "soles" ? "S/." : "$") + " " }}
-                      {{ catalogue.minimum_investment | currency }}
-                    </strong>
-                  </p>
-                  <template v-slot:actions>
-                    <v-btn small dark color="black" class="mr-2">Ver</v-btn>
-                  </template>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content
-                  class="color"
-                  style="
-                    max-height: 500px;
-                    overflow: scroll;
-                    overflow-x: hidden;
-                  "
-                >
-                  <v-card-text
-                    v-for="(product, index) in selected"
-                    :key="'A' + index"
-                    class="py-0 px-0"
-                  >
-                    <v-row>
-                      <v-col cols="4">
-                        <v-img
-                          v-if="
-                            product.images == null || product.images.length == 0
-                          "
-                          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                          max-width="75"
-                          height="50"
-                          contain
-                          class="m-1"
-                        />
-                        <v-img
-                          v-else
-                          contain
-                          :src="product.images[0].path"
-                          max-width="75"
-                          height="50"
-                          class="text-center align-center"
-                        />
-                      </v-col>
-                      <v-col cols="8">
-                        Modelo:{{ product.model }}
-                        <br />
-                        Pago:{{ catalogue.coin == "soles" ? "S/." : "$"
-                        }}{{
-                          (product.quantity * product.price_unit) | currency
-                        }}
-                        <br />
-                        Cantidad
-                        {{ product.quantity + " " + product.type_group }}
-                        <br />
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-
-                  <v-card-text
-                    v-for="(productRange, index) in selectedRange"
-                    :key="index"
-                    class="py-0"
-                  >
-                    <v-row>
-                      <v-col cols="4">
-                        <v-img
-                          v-if="
-                            productRange.images == null ||
-                            productRange.images.length == 0
-                          "
-                          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                          max-width="75"
-                          height="50"
-                          contain
-                          class="m-1"
-                        />
-                        <v-img
-                          v-else
-                          contain
-                          :src="productRange.images[0].path"
-                          max-width="75"
-                          height="50"
-                          class="text-center align-center"
-                        />
-                      </v-col>
-                      <v-col cols="8">
-                        Modelo:{{ productRange.model }}
-                        <br />
-                        Pago:{{ catalogue.coin == "soles" ? "S/." : "$" }}
-                        {{ productRange.total }}
-                        <br />
-                        Cantidad
-                        {{
-                          productRange.quantity +
-                          " " +
-                          (productRange.quantity == 1 ? "Unidad" : "Unidades")
-                        }}
-                        <br />
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
-            <v-row class="text-right mx-2">
-              <v-spacer></v-spacer>
-              <v-col class="text-subtitle-1"
-                >Total: {{ totalGeneral | currency }}</v-col
-              >
-            </v-row>
-            <br />
-            <v-dialog v-model="dialog" persistent max-width="290">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  v-if="!isLoggedIn"
-                  color="blue"
-                  small
-                  :to="{ name: 'register' }"
-                  class="mx-2 mb-3"
-                >
-                  Registraste
-                </v-btn>
-                <v-btn
-                  v-if="!isLoggedIn"
-                  v-bind="attrs"
-                  v-on="on"
-                  small
-                  class="mx-2 mb-3"
-                >
-                  Generar Orden
-                </v-btn>
-                <v-btn
-                  v-if="isLoggedIn"
-                  v-bind="attrs"
-                  v-on="on"
-                  :disabled="validate"
-                  small
-                  class="mx-2 mb-3"
-                >
-                  Generar Orden
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title class="headline"> Generar Orden </v-card-title>
-                <v-card-text v-if="isLoggedIn">
-                  Antes de generar esta orden,
-                  <strong class="text-red"
-                    >tienes que estar seguro de que los datos con los que te
-                    registraste son validos</strong
-                  >, ya que mediante estos estaremos generando una orden de
-                  compra.
+                    >tienes que estar seguro de que los datos con los que te registraste son
+                    validos</strong
+                  >, ya que mediante estos estaremos generando una orden de compra.
                 </v-card-text>
                 <v-card-text v-else>
                   Para generar su orden debe registrarse
@@ -794,12 +571,192 @@
                   >
                     Generar
                   </v-btn>
+                  <v-btn v-else color="green darken-1" text :to="{ name: 'register' }">
+                    registrarse
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-card>
+        </v-col>
+        <v-col cols="12" sm="12" md="3" lg="3" class="content-cart display-sm">
+          <v-card class="float mx-auto">
+            <p class="py-3 px-3 font-text text-center">
+              RESUMEN DE MI PEDIDO
+            </p>
+            <p class="px-3 pb-0 mb-0 text-subtitle-1">
+              Minima Inversión:
+              <strong>
+                {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                {{ catalogue.minimum_investment | currency }}
+              </strong>
+            </p>
+            <v-expansion-panels flat class="color">
+              <v-expansion-panel class="color">
+                <v-expansion-panel-header class="color p-2">
+                  <v-btn small dark color="black" class="mr-2">Ver Productos</v-btn>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content
+                  class="color"
+                  style="
+                    max-height: 500px;
+                    overflow: scroll;
+                    overflow-x: hidden;
+                  "
+                >
+                  <v-card-text
+                    v-for="(product, index) in selected"
+                    :key="'A' + index"
+                    class="py-0 px-0"
+                  >
+                    <v-row>
+                      <v-col cols="4">
+                        <v-img
+                          v-if="product.images == null || product.images.length == 0"
+                          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                          max-width="75"
+                          height="50"
+                          contain
+                          class="m-1"
+                        />
+                        <v-img
+                          v-else
+                          contain
+                          :src="product.images[0].path"
+                          max-width="75"
+                          height="50"
+                          class="text-center align-center"
+                        />
+                      </v-col>
+                      <v-col cols="8">
+                        Modelo:{{ product.model }}
+                        <br />
+                        Pago:{{ catalogue.coin == 'soles' ? 'S/.' : '$'
+                        }}{{ (product.quantity * product.price_unit) | currency }}
+                        <br />
+                        Cantidad
+                        {{ product.quantity + ' ' + product.type_group }}
+                        <br />
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+
+                  <v-card-text
+                    v-for="(productRange, index) in selectedRange"
+                    :key="index"
+                    class="py-0"
+                  >
+                    <v-row>
+                      <v-col cols="4">
+                        <v-img
+                          v-if="productRange.images == null || productRange.images.length == 0"
+                          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                          max-width="75"
+                          height="50"
+                          contain
+                          class="m-1"
+                        />
+                        <v-img
+                          v-else
+                          contain
+                          :src="productRange.images[0].path"
+                          max-width="75"
+                          height="50"
+                          class="text-center align-center"
+                        />
+                      </v-col>
+                      <v-col cols="8">
+                        Modelo:{{ productRange.model }}
+                        <br />
+                        Pago:{{ catalogue.coin == 'soles' ? 'S/.' : '$' }}
+                        {{ productRange.total }}
+                        <br />
+                        Cantidad
+                        {{
+                          productRange.quantity +
+                            ' ' +
+                            (productRange.quantity == 1 ? 'Unidad' : 'Unidades')
+                        }}
+                        <br />
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+            <v-row class="text-right mx-2">
+              <v-spacer></v-spacer>
+              <v-col class="text-subtitle-1">Total: {{ totalGeneral | currency }}</v-col>
+            </v-row>
+            <br />
+            <v-dialog v-model="dialog" persistent max-width="290">
+              <template v-slot:activator="{ on, attrs }">
+                <div class="d-flex justify-space-around mb-3">
+                  <div>
+                    <v-btn v-if="!isLoggedIn" v-bind="attrs" v-on="on" small class="px-2">
+                      Generar Orden
+                    </v-btn>
+                  </div>
+                  <div>
+                    <v-btn
+                      v-if="isLoggedIn"
+                      v-bind="attrs"
+                      v-on="on"
+                      :disabled="validate"
+                      small
+                      class="px-2"
+                    >
+                      Generar Orden
+                    </v-btn>
+                  </div>
+                  <div>
+                    <v-btn
+                      v-if="!isLoggedIn"
+                      color="blue"
+                      small
+                      :to="{ name: 'register' }"
+                      class="px-2"
+                    >
+                      Registraste
+                    </v-btn>
+                  </div>
+                </div>
+              </template>
+              <v-card>
+                <v-card-title class="headline"> Generar Orden </v-card-title>
+                <v-card-text v-if="isLoggedIn">
+                  Antes de generar esta orden,
+                  <strong class="text-red"
+                    >tienes que estar seguro de que los datos con los que te registraste son
+                    validos</strong
+                  >, ya que mediante estos estaremos generando una orden de compra.
+                </v-card-text>
+                <v-card-text v-else>
+                  Para generar su orden debe registrarse
+                  <strong class="text-red">¡ES FACILISIMO!</strong>.
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="dialog = false">
+                    Cancelar
+                  </v-btn>
                   <v-btn
-                    v-else
+                    v-if="isLoggedIn"
                     color="green darken-1"
                     text
-                    :to="{ name: 'register' }"
+                    @click="
+                      generateOrder({
+                        id: catalogue.id,
+                        products: selected,
+                        product_ranges: selectedRange,
+                      }),
+                        (dialog = false),
+                        (alert = false)
+                    "
                   >
+                    Generar
+                  </v-btn>
+                  <v-btn v-else color="green darken-1" text :to="{ name: 'register' }">
                     registrarse
                   </v-btn>
                 </v-card-actions>
@@ -820,9 +777,9 @@
   </div>
 </template>
 <script>
-import Product from "./product";
-import { mapActions, mapGetters } from "vuex";
-import moment from "moment";
+import Product from './product';
+import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
 
 export default {
   comments: {
@@ -830,7 +787,7 @@ export default {
   },
   data: () => ({
     dialog: false,
-    baseURL: "",
+    baseURL: '',
     totalItems: 0,
     itemSelected: null,
     showScheduleForm: false,
@@ -842,69 +799,69 @@ export default {
     number: 1,
     currentTab: 0,
     headers: [
-      { text: "Imagen", value: "images", align: "center", sortable: false },
+      { text: 'Imagen', value: 'images', align: 'center', sortable: false },
       {
-        text: "Modelo",
-        value: "model",
-        align: "center",
+        text: 'Modelo',
+        value: 'model',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Marca",
-        value: "brand",
-        align: "center",
+        text: 'Marca',
+        value: 'brand',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Precio unitario(A)",
-        value: "price_unit",
-        align: "center",
+        text: 'Precio unitario(A)',
+        value: 'price_unit',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Cantidad Mínima de Pedido(B)",
-        value: "quantity_group",
-        align: "center",
+        text: 'Cantidad Mínima de Pedido(B)',
+        value: 'quantity_group',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Precio Total por Cantidad Mínima(AxB)",
-        value: "price_group",
-        align: "center",
+        text: 'Precio Total(AxB)',
+        value: 'price_group',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Cantidad de Pedido",
-        value: "quantity_order",
-        align: "center",
+        text: 'Cantidad de Pedido',
+        value: 'quantity_order',
+        align: 'center',
         sortable: false,
         width: 135,
       },
     ],
     headersItem: [
-      { text: "Imagen", value: "images", align: "center", sortable: false },
+      { text: 'Imagen', value: 'images', align: 'center', sortable: false },
       {
-        text: "Modelo",
-        value: "model",
-        align: "center",
+        text: 'Modelo',
+        value: 'model',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Marca",
-        value: "brand",
-        align: "center",
+        text: 'Marca',
+        value: 'brand',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Precio por cantidad de Pedido",
-        value: "ranges",
-        align: "center",
+        text: 'Precio por cantidad de Pedido',
+        value: 'ranges',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Cantidad de Pedido",
-        value: "quantity_order",
-        align: "center",
+        text: 'Cantidad de Pedido',
+        value: 'quantity_order',
+        align: 'center',
         sortable: false,
       },
     ],
@@ -915,12 +872,12 @@ export default {
     Product,
   },
   computed: {
-    ...mapGetters("groupImport", ["catalogue", "cart"]),
-    ...mapGetters("account", ["isLoggedIn"]),
+    ...mapGetters('groupImport', ['catalogue', 'cart']),
+    ...mapGetters('account', ['isLoggedIn']),
 
     total() {
       let t = 0;
-      this.selected.forEach((element) => {
+      this.selected.forEach(element => {
         t += element.quantity * element.price_unit;
       });
       this.totalItems += t;
@@ -940,10 +897,10 @@ export default {
       let q = 0;
       let p = 0;
       let tot = 0;
-      this.selectedRange.forEach((element) => {
+      this.selectedRange.forEach(element => {
         q = element.quantity;
         if (element.ranges.length != 0) {
-          element.ranges.forEach((range) => {
+          element.ranges.forEach(range => {
             if ((q >= range.min) & (q <= range.max)) {
               t = range.price * q;
             }
@@ -969,13 +926,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions("groupImport", ["removeCart"]),
-    ...mapActions("groupImport", [
-      "getCatalogue",
-      "addCart",
-      "setCart",
-      "generateOrder",
-    ]),
+    ...mapActions('groupImport', ['removeCart']),
+    ...mapActions('groupImport', ['getCatalogue', 'addCart', 'setCart', 'generateOrder']),
     minusFunction(item, index) {
       if (item.quantity <= item.quantity_group) {
         alert(
@@ -983,22 +935,18 @@ export default {
         );
       } else {
         this.catalogue.products[index].quantity =
-          this.catalogue.products[index].quantity -
-          this.catalogue.products[index].magnifying;
+          this.catalogue.products[index].quantity - this.catalogue.products[index].magnifying;
       }
     },
     plusFunctionO(index) {
       console.log(this.catalogue.products[index]);
       this.catalogue.products[index].quantity =
-        this.catalogue.products[index].quantity +
-        this.catalogue.products[index].magnifying;
+        this.catalogue.products[index].quantity + this.catalogue.products[index].magnifying;
     },
 
     minusFunctionR(item, index) {
       if (item.quantity <= item.min) {
-        alert(
-          `Lo sentimos, la candidad minima de de compra de este producto es ${item.min}`
-        );
+        alert(`Lo sentimos, la candidad minima de de compra de este producto es ${item.min}`);
       } else {
         this.catalogue.productRanges[index].quantity--;
       }
@@ -1027,29 +975,44 @@ export default {
     console.log(this.catalogue);
   },
   filters: {
-    currency: function (value) {
+    currency: function(value) {
       return parseFloat(value).toFixed(2);
     },
-    date: function (value) {
-      return moment(value).format("DD-MM-YYYY");
+    date: function(value) {
+      return moment(value).format('DD-MM-YYYY');
     },
-    porcent: function (value) {
-      return parseFloat(value) * 100 + " %";
+    porcent: function(value) {
+      return parseFloat(value) * 100 + ' %';
     },
   },
 };
 </script>
 
 <style scoped>
-.v-data-table
-  /deep/
-  tbody
-  /deep/
-  tr:hover:not(.v-data-table__expanded__content) {
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
+.font-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #444;
+  font-weight: bold;
+}
+.v-data-table /deep/ tbody /deep/ tr:hover:not(.v-data-table__expanded__content) {
   background: #ff7676 !important;
 }
 .v-data-table /deep/ tbody /deep/ tr:not(.v-data-table__expanded__content) {
   border-top: 2px solid black;
+}
+.v-data-table /deep/ tbody /deep/ td:not(.v-data-table__expanded__content) {
+  padding-right: 0;
+  padding-left: 0;
+  text-align: center !important;
+}
+.v-data-table /deep/ thead /deep/ th:not(.v-data-table__expanded__content) {
+  padding-right: 0;
+  padding-left: 0;
+  text-align: center !important;
 }
 .display-md {
   visibility: hidden;
@@ -1140,5 +1103,3 @@ export default {
   }
 }
 </style>
-
-

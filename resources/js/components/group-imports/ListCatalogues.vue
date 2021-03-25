@@ -36,7 +36,7 @@
                 </v-col>
                 <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
-                    {{ item.coin == "soles" ? "S./" : "$" }}
+                    {{ item.coin == 'soles' ? 'S./' : '$' }}
                     {{ item.quota_price | currency }}
                   </v-chip>
                 </v-col>
@@ -50,7 +50,7 @@
                 </v-col>
                 <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
-                    {{ item.coin == "soles" ? "S./" : "$" }}
+                    {{ item.coin == 'soles' ? 'S./' : '$' }}
                     {{ item.minimum_investment | currency }}
                   </v-chip>
                 </v-col>
@@ -59,8 +59,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col sm="6" md="8">
-                  <v-icon color="black" x-small>mdi-circle</v-icon> % de Primera
-                  cuota:
+                  <v-icon color="black" x-small>mdi-circle</v-icon> % de Primera cuota:
                 </v-col>
                 <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
@@ -73,8 +72,7 @@
             <v-card-text class="font-weight-medium pb-0 pt-1">
               <v-row>
                 <v-col sm="6" md="8">
-                  <v-icon color="black" x-small>mdi-circle</v-icon> % de Segunda
-                  cuota:
+                  <v-icon color="black" x-small>mdi-circle</v-icon> % de Segunda cuota:
                 </v-col>
                 <v-col sm="6" md="4" class="text-right">
                   <v-chip class="mr-2">
@@ -163,19 +161,19 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
-import moment from "moment";
+import { mapGetters, mapActions } from 'vuex';
+import moment from 'moment';
 
 export default {
   data: () => ({}),
   computed: {
-    ...mapGetters("groupImport", ["catalogues", "cart"]),
+    ...mapGetters('groupImport', ['catalogues', 'cart']),
   },
   methods: {
-    ...mapActions("groupImport", ["getCatalogues"]),
+    ...mapActions('groupImport', ['getCatalogues']),
     showProduct(item) {
       this.$router.push({
-        name: "listProductforCatalogue",
+        name: 'listProductforCatalogue',
         params: {
           id: item.id,
         },
@@ -186,21 +184,21 @@ export default {
     this.getCatalogues();
   },
   filters: {
-    currency: function (value) {
+    currency: function(value) {
       return parseFloat(value).toFixed(2);
-      moment(element.arrival_date).format("YYYY-MM-DD");
+      moment(element.arrival_date).format('YYYY-MM-DD');
     },
-    date: function (value) {
-      return moment(value).format("DD-MM-YYYY");
+    date: function(value) {
+      return moment(value).format('DD-MM-YYYY');
     },
-    porcent: function (value) {
-      return parseFloat(value) * 100 + " %";
+    porcent: function(value) {
+      return parseFloat(value) * 100 + ' %';
     },
   },
 };
 </script>
 <style scoped>
 * {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 </style>

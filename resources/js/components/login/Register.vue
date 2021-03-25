@@ -53,67 +53,79 @@
           placeholder="Av. example"
         ></v-text-field>
 
-        <v-btn
-          :disabled="!valid"
-          color="primary"
-          class="my-3"
-          @click="register"
-        >
+        <v-btn :disabled="!valid" color="primary" class="my-3" @click="registerAction">
           Registrarse
         </v-btn>
       </div>
     </div>
+    <v-dialog v-model="dialogAfterRegister" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">
+          ¡Registro Exitoso!
+        </v-card-title>
+        <v-card-text>
+          ¡Ud. ya puede realizar su pedido!
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="goBackProducts">
+            Revisar Pedido
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data: () => ({
     w_with: window.innerWidth * 0.6,
     w_height: window.innerHeight,
     valid: true,
-    email: "",
+    email: '',
     emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      v => !!v || 'E-mail is required',
+      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
     ],
     select: null,
     show1: false,
     show2: true,
     show3: false,
     show4: false,
-    password: "",
+    password: '',
     rules: {
-      required: (value) => !!value || "Required.",
-      min: (v) => v.length >= 8 || "Min 8 characters",
+      required: value => !!value || 'Required.',
+      min: v => v.length >= 8 || 'Min 8 characters',
     },
-    generalRules: [(v) => !!v || "Este campo no puede ir vacio"],
+    generalRules: [v => !!v || 'Este campo no puede ir vacio'],
     e6: 1,
-    name: "",
-    lastname: "",
-    email: "",
-    password_confirmation: "",
-    address: "",
-    ruc: "",
-    dni: "",
-    phone: "",
-    gender: "",
-    city: "",
+    name: '',
+    lastname: '',
+    email: '',
+    password_confirmation: '',
+    address: '',
+    ruc: '',
+    dni: '',
+    phone: '',
+    gender: '',
+    city: '',
     items: [
       {
-        name: "Masculino",
-        send: "masculine",
+        name: 'Masculino',
+        send: 'masculine',
       },
       {
-        name: "Femenino",
-        send: "female",
+        name: 'Femenino',
+        send: 'female',
       },
     ],
+    dialogAfterRegister: false,
   }),
 
   methods: {
-    ...mapActions("account", ["login"]),
+    ...mapActions('account', ['login', 'register']),
     validate() {
       this.$refs.form.validate();
     },
@@ -124,23 +136,22 @@ export default {
       this.$refs.form.resetValidation();
     },
     loginRouter() {
-      this.$router.replace({ name: "loginRouter" });
+      this.$router.replace({ name: 'loginRouter' });
     },
-    register() {
-      axios
-        .post("/api/v1/signup", {
-          name: this.name,
-          password: this.password,
-          password_confirmation: this.password,
-          dni: parseInt(this.dni),
-          phone: this.phone,
-          city: this.city,
-        })
-        .then((response) => {
-          console.log(response);
-          
-        })
-        .catch((error) => {});
+    registerAction() {
+      let user = {
+        name: this.name,
+        password: this.password,
+        password_confirmation: this.password,
+        dni: parseInt(this.dni),
+        phone: this.phone,
+        city: this.city,
+      };
+      this.register(user);
+      this.dialogAfterRegister = true;
+    },
+    goBackProducts() {
+      this.$router.go(-1);
     },
   },
 };
@@ -152,7 +163,7 @@ export default {
 }
 
 h1 {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   text-align: center;
   font-size: 2.5rem;
   font-weight: 500;

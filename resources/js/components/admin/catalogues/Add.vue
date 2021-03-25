@@ -6,10 +6,7 @@
       </div>
       <v-spacer></v-spacer>
       <div>
-        <v-checkbox
-          v-model="catalogue.is_available"
-          label="Disponible"
-        ></v-checkbox>
+        <v-checkbox v-model="catalogue.is_available" label="Disponible"></v-checkbox>
       </div>
     </v-row>
     <v-card flat elevation="2">
@@ -173,37 +170,27 @@
                   </v-menu>
                 </v-col>
               </v-row>
-              <v-row>
-                <v-col cols="12" sm="12" md="6" lg="6">
-                  Condiciones de Cátalogo
-                  <v-combobox
-                    v-model="catalogue.conditions"
-                    chips
-                    clearable
-                    multiple
-                    solo
-                  >
-                    <template
-                      v-slot:selection="{ attrs, item, select, selected }"
-                    >
-                      <v-chip
-                        v-bind="attrs"
-                        :input-value="selected"
-                        close
-                        label
-                        class="my-2"
-                        @click="select"
-                        @click:close="remove(item)"
-                        color="primary"
-                      >
-                        {{ item }}
-                      </v-chip>
-                    </template>
-                  </v-combobox>
-                </v-col>
-              </v-row>
             </v-col>
-            <v-col>
+            <v-col cols="12">
+              Condiciones de Cátalogo
+              <v-combobox v-model="catalogue.conditions" chips clearable multiple solo>
+                <template v-slot:selection="{ attrs, item, select, selected }">
+                  <v-chip
+                    v-bind="attrs"
+                    :input-value="selected"
+                    close
+                    label
+                    class="my-2"
+                    @click="select"
+                    @click:close="remove(item)"
+                    color="primary"
+                  >
+                    {{ item }}
+                  </v-chip>
+                </template>
+              </v-combobox>
+            </v-col>
+            <v-col cols="12">
               <v-file-input
                 v-model="imagesCatalogue"
                 label="Imagen"
@@ -282,13 +269,7 @@
                 </v-col>
                 <v-col cols="12" sm="1" md="1" class="">
                   <div class="text-center">
-                    <v-btn
-                      color="error"
-                      fab
-                      x-small
-                      class="mt-5"
-                      @click="deleteRow(index)"
-                    >
+                    <v-btn color="error" fab x-small class="mt-5" @click="deleteRow(index)">
                       <v-icon>mdi-minus</v-icon>
                     </v-btn>
                   </div>
@@ -313,7 +294,7 @@ export default {
     inputs: [
       {
         calendar: false,
-        city: "Arequipa",
+        city: 'Arequipa',
         arrival_date: new Date().toISOString().substr(0, 10),
       },
     ],
@@ -327,7 +308,7 @@ export default {
     window: null,
     valid: true,
     catalogue: {
-      name: "",
+      name: '',
       minimum_investment: null,
       quota_price: null,
       quota_date: new Date().toISOString().substr(0, 10),
@@ -335,45 +316,45 @@ export default {
       date_first_payment: new Date().toISOString().substr(0, 10),
       second_payment: null,
       date_second_payment: new Date().toISOString().substr(0, 10),
-      coin: "soles",
+      coin: 'soles',
       is_available: false,
     },
-    coins: ["soles", "dolares"],
+    coins: ['soles', 'dolares'],
     select: null,
     url: null,
     cities: [
-      "Amazonas",
-      "Ancash",
-      "Apurímac",
-      "Arequipa",
-      "Ayacucho",
-      "Cajamarca",
-      "Cusco",
-      "Huancavelica",
-      "Huánuco",
-      "Ica",
-      "Junín",
-      "La Libertad",
-      "Lambayeque",
-      "Lima",
-      "Loreto",
-      "Madre de Dios",
-      "Moquegua",
-      "Pasco",
-      "Piura",
-      "Puno",
-      "San Martín",
-      "Tacna",
-      "Tumbes",
-      "Ucayali",
+      'Amazonas',
+      'Ancash',
+      'Apurímac',
+      'Arequipa',
+      'Ayacucho',
+      'Cajamarca',
+      'Cusco',
+      'Huancavelica',
+      'Huánuco',
+      'Ica',
+      'Junín',
+      'La Libertad',
+      'Lambayeque',
+      'Lima',
+      'Loreto',
+      'Madre de Dios',
+      'Moquegua',
+      'Pasco',
+      'Piura',
+      'Puno',
+      'San Martín',
+      'Tacna',
+      'Tumbes',
+      'Ucayali',
     ],
-    iconCoin: "S/ .",
+    iconCoin: 'S/ .',
   }),
   watch: {
-    "catalogue.first_payment": function (val) {
+    'catalogue.first_payment': function(val) {
       this.catalogue.second_payment = parseInt(100 - val).toFixed();
     },
-    "catalogue.second_payment": function (val) {
+    'catalogue.second_payment': function(val) {
       this.catalogue.first_payment = parseInt(100 - val).toFixed();
     },
   },
@@ -381,8 +362,7 @@ export default {
     validate() {
       if (this.imagesCatalogue.length != 0) {
         this.addImages();
-      }
-      else {
+      } else {
         this.addCatalogue();
       }
     },
@@ -396,35 +376,32 @@ export default {
       axios
         .post(`/api/v1/uploads`, data, {
           headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
           },
         })
-        .then((response) => {
+        .then(response => {
           this.catalogue.image = response.data[0];
-          console.log("aqui", response.data[0]);
+          console.log('aqui', response.data[0]);
           this.addCatalogue();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
           // reject(error);
         });
     },
     addCatalogue() {
       axios
-        .post(
-          "/api/v1/catalogues",this.catalogue,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
+        .post('/api/v1/catalogues', this.catalogue, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => {
           this.addArrivals(response.data.data.id);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     addArrivals(id) {
       axios
@@ -433,36 +410,33 @@ export default {
           { items: this.inputs },
           {
             headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
             },
           }
         )
-        .then((response) => {
-          this.$router.push({ name: "listCatalogue" });
+        .then(response => {
+          this.$router.push({ name: 'listCatalogue' });
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     add() {
       this.inputs.push({
-        calendar: "",
-        city: "",
-        arrival_date: "",
+        calendar: '',
+        city: '',
+        arrival_date: '',
       });
     },
     deleteRow(index) {
       this.inputs.splice(index, 1);
     },
     typeCoin() {
-      if (this.catalogue.coin == "soles") this.iconCoin = "S/.";
-      else this.iconCoin = "$";
+      if (this.catalogue.coin == 'soles') this.iconCoin = 'S/.';
+      else this.iconCoin = '$';
     },
 
     remove(item) {
-      this.catalogue.conditions.splice(
-        this.catalogue.conditions.indexOf(item),
-        1
-      );
+      this.catalogue.conditions.splice(this.catalogue.conditions.indexOf(item), 1);
       this.catalogue.conditions = [...this.catalogue.conditions];
     },
   },

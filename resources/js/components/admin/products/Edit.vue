@@ -9,28 +9,28 @@
               <v-row>
                 <v-col cols="12" sm="6" md="3">
                   Modelo
-                  <v-text-field
-                    solo
-                    v-model="product.model"
-                    required
-                  ></v-text-field>
+                  <v-text-field solo v-model="product.model" required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="3">
                   Marca
-                  <v-text-field
-                    solo
-                    v-model="product.brand"
-                    required
-                  ></v-text-field>
+                  <v-text-field solo v-model="product.brand" required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="3">
                   SKU
-                  <v-text-field
+                  <v-text-field solo v-model="product.sku" required readonly></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="3" md="3">
+                  Género
+                  <v-select
+                    v-model="product.gender"
+                    item-text="name"
+                    item-value="send"
+                    :items="genderItems"
+                    menu-props="auto"
                     solo
-                    v-model="product.sku"
-                    required
-                    readonly
-                  ></v-text-field>
+                    hide-details
+                    placeholder="Selecciona"
+                  ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="3">
                   Incremento
@@ -44,36 +44,19 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="3">
                   Stock
-                  <v-text-field
-                    v-model="product.stock"
-                    type="number"
-                    solo
-                  ></v-text-field>
+                  <v-text-field v-model="product.stock" type="number" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="3">
                   Cantidad minima por cliente
-                  <v-text-field
-                    v-model="product.quantity_group"
-                    type="number"
-                    solo
-                  ></v-text-field>
+                  <v-text-field v-model="product.quantity_group" type="number" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="3">
                   Precio por unidad
-                  <v-text-field
-                    v-model="product.price_unit"
-                    type="number"
-                    solo
-                  ></v-text-field>
+                  <v-text-field v-model="product.price_unit" type="number" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="3">
                   Precio por conjunto
-                  <v-text-field
-                    v-model="productQG"
-                    type="number"
-                    solo
-                    readonly
-                  ></v-text-field>
+                  <v-text-field v-model="productQG" type="number" solo readonly></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4" md="4">
                   Tipo de grupo
@@ -122,11 +105,7 @@
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
-                <v-color-picker
-                  hide-inputs
-                  v-model="color"
-                  class="mx-auto"
-                ></v-color-picker>
+                <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
               </v-col>
               <v-col cols="12" md="6">
                 <v-row>
@@ -146,11 +125,7 @@
                 </v-col>
                 <v-row class="pr-3">
                   <v-col v-for="(item, index) in colors" :key="index" cols="1">
-                    <v-avatar
-                      :color="item"
-                      size="15"
-                      @click="deleteColor(index)"
-                    ></v-avatar>
+                    <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
                   </v-col>
                 </v-row>
               </v-col>
@@ -194,21 +169,9 @@
         <v-card class="mt-5">
           <v-item-group v-model="selectedDelete" multiple>
             <v-row>
-              <v-col
-                v-for="(item, i) in images"
-                :key="i"
-                cols="12"
-                sm="3"
-                md="3"
-              >
+              <v-col v-for="(item, i) in images" :key="i" cols="12" sm="3" md="3">
                 <v-item v-slot="{ active, toggle }" class="mx-3">
-                  <v-img
-                    :src="item.path"
-                    height="150"
-                    class="text-right"
-                    @click="toggle"
-                    contain
-                  >
+                  <v-img :src="item.path" height="150" class="text-right" @click="toggle" contain>
                     <v-btn icon>
                       <v-icon color="red" @click="deleteImage(i, item)">
                         mdi-delete
@@ -246,13 +209,7 @@
           <v-card-text>
             <v-item-group v-model="selected" multiple>
               <v-row>
-                <v-col
-                  v-for="(item, i) in urls"
-                  :key="i"
-                  cols="12"
-                  md="3"
-                  sm="3"
-                >
+                <v-col v-for="(item, i) in urls" :key="i" cols="12" md="3" sm="3">
                   <v-item v-slot="{ active, toggle }">
                     <v-img
                       :src="item.src"
@@ -263,7 +220,7 @@
                     >
                       <v-btn icon>
                         <v-icon>
-                          {{ active ? "mdi-heart" : "mdi-heart-outline" }}
+                          {{ active ? 'mdi-heart' : 'mdi-heart-outline' }}
                         </v-icon>
                       </v-btn>
                     </v-img>
@@ -299,12 +256,7 @@
         <v-icon left> mdi-delete </v-icon>
         Cancelar
       </v-btn>
-      <v-btn
-        :disabled="!valid"
-        color="success"
-        class="mr-3 my-5"
-        @click="validate"
-      >
+      <v-btn :disabled="!valid" color="success" class="mr-3 my-5" @click="validate">
         <v-icon left> mdi-content-save </v-icon>
         Guardar
       </v-btn>
@@ -317,18 +269,18 @@ export default {
   data: () => ({
     // Object Product
     product: {
-      model: "",
-      slug: "",
-      sku: "",
-      stock: "",
-      brand: "",
-      price_unit: "",
-      price_group: "",
-      quantity_group: "",
-      type_group: "",
-      category: "",
-      catalogue: "",
-      images: null
+      model: '',
+      slug: '',
+      sku: '',
+      stock: '',
+      brand: '',
+      price_unit: '',
+      price_group: '',
+      quantity_group: '',
+      type_group: '',
+      category: '',
+      catalogue: '',
+      images: null,
     },
     // Object Catalogue
     catalogues: [],
@@ -341,13 +293,13 @@ export default {
     selected: [],
     select: null,
     // Options of Types Group
-    types: ["unidades", "sets", "cajas"],
+    types: ['unidades', 'sets', 'cajas'],
     // Url of Images
     urls: [],
     // Data of Color Picker
     colors: [],
-    type: "hex",
-    hex: "#FF00FF",
+    type: 'hex',
+    hex: '#FF00FF',
     // Items Image Delete
     selectedDelete: [],
     // Items Image Show
@@ -355,11 +307,25 @@ export default {
     // Validation
     valid: true,
     measures: [],
+    gender: 'none',
+    genderItems: [
+      {
+        name: 'Ninguno',
+        send: 'none',
+      },
+      {
+        name: 'Masculino',
+        send: 'masculine',
+      },
+      {
+        name: 'Femenino',
+        send: 'female',
+      },
+    ],
   }),
   computed: {
     productQG: function() {
-      this.product.price_group =
-        this.product.price_unit * this.product.quantity_group;
+      this.product.price_group = this.product.price_unit * this.product.quantity_group;
       return this.product.price_group;
     },
     color: {
@@ -368,10 +334,10 @@ export default {
       },
       set(v) {
         this[this.type] = v;
-      }
+      },
     },
     showColor() {
-      if (typeof this.color === "string") return this.color;
+      if (typeof this.color === 'string') return this.color;
 
       return JSON.stringify(
         Object.keys(this.color).reduce((color, key) => {
@@ -381,7 +347,7 @@ export default {
         null,
         2
       );
-    }
+    },
   },
   mounted() {
     this.getProduct();
@@ -402,7 +368,7 @@ export default {
     // Peticion Get Categories
     getCategories() {
       axios
-        .get("/api/v1/categories")
+        .get('/api/v1/categories')
         .then(response => {
           console.log(response);
           this.loading = false;
@@ -415,7 +381,7 @@ export default {
     // Peticion Get Catalogues
     getCatalogues() {
       axios
-        .get("/api/v1/catalogues")
+        .get('/api/v1/catalogues')
         .then(response => {
           console.log(response);
           this.loading = false;
@@ -430,14 +396,14 @@ export default {
 
     getMeasures() {
       axios
-        .get("/api/v1/measures")
-        .then((response) => {
+        .get('/api/v1/measures')
+        .then(response => {
           console.log(response.data);
           response.data.forEach(element => {
-            this.measures.push(element.name)
-          })
+            this.measures.push(element.name);
+          });
         })
-        .catch((error) => {
+        .catch(error => {
           //console.log(error)
           // reject(error);
         });
@@ -448,9 +414,9 @@ export default {
       axios
         .get(`/api/v1/products/${this.$route.params.id}`, {
           headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          }
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
         })
         .then(response => {
           console.log(response);
@@ -484,16 +450,16 @@ export default {
       axios
         .post(`/api/v1/uploads`, data, {
           headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data"
-          }
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
         })
         .then(response => {
           response.data.forEach(elements => {
             this.product.images.push(elements);
             console.log(elements);
           });
-          console.log("imagenes", this.product.images);
+          console.log('imagenes', this.product.images);
           this.editProduct();
         })
         .catch(error => {
@@ -520,18 +486,19 @@ export default {
         description: this.description,
         colors: this.colors,
         images: this.product.images,
-        magnifying: this.product.magnifying
+        magnifying: this.product.magnifying,
+        gender: this.product.gender,
       };
 
       axios
         .put(`/api/v1/products/${this.$route.params.id}`, data, {
           headers: {
-            Accept: "application/json"
-          }
+            Accept: 'application/json',
+          },
         })
         .then(response => {
-          console.log("Response", response);
-          this.$router.replace({ name: "listProduct" });
+          console.log('Response', response);
+          this.$router.replace({ name: 'listProduct' });
         })
         .catch(error => {
           console.log(error);
@@ -548,13 +515,13 @@ export default {
     // Preview Images
     previewImages() {
       if (this.files.length == 0) {
-        console.log("esta vacio");
+        console.log('esta vacio');
       } else {
         this.files.forEach((element, index) => {
           this.images.push({
             path: URL.createObjectURL(element),
             new: true,
-            id: index
+            id: index,
           });
         });
         console.log(this.urls);
@@ -595,8 +562,8 @@ export default {
 
     // Return List Product
     listRouter() {
-      this.$router.replace({ name: "listProduct" });
-    }
-  }
+      this.$router.replace({ name: 'listProduct' });
+    },
+  },
 };
 </script>
