@@ -196,6 +196,91 @@
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
+                <template v-slot:item="props">
+                  <tr class="mt-2 bb">
+                    <td class="text-center">
+                      <v-checkbox
+                        :input-value="props.isSelected"
+                        @change="props.select($event)"
+                        hide-details
+                      ></v-checkbox>
+                    </td>
+                    <td class="text-center px-1">
+                      <v-img
+                        v-if="
+                          props.item.images == null ||
+                          props.item.images.length == 0
+                        "
+                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                        max-width="300"
+                        contain
+                        class="m-1 my-5"
+                      />
+                      <v-img
+                        v-else
+                        contain
+                        :src="props.item.images[0].path"
+                        max-width="300"
+                        class="text-center align-center my-5"
+                      />
+                    </td>
+                    <td class="text-center px-1">
+                      {{ props.item.model }}
+                      <v-btn
+                        small
+                        class="mt-2 mx-2"
+                        @click="prueba(props.item)"
+                      >
+                        Ver Mas
+                      </v-btn>
+                    </td>
+                    <td class="text-center px-1">
+                      {{ props.item.brand }}
+                    </td>
+                    <td class="text-center px-1">
+                      {{ props.item.price_unit }}
+                    </td>
+                    <td class="text-center px-1">
+                      {{ props.item.quantity_group + " " }}
+                      <br />
+                      {{ props.item.type_group }}
+                    </td>
+                    <td class="text-center px-1">
+                      {{ props.item.price_group }}
+                    </td>
+                    <td class="text-center px-1">
+                      <div class="mx-2">
+                        <v-row>
+                          <v-btn
+                            @click="minusFunction(props.item, props.index)"
+                            color="secondary"
+                            fab
+                            x-small
+                            elevation="1"
+                          >
+                            <v-icon>mdi-minus</v-icon>
+                          </v-btn>
+                          <input
+                            type="text"
+                            class="mx-2 w1"
+                            v-model="props.item.quantity"
+                          />
+
+                          <v-btn
+                            @click="plusFunctionO(props.index)"
+                            color="secondary"
+                            fab
+                            elevation="1"
+                            x-small
+                          >
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </v-row>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
+
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
                     v-if="item.images == null || item.images.length == 0"
@@ -247,7 +332,7 @@
                     </v-btn>
                   </v-row>
                 </template>
-                <template v-slot:[`item.cart`]="{ item }">
+                <template class="bb" v-slot:[`item.cart`]="{ item }">
                   <v-row>
                     <v-icon
                       small
@@ -406,11 +491,9 @@
               </v-data-table>
             </v-tab-item>
           </v-tabs-items>
-        </v-col>
-        <v-col cols="12" sm="12" md="3" lg="3" class="content-cart">
-          <v-card class="float mx-auto" dark>
-            <p class="py-3 px-3 text-h6">Resumen de mi pedido</p>
-            <v-expansion-panels flat class="color" dark>
+          <v-card class="float mx-auto display-md">
+            <p class="px-3 text-h6 mb-0">Resumen de mi pedido</p>
+            <v-expansion-panels flat class="color">
               <v-expansion-panel class="color">
                 <v-expansion-panel-header class="color p-2">
                   <p class="pb-3 px-3 text-subtitle-1">
@@ -435,7 +518,7 @@
                   <v-card-text
                     v-for="(product, index) in selected"
                     :key="'A' + index"
-                    class="py-0"
+                    class="py-0 px-0"
                   >
                     <v-row>
                       <v-col cols="4">
@@ -528,25 +611,25 @@
             <br />
             <v-dialog v-model="dialog" persistent max-width="290">
               <template v-slot:activator="{ on, attrs }">
+                <v-btn v-if="!isLoggedIn" color="blue" small>
+                  Registraste
+                </v-btn>
+                <v-btn v-if="!isLoggedIn" v-bind="attrs" v-on="on" small>
+                  Generar Orden
+                </v-btn>
                 <v-btn
+                  v-if="isLoggedIn"
                   v-bind="attrs"
                   v-on="on"
-                  class="mt-3"
                   :disabled="validate"
-                  v-if="isLoggedIn"
+                  small
                 >
                   Generar Orden
                 </v-btn>
-                <p class="mx-2 pb-2 pc" v-else>
-                  Para poder realiar una orden usted debe de estar logueado
-                  <router-link :to="{ name: 'register' }">
-                    Registrate aqui</router-link
-                  >
-                </p>
               </template>
               <v-card>
                 <v-card-title class="headline"> Generar Orden </v-card-title>
-                <v-card-text>
+                <v-card-text v-if="isLoggedIn">
                   Antes de generar esta orden,
                   <strong class="text-red"
                     >tienes que estar seguro de que los datos con los que te
@@ -554,12 +637,17 @@
                   >, ya que mediante estos estaremos generando una orden de
                   compra.
                 </v-card-text>
+                <v-card-text v-else>
+                  Para generar su orden debe registrarse
+                  <strong class="text-red">¡ES FASILISIMO!</strong>.
+                </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="green darken-1" text @click="dialog = false">
                     Cancelar
                   </v-btn>
                   <v-btn
+                    v-if="isLoggedIn"
                     color="green darken-1"
                     text
                     @click="
@@ -573,6 +661,199 @@
                     "
                   >
                     Generar
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    color="green darken-1"
+                    text
+                    :to="{ name: 'register' }"
+                  >
+                    registrarse
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-card>
+        </v-col>
+        <v-col cols="12" sm="12" md="3" lg="3" class="content-cart display-sm">
+          <v-card class="float mx-auto">
+            <p class="py-3 px-3 text-h6">Resumen de mi pedido</p>
+            <v-expansion-panels flat class="color">
+              <v-expansion-panel class="color">
+                <v-expansion-panel-header class="color p-2">
+                  <p class="pb-3 px-3 text-subtitle-1">
+                    Minima Inversión:
+                    <strong>
+                      {{ (catalogue.coin == "soles" ? "S/." : "$") + " " }}
+                      {{ catalogue.minimum_investment | currency }}
+                    </strong>
+                  </p>
+                  <template v-slot:actions>
+                    <v-btn small dark color="black" class="mr-2">Ver</v-btn>
+                  </template>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content
+                  class="color"
+                  style="
+                    max-height: 500px;
+                    overflow: scroll;
+                    overflow-x: hidden;
+                  "
+                >
+                  <v-card-text
+                    v-for="(product, index) in selected"
+                    :key="'A' + index"
+                    class="py-0 px-0"
+                  >
+                    <v-row>
+                      <v-col cols="4">
+                        <v-img
+                          v-if="
+                            product.images == null || product.images.length == 0
+                          "
+                          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                          max-width="75"
+                          height="50"
+                          contain
+                          class="m-1"
+                        />
+                        <v-img
+                          v-else
+                          contain
+                          :src="product.images[0].path"
+                          max-width="75"
+                          height="50"
+                          class="text-center align-center"
+                        />
+                      </v-col>
+                      <v-col cols="8">
+                        Modelo:{{ product.model }}
+                        <br />
+                        Pago:{{ catalogue.coin == "soles" ? "S/." : "$"
+                        }}{{
+                          (product.quantity * product.price_unit) | currency
+                        }}
+                        <br />
+                        Cantidad
+                        {{ product.quantity + " " + product.type_group }}
+                        <br />
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+
+                  <v-card-text
+                    v-for="(productRange, index) in selectedRange"
+                    :key="index"
+                    class="py-0"
+                  >
+                    <v-row>
+                      <v-col cols="4">
+                        <v-img
+                          v-if="
+                            productRange.images == null ||
+                            productRange.images.length == 0
+                          "
+                          src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                          max-width="75"
+                          height="50"
+                          contain
+                          class="m-1"
+                        />
+                        <v-img
+                          v-else
+                          contain
+                          :src="productRange.images[0].path"
+                          max-width="75"
+                          height="50"
+                          class="text-center align-center"
+                        />
+                      </v-col>
+                      <v-col cols="8">
+                        Modelo:{{ productRange.model }}
+                        <br />
+                        Pago:{{ catalogue.coin == "soles" ? "S/." : "$" }}
+                        {{ productRange.total }}
+                        <br />
+                        Cantidad
+                        {{
+                          productRange.quantity +
+                          " " +
+                          (productRange.quantity == 1 ? "Unidad" : "Unidades")
+                        }}
+                        <br />
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+            <v-row class="text-right mx-2">
+              <v-spacer></v-spacer>
+              <v-col class="text-subtitle-1"
+                >Total: {{ totalGeneral | currency }}</v-col
+              >
+            </v-row>
+            <br />
+            <v-dialog v-model="dialog" persistent max-width="290">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-if="!isLoggedIn" color="blue" small>
+                  Registraste
+                </v-btn>
+                <v-btn v-if="!isLoggedIn" v-bind="attrs" v-on="on" small>
+                  Generar Orden
+                </v-btn>
+                <v-btn
+                  v-if="isLoggedIn"
+                  v-bind="attrs"
+                  v-on="on"
+                  :disabled="validate"
+                  small
+                >
+                  Generar Orden
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline"> Generar Orden </v-card-title>
+                <v-card-text v-if="isLoggedIn">
+                  Antes de generar esta orden,
+                  <strong class="text-red"
+                    >tienes que estar seguro de que los datos con los que te
+                    registraste son validos</strong
+                  >, ya que mediante estos estaremos generando una orden de
+                  compra.
+                </v-card-text>
+                <v-card-text v-else>
+                  Para generar su orden debe registrarse
+                  <strong class="text-red">¡ES FASILISIMO!</strong>.
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="dialog = false">
+                    Cancelar
+                  </v-btn>
+                  <v-btn
+                    v-if="isLoggedIn"
+                    color="green darken-1"
+                    text
+                    @click="
+                      generateOrder({
+                        id: catalogue.id,
+                        products: selected,
+                        product_ranges: selectedRange,
+                      }),
+                        (dialog = false),
+                        (alert = false)
+                    "
+                  >
+                    Generar
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    color="green darken-1"
+                    text
+                    :to="{ name: 'register' }"
+                  >
+                    registrarse
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -588,13 +869,7 @@
         v-if="showScheduleForm"
         :catalogue="catalogue"
       />
-      <v-alert dense text type="success" :hidden="alert" dismissible>
-        Se genero correctamente su orden
-      </v-alert>
     </v-col>
-    <v-card class="float-movil">
-      <v-card-text> Total de orden : {{ totalGeneral }} </v-card-text>
-    </v-card>
   </div>
 </template>
 <script>
@@ -818,15 +1093,18 @@ export default {
 };
 </script>
 <style scoped>
+.display-md {
+  visibility: hidden;
+}
 .bb {
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid rgb(124, 121, 121);
 }
 .content-cart {
   display: flex;
   flex-direction: row;
 }
 .color {
-  background-color: #0473cd;
+  background-color: #bcdaf1;
 }
 .pc {
   color: red;
@@ -850,7 +1128,7 @@ export default {
 .float {
   position: sticky;
   bottom: 10px;
-  background-color: #0473cd;
+  background-color: #bcdaf1;
   align-self: flex-end;
 }
 .float-movil {
@@ -869,14 +1147,8 @@ export default {
     margin-right: auto;
     margin-left: auto;
   }
-  .float {
-    position: relative;
-  }
-  .float-movil {
-    visibility: visible;
-    position: fixed;
-    bottom: 0;
-    right: 0;
+  .display-sm {
+    display: none;
   }
 }
 @media (max-width: 600px) {
@@ -884,14 +1156,8 @@ export default {
     margin-right: auto;
     margin-left: auto;
   }
-  .float {
-    position: relative;
-  }
-  .float-movil {
-    visibility: visible;
-    position: fixed;
-    bottom: 0;
-    right: 0;
+  .display-sm {
+    display: none;
   }
 }
 @media (max-width: 1200px) {
@@ -902,6 +1168,14 @@ export default {
   .p-page {
     padding-right: 0;
     padding-left: 0;
+  }
+}
+@media (max-width: 960px) {
+  .display-sm {
+    display: none;
+  }
+  .display-md {
+    visibility: visible;
   }
 }
 </style>
