@@ -611,7 +611,7 @@
             <br />
             <v-dialog v-model="dialog" persistent max-width="290">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-if="!isLoggedIn" color="blue" small>
+                <v-btn v-if="!isLoggedIn" color="blue" small :to="{name: 'register'}">
                   Registraste
                 </v-btn>
                 <v-btn v-if="!isLoggedIn" v-bind="attrs" v-on="on" small>
@@ -796,7 +796,7 @@
             <br />
             <v-dialog v-model="dialog" persistent max-width="290">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-if="!isLoggedIn" color="blue" small>
+                <v-btn v-if="!isLoggedIn" color="blue" small :to="{name: 'register'}">
                   Registraste
                 </v-btn>
                 <v-btn v-if="!isLoggedIn" v-bind="attrs" v-on="on" small>
