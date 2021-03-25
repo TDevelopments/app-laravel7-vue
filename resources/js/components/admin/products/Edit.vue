@@ -2,7 +2,7 @@
   <div>
     <v-row class="mx-2 my-2">
       <v-col cols="12">
-        <h3>Nuevo producto por conjunto</h3>
+        <h3>Editar producto</h3>
         <v-card flat elevation="2">
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
@@ -19,19 +19,6 @@
                   SKU
                   <v-text-field solo v-model="product.sku" required readonly></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="3" md="3">
-                  Género
-                  <v-select
-                    v-model="product.gender"
-                    item-text="name"
-                    item-value="send"
-                    :items="genderItems"
-                    menu-props="auto"
-                    solo
-                    hide-details
-                    placeholder="Selecciona"
-                  ></v-select>
-                </v-col>
                 <v-col cols="12" sm="6" md="3">
                   Incremento
                   <v-text-field
@@ -43,7 +30,7 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="3">
-                  Stock
+                  Stock Meta
                   <v-text-field v-model="product.stock" type="number" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6" lg="3">
@@ -58,7 +45,20 @@
                   Precio por conjunto
                   <v-text-field v-model="productQG" type="number" solo readonly></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="6" lg="3">
+                  Género
+                  <v-select
+                    v-model="product.gender"
+                    item-text="name"
+                    item-value="send"
+                    :items="genderItems"
+                    menu-props="auto"
+                    solo
+                    hide-details
+                    placeholder="Selecciona"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6" lg="3">
                   Tipo de grupo
                   <v-select
                     v-model="product.type_group"
@@ -70,7 +70,7 @@
                     hide-details
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="6" lg="3">
                   Categoria
                   <v-select
                     v-model="product.category"
@@ -82,7 +82,7 @@
                     hide-details
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="6" lg="3">
                   Catalogo
                   <v-select
                     v-model="product.catalogue"

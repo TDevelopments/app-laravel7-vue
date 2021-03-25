@@ -45,19 +45,6 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
-                  Género
-                  <v-select
-                    v-model="product.gender"
-                    item-text="name"
-                    item-value="send"
-                    :items="genderItems"
-                    menu-props="auto"
-                    solo
-                    hide-details
-                    placeholder="Selecciona"
-                  ></v-select>
-                </v-col>
-                <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
                   Incremento
                   <v-text-field
                     solo
@@ -104,7 +91,20 @@
                     placeholder="0"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="6" lg="3" v-if="!varBoolean">
+                  Género
+                  <v-select
+                    v-model="gender"
+                    item-text="name"
+                    item-value="send"
+                    :items="genderItems"
+                    menu-props="auto"
+                    solo
+                    hide-details
+                    placeholder="Selecciona"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6" md="6" lg="3">
                   Tipo de grupo
                   <v-select
                     v-model="product.type_group"
@@ -117,7 +117,7 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="6" lg="3">
                   Categoria
                   <v-select
                     v-model="product.category"
@@ -130,7 +130,7 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="4" md="4">
+                <v-col cols="12" sm="6" md="6" lg="3">
                   Catalogo
                   <v-select
                     v-model="product.catalogue"

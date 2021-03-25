@@ -25,7 +25,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'name' => ['string'],
-            'sku' => ['string', 'unique:products'],
+            'sku' => ['unique:products'],
             'model' => ['required', 'string', 'unique:products'],
             'description' => ['array'],
             'description.*' => ['string'],

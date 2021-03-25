@@ -23,6 +23,7 @@ class Product extends Model
         'name',
         'sku',
         'description',
+        'gender',
         'magnifying',
         'images',
         'video',
