@@ -22,23 +22,6 @@
       >
         <v-toolbar-title @click="welcomeRoute">BizzPeru</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-autocomplete
-          :loading="isLoading"
-          :search-input.sync="search"
-          chips
-          flat
-          clearable
-          hide-details
-          hide-selected
-          item-text="name"
-          item-value="symbol"
-          label="Search product ..."
-          solo
-          dense
-          light
-        />
-        <v-btn icon><v-icon>mdi-magnify</v-icon></v-btn>
-        <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
           <!-- <v-btn text @click="cartView">Carrito</v-btn> -->
           <v-btn text> {{ user.name }}</v-btn>

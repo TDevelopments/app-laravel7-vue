@@ -187,7 +187,7 @@ export default {
       this.$refs.form.resetValidation();
     },
     loginRouter() {
-      this.$router.push({ name: "loginRouter" });
+      this.$router.replace({ name: "loginRouter" });
     },
     register() {
       axios

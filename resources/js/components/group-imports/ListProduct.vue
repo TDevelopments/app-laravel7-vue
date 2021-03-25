@@ -22,15 +22,10 @@
         <v-col cols="12" sm="12" md="7" lg="7">
           <v-card-title>
             <v-row>
-              <v-col cols="12">
-                Información y Condiciones &nbsp;<strong
-                  >{{ catalogue.name }}
-                </strong>
-                <v-spacer></v-spacer>
-              </v-col>
-              <v-col cols="12" class="text-capitalize">
+              <v-col cols="12" class="pb-0 text-capitalize">
                 Moneda &nbsp; {{ catalogue.coin }}
               </v-col>
+              <v-col cols="12"> Información y Condiciones </v-col>
             </v-row>
           </v-card-title>
           <v-card-text class="font-weight-medium pb-0 pt-1">
@@ -89,6 +84,11 @@
               </v-col>
             </v-row>
           </v-card-text>
+          <v-card-title>
+            <v-row>
+              <v-col cols="12"> Fechas </v-col>
+            </v-row>
+          </v-card-title>
           <v-card-text class="font-weight-medium pb-0 pt-1">
             <v-row>
               <v-col sm="6" md="8">
@@ -131,11 +131,29 @@
               </v-col>
             </v-row>
           </v-card-text>
+          <v-card-text
+            class="font-weight-medium pb-0 pt-1"
+            v-for="(arrival, index) in catalogue.arrivals"
+            :key="index"
+          >
+            <v-row>
+              <v-col sm="6" md="8">
+                <v-icon color="black" x-small>mdi-circle</v-icon>
+                Fecha estimada para recojos y envios desde {{ arrival.city }}
+              </v-col>
+              <v-col sm="6" md="4" class="text-right">
+                <v-chip class="mr-2">
+                  <v-icon left> mdi-calendar-month </v-icon>
+                  {{ arrival.arrival_date | date }}
+                </v-chip>
+              </v-col>
+            </v-row>
+          </v-card-text>
         </v-col>
       </v-row>
       <v-col class="px-0 content-card pt-0 mt-5">
         <v-toolbar color="black" class="px-0 text-h6" dark flat
-          >Terminos y condiciones</v-toolbar
+          >Términos y Condiciones</v-toolbar
         >
         <v-card-text
           v-for="(element, index) in catalogue.conditions"
@@ -154,6 +172,9 @@
             v-model="currentTab"
             dark
             show-arrows=""
+            v-if="
+              catalogue.products.length != 0 || catalogue.productRanges != 0
+            "
           >
             <v-tab v-if="catalogue.products.length != 0">
               Productos por conjunto
@@ -171,7 +192,7 @@
                 :headers="headers"
                 :items="catalogue.products"
                 hide-default-footer
-                class="elevation-1"
+                class="elevation-1 hidden-xs-only p-page px-0"
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
@@ -181,15 +202,21 @@
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                     max-width="150"
                     contain
-                    class="m-1"
+                    class="m-1 my-5"
                   />
                   <v-img
                     v-else
                     contain
                     :src="item.images[0].path"
                     max-width="150"
-                    class="text-center align-center"
+                    class="text-center align-center my-5"
                   />
+                </template>
+                <template v-slot:[`item.model`]="{ item }">
+                  {{ item.model }}
+                  <v-btn small class="mt-2 mx-2" @click="prueba(item)">
+                    Ver Mas
+                  </v-btn>
                 </template>
                 <template v-slot:[`item.quantity_group`]="{ item }">
                   {{ item.quantity_group + " " }}
@@ -207,13 +234,8 @@
                     >
                       <v-icon>mdi-minus</v-icon>
                     </v-btn>
-                    <v-text-field
-                      class="w mx-2"
-                      solo
-                      dense
-                      v-model="item.quantity"
-                      hide-details
-                    ></v-text-field>
+                    <input type="text" class="w mx-2" v-model="item.quantity" />
+
                     <v-btn
                       @click="plusFunctionO(index)"
                       color="secondary"
@@ -236,6 +258,99 @@
                       mdi-cart
                     </v-icon>
                   </v-row>
+                </template>
+              </v-data-table>
+              <v-data-table
+                v-model="selected"
+                :single-select="singleSelect"
+                :headers="headers"
+                :items="catalogue.products"
+                hide-default-footer
+                hide-default-header
+                class="elevation-1 hidden-sm-and-up"
+                disable-pagination
+                v-if="catalogue.products.length != 0"
+              >
+                <template v-slot:item="props">
+                  <tr class="mt-5 bb">
+                    <td class="px-0">
+                      <v-row class="px-2">
+                        <div>
+                          <v-checkbox
+                            :input-value="props.isSelected"
+                            @change="props.select($event)"
+                            dense
+                            hide-details
+                            style="display: block"
+                            class="px-0 mx-0"
+                          ></v-checkbox>
+                        </div>
+                        <div sm="11" md="11" lg="11">
+                          <v-img
+                            v-if="
+                              props.item.images == null ||
+                              props.item.images.length == 0
+                            "
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="75"
+                            max-height="75"
+                            contain
+                            class="m-1"
+                          />
+                          <v-img
+                            v-else
+                            contain
+                            :src="props.item.images[0].path"
+                            max-width="75"
+                            max-height="75"
+                            class="text-center align-center"
+                          />
+                        </div>
+                      </v-row>
+                    </td>
+                    <td class="px-0 py-5">
+                      <strong>Modelo:</strong> {{ props.item.model }}
+                      <br />
+                      <strong>Marca:</strong> {{ props.item.brand }}
+                      <br />
+                      <strong>P.U:</strong> {{ props.item.price_unit }}
+                      <br />
+                      <strong>Cant.Min:</strong> {{ props.item.quantity_group }}
+                      <br />
+                      <strong>Total:</strong> {{ props.item.price_group }}
+                    </td>
+                    <td class="px-0 py-5">
+                      <v-btn small class="my-5" @click="prueba(props.item)"
+                        >Ver Mas</v-btn
+                      >
+                      <br />
+                      <v-row class="mx-auto my-2">
+                        <v-btn
+                          @click="minusFunction(props.item, props.index)"
+                          color="#000"
+                          icon
+                          x-small
+                          elevation="1"
+                        >
+                          <v-icon>mdi-minus</v-icon>
+                        </v-btn>
+                        <input
+                          type="text"
+                          class="w mx-2"
+                          v-model="props.item.quantity"
+                        />
+                        <v-btn
+                          @click="plusFunctionO(props.index)"
+                          color="#000"
+                          icon
+                          elevation="1"
+                          x-small
+                        >
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </v-row>
+                    </td>
+                  </tr>
                 </template>
               </v-data-table>
             </v-tab-item>
@@ -292,12 +407,12 @@
             </v-tab-item>
           </v-tabs-items>
         </v-col>
-        <v-col cols="12" sm="12" md="3" lg="3">
-          <v-card class="float">
+        <v-col cols="12" sm="12" md="3" lg="3" class="content-cart">
+          <v-card class="float mx-auto" dark>
             <p class="py-3 px-3 text-h6">Resumen de mi pedido</p>
-            <v-expansion-panels flat>
-              <v-expansion-panel>
-                <v-expansion-panel-header>
+            <v-expansion-panels flat class="color" dark>
+              <v-expansion-panel class="color">
+                <v-expansion-panel-header class="color p-2">
                   <p class="pb-3 px-3 text-subtitle-1">
                     Minima Inversión:
                     <strong>
@@ -305,8 +420,18 @@
                       {{ catalogue.minimum_investment | currency }}
                     </strong>
                   </p>
+                  <template v-slot:actions>
+                    <v-btn small dark color="black" class="mr-2">Ver</v-btn>
+                  </template>
                 </v-expansion-panel-header>
-                <v-expansion-panel-content>
+                <v-expansion-panel-content
+                  class="color"
+                  style="
+                    max-height: 500px;
+                    overflow: scroll;
+                    overflow-x: hidden;
+                  "
+                >
                   <v-card-text
                     v-for="(product, index) in selected"
                     :key="'A' + index"
@@ -408,9 +533,16 @@
                   v-on="on"
                   class="mt-3"
                   :disabled="validate"
+                  v-if="isLoggedIn"
                 >
                   Generar Orden
                 </v-btn>
+                <p class="mx-2 pb-2 pc" v-else>
+                  Para poder realiar una orden usted debe de estar logueado
+                  <router-link :to="{ name: 'register' }">
+                    Registrate aqui</router-link
+                  >
+                </p>
               </template>
               <v-card>
                 <v-card-title class="headline"> Generar Orden </v-card-title>
@@ -448,6 +580,8 @@
           </v-card>
         </v-col>
       </v-row>
+      <br />
+      <br />
       <Product
         v-model="showScheduleForm"
         :product="itemSelected"
@@ -560,6 +694,7 @@ export default {
   },
   computed: {
     ...mapGetters("groupImport", ["catalogue", "cart"]),
+    ...mapGetters("account", ["isLoggedIn"]),
 
     total() {
       let t = 0;
@@ -674,7 +809,7 @@ export default {
       return parseFloat(value).toFixed(2);
     },
     date: function (value) {
-      return moment(value).format("YYYY-MM-DD");
+      return moment(value).format("DD-MM-YYYY");
     },
     porcent: function (value) {
       return parseFloat(value) * 100 + " %";
@@ -683,6 +818,27 @@ export default {
 };
 </script>
 <style scoped>
+.bb {
+  border-bottom: 2px solid #000;
+}
+.content-cart {
+  display: flex;
+  flex-direction: row;
+}
+.color {
+  background-color: #0473cd;
+}
+.pc {
+  color: red;
+}
+.w {
+  display: flex;
+  max-width: 20px;
+}
+.w1 {
+  display: flex;
+  max-width: 25px;
+}
 .header-card {
   background-color: black;
   color: white;
@@ -692,8 +848,10 @@ export default {
   border: 1px solid black;
 }
 .float {
-  position: fixed;
-  bottom: 0px;
+  position: sticky;
+  bottom: 10px;
+  background-color: #0473cd;
+  align-self: flex-end;
 }
 .float-movil {
   visibility: hidden;
@@ -705,9 +863,6 @@ export default {
 .p-page {
   padding-right: 10%;
   padding-left: 10%;
-}
-.w {
-  width: 1px;
 }
 @media (max-width: 360px) {
   .m-page {
@@ -724,13 +879,19 @@ export default {
     right: 0;
   }
 }
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .m-page {
     margin-right: auto;
     margin-left: auto;
   }
   .float {
     position: relative;
+  }
+  .float-movil {
+    visibility: visible;
+    position: fixed;
+    bottom: 0;
+    right: 0;
   }
 }
 @media (max-width: 1200px) {
