@@ -1,103 +1,97 @@
-import router from "../../router";
-import axios from "axios";
+import router from '../../router';
+import axios from 'axios';
 export function login({ commit }, user) {
   return new Promise((resolve, reject) => {
-    commit("auth_request");
+    commit('auth_request');
     axios({
-      url: "/api/v1/login",
+      url: '/api/v1/login',
       data: user,
-      method: "POST"
+      method: 'POST',
     })
       .then(resp => {
         const token = resp.data.access_token;
         const user = resp.data.user;
-        localStorage.setItem("token", token);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        commit("auth_success", { token, user });
-        let admin = false;
-        // user.roles.forEach(rol => {
-        //   if (rol.name === "admin") {
-        //     admin = true;
-        //   }
-        // });
-        // router.push({ name: admin ? "Home" : "welcome" });
+        localStorage.setItem('token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        commit('auth_success', { token, user });
         router.go(-1);
         resolve(resp);
       })
       .catch(err => {
-        commit("auth_error");
-        localStorage.removeItem("token");
+        commit('auth_error');
+        localStorage.removeItem('token');
         reject(err);
       });
   });
 }
 export function register({ commit }, user) {
   return new Promise((resolve, reject) => {
-    commit("auth_request");
+    commit('auth_request');
     axios({
-      url: "/api/v1/signup",
+      url: '/api/v1/signup',
       data: user,
-      method: "POST"
+      method: 'POST',
     })
       .then(resp => {
-        const token = resp.data.token;
+        const token = resp.data.access_token;
         const user = resp.data.user;
-        localStorage.setItem("token", token);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        commit("auth_success", token, user);
+        localStorage.setItem('token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        commit('auth_success', { token, user });
+        router.go(-1);
         resolve(resp);
       })
       .catch(err => {
-        commit("auth_error", err);
-        localStorage.removeItem("token");
+        commit('auth_error', err);
+        localStorage.removeItem('token');
         reject(err);
       });
   });
 }
 export function getUser({ commit }) {
   return new Promise((resolve, reject) => {
-    commit("auth_request");
+    commit('auth_request');
     axios({
-      url: "/api/v1/user",
-      method: "GET"
+      url: '/api/v1/user',
+      method: 'GET',
     })
       .then(resp => {
         const user = resp.data.data;
-        commit("auth_user", user);
+        commit('auth_user', user);
         resolve(resp);
       })
       .catch(err => {
-        commit("auth_error", err);
-        delete axios.defaults.headers.common["Authorization"];
-        localStorage.removeItem("token");
+        commit('auth_error', err);
+        delete axios.defaults.headers.common['Authorization'];
+        localStorage.removeItem('token');
         reject(err);
       });
   });
 }
 export function logout({ commit }) {
   return new Promise((resolve, reject) => {
-    console.log("ejecutando");
-    commit("logout");
+    console.log('ejecutando');
+    commit('logout');
     axios({
-      url: "/api/v1/logout",
-      method: "GET"
+      url: '/api/v1/logout',
+      method: 'GET',
     })
       .then(response => {
-        commit("logout");
-        localStorage.removeItem("token");
-        delete axios.defaults.headers.common["Authorization"];
-        router.push({ name: "welcome" });
+        commit('logout');
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
+        router.push({ name: 'welcome' });
         resolve();
       })
       .catch(error => {
-        commit("logout", error);
-        localStorage.removeItem("token");
+        commit('logout', error);
+        localStorage.removeItem('token');
         reject(error);
       });
   });
 }
 export async function updateUser({ commit }, user) {
-  console.log("datos", user);
+  console.log('datos', user);
   // await axios({
   //   url: "/api/v1/user-update",
   //   method: "PUT",

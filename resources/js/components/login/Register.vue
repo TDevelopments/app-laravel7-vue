@@ -114,12 +114,7 @@
               placeholder="*********"
             ></v-text-field>
 
-            <v-btn
-              :disabled="!valid"
-              color="primary"
-              class="my-3"
-              @click="register"
-            >
+            <v-btn :disabled="!valid" color="primary" class="my-3" @click="registerAction">
               Registrarse
             </v-btn>
           </v-stepper-content>
@@ -129,54 +124,54 @@
   </v-app>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data: () => ({
     w_with: window.innerWidth * 0.6,
     w_height: window.innerHeight,
     valid: true,
-    email: "",
+    email: '',
     emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      v => !!v || 'E-mail is required',
+      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
     ],
     select: null,
     show1: false,
     show2: true,
     show3: false,
     show4: false,
-    password: "",
+    password: '',
     rules: {
-      required: value => !!value || "Required.",
-      min: v => v.length >= 8 || "Min 8 characters"
+      required: value => !!value || 'Required.',
+      min: v => v.length >= 8 || 'Min 8 characters',
     },
-    generalRules: [v => !!v || "Este campo no puede ir vacio"],
+    generalRules: [v => !!v || 'Este campo no puede ir vacio'],
     e6: 1,
-    name: "",
-    lastname: "",
-    email: "",
-    password_confirmation: "",
-    address: "",
-    ruc: "",
-    dni: "",
-    phone: "",
-    gender: "",
-    city: "",
+    name: '',
+    lastname: '',
+    email: '',
+    password_confirmation: '',
+    address: '',
+    ruc: '',
+    dni: '',
+    phone: '',
+    gender: '',
+    city: '',
     items: [
       {
-        name: "Masculino",
-        send: "masculine"
+        name: 'Masculino',
+        send: 'masculine',
       },
       {
-        name: "Femenino",
-        send: "female"
-      }
-    ]
+        name: 'Femenino',
+        send: 'female',
+      },
+    ],
   }),
 
   methods: {
-    ...mapActions("account", ["login"]),
+    ...mapActions('account', ['login', 'register']),
     validate() {
       this.$refs.form.validate();
     },
@@ -187,30 +182,24 @@ export default {
       this.$refs.form.resetValidation();
     },
     loginRouter() {
-      this.$router.replace({ name: "loginRouter" });
+      this.$router.replace({ name: 'loginRouter' });
     },
-    register() {
-      axios
-        .post("/api/v1/signup", {
-          name: this.name,
-          lastname: this.lastname,
-          email: this.email,
-          password: this.password,
-          password_confirmation: this.password,
-          address: this.address,
-          ruc: parseInt(this.ruc),
-          dni: parseInt(this.dni),
-          phone: this.phone,
-          gender: this.gender,
-          city: this.city
-        })
-        .then(response => {
-          console.log(response);
-          this.loginRouter();
-        })
-        .catch(error => {});
-    }
-  }
+    registerAction() {
+      let user = {
+        name: this.name,
+        lastname: this.lastname,
+        email: this.email,
+        password: this.password,
+        password_confirmation: this.password,
+        address: this.address,
+        dni: parseInt(this.dni),
+        phone: this.phone,
+        gender: this.gender,
+        city: this.city,
+      };
+      this.register(user);
+    },
+  },
 };
 </script>
 <style scoped>
@@ -220,7 +209,7 @@ export default {
 }
 
 h1 {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   text-align: center;
   font-size: 2.5rem;
   font-weight: 500;
