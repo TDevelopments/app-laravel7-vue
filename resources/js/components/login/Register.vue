@@ -21,6 +21,15 @@
           placeholder="75632449"
         ></v-text-field>
 
+        Email
+        <v-text-field
+          v-model="email"
+          solo
+          required
+          :rules="emailRules"
+          placeholder="example@gmail.com"
+        ></v-text-field>
+
         Contraseña
         <v-text-field
           solo
@@ -50,7 +59,7 @@
           solo
           required
           :rules="generalRules"
-          placeholder="Av. example"
+          placeholder="Arequipa"
         ></v-text-field>
 
         <v-btn :disabled="!valid" color="primary" class="my-3" @click="registerAction">
@@ -143,6 +152,7 @@ export default {
         name: this.name,
         password: this.password,
         password_confirmation: this.password,
+        email: this.email,
         dni: parseInt(this.dni),
         phone: this.phone,
         city: this.city,

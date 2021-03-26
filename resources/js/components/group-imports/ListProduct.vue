@@ -279,7 +279,6 @@
                           <v-checkbox
                             :input-value="props.isSelected"
                             @change="props.select($event)"
-                            dense
                             hide-details
                             style="display: block"
                             class="px-0 mx-0"
@@ -733,39 +732,48 @@
                 <v-card-title class="headline text-center" v-else> Generar Orden </v-card-title>
                 <v-card-text v-if="isLoggedIn" class="font-weight-medium black--text">
                   Para realizar su separación de pedido debe pagar
-                  <strong>${{ catalogue.quota_price }}</strong> a cualquiera de las siguientes
-                  cuentas:
+                  <strong>${{ catalogue.quota_price }}</strong> o 300 soles, el monto a depositar
+                  debe ser en la misma moneda del banco receptor.
+                  <br />
+                  <br />
+                  CUENTAS:
                   <br />
                   BCP A NOMBRE DE BIZZPERU SA:
                   <ul>
                     <li>
-                      CUENTA SOLES: 215-31690893-0-98 CÓDIGO DE CUENTA INTERBANCARIA:
-                      00221513169089309824
+                      CUENTA SOLES: 215-31690893-0-98
                     </li>
                     <li>
-                      CUENTA DÓLARES: 215-91784070-1-76 CÓDIGO DE CUENTA INTERBANCARIA:
-                      00221519178407017621
+                      CÓDIGO DE CUENTA INTERBANCARIA: 00221513169089309824
+                    </li>
+                    <br />
+                    <li>
+                      CUENTA DÓLARES: 215-91784070-1-76
+                    </li>
+                    <li>
+                      CÓDIGO DE CUENTA INTERBANCARIA: 00221519178407017621
                     </li>
                   </ul>
 
                   BBVA A NOMBRE DE BIZZPERU COMPANY EIRL:
                   <ul>
                     <li>
-                      CUENTA SOLES:0011-0220-0201770773 CÓDIGO DE CUENTA INTERBANCARIA:
-                      01122000020177077314
+                      CUENTA SOLES:0011-0220-0201770773
                     </li>
-
                     <li>
-                      CUENTA DÓLARES: 0011-0220-0201770803 CÓDIGO DE CUENTA INTERBANCARIA:
-                      01122000020177080319
+                      CÓDIGO DE CUENTA INTERBANCARIA: 01122000020177077314
                     </li>
-
+                    <br />
                     <li>
-                      YAPE A NOMBRE DE BIZZPERU SA: 958073710
+                      CUENTA DÓLARES: 0011-0220-0201770803
+                    </li>
+                    <li>
+                      CÓDIGO DE CUENTA INTERBANCARIA: 01122000020177080319
                     </li>
                   </ul>
-
-                  Y enviar su constancia al siguiente número: <strong>927750048</strong>
+                  YAPE A NOMBRE DE BIZZPERU SA: 958073710
+                  <br />
+                  Y enviar su constancia al siguiente número de Whatsapp: <strong>927750048</strong>
                 </v-card-text>
                 <v-card-text v-else class="font-weight-medium black--text">
                   Para generar su orden debe registrarse
