@@ -21,7 +21,7 @@ class OrderResource extends JsonResource
             'catalogue' => $this->catalogue,
             'user' => $this->user,
             'status' => $this->status,
-            'orderDetails' => $this->orderDetails,
+            'orderDetails' => OrderDetailResource::collection($this->orderDetails),
             'total_order' => $this->orderDetails->sum('total'),
             'payment' => $this->payments,
         ];
