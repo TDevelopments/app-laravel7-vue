@@ -309,11 +309,13 @@
                       <br />
                       <strong>Marca:</strong> {{ props.item.brand }}
                       <br />
-                      <strong>P.U:</strong> {{ props.item.price_unit }}
+                      <strong>P.U:</strong> {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                      {{ props.item.price_unit }}
                       <br />
                       <strong>Cant.Min:</strong> {{ props.item.quantity_group }}
                       <br />
-                      <strong>Total:</strong> {{ props.item.price_group }}
+                      <strong>Total:</strong> {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                      {{ props.item.price_group }}
                     </td>
                     <td class="px-0 py-5">
                       <v-btn small class="my-5" @click="prueba(props.item)">Ver Mas</v-btn>
