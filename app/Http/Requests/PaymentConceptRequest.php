@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BankEntityRequest extends FormRequest
+class PaymentConceptRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class BankEntityRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string'],
-            'short_name' => ['required', 'string'],
+            'name' => ['required', 'string']
         ];
     }
 }

@@ -8,6 +8,6 @@ class BankEntity extends Model
 {
     protected $fillable = [
         'name',
-        'short_name'-
+        'short_name'
     ];
 }

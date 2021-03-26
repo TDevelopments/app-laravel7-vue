@@ -8,6 +8,7 @@ use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\ProductRange;
 use App\Models\Range;
+use App\Models\User;
 use App\Models\Catalogue;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
@@ -43,12 +44,19 @@ class OrderController extends Controller
     {
         if ($request->query("orderId")) {
             $value = $request->query("orderId");
-            return OrderResource::collection($this->order->find($value)->get());
+            return new OrderResource($order);
         }
         if ($request->query("username"))
         {
-            $value = $request->query("username");
-            
+            $value2 = $request->query("username");
+            $user = User::where('name', 'like', "%$value%")->get();
+            if (!$user)
+                return response()->json(['message' => "User doesn't exists", "user" => $user]);
+            $order = $this->order->join('users', function($join){
+                $join->on('orders.user_id', '=', 'users.id')
+                     ->where('users.name', 'like', "%$value2%");
+            })->get();
+            return OrderResource::collection($order);
         }
         return OrderResource::collection($this->order->paginate());
     }
