@@ -74,6 +74,9 @@
                 {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
                 {{ item.total | currency }}
               </template>
+              <template v-slot:[`item.button`]="{ item }">
+                <v-btn small class="my-5" @click="prueba(item.product)">Ver Mas</v-btn>
+              </template>
             </v-data-table>
             <v-data-table
               :items="order.orderDetails"
@@ -184,6 +187,12 @@ export default {
       {
         text: 'Total de Producto',
         value: 'total',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Detalles',
+        value: 'button',
         align: 'center',
         sortable: false,
       },
