@@ -134,7 +134,7 @@ class AuthController extends Controller
     public function orderByUser(Request $request)
     {
         $user = $request->user()->id;
-        $order = Order::firstWhere('user_id', $user);
-        return new OrderResource($order);
+        $order = Order::where('user_id', $user)->get();
+        return OrderResource::collection($order);
     }
 }

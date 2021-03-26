@@ -114,7 +114,7 @@ class OrderController extends Controller
                 }
                 $product_ranges[] = $this->orderDetail->create(
                     [
-                        'product_range_id' => $row['product_id'],
+                        'product_range_id' => $productRangeReference->id,
                         'order_id' => $order->id,
                         'quantity' => $row['quantity'],
                         'price' => $rangeReference->price,
