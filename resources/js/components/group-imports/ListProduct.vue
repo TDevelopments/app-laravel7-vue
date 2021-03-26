@@ -4,19 +4,18 @@
       <h2>{{ catalogue.name }}</h2>
       <v-divider></v-divider>
       <v-row>
-        <v-col cols="12" sm="12" md="5" lg="5">
+        <v-col cols="12" sm="12" md="5" lg="5" class="d-flex align-center">
           <v-img
             contain
             src="https://ep01.epimg.net/elpais/imagenes/2020/11/30/escaparate/1606750893_769867_1606751114_noticia_normal_recorte1.jpg"
             v-if="catalogue.image == null || catalogue.image.length == 0"
-            height="400"
           />
-          <v-img v-else contain :src="catalogue.image.path" height="400" />
+          <v-img v-else contain :src="catalogue.image.path" />
         </v-col>
         <v-col cols="12" sm="12" md="7" lg="7">
-          <v-card-title>
+          <v-card-title class="pt-1">
             <v-row>
-              <v-col cols="12"> Información y Condiciones </v-col>
+              <v-col cols="12" class="pt-0"> Información y Condiciones </v-col>
             </v-row>
           </v-card-title>
           <v-card-text class="font-weight-medium pb-0 pt-1">
@@ -37,10 +36,7 @@
               <v-col sm="6" md="8">
                 <v-icon color="black" x-small>mdi-circle</v-icon>
                 Monto de separación de cupo / Garantía de participación:
-
                 <br />
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                (El monto de separación es parte de la primera cuota)
               </v-col>
               <v-col sm="6" md="4" class="text-right">
                 <v-chip class="mr-2">
@@ -48,6 +44,16 @@
                   {{ catalogue.quota_price | currency }}
                 </v-chip>
               </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-text class="font-weight-medium pb-2 pt-1">
+            <v-row>
+              <v-col sm="6" md="8">
+                <v-icon color="black" x-small>mdi-circle</v-icon>
+                El monto de separación es parte de la primera cuota)
+                <br />
+              </v-col>
+              <v-col sm="6" md="4" class="text-right"> </v-col>
             </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
@@ -196,22 +202,27 @@
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
-                <template v-slot:[`item.images`]="{ item }">
-                  <v-img
-                    v-if="item.images == null || item.images.length == 0"
-                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    max-width="150"
-                    max-height="150"
-                    contain
-                    class="m-1 my-5"
-                  />
-                  <v-img
-                    v-else
-                    contain
-                    :src="item.images[0].path"
-                    max-width="150"
-                    class="text-center align-center my-5"
-                  />
+                <template v-slot:[`item.images`]="{ item, index }">
+                  <v-row class="d-flex align-center justify-center">
+                    <div>
+                      <strong>{{ index }}</strong>
+                    </div>
+                    <v-img
+                      v-if="item.images == null || item.images.length == 0"
+                      src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                      max-width="150"
+                      max-height="150"
+                      contain
+                      class="m-1 my-5"
+                    />
+                    <v-img
+                      v-else
+                      contain
+                      :src="item.images[0].path"
+                      max-width="150"
+                      class="text-center align-center my-5"
+                    />
+                  </v-row>
                 </template>
                 <template v-slot:[`item.model`]="{ item }">
                   {{ item.model }}
@@ -395,7 +406,7 @@
           </v-tabs-items>
           <br />
           <br />
-          <v-card class="float mx-auto display-md" max-width="80%">
+          <v-card class="float mx-auto display-md" max-width="80%" elevation="5">
             <p class="font-text text-center mb-0">
               RESUMEN DE MI PEDIDO
             </p>
@@ -548,7 +559,7 @@
                 </v-card-text>
                 <v-card-text v-else>
                   Para generar su orden debe registrarse
-                  <strong class="text-red">¡ES FACILISIMO!</strong>.
+                  <strong class="text-red">¡ES FACILÍSIMO!</strong>.
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
@@ -580,7 +591,7 @@
           </v-card>
         </v-col>
         <v-col cols="12" sm="12" md="3" lg="3" class="content-cart display-sm">
-          <v-card class="float mx-auto">
+          <v-card class="float mx-auto" elevation="5">
             <p class="py-3 px-3 font-text text-center">
               RESUMEN DE MI PEDIDO
             </p>
@@ -689,7 +700,7 @@
               <v-col class="text-subtitle-1">Total: {{ totalGeneral | currency }}</v-col>
             </v-row>
             <br />
-            <v-dialog v-model="dialog" persistent max-width="290">
+            <v-dialog v-model="dialog" persistent max-width="500">
               <template v-slot:activator="{ on, attrs }">
                 <div class="d-flex justify-space-around mb-3">
                   <div>
@@ -723,40 +734,59 @@
                 </div>
               </template>
               <v-card>
-                <v-card-title class="headline"> Generar Orden </v-card-title>
-                <v-card-text v-if="isLoggedIn">
-                  Antes de generar esta orden,
-                  <strong class="text-red"
-                    >tienes que estar seguro de que los datos con los que te registraste son
-                    validos</strong
-                  >, ya que mediante estos estaremos generando una orden de compra.
+                <v-card-title class="headline text-center" v-if="isLoggedIn">
+                  IMPORTANTE
+                </v-card-title>
+                <v-card-title class="headline text-center" v-else> Generar Orden </v-card-title>
+                <v-card-text v-if="isLoggedIn" class="font-weight-medium black--text">
+                  Para realizar su separación de pedido debe pagar
+                  <strong>${{ catalogue.quota_price }}</strong> a cualquiera de las siguientes
+                  cuentas:
+                  <br />
+                  BCP A NOMBRE DE BIZZPERU SA:
+                  <ul>
+                    <li>
+                      CUENTA SOLES: 215-31690893-0-98 CÓDIGO DE CUENTA INTERBANCARIA:
+                      00221513169089309824
+                    </li>
+                    <li>
+                      CUENTA DÓLARES: 215-91784070-1-76 CÓDIGO DE CUENTA INTERBANCARIA:
+                      00221519178407017621
+                    </li>
+                  </ul>
+
+                  BBVA A NOMBRE DE BIZZPERU COMPANY EIRL:
+                  <ul>
+                    <li>
+                      CUENTA SOLES:0011-0220-0201770773 CÓDIGO DE CUENTA INTERBANCARIA:
+                      01122000020177077314
+                    </li>
+
+                    <li>
+                      CUENTA DÓLARES: 0011-0220-0201770803 CÓDIGO DE CUENTA INTERBANCARIA:
+                      01122000020177080319
+                    </li>
+
+                    <li>
+                      YAPE A NOMBRE DE BIZZPERU SA: 958073710
+                    </li>
+                  </ul>
+
+                  Y enviar su constancia al siguiente número: <strong>927750048</strong>
                 </v-card-text>
-                <v-card-text v-else>
+                <v-card-text v-else class="font-weight-medium black--text">
                   Para generar su orden debe registrarse
                   <strong class="text-red">¡ES FACILISIMO!</strong>.
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="dialog = false">
+                  <v-btn text @click="dialog = false" color="red" x-large>
                     Cancelar
                   </v-btn>
-                  <v-btn
-                    v-if="isLoggedIn"
-                    color="green darken-1"
-                    text
-                    @click="
-                      generateOrder({
-                        id: catalogue.id,
-                        products: selected,
-                        product_ranges: selectedRange,
-                      }),
-                        (dialog = false),
-                        (alert = false)
-                    "
-                  >
+                  <v-btn v-if="isLoggedIn" color="blue" text x-large @click="generateOrderAction">
                     Generar
                   </v-btn>
-                  <v-btn v-else color="green darken-1" text :to="{ name: 'register' }">
+                  <v-btn v-else color="blue" x-large text :to="{ name: 'register' }">
                     registrarse
                   </v-btn>
                 </v-card-actions>
@@ -774,6 +804,22 @@
         :catalogue="catalogue"
       />
     </v-col>
+    <v-dialog v-model="dialogSuccess" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">
+          ¡Operación exitosa!
+        </v-card-title>
+        <v-card-text>
+          Su orden fue regitrada con éxito
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="dialogSuccess = false" x-large>
+            Aceptar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
@@ -786,13 +832,13 @@ export default {
     Product,
   },
   data: () => ({
+    dialogSuccess: false,
     dialog: false,
     baseURL: '',
     totalItems: 0,
     itemSelected: null,
     showScheduleForm: false,
     singleSelect: false,
-    selected: [],
     singleSelectRange: false,
     selectedRange: [],
     description: [],
@@ -813,19 +859,19 @@ export default {
         sortable: false,
       },
       {
-        text: 'Precio unitario(A)',
+        text: 'Precio unitario (A)',
         value: 'price_unit',
         align: 'center',
         sortable: false,
       },
       {
-        text: 'Cantidad Mínima de Pedido(B)',
+        text: 'Cantidad Mínima de Pedido (B)',
         value: 'quantity_group',
         align: 'center',
         sortable: false,
       },
       {
-        text: 'Precio Total(AxB)',
+        text: 'Precio Total (AxB)',
         value: 'price_group',
         align: 'center',
         sortable: false,
@@ -867,6 +913,7 @@ export default {
     ],
     catalogueGet: null,
     alert: true,
+    proCa: [],
   }),
   components: {
     Product,
@@ -924,10 +971,40 @@ export default {
       let t = this.total + this.totalRange;
       return t;
     },
+    selected: {
+      get() {
+        let pro = [];
+        this.cart.forEach(catalo => {
+          if (catalo.id === this.catalogue.id) {
+            pro = catalo.products;
+          }
+        });
+        return pro;
+      },
+      set(v) {
+        let cat = this.catalogue;
+        // cat.products = v;
+        this.addCart({ cat, products: v });
+        return (this.proCa = v);
+      },
+    },
   },
   methods: {
     ...mapActions('groupImport', ['removeCart']),
     ...mapActions('groupImport', ['getCatalogue', 'addCart', 'setCart', 'generateOrder']),
+
+    generateOrderAction() {
+      let order;
+      this.cart.forEach(catalogue => {
+        if (catalogue.id === this.catalogue.id) {
+          order = catalogue;
+        }
+      });
+      this.generateOrder(order);
+      this.dialog = false;
+      this.dialogSuccess = true;
+    },
+
     minusFunction(item, index) {
       if (item.quantity <= item.quantity_group) {
         alert(
@@ -1051,7 +1128,7 @@ export default {
 }
 .float {
   position: sticky;
-  bottom: 10px;
+  bottom: 30px;
   background-color: #bcdaf1;
   align-self: flex-end;
 }

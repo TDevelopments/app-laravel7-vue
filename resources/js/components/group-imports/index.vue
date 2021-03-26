@@ -13,7 +13,7 @@
         </v-container>
       </v-system-bar>
       <v-app-bar dark color="blue-grey darken-1" class="hidden-xs-only p-page" max-height="64">
-        <v-toolbar-title @click="welcomeRoute">BizzPeru</v-toolbar-title>
+        <v-toolbar-title @click="welcomeRoute">Bizzperu</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
           <!-- <v-btn text @click="cartView">Carrito</v-btn> -->

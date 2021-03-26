@@ -11,7 +11,7 @@
           lg="6"
           class="mx-auto"
         >
-          <v-card class="mx-auto" max-width="700">
+          <v-card class="mx-auto" max-width="650">
             <v-img
               v-if="item.image == null || item.image.length == 0"
               src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
@@ -19,8 +19,13 @@
               contain
               class="m-1"
             />
-            <v-img v-else contain :src="item.image.path" />
-            <v-card-title>
+            <v-img v-else contain :src="item.image.path" height="400px" />
+            <v-card-title class="justify-center py-0">
+              <v-btn color="#0D52D6" text @click="showProduct(item)" x-large>
+                Ver Productos
+              </v-btn>
+            </v-card-title>
+            <v-card-title class="pt-0">
               <v-row>
                 <v-col cols="12" class="pb-0">
                   <strong>{{ item.name }} </strong>
@@ -147,13 +152,6 @@
                 </v-col>
               </v-row>
             </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="#0D52D6" text @click="showProduct(item)">
-                Ver Productos
-              </v-btn>
-            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>

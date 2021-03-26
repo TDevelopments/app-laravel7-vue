@@ -84,32 +84,51 @@ export async function getProduct({ commit, getters, dispatch }, data) {
 
 export function addCart({ commit, getters }, payload) {
   let cart = getters.cart;
-  let product = payload.product;
+  let entrada = payload.products;
   if (!cart.length) {
     cart.push({
-      id: payload.catalogue.id,
-      name: payload.catalogue.name,
-      minimum_investment: payload.catalogue.minimum_investment,
-      products: [product],
+      id: payload.cat.id,
+      name: payload.cat.name,
+      minimum_investment: payload.cat.minimum_investment,
+      products: entrada,
+      product_ranges: [],
     });
+    // cart.push(payload);
   } else {
     let access = false;
     cart.forEach((catalogue, index) => {
-      // console.log("aqui 2");
-      if (catalogue.id === product.catalogue_id) {
-        catalogue.products.push(product);
-        access = true;
-      }
-      // console.log("index", index, products.length, access);
+      // console.log('aqui 2');
+      // if (catalogue.id === product.catalogue_id) {
+      //   catalogue.products.push(product);
+      //   access = true;
+      // }
+      // // console.log("index", index, products.length, access);
 
-      if (index === cart.length - 1) {
-        if (!access) {
-          cart.push({
-            id: payload.catalogue.id,
-            name: payload.catalogue.name,
-            minimum_investment: payload.catalogue.minimum_investment,
-            products: [product],
-          });
+      // if (index === cart.length - 1) {
+      //   if (!access) {
+      //     cart.push({
+      //       id: payload.catalogue.id,
+      //       name: payload.catalogue.name,
+      //       minimum_investment: payload.catalogue.minimum_investment,
+      //       products: [product],
+      //     });
+      //   }
+      // }
+      if (catalogue.id === payload.cat.id) {
+        access = true;
+        catalogue.products = entrada;
+      } else {
+        // cart.push(payload);
+        if (index === cart.length - 1) {
+          if (!access) {
+            cart.push({
+              id: payload.cat.id,
+              name: payload.cat.name,
+              minimum_investment: payload.cat.minimum_investment,
+              products: entrada,
+              product_ranges: [],
+            });
+          }
         }
       }
     });
@@ -151,6 +170,7 @@ export function removeCart({ commit, getters }, data) {
 export function generateOrder({ commit, getters, rootGetters }, catalogue) {
   let auth = rootGetters['account/isLoggedIn'];
   if (auth) {
+    console.log('HOaskdjnasdjk', catalogue);
     catalogue.products.forEach(product => {
       product.product_id = product.id;
     });

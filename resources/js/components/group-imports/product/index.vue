@@ -70,8 +70,12 @@
               </div>
               <div>
                 <p v-for="(item, index) in product.description" :key="index">
-                  <v-icon color="black">mdi-unfold-more-vertical</v-icon>
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
                   {{ item }}
+                </p>
+                <p>
+                  <v-icon color="black" x-small>mdi-circle</v-icon>
+                  Género: {{ product.gender == 'female' ? 'Femenino' : product.gender == 'masculine' ? 'Masculino' : 'Ninguno' }}
                 </p>
               </div>
               <div>
