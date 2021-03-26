@@ -75,7 +75,7 @@
                 </p>
                 <p>
                   <v-icon color="black" x-small>mdi-circle</v-icon>
-                  Género: {{ product.gender == 'female' ? 'Femenino' : product.gender == 'masculine' ? 'Masculino' : 'Ninguno' }}
+                  <strong>Género:</strong> {{ product.gender == 'female' ? 'Femenino' : product.gender == 'masculine' ? 'Masculino' : 'Ninguno' }}
                 </p>
               </div>
               <div>

@@ -37,6 +37,7 @@
                 <v-icon color="black" x-small>mdi-circle</v-icon>
                 Monto de separación de cupo / Garantía de participación:
                 <br />
+                <small class="my-0">(El monto de separación es parte de la primera cuota)</small>
               </v-col>
               <v-col sm="6" md="4" class="text-right">
                 <v-chip class="mr-2">
@@ -44,16 +45,6 @@
                   {{ catalogue.quota_price | currency }}
                 </v-chip>
               </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-2 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                El monto de separación es parte de la primera cuota)
-                <br />
-              </v-col>
-              <v-col sm="6" md="4" class="text-right"> </v-col>
             </v-row>
           </v-card-text>
           <v-card-text class="font-weight-medium pb-0 pt-1">
@@ -204,24 +195,26 @@
               >
                 <template v-slot:[`item.images`]="{ item, index }">
                   <v-row class="d-flex align-center justify-center">
-                    <div>
+                    <v-col cols="1">
                       <strong>{{ index }}</strong>
-                    </div>
-                    <v-img
-                      v-if="item.images == null || item.images.length == 0"
-                      src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                      max-width="150"
-                      max-height="150"
-                      contain
-                      class="m-1 my-5"
-                    />
-                    <v-img
-                      v-else
-                      contain
-                      :src="item.images[0].path"
-                      max-width="150"
-                      class="text-center align-center my-5"
-                    />
+                    </v-col>
+                    <v-col cols="9">
+                      <v-img
+                        v-if="item.images == null || item.images.length == 0"
+                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                        max-width="150"
+                        max-height="150"
+                        contain
+                        class="m-1 my-5"
+                      />
+                      <v-img
+                        v-else
+                        contain
+                        :src="item.images[0].path"
+                        max-width="150"
+                        class="text-center align-center my-5"
+                      />
+                    </v-col>
                   </v-row>
                 </template>
                 <template v-slot:[`item.model`]="{ item }">
