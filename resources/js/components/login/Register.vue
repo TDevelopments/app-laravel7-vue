@@ -3,68 +3,70 @@
     <div class="container">
       <div class="register-content">
         <h1 class="h1">Registro de Usuario</h1>
-        Nombre Completo
-        <v-text-field
-          v-model="name"
-          solo
-          required
-          :rules="generalRules"
-          placeholder="Juan Perez Makoto"
-        ></v-text-field>
+        <v-form ref="form" v-model="valid" lazy-validation>
+          Nombre Completo
+          <v-text-field
+            v-model="name"
+            solo
+            required
+            :rules="generalRules"
+            placeholder="Juan Perez Makoto"
+          ></v-text-field>
 
-        DNI
-        <v-text-field
-          v-model="dni"
-          solo
-          required
-          :rules="generalRules"
-          placeholder="75632449"
-        ></v-text-field>
+          DNI
+          <v-text-field
+            v-model="dni"
+            solo
+            required
+            :rules="generalRules"
+            placeholder="75632449"
+          ></v-text-field>
 
-        Email
-        <v-text-field
-          v-model="email"
-          solo
-          required
-          :rules="emailRules"
-          placeholder="example@gmail.com"
-        ></v-text-field>
+          Email
+          <v-text-field
+            v-model="email"
+            solo
+            required
+            :rules="emailRules"
+            placeholder="example@gmail.com"
+          ></v-text-field>
 
-        Contraseña
-        <v-text-field
-          solo
-          v-model="password"
-          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="[rules.required, rules.min]"
-          :type="show1 ? 'text' : 'password'"
-          name="input-10-1"
-          hint="At least 8 characters"
-          @click:append="show1 = !show1"
-          v-on:keyup.enter="login"
-          placeholder="*********"
-        ></v-text-field>
+          Contraseña
+          <v-text-field
+            solo
+            v-model="password"
+            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+            :rules="[rules.required, rules.min]"
+            :type="show1 ? 'text' : 'password'"
+            name="input-10-1"
+            hint="At least 8 characters"
+            @click:append="show1 = !show1"
+            v-on:keyup.enter="login"
+            placeholder="*********"
+          ></v-text-field>
 
-        Celular / Whatsapp
-        <v-text-field
-          v-model="phone"
-          solo
-          required
-          :rules="generalRules"
-          placeholder="98546789"
-        ></v-text-field>
+          Celular / Whatsapp
+          <v-text-field
+            v-model="phone"
+            solo
+            required
+            :rules="generalRules"
+            placeholder="98546789"
+          ></v-text-field>
 
-        Cuidad de recojo / envio
-        <v-text-field
-          v-model="city"
-          solo
-          required
-          :rules="generalRules"
-          placeholder="Arequipa"
-        ></v-text-field>
+          Cuidad de recojo / envio
+          <v-text-field
+            v-model="city"
+            solo
+            required
+            :rules="generalRules"
+            placeholder="Arequipa"
+          ></v-text-field>
 
-        <v-btn :disabled="!valid" color="primary" class="my-3" @click="registerAction">
-          Registrarse
-        </v-btn>
+          <v-btn :disabled="!valid" color="primary" class="my-3" @click="registerAction">
+            Registrarse
+          </v-btn>
+        </v-form>
       </div>
     </div>
     <v-dialog v-model="dialogAfterRegister" persistent max-width="290">
@@ -148,6 +150,7 @@ export default {
       this.$router.replace({ name: 'loginRouter' });
     },
     registerAction() {
+      this.$refs.form.validate();
       let user = {
         name: this.name,
         password: this.password,
