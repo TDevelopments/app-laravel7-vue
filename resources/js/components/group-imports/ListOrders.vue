@@ -36,7 +36,7 @@
               </v-icon>
             </template>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>
+          <v-expansion-panel-content style="padding: 0 0 0 0 !important">
             <v-data-table
               :items="order.orderDetails"
               :headers="orderHeaders"
@@ -109,9 +109,8 @@
                       <strong>Modelo: </strong> {{ props.item.product.model }}
                     </div>
                     <div class="d-flex">
-                      <strong>Cantidad: </strong>
+                      <strong>Cant.</strong>
                       {{ props.item.quantity }}
-                      <div class="text-capitalize">{{ props.item.product.type_group }}</div>
                     </div>
                     <div class="d-flex">
                       <strong>P.U: </strong>
@@ -119,15 +118,24 @@
                       {{ props.item.price | currency }}
                     </div>
                     <div class="d-flex">
-                      <strong>TotalxProducto: </strong>
+                      <strong>Tot.Prod: </strong>
                       {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
                       {{ props.item.total | currency }}
                     </div>
+                  </td>
+                  <td class="px-0">
+                    <v-btn small class="my-5" @click="prueba(props.item.product)">Ver Mas</v-btn>
                   </td>
                 </tr>
               </template>
             </v-data-table>
           </v-expansion-panel-content>
+          <Product
+            v-model="showScheduleForm"
+            :product="itemSelected"
+            v-if="showScheduleForm"
+            :catalogue="order.catalogue"
+          />
         </v-expansion-panel>
       </v-expansion-panels>
       <!-- <v-data-table :items="orders" :headers="orderHeaders"> </v-data-table> -->
@@ -135,8 +143,17 @@
   </div>
 </template>
 <script>
+import Product from './product';
 export default {
+  components: {
+    Product,
+  },
+  comments: {
+    Product,
+  },
   data: () => ({
+    showScheduleForm: false,
+    itemSelected: null,
     panel: 0,
     orders: [],
     orderHeaders: [
@@ -183,6 +200,11 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    prueba(value) {
+      this.itemSelected = value;
+      this.showScheduleForm = true;
+      console.log(this.itemSelected);
     },
   },
   mounted() {

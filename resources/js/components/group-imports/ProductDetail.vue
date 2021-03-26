@@ -47,9 +47,7 @@
             </v-sheet>
           </v-col>
           <v-col cols="12" sm="12" md="9" ls="9" class="p-0 bcard">
-            <v-toolbar elevation="1" color="#1933AA" dark>
-              Modelo {{ product.model }}
-            </v-toolbar>
+            <v-toolbar elevation="1" color="#1933AA" dark> Modelo {{ product.model }} </v-toolbar>
             <v-card-text class="mx-3">
               <ul v-for="(item, index) in product.description" :key="index">
                 <li class="m-0 p-0">{{ item }}</li>
@@ -69,12 +67,8 @@
                 <v-col>
                   <strong>PRECIO POR {{ product.quantity_group }} U.</strong>
                   <div class="form-inline">
-                    <v-avatar
-                      color="#1933AA"
-                      size="30"
-                      class="text-white mr-1 my-2"
-                    >
-                      {{ (catalogue.coin = "soles" ? "S./" : "$") }}
+                    <v-avatar color="#1933AA" size="30" class="text-white mr-1 my-2">
+                      {{ (catalogue.coin = 'soles' ? 'S./' : '$') }}
                     </v-avatar>
                     <p class="mt-3 ml-2 font-weight-bold">
                       {{ product.price_group | currency }}
@@ -84,12 +78,8 @@
                 <v-col>
                   <strong>PRECIO UNITARIO</strong>
                   <div class="form-inline">
-                    <v-avatar
-                      color="#1933AA"
-                      size="30"
-                      class="text-white mr-1 my-2"
-                    >
-                      {{ (catalogue.coin = "soles" ? "S./" : "$") }}
+                    <v-avatar color="#1933AA" size="30" class="text-white mr-1 my-2">
+                      {{ (catalogue.coin = 'soles' ? 'S./' : '$') }}
                     </v-avatar>
                     <p class="mt-3 ml-2">{{ product.price_unit | currency }}</p>
                   </div>
@@ -104,23 +94,23 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data: () => ({
     model: 0,
   }),
   computed: {
-    ...mapGetters("groupImport", ["product", "catalogue"]),
+    ...mapGetters('groupImport', ['product', 'catalogue']),
   },
   methods: {
-    ...mapActions("groupImport", ["getProduct"]),
+    ...mapActions('groupImport', ['getProduct']),
   },
   mounted() {
     this.getProduct(this.$route.params);
   },
   filters: {
-    currency: function (value) {
+    currency: function(value) {
       return parseFloat(value).toFixed(2);
     },
   },
