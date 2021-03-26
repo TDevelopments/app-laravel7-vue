@@ -196,7 +196,7 @@
                 <template v-slot:[`item.images`]="{ item, index }">
                   <v-row class="d-flex align-center justify-center">
                     <v-col cols="1">
-                      <strong>{{ index }}</strong>
+                      <strong>{{ index + 1 }}</strong>
                     </v-col>
                     <v-col cols="9">
                       <v-img
@@ -223,6 +223,14 @@
                   <v-btn small class="mt-2 mx-2" @click="prueba(item)">
                     Ver Mas
                   </v-btn>
+                </template>
+                <template v-slot:[`item.price_unit`]="{ item }">
+                  {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                  {{ item.price_unit | currency }}
+                </template>
+                <template v-slot:[`item.price_group`]="{ item }">
+                  {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                  {{ item.price_group | currency }}
                 </template>
                 <template v-slot:[`item.quantity_group`]="{ item }">
                   {{ item.quantity_group + ' ' }}
@@ -310,12 +318,12 @@
                       <strong>Marca:</strong> {{ props.item.brand }}
                       <br />
                       <strong>P.U:</strong> {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
-                      {{ props.item.price_unit }}
+                      {{ props.item.price_unit | currency }}
                       <br />
                       <strong>Cant.Min:</strong> {{ props.item.quantity_group }}
                       <br />
                       <strong>Total:</strong> {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
-                      {{ props.item.price_group }}
+                      {{ props.item.price_group | currency }}
                     </td>
                     <td class="px-0 py-5">
                       <v-btn small class="my-5" @click="prueba(props.item)">Ver Mas</v-btn>
@@ -585,7 +593,7 @@
           </v-card>
         </v-col>
         <v-col cols="12" sm="12" md="3" lg="3" class="content-cart display-sm">
-          <v-card class="float mx-auto" elevation="5">
+          <v-card class="float mx-0 d-flex flex-column" elevation="12" style="flex: 1">
             <p class="py-3 px-3 font-text text-center">
               RESUMEN DE MI PEDIDO
             </p>

@@ -21,7 +21,7 @@
             />
             <v-img v-else contain :src="item.image.path" height="400px" />
             <v-card-title class="justify-center py-0">
-              <v-btn color="#0D52D6" text @click="showProduct(item)" x-large>
+              <v-btn color="#0D52D6" @click="showProduct(item)" rounded dark>
                 Ver Productos
               </v-btn>
             </v-card-title>

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RoleTableSeeder::class);
         $this->call(MeasureSeeder::class);
+        $this->call(BankEntitySeeder::class);
 
         $user = User::create([
             'name' => 'George Miguel',

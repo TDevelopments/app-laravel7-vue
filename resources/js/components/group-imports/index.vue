@@ -17,17 +17,29 @@
         <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
           <!-- <v-btn text @click="cartView">Carrito</v-btn> -->
-          <v-btn text> {{ user.name }}</v-btn>
-          <v-btn text @click="userRoute"> User Setting </v-btn>
+          <v-menu rounded offset-y>
+            <template v-slot:activator="{ attrs, on }">
+              <v-btn text v-bind="attrs" v-on="on"> {{ user.name }}</v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item link :to="{ name: 'UserSettingIG' }">
+                <v-list-item-title text>
+                  Opciones
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-btn text :to="{ name: 'orderUser' }"> Mis Pedidos </v-btn>
           <v-btn text v-if="role" @click="dashboardRoute"> Administrar </v-btn>
-          <v-btn text @click="logout"> Logout </v-btn>
+          <v-btn text @click="logout"> Salir </v-btn>
         </v-toolbar-items>
         <v-toolbar-items v-else>
-          <v-btn class="text-capitalize" text @click="cartView">
+          <!-- <v-btn class="text-capitalize" text @click="cartView">
             <v-icon class="mr-1">mdi-cart</v-icon>Carrito</v-btn
-          >
+          > -->
           <v-btn class="text-capitalize" text @click="registerRoute">
-            <v-icon class="mr-1">mdi-pencil</v-icon> Register
+            <v-icon class="mr-1">mdi-pencil</v-icon> Registrarse
           </v-btn>
           <v-btn class="text-capitalize" text @click="login"
             ><v-icon class="mr-1">mdi-account</v-icon> Login
@@ -63,15 +75,23 @@
                 </v-list-item>
                 <v-list-item>
                   <v-list-item-icon>
-                    <v-icon> mdi-account</v-icon>
+                    <v-icon> mdi-account-convert</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content @click="userRoute">
                     <v-list-item-title>Configuracion de Usuario</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
+                <v-list-item>
+                  <v-list-item-icon>
+                    <v-icon> mdi-view-list</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content @click="orderUserRoute">
+                    <v-list-item-title>Mis Pedidos</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
                 <v-list-item v-if="role">
                   <v-list-item-icon>
-                    <v-icon> mdi-account</v-icon>
+                    <v-icon> mdi-settings</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content @click="dashboardRoute">
                     <v-list-item-title>Administrar</v-list-item-title>
@@ -79,7 +99,7 @@
                 </v-list-item>
                 <v-list-item>
                   <v-list-item-icon>
-                    <v-icon> mdi-account</v-icon>
+                    <v-icon> mdi-logout</v-icon>
                   </v-list-item-icon>
                   <v-list-item-content @click="logout">
                     <v-list-item-title>Cerrar Sesión</v-list-item-title>
@@ -154,26 +174,37 @@ export default {
       this.$router.push({
         name: 'loginRouter',
       });
+      this.dialog = false;
     },
     registerRoute() {
       this.$router.push({
         name: 'register',
       });
+      this.dialog = false;
     },
     welcomeRoute() {
       this.$router.push({
         name: 'welcome',
       });
+      this.dialog = false;
     },
     dashboardRoute() {
       this.$router.push({
         name: 'Home',
       });
+      this.dialog = false;
+    },
+    orderUserRoute() {
+      this.$router.push({
+        name: 'orderUser',
+      });
+      this.dialog = false;
     },
     cartView() {
       this.$router.push({
         name: 'cartGroupImport',
       });
+      this.dialog = false;
     },
     userRoute() {
       this.$router.push({

@@ -13,14 +13,7 @@
       </v-toolbar-items>
     </v-app-bar>
 
-    <v-navigation-drawer
-      v-model="drawer"
-      :permanent="permanent"
-      clipped
-      app
-      color="#253035"
-      dark
-    >
+    <v-navigation-drawer v-model="drawer" :permanent="permanent" clipped app color="#253035" dark>
       <v-list nav>
         <v-list-item class="px-2">
           <v-list-item-avatar>
@@ -89,11 +82,7 @@
             <v-list-item-title>Crear Categorías</v-list-item-title>
           </v-list-item>
         </v-list-group>
-        <v-list-group
-          prepend-icon="mdi-account-circle"
-          no-action
-          color="#FCF3F3"
-        >
+        <v-list-group prepend-icon="mdi-account-circle" no-action color="#FCF3F3">
           <template v-slot:activator>
             <v-list-item-title>Usuarios</v-list-item-title>
           </template>
@@ -105,27 +94,24 @@
           </v-list-item>
         </v-list-group>
 
-        <v-list-group
-          prepend-icon="mdi-account-circle"
-          no-action
-          color="#FCF3F3"
-        >
-          <template v-slot:activator>
-            <v-list-item-title>Unidades</v-list-item-title>
-          </template>
-          <v-list-item link :to="{ name: 'listMeasure' }">
-            <v-list-item-title>Listar Unidades</v-list-item-title>
-          </v-list-item>
-          <v-list-item link :to="{ name: 'addMeasure' }">
-            <v-list-item-title>Crear Unidad</v-list-item-title>
-          </v-list-item>
-        </v-list-group>
         <v-list-group prepend-icon="mdi-view-list" no-action color="#FCF3F3">
           <template v-slot:activator>
             <v-list-item-title>Ordenes</v-list-item-title>
           </template>
           <v-list-item link :to="{ name: 'listOrder' }">
             <v-list-item-title>Listar Categorias</v-list-item-title>
+          </v-list-item>
+        </v-list-group>
+
+        <v-list-group prepend-icon="mdi-settings" no-action color="#FCF3F3">
+          <template v-slot:activator>
+            <v-list-item-title>Configuración</v-list-item-title>
+          </template>
+          <v-list-item link :to="{ name: 'listMeasure' }">
+            <v-list-item-title>Unidades Comerciales</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'addMeasure' }">
+            <v-list-item-title>Bancos</v-list-item-title>
           </v-list-item>
         </v-list-group>
       </v-list>
@@ -164,36 +150,36 @@
   </v-app>
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data: () => ({
     wheight: window.innerHeight,
     drawer: null,
     permanent: null,
-    module: "ImportGroup",
+    module: 'ImportGroup',
   }),
   computed: {
-    ...mapGetters("account", ["user"]),
+    ...mapGetters('account', ['user']),
   },
   mounted() {
     this.getUser();
   },
   methods: {
-    ...mapActions("account", ["logout", "getUser"]),
+    ...mapActions('account', ['logout', 'getUser']),
     pageGroupImport() {
       this.$router.push({
-        name: "group-import",
+        name: 'group-import',
       });
     },
     iG() {
-      this.module = "ImportGroup";
+      this.module = 'ImportGroup';
     },
     sS() {
-      this.module = "SellStock";
+      this.module = 'SellStock';
     },
     viewUser() {
-      this.$router.push({ name: "group-import" });
+      this.$router.push({ name: 'group-import' });
     },
   },
 };
