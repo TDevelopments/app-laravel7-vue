@@ -11,9 +11,9 @@ class BankEntitySeeder extends Seeder
      */
     public function run()
     {
-        $role = new BankEntity();
-        $role->name = 'Banco Continental';
-        $role->short_name = 'BBVA';
-        $role->save();
+        $bank = new BankEntity();
+        $bank->name = 'Banco Continental';
+        $bank->short_name = 'BBVA';
+        $bank->save();
     }
 }

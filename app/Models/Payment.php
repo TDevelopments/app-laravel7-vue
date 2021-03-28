@@ -14,6 +14,8 @@ class Payment extends Model
         'image',
         'mount',
         'payment_date',
+        'payment_concept_id',
+        'bank_entity_id',
         'order_id',
     ];
 

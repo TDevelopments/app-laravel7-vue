@@ -7,6 +7,7 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use  App\Http\Requests\PaymentRequest;
 
 class PaymentController extends Controller
 {
@@ -37,25 +38,17 @@ class PaymentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Order $order)
+    public function store(PaymentRequest $request, Order $order)
     {
-        $validator = Validator::make($request->all(), [
-            'mount' => ['required', 'numeric'],
-            'payment_date' => ['required', 'date'],
-            'image' => ['required'],
-            'image.id' => ['required', 'exists:App\Models\Image,id'],
-            'image.name' => ['required', 'exists:App\Models\Image,name'],
-            'image.path' => ['required', 'exists:App\Models\Image,path'],
-        ]);
-        if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error'], 422);
-        }
         $payment = $this->payment->create([
             'image' => $request->image,
             'mount' => $request->mount,
             'payment_date' => $request->payment_date,
             'order_id' => $order->id,
+            'payment_concept_id' => $request->payment_concept_id,
+            'bank_entity_id' => $request->bank_entity_id,
         ]);
+        // $payment = $this->payment->create($request->toArray());
         return response()->json(['message' => 'Payment added successfully']);
         
     }
@@ -78,9 +71,9 @@ class PaymentController extends Controller
      * @param  \App\Models\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Payment $payment)
+    public function update(PaymentRequest $request, Payment $payment)
     {
-        //
+        // $payment->update($request);
     }
 
     /**
