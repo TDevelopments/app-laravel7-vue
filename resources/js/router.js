@@ -42,6 +42,7 @@ import EditMeasure from './components/admin/measure/Edit';
 // Pages View Orders
 import ListOrder from './components/admin/orders/List';
 import EditOrder from './components/admin/orders/Edit';
+import FilterOrder from './components/admin/orders/Filter';
 
 // Pages Product For Catalogue
 import ProductCatalogue from './components/admin/catalogues/ProductForCatalogue';
@@ -251,6 +252,11 @@ export default new Router({
           path: '/admin/order/:id/edit',
           name: 'editOrder',
           component: EditOrder,
+        },
+        {
+          path: '/admin/orders/filter',
+          name: 'filterOrder',
+          component: FilterOrder,
         },
       ],
     },

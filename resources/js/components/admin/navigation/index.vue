@@ -99,7 +99,10 @@
             <v-list-item-title>Ordenes</v-list-item-title>
           </template>
           <v-list-item link :to="{ name: 'listOrder' }">
-            <v-list-item-title>Listar Categorias</v-list-item-title>
+            <v-list-item-title>Listar Ordenes</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'filterOrder' }">
+            <v-list-item-title>Filtros de Ordenes</v-list-item-title>
           </v-list-item>
         </v-list-group>
 
