@@ -113,9 +113,12 @@ Route::group(['prefix' => 'v1'], function () {
         
         Route::post('products-massive', [ProductController::class, 'createMassive']);
         Route::post('product-ranges-massive', [ProductRangeController::class, 'createMassive']);
-        
+
+        // List
         Route::get('list-catalogues', [CatalogueController::class, 'list']);
         Route::get('list-categories', [CategoryController::class, 'list']);
+
+        
         Route::post('catalogues/{catalogue}/arrivals', [ArrivalController::class, 'store']);
         // Route::post('catalogues/{catalogue}/arrivals/multiple', [ArrivalController::class, 'create']);
         // Route::put('arrivals/{arrival}', [ArrivalController::class, 'update']);
@@ -125,13 +128,24 @@ Route::group(['prefix' => 'v1'], function () {
         // Route::delete('ranges/{range}', [RangeController::class, 'destroy']);
         Route::delete('ranges', [RangeController::class, 'destroy']);
         // Route::delete('catalogues/{catalogue}/arrivals/{arrival}', [ArrivalController::class, 'destroy']);
+        
+        // Orders
         Route::get('orders', [OrderController::class, 'index']);
         Route::post('orders', [OrderController::class, 'store']);
         Route::put('orders/{order}', [OrderController::class, 'update']);
         Route::get('orders/{order}', [OrderController::class, 'show']);
+        Route::delete('orders/{order}', [OrderController::class, 'destroy']);
+
         Route::post('orders/{order}/order-details', [OrderDetailController::class, 'store']);
+
+        // Payments
         Route::post('orders/{order}/payments', [PaymentController::class, 'store']);
+        Route::delete('payments', [PaymentController::class, 'destroy']);
+        
+        
         Route::delete('order-details', [OrderDetailController::class, 'destroy']);
+        
+        // Image
         Route::post('uploads', [ImageController::class, 'store']);
     });
 });

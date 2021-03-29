@@ -20,7 +20,7 @@ class ProductController extends Controller
 
     public function __construct(Product $product)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->middleware('api.admin');
         $this->product = $product;
     }
 
@@ -31,11 +31,33 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        
         if ($request->query("model")) {
             $value = $request->query("model");
-            return ProductResource::collection($this->product->where('model', 'like', "%$value%")->orderBy('model')->get());
+            $products = $this->product->where('model', 'like', "%$value%")->orderBy('model')->paginate();
+            return ProductResource::collection($products);
+        }
+        if ($request->query("sku")) {
+            $value2 = $request->query("sku");
+            $products = $this->product->where('sku', 'like', "%$value2%")->orderBy('sku')->paginate();
+            return ProductResource::collection($products);
+        }
+        if ($request->query("meta")) 
+        {
+            $value2 = $request->query("meta");
+            switch ($value2) {
+                case "true":
+                    $products = $this->product->whereColumn('count', '>=', 'stock')->orderBy('count')->paginate();
+                    return ProductResource::collection($products);
+                    break;
+                case "false":
+                    $products = $this->product->whereColumn('count', '<=', 'stock')->orderBy('count')->paginate();
+                    return ProductResource::collection($products);
+                    break;
+            }
         }
         return ProductResource::collection($this->product->orderBy('model')->paginate());
+        
     }
 
     /**

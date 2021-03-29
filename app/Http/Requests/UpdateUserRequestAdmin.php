@@ -25,10 +25,10 @@ class UpdateUserRequestAdmin extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'lastname' => ['required','string'],
+            'lastname' => ['string'],
             'email' => ['nullable', 'email', 'unique:users,email,'.$this->user->id],
             'password' => ['nullable', 'min:8', 'confirmed', 'string'],
-            'address' => ['required','string'],
+            'address' => ['string'],
             'ruc' => ['integer','unique:users,ruc,'.$this->user->id],
             'dni' => ['required', 'integer', 'unique:users,dni,'.$this->user->id],
             'phone' => ['required','integer'],
