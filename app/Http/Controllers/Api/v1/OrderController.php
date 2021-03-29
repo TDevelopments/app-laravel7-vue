@@ -9,10 +9,12 @@ use App\Models\Product;
 use App\Models\ProductRange;
 use App\Models\Range;
 use App\Models\User;
+use App\Models\StateOrder;
 use App\Models\Catalogue;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\OrderRequest;
 
 class OrderController extends Controller
 {
@@ -23,8 +25,11 @@ class OrderController extends Controller
     protected $productRange;
     protected $orderDetail;
     protected $range;
+    protected $stateOrder;
 
-    public function __construct(Order $order, Catalogue $catalogue, Product $product, OrderDetail $orderDetail, ProductRange $productRange, Range $range)
+    public function __construct(
+        Order $order, Catalogue $catalogue, Product $product, OrderDetail $orderDetail, 
+        ProductRange $productRange, Range $range, StateOrder $stateOrder)
     {
         $this->middleware('api.admin')->except(['store']);
         $this->order = $order;
@@ -33,6 +38,7 @@ class OrderController extends Controller
         $this->productRange = $productRange;
         $this->orderDetail = $orderDetail;
         $this->range = $range;
+        $this->stateOrder = $stateOrder;
     }
 
     /**
@@ -44,20 +50,33 @@ class OrderController extends Controller
     {
         if ($request->query("orderId")) {
             $value = $request->query("orderId");
-            return new OrderResource($order);
+            $order = $this->order->where('id', 'like', "%$value%")->paginate();
+            return OrderResource::collection($order);
         }
         if ($request->query("username"))
         {
             $value2 = $request->query("username");
-            $user = User::where('name', 'like', "%$value%")->get();
-            if (!$user)
-                return response()->json(['message' => "User doesn't exists", "user" => $user]);
-            $order = $this->order->join('users', function($join){
+            $user = User::where('name', 'like', "%$value2%")->get();
+            if (count($user) == 0)
+                return response()->json(['message' => "There is no user with that name"]);
+            $order = $this->order->join('users', function($join) use($value2){
                 $join->on('orders.user_id', '=', 'users.id')
-                     ->where('users.name', 'like', "%$value2%");
-            })->get();
+                ->where('users.name', 'like', "%$value2%");
+            })->paginate();
             return OrderResource::collection($order);
+            
         }
+        if ($request->query("stateOrder"))
+        {
+            $value3 = $request->query("stateOrder");
+            $consult = $this->stateOrder->where('name', $value3)->get();
+            $stateOrder = $this->stateOrder->where('name', $value3)->first();
+            // return response()->json(["stado" => $stateOrder, "true" => !empty($stateOrder)]);
+            if (count($consult) == 0)
+                return response()->json(['message' => "There is no state order with that name"]);
+            $order = $this->order->where('state_order_id', $stateOrder->id)->paginate();
+            return OrderResource::collection($order);
+        }   
         return OrderResource::collection($this->order->paginate());
     }
 
@@ -76,15 +95,19 @@ class OrderController extends Controller
                 'products.*.quantity' => ['required', 'integer'],
                 'product_ranges' => ['array'],
                 'product_ranges.*.product_id' => ['required', 'integer', 'exists:App\Models\ProductRange,id'],
-                'product_ranges.*.quantity' => ['required', 'integer']
+                'product_ranges.*.quantity' => ['required', 'integer'],
+                // 'state_order_id' => ['required', 'integer', 'exists:App\Models\StateOrder,id'],
         ]);
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
+        $stateOrder = $this->stateOrder->where('name', 'like', '%eparado%')->first();
         $order = $this->order->create([
             'user_id' => $request->user()->id,
             'catalogue_id' => $request->catalogue_id,
-            'status' => 'pending',
+            'state_order_id' => $stateOrder->id,
+            // 'state_order_id' => $request->state_order_id,
+            // 'status' => 'pending',
         ]);
         $catalogueReference = $this->catalogue->find($request->catalogue_id);
         $data = $request->products;

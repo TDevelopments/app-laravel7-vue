@@ -57,7 +57,7 @@ class StateOrderController extends Controller
      * @param  \App\Measure  $stateOrder
      * @return \Illuminate\Http\Response
      */
-    public function update(MeasureRequest $request, StateOrder $stateOrder)
+    public function update(StateOrderRequest $request, StateOrder $stateOrder)
     {
         $stateOrder->update($request->toArray());
         return response()->json($stateOrder, 200);
@@ -69,7 +69,7 @@ class StateOrderController extends Controller
      * @param  \App\stateOrder  $stateOrder
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Measure $stateOrder)
+    public function destroy(StateOrder $stateOrder)
     {
         $stateOrder->delete();
         return response()->json(null, 204);

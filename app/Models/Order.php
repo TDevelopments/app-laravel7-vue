@@ -8,16 +8,18 @@ use App\Models\OrderDetail;
 use App\Models\User;
 use App\Models\Catalogue;
 use App\Models\Payment;
+use App\Models\StateOrder;
 
 class Order extends Model
 {
     // use HasFactory;
 
     protected $fillable = [
-        'status',
+        // 'status',
         'total_order',
         'catalogue_id',
-        'user_id'
+        'user_id',
+        'state_order_id'
     ];
 
     public function orderDetails()
@@ -38,5 +40,10 @@ class Order extends Model
     public function catalogue()
     {
         return $this->belongsTo(Catalogue::class);
+    }
+
+    public function stateOrder()
+    {
+        return $this->belongsTo(StateOrder::class);
     }
 }
