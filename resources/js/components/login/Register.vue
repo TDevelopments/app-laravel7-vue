@@ -2,6 +2,9 @@
   <v-app>
     <div class="container">
       <div class="register-content">
+        <v-alert dense text type="error" dismissible :hidden="alert">
+          Ocurrio un error durante el registro, vuelve a intentarlo.
+        </v-alert>
         <h1 class="h1">Registro de Usuario</h1>
         <v-form ref="form" v-model="valid" lazy-validation>
           Nombre Completo
@@ -133,7 +136,12 @@ export default {
       },
     ],
     dialogAfterRegister: false,
+    alert: true,
   }),
+
+  computed: {
+    ...mapGetters('account', ['authStatus', 'errResponse']),
+  },
 
   methods: {
     ...mapActions('account', ['login', 'register']),
@@ -160,8 +168,17 @@ export default {
         phone: this.phone,
         city: this.city,
       };
-      this.register(user);
-      this.dialogAfterRegister = true;
+      this.register(user)
+        .then(result => {
+          this.dialogAfterRegister = true;
+        })
+        .catch(err => {
+          console.log(this.authStatus);
+          this.alert = false;
+          setTimeout(() => {
+            this.alert = true;
+          }, 5000);
+        });
     },
     goBackProducts() {
       this.$router.go(-1);

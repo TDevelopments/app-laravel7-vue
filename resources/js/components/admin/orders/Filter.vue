@@ -1,5 +1,23 @@
 <template>
   <v-card>
+    <v-row class="mx-2 pt-5">
+      <v-col>
+        <v-text-field label="Cliente" solo dense></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field label="Estado" solo dense></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field label="Modelo" solo dense></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field label="Comming soon" solo dense></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field label="Comming soon" solo dense></v-text-field>
+      </v-col>
+    </v-row>
+
     <v-data-table
       :headers="headers"
       :items="orders"

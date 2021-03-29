@@ -17,6 +17,8 @@ use App\Http\Controllers\Api\v1\OrderDetailController;
 use App\Http\Controllers\Api\v1\PaymentController;
 use App\Http\Controllers\Api\v1\MeasureController;
 use App\Http\Controllers\Api\v1\BankEntityController;
+use App\Http\Controllers\Api\v1\StateOrderController;
+use App\Http\Controllers\Api\v1\PaymentConceptController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +96,20 @@ Route::group(['prefix' => 'v1'], function () {
         Route::put('banks/{bank}', [BankEntityController::class, 'update']);
         Route::delete('banks/{bank}', [BankEntityController::class, 'destroy']);
 
+        // StateOrder
+        Route::get('state-orders', [StateOrderController::class, 'index']);
+        Route::post('state-orders', [StateOrderController::class, 'store']);
+        Route::get('state-orders/{state-order}', [StateOrderController::class, 'show']);
+        Route::put('state-orders/{state-order}', [StateOrderController::class, 'update']);
+        Route::delete('state-orders/{state-order}', [StateOrderController::class, 'destroy']);
+
+        // PaymentConcept
+        Route::get('payment-concepts', [PaymentConceptController::class, 'index']);
+        Route::post('payment-concepts', [PaymentConceptController::class, 'store']);
+        Route::get('payment-concepts/{payment-concept}', [PaymentConceptController::class, 'show']);
+        Route::put('payment-concepts/{payment-concept}', [PaymentConceptController::class, 'update']);
+        Route::delete('payment-concepts/{payment-concept}', [PaymentConceptController::class, 'destroy']);
+        
         Route::post('products-massive', [ProductController::class, 'createMassive']);
         Route::post('product-ranges-massive', [ProductRangeController::class, 'createMassive']);
         

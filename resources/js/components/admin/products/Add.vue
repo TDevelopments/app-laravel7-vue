@@ -517,7 +517,7 @@ export default {
     // Object of Images
     files: [],
     // Chip of Description
-    description: null,
+    description: [],
     selected: [],
     select: null,
     // Options of Types Group
@@ -670,7 +670,8 @@ export default {
               category_id: this.product.category,
               catalogue_id: this.product.catalogue,
               images: this.image,
-              description: this.description,
+              description:
+                this.description == null || this.description == [] ? [] : this.description,
               colors: this.colors,
               magnifying: this.product.magnifying,
               gender: this.gender,

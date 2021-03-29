@@ -280,7 +280,7 @@ export default {
       type_group: '',
       category: '',
       catalogue: '',
-      images: null,
+      images: [],
     },
     // Object Catalogue
     catalogues: [],
@@ -441,6 +441,7 @@ export default {
 
     // Peticion Add Images
     addImages() {
+      this.product.images = [];
       // Declaring Forma Data
       const data = new FormData();
       this.files.forEach((elements, index) => {
@@ -471,7 +472,7 @@ export default {
     // Peticion Update Product
     editProduct() {
       console.log(this.product);
-
+      console.log('antes', this.product.images);
       let data = {
         model: this.product.model,
         stock: this.product.stock,
@@ -483,19 +484,16 @@ export default {
         type_group: this.product.type_group,
         category_id: this.product.category,
         catalogue_id: this.product.catalogue,
-        description: this.description,
+        description: this.description == null || this.description == [] ? [] : this.description,
         colors: this.colors,
-        images: this.product.images,
+        images:
+          this.product.images == null || this.product.images.length == 0 ? [] : this.product.images,
         magnifying: this.product.magnifying,
         gender: this.product.gender,
       };
 
       axios
-        .put(`/api/v1/products/${this.$route.params.id}`, data, {
-          headers: {
-            Accept: 'application/json',
-          },
-        })
+        .put(`/api/v1/products/${this.$route.params.id}`, data)
         .then(response => {
           console.log('Response', response);
           this.$router.replace({ name: 'listProduct' });

@@ -46,7 +46,7 @@
               <template v-slot:[`item.image`]="{ item }">
                 <div class="d-flex justify-center aling-center">
                   <v-img
-                    v-if="item.product.images == null || item.product.length == 0"
+                    v-if="item.product.images == null || item.product.images.length == 0"
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                     max-width="150"
                     max-height="150"
@@ -91,7 +91,9 @@
                   <td class="px-0">
                     <div class="d-flex justify-center aling-center">
                       <v-img
-                        v-if="props.item.product.images == null || props.item.product.length == 0"
+                        v-if="
+                          props.item.product.images == null || props.item.product.images.length == 0
+                        "
                         src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                         max-width="75"
                         max-height="75"

@@ -16,8 +16,8 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->float('total_order')->nullable();
-            $table->enum('status', ['pending', 'paid', 'cancelled', 'separated', 'first_payment'])
-                  ->default('pending');
+            // $table->enum('status', ['pending', 'paid', 'cancelled', 'separated', 'first_payment'])
+            //       ->default('pending');
             $table->foreignId('user_id')
                   ->constrained();
             $table->foreignId('catalogue_id')

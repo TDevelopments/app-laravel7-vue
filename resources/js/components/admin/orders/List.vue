@@ -1,18 +1,29 @@
 <template>
   <v-card>
+    <v-row>
+      <v-col>
+        <v-combobox solo append-icon="mdi-magnify" dense class="mt-3"></v-combobox>
+      </v-col>
+      <v-col>
+        <v-combobox solo append-icon="mdi-magnify" dense class="mt-3"></v-combobox>
+      </v-col>
+      <v-col>
+        <v-combobox solo append-icon="mdi-magnify" dense class="mt-3"></v-combobox>
+      </v-col>
+      <v-col>
+        <v-combobox solo append-icon="mdi-magnify" dense class="mt-3"></v-combobox>
+      </v-col>
+    </v-row>
+    <v-card-title>
+      Ordenes de Cliente
+      <v-spacer></v-spacer>
+    </v-card-title>
     <v-data-table
       :headers="headers"
       :items="orders"
       item-key="item.id"
       loading-text="Loading... Please wait"
     >
-      <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title>Ordenes de Clientes</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-      </template>
       <template v-slot:[`item.status`]="{ item }">
         <v-chip color="red" dark small>
           {{ item.status }}

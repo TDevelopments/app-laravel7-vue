@@ -1,20 +1,28 @@
 export function auth_request(state) {
-  state.status = "loading";
+  state.status = 'loading';
 }
+
 export function auth_success(state, data) {
-  state.status = "success";
+  state.status = 'success';
   state.token = data.token;
   state.user = data.user;
 }
+
 export function auth_error(state) {
-  state.status = "error";
+  state.status = 'error';
 }
+
 export function logout(state) {
-  state.status = "";
-  state.token = "";
+  state.status = '';
+  state.token = '';
 }
 
 export function auth_user(state, data) {
-  state.status = "success";
+  state.status = 'success';
   state.user = data;
+}
+
+export function err_response(state, data) {
+  console.log('Mutacion', data);
+  state.err = data;
 }

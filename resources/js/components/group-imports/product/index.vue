@@ -1,9 +1,5 @@
 <template>
-  <v-dialog
-    transition="dialog-bottom-transition"
-    max-width="1200"
-    v-model="show"
-  >
+  <v-dialog transition="dialog-bottom-transition" max-width="1200" v-model="show">
     <v-toolbar color="primary" dark class="text-h6 mb-2">
       Detalles del producto
       <v-spacer></v-spacer>
@@ -16,19 +12,12 @@
         <v-row>
           <v-col cols="12" sm="12" md="6" lg="6">
             <div class="text-center">
-              <v-img
-                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                contain
+              <ZoomOnHover
+                img-normal="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                 v-if="product.images == null || product.images.length == 0"
-              />
-              <v-img
-                :src="product.images[model].path"
-                max-width="500"
-                height="350"
-                contain
-                v-else
-                class="mx-auto"
-              />
+              ></ZoomOnHover>
+
+              <ZoomOnHover :img-normal="product.images[model].path" v-else></ZoomOnHover>
             </div>
             <v-sheet class="mx-auto" max-width="800">
               <v-slide-group v-model="model" show-arrows>
@@ -75,17 +64,20 @@
                 </p>
                 <p>
                   <v-icon color="black" x-small>mdi-circle</v-icon>
-                  <strong>Género:</strong> {{ product.gender == 'female' ? 'Femenino' : product.gender == 'masculine' ? 'Masculino' : 'Ninguno' }}
+                  <strong>Género:</strong>
+                  {{
+                    product.gender == 'female'
+                      ? 'Femenino'
+                      : product.gender == 'masculine'
+                      ? 'Masculino'
+                      : 'Ninguno'
+                  }}
                 </p>
               </div>
               <div>
                 Colores:
                 <v-row>
-                  <v-col
-                    cols="1"
-                    v-for="(color, index) in product.colors"
-                    :key="index"
-                  >
+                  <v-col cols="1" v-for="(color, index) in product.colors" :key="index">
                     <v-avatar :color="color" size="15"> </v-avatar>
                   </v-col>
                 </v-row>
@@ -93,16 +85,11 @@
               <v-row>
                 <v-col class="mt-5 pb-0">
                   <strong
-                    >PRECIO POR {{ product.quantity_group }}
-                    {{ type_group.toUpperCase() }}</strong
+                    >PRECIO POR {{ product.quantity_group }} {{ type_group.toUpperCase() }}</strong
                   >
                   <div class="form-inline">
-                    <v-avatar
-                      color="#0D52D6"
-                      size="30"
-                      class="text-white mr-1 t-0"
-                    >
-                      {{ catalogue.coin == "soles" ? "S./" : "$" }}
+                    <v-avatar color="#0D52D6" size="30" class="text-white mr-1 t-0">
+                      {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
                     </v-avatar>
                     <p class="mt-4 ml-2 font-weight-bold">
                       {{ product.price_group | currency }}
@@ -112,12 +99,8 @@
                 <v-col class="mt-5 pb-0">
                   <strong>PRECIO UNITARIO</strong>
                   <div class="form-inline">
-                    <v-avatar
-                      color="#0D52D6"
-                      size="30"
-                      class="text-white mr-1 my-2"
-                    >
-                      {{ catalogue.coin == "soles" ? "S./" : "$" }}
+                    <v-avatar color="#0D52D6" size="30" class="text-white mr-1 my-2">
+                      {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
                     </v-avatar>
                     <p class="mt-3 ml-2">{{ product.price_unit | currency }}</p>
                   </div>
@@ -133,14 +116,16 @@
     </v-card>
   </v-dialog>
 </template>
-    </v-dialog>
-  </v-col>
-</template>
+
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex';
+import ZoomOnHover from './ZoomOnHover';
 
 export default {
-  props: ["product", "catalogue", "value"],
+  components: {
+    ZoomOnHover: ZoomOnHover,
+  },
+  props: ['product', 'catalogue', 'value'],
   data: () => ({
     quantity: 1,
     loading: false,
@@ -148,34 +133,34 @@ export default {
     model: 0,
   }),
   methods: {
-    ...mapActions("groupImport", ["addCart"]),
+    ...mapActions('groupImport', ['addCart']),
     showProduct(product) {
       this.$router.push({
-        name: "ProductDetail",
+        name: 'ProductDetail',
         params: {
-          type: "product",
+          type: 'product',
           sku: this.product.sku,
         },
       });
     },
     cartRoute() {
-      this.$router.push({ name: "cartGroupImport" });
+      this.$router.push({ name: 'cartGroupImport' });
     },
     cartView() {
       this.$router.push({
-        name: "cartGroupImport",
+        name: 'cartGroupImport',
       });
     },
   },
   filters: {
-    currency: function (value) {
+    currency: function(value) {
       return parseFloat(value).toFixed(2);
     },
-    date: function (value) {
-      return moment(value).format("YYYY-MM-DD");
+    date: function(value) {
+      return moment(value).format('YYYY-MM-DD');
     },
-    porcent: function (value) {
-      return parseFloat(value) * 100 + " %";
+    porcent: function(value) {
+      return parseFloat(value) * 100 + ' %';
     },
   },
   computed: {
@@ -184,11 +169,11 @@ export default {
         return this.value;
       },
       set(value) {
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
     },
     type_group() {
-      let valor = "";
+      let valor = '';
       if (this.product.quantity_group > 1) {
         valor = this.product.type_group;
       } else {
@@ -203,6 +188,7 @@ export default {
 };
 </script>
 <style scoped>
+@import '/css/zoomOnHover';
 .v-img--offset {
   top: -24px;
   position: relative;
@@ -211,6 +197,7 @@ export default {
   width: 100%;
 }
 </style>
-// <div class="mb-3 subtitle-1">
+//
+<div class="mb-3 subtitle-1">
 //           {{ catalogue.coin }} {{ product.price_group }}
 //         </div>

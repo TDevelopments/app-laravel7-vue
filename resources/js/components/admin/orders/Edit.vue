@@ -48,7 +48,7 @@
               <template v-slot:[`item.image`]="{ item }">
                 <div class="d-flex justify-center aling-center">
                   <v-img
-                    v-if="item.product.images == null || item.product.length == 0"
+                    v-if="item.product.images == null || item.product.images.length == 0"
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                     max-width="75"
                     max-height="75"
@@ -77,19 +77,21 @@
       </div>
 
       <v-row>
+        <v-col cols="12" md="2">
+          Imagen
+          <v-file-input accept="image/*" solo placeholder="Pago"></v-file-input>
+        </v-col>
         <v-col cols="12" md="3">
           Concepto
           <v-select
             :items="concept"
+            item-text="name"
+            item-value="id"
             menu-props="auto"
             hide-details
             prepend-inner-icon="mdi-map"
             solo
           ></v-select>
-        </v-col>
-        <v-col cols="12" md="2">
-          Monto
-          <v-text-field placeholder="0.00" solo type="number"> </v-text-field>
         </v-col>
         <v-col cols="12" md="2">
           <v-menu
@@ -113,13 +115,15 @@
           </v-menu>
         </v-col>
         <v-col cols="12" md="2">
-          Nro Orden
-          <v-text-field solo placeholder="120"> </v-text-field>
+          Monto
+          <v-text-field placeholder="0.00" solo type="number"> </v-text-field>
         </v-col>
         <v-col cols="12" md="2">
           Banco
           <v-select
             :items="bank"
+            item-value="id"
+            item-text="name"
             menu-props="auto"
             hide-details
             prepend-inner-icon="mdi-map"
@@ -167,8 +171,6 @@ export default {
         sortable: false,
       },
     ],
-    concept: ['Pago primer 40%', 'Pago primer 60%'],
-    bank: ['BCP', 'BBVA'],
     order: [],
     valid: true,
     product: [],
@@ -178,6 +180,10 @@ export default {
     user: {
       name: '',
     },
+    payment: {},
+    concept: [],
+    state: [],
+    bank: [],
   }),
   computed: {
     completeName() {
@@ -240,9 +246,44 @@ export default {
           // reject(error);
         });
     },
+    createPayment() {
+      console.log(this.payment);
+    },
+
+    getConcept() {
+      axios
+        .get('/api/v1/payment-concepts')
+        .then(response => {
+          this.concept = response.data;
+          console.log(response);
+        })
+        .catch(error => {});
+    },
+
+    getState() {
+      axios
+        .get('/api/v1/state-orders')
+        .then(response => {
+          this.state = response.data;
+          console.log(response);
+        })
+        .catch(error => {});
+    },
+    getBanks() {
+      axios
+        .get('/api/v1/banks')
+        .then(response => {
+          this.bank = response.data;
+          console.log(response);
+        })
+        .catch(error => {});
+    },
   },
   mounted() {
     this.getOrders();
+    this.getConcept();
+    this.getState();
+    this.getBanks();
   },
 };
 </script>

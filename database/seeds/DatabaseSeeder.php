@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleTableSeeder::class);
         $this->call(MeasureSeeder::class);
         $this->call(BankEntitySeeder::class);
+        $this->call(PaymentConceptSeeder::class);
+        $this->call(StateOrderSeeder::class);
 
         $user = User::create([
             'name' => 'George Miguel',

@@ -7,3 +7,6 @@ export function authStatus(state) {
 export function user(state) {
   return state.user;
 }
+export function errResponse(state) {
+  return state.err;
+}

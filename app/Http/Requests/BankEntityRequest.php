@@ -13,7 +13,7 @@ class BankEntityRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +25,7 @@ class BankEntityRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'short-_name' => ['required', 'string'],
+            'short_name' => ['required', 'string'],
         ];
     }
 }

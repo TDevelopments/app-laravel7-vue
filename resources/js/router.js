@@ -39,6 +39,21 @@ import ListMeasure from './components/admin/measure/List';
 import AddMeasure from './components/admin/measure/Add';
 import EditMeasure from './components/admin/measure/Edit';
 
+// Pages View CRUD Concept Payment
+import ListConcept from './components/admin/concept/List';
+import AddConcept from './components/admin/concept/Add';
+import EditConcept from './components/admin/concept/Edit';
+
+// Pages View CRUD State Payment
+import ListState from './components/admin/state/List';
+import AddState from './components/admin/state/Add';
+import EditState from './components/admin/state/Edit';
+
+// Pages View CRUD Banks
+import ListBank from './components/admin/bank/List';
+import AddBank from './components/admin/bank/Add';
+import EditBank from './components/admin/bank/Edit';
+
 // Pages View Orders
 import ListOrder from './components/admin/orders/List';
 import EditOrder from './components/admin/orders/Edit';
@@ -257,6 +272,54 @@ export default new Router({
           path: '/admin/orders/filter',
           name: 'filterOrder',
           component: FilterOrder,
+        },
+        // Concept
+        {
+          path: '/admin/concept',
+          name: 'listConcept',
+          component: ListConcept,
+        },
+        {
+          path: '/admin/concept/add',
+          name: 'addConcept',
+          component: AddConcept,
+        },
+        {
+          path: '/admin/concept/:id/edit',
+          name: 'editConcept',
+          component: EditConcept,
+        },
+        // Concept
+        {
+          path: '/admin/state',
+          name: 'listState',
+          component: ListState,
+        },
+        {
+          path: '/admin/state/add',
+          name: 'addState',
+          component: AddState,
+        },
+        {
+          path: '/admin/state/:id/edit',
+          name: 'editState',
+          component: EditState,
+        },
+        // Bank
+        {
+          path: '/admin/bank',
+          name: 'listBank',
+          component: ListBank,
+        },
+        {
+          path: '/admin/bank/add',
+          name: 'addBank',
+          component: AddBank,
+        },
+        {
+          path: '/admin/bank/:id/edit',
+          name: 'editBank',
+          component: EditBank,
         },
       ],
     },

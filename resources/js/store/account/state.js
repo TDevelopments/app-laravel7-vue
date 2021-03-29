@@ -1,7 +1,8 @@
 export default function() {
   return {
-    status: "",
-    token: localStorage.getItem("token") || "",
-    user: { roles: [] }
+    status: '',
+    token: localStorage.getItem('token') || '',
+    user: { roles: [] },
+    err: [],
   };
 }

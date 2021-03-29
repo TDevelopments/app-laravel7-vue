@@ -113,7 +113,13 @@
           <v-list-item link :to="{ name: 'listMeasure' }">
             <v-list-item-title>Unidades Comerciales</v-list-item-title>
           </v-list-item>
-          <v-list-item link :to="{ name: 'addMeasure' }">
+          <v-list-item link :to="{ name: 'listState' }">
+            <v-list-item-title>Estados de Orden</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'listConcept' }">
+            <v-list-item-title>Conceptos de Pago</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'listBank' }">
             <v-list-item-title>Bancos</v-list-item-title>
           </v-list-item>
         </v-list-group>
