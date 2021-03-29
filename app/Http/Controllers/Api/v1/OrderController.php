@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\StateOrder;
 use App\Models\Catalogue;
 use Illuminate\Http\Request;
+use App\Http\Resources\OrderResourceAdmin;
 use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\OrderRequest;
@@ -51,7 +52,7 @@ class OrderController extends Controller
         if ($request->query("orderId")) {
             $value = $request->query("orderId");
             $order = $this->order->where('id', 'like', "%$value%")->paginate();
-            return OrderResource::collection($order);
+            return OrderResourceAdmin::collection($order);
         }
         if ($request->query("username"))
         {
@@ -63,7 +64,7 @@ class OrderController extends Controller
                 $join->on('orders.user_id', '=', 'users.id')
                 ->where('users.name', 'like', "%$value2%");
             })->paginate();
-            return OrderResource::collection($order);
+            return OrderResourceAdmin::collection($order);
             
         }
         if ($request->query("stateOrder"))
@@ -75,9 +76,9 @@ class OrderController extends Controller
             if (count($consult) == 0)
                 return response()->json(['message' => "There is no state order with that name"]);
             $order = $this->order->where('state_order_id', $stateOrder->id)->paginate();
-            return OrderResource::collection($order);
+            return OrderResourceAdmin::collection($order);
         }   
-        return OrderResource::collection($this->order->paginate());
+        return OrderResourceAdmin::collection($this->order->paginate());
     }
 
     /**
@@ -167,7 +168,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return new OrderResource($order);
+        return new OrderResourceAdmin($order);
     }
 
     /**
@@ -180,13 +181,13 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $validator = Validator::make($request->all(), [
-            'status' => ['in:pending,paid,cancelled,separated,first_payment'],
+            'state_order_id' => ['required', 'integer', 'exists:App\Models\StateOrder,id'],
         ]);
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
-        $order->update([ 'status' => $request->status ]);
-        return new OrderResource($order);
+        $order->update(['state_order_id' => $request->state_order_id]);
+        return new OrderResourceAdmin($order);
     }
 
     /**
