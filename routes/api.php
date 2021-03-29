@@ -99,16 +99,17 @@ Route::group(['prefix' => 'v1'], function () {
         // StateOrder
         Route::get('state-orders', [StateOrderController::class, 'index']);
         Route::post('state-orders', [StateOrderController::class, 'store']);
-        Route::get('state-orders/{state-order}', [StateOrderController::class, 'show']);
-        Route::put('state-orders/{state-order}', [StateOrderController::class, 'update']);
-        Route::delete('state-orders/{state-order}', [StateOrderController::class, 'destroy']);
+        Route::get('state-orders/{state_order}', [StateOrderController::class, 'show']);
+        Route::put('state-orders/{state_order}', [StateOrderController::class, 'update']);
+        Route::delete('state-orders/{state_order}', [StateOrderController::class, 'destroy']);
 
         // PaymentConcept
-        Route::get('payment-concepts', [PaymentConceptController::class, 'index']);
-        Route::post('payment-concepts', [PaymentConceptController::class, 'store']);
-        Route::get('payment-concepts/{payment-concept}', [PaymentConceptController::class, 'show']);
-        Route::put('payment-concepts/{payment-concept}', [PaymentConceptController::class, 'update']);
-        Route::delete('payment-concepts/{payment-concept}', [PaymentConceptController::class, 'destroy']);
+        Route::apiResource('payment-concepts', 'Api\v1\PaymentConceptController');
+        // Route::get('payment-concepts', [PaymentConceptController::class, 'index']);
+        // Route::post('payment-concepts', [PaymentConceptController::class, 'store']);
+        // Route::get('payment-concepts/{payment_concept}', [PaymentConceptController::class, 'show']);
+        // Route::put('payment-concepts/{payment_concept}', [PaymentConceptController::class, 'update']);
+        // Route::delete('payment-concepts/{payment_concept}', [PaymentConceptController::class, 'destroy']);
         
         Route::post('products-massive', [ProductController::class, 'createMassive']);
         Route::post('product-ranges-massive', [ProductRangeController::class, 'createMassive']);

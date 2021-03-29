@@ -13,6 +13,11 @@ use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Hash;
 
+/**
+* @OA\Info(title="API Usuarios", version="1.0")
+*
+* @OA\Server(url="http://app.test")
+*/
 class UserController extends Controller
 {
     protected $user;
@@ -26,10 +31,19 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    * @OA\Get(
+    *     path="/api/v1/users",
+    *     summary="Mostrar usuarios",
+    *     @OA\Response(
+    *         response=200,
+    *         description="Mostrar todos los usuarios."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *     )
+    * )
+    */
     public function index(Request $request)
     {
         $request->user()->authorizeRoles(['admin']);

@@ -25,13 +25,14 @@ class OrderRequest extends FormRequest
     {
         return [
             'catalogue_id' => ['required','exists:App\Models\Catalogue,id'],
+            'state_order_id' => ['required', 'integer', 'exists:App\Models\StateOrder,id'],
             'products' => ['array'],
-            'products.*.product_id' => ['required', 'integer', 'exists:'],
+            'products.*.product_id' => ['required', 'integer', 'exists:App\Models\Product,id'],
             'products.*.quantity' => ['required', 'integer'],
             'product_ranges' => ['array'],
             'product_ranges.*.product_id' => ['required', 'integer', 'exists:App\Models\ProductRange,id'],
             'product_ranges.*.quantity' => ['required', 'integer'],
-            'status' => ['in:pending,paid,cancelled,separated,first_payment'],
-            
+            // 'status' => ['in:pending,paid,cancelled,separated,first_payment'],
+        ];
     }
 }

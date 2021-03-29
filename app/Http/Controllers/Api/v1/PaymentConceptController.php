@@ -45,9 +45,9 @@ class PaymentConceptController extends Controller
      * @param  \App\PaymentConcept  $concept
      * @return \Illuminate\Http\Response
      */
-    public function show(PaymentConcept $concept)
+    public function show(PaymentConcept $paymentConcept)
     {
-        return response()->json($concept, 200);
+        return response()->json($paymentConcept, 200);
     }
 
     /**
@@ -57,10 +57,10 @@ class PaymentConceptController extends Controller
      * @param  \App\PaymentConcept  $concept
      * @return \Illuminate\Http\Response
      */
-    public function update(PaymentConceptRequest $request, PaymentConcept $concept)
+    public function update(PaymentConceptRequest $request, PaymentConcept $paymentConcept)
     {
-        $concept->update($request->toArray());
-        return response()->json($concept, 200);
+        $paymentConcept->update($request->toArray());
+        return response()->json($paymentConcept, 200);
     }
 
     /**
@@ -69,9 +69,9 @@ class PaymentConceptController extends Controller
      * @param  \App\PaymentConcept  $concept
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PaymentConcept $concept)
+    public function destroy(PaymentConcept $paymentConcept)
     {
-        $concept->delete();
+        $paymentConcept->delete();
         return response()->json(null, 204);
     }
 }
