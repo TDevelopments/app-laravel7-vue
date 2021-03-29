@@ -3,7 +3,9 @@
     <v-app>
       <v-system-bar height="35" window color="#fff" class="px-0">
         <v-container class="px-0 m-page">
-          <v-btn small text class="text-capitalize"> <v-icon>mdi-home-outline</v-icon>Home</v-btn>
+          <v-btn small text class="text-capitalize" @click="welcomeRoute">
+            <v-icon>mdi-home-outline</v-icon>Home</v-btn
+          >
           <v-btn small text class="text-capitalize">
             <v-icon>mdi-information-outline</v-icon>Acerca</v-btn
           >
@@ -13,7 +15,7 @@
         </v-container>
       </v-system-bar>
       <v-app-bar dark color="blue-grey darken-1" class="hidden-xs-only p-page" max-height="64">
-        <v-toolbar-title @click="welcomeRoute">Bizzperu</v-toolbar-title>
+        <v-toolbar-title @click="catalogueRoute">Bizzperu</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
           <!-- <v-btn text @click="cartView">Carrito</v-btn> -->
@@ -209,6 +211,12 @@ export default {
     userRoute() {
       this.$router.push({
         name: 'UserSettingIG',
+      });
+      this.dialog = false;
+    },
+    catalogueRoute() {
+      this.$router.push({
+        name: 'homeGroupImport',
       });
       this.dialog = false;
     },

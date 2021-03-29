@@ -441,7 +441,6 @@ export default {
 
     // Peticion Add Images
     addImages() {
-      this.product.images = [];
       // Declaring Forma Data
       const data = new FormData();
       this.files.forEach((elements, index) => {

@@ -78,7 +78,7 @@
                 Colores:
                 <v-row>
                   <v-col cols="1" v-for="(color, index) in product.colors" :key="index">
-                    <v-avatar :color="color" size="15"> </v-avatar>
+                    <v-avatar :color="color" size="15" style="border: 1px solid black"> </v-avatar>
                   </v-col>
                 </v-row>
               </div>
@@ -106,10 +106,10 @@
                   </div>
                 </v-col>
               </v-row>
-              <v-col class="mt-5 pb-0 text-right pr-0">
-                <v-btn @click="show = false"> Cerrar </v-btn>
-              </v-col>
             </v-card-text>
+            <v-btn @click="show = false" style="position: absolute; right: 10px; bottom: 20px">
+              Cerrar
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-text>

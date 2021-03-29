@@ -33,15 +33,8 @@
                     >
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="closeDelete"
-                        >Cancel</v-btn
-                      >
-                      <v-btn
-                        color="blue darken-1"
-                        text
-                        @click="deleteItemConfirm"
-                        >OK</v-btn
-                      >
+                      <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                      <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
                       <v-spacer></v-spacer>
                     </v-card-actions>
                   </v-card>
@@ -52,23 +45,22 @@
               <v-img
                 max-height="50"
                 max-width="100"
-                :src="
-                  item.images.length != 0
-                    ? item.images[0].path
-                    : 'https://cdn.vuetifyjs.com/images/parallax/material.jpg'
-                "
-                v-if="item.images"
+                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                v-if="item.images == null || item.images.length == 0"
+                class="mt-1 mb-1 mx-auto"
+                contain
+              ></v-img>
+              <v-img
+                max-height="50"
+                max-width="100"
+                v-else
+                :src="item.images[0].path"
                 class="mt-1 mb-1 mx-auto"
                 contain
               ></v-img>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
-              <v-icon
-                small
-                class="mr-2"
-                @click="editItem(item)"
-                color="#D6B331"
-              >
+              <v-icon small class="mr-2" @click="editItem(item)" color="#D6B331">
                 mdi-pencil
               </v-icon>
               <v-icon small @click="deleteItem(item)" color="#FF0000">
@@ -78,11 +70,7 @@
           </v-data-table>
         </v-card>
         <div class="text-center pt-2">
-          <v-pagination
-            v-model="page0"
-            :length="pagination0"
-            @input="next0"
-          ></v-pagination>
+          <v-pagination v-model="page0" :length="pagination0" @input="next0"></v-pagination>
         </div>
       </v-tab-item>
       <v-tab-item>
@@ -129,11 +117,7 @@
                           Cancelar
                         </v-btn>
 
-                        <v-btn
-                          color="green darken-1"
-                          text
-                          @click="deleteItemConfirm"
-                        >
+                        <v-btn color="green darken-1" text @click="deleteItemConfirm">
                           Aceptar
                         </v-btn>
                       </v-card-actions>
@@ -162,12 +146,7 @@
                 ></v-img>
               </template>
               <template v-slot:[`item.actions`]="{ item }">
-                <v-icon
-                  small
-                  class="mr-2"
-                  @click="editItem(item)"
-                  color="#D6B331"
-                >
+                <v-icon small class="mr-2" @click="editItem(item)" color="#D6B331">
                   mdi-pencil
                 </v-icon>
                 <v-icon small @click="deleteItem(item)" color="black">
@@ -178,11 +157,7 @@
           </v-card>
         </v-card>
         <div class="text-center pt-2">
-          <v-pagination
-            v-model="page"
-            :length="pagination"
-            @input="next"
-          ></v-pagination>
+          <v-pagination v-model="page" :length="pagination" @input="next"></v-pagination>
         </div>
       </v-tab-item>
     </v-tabs-items>
@@ -197,98 +172,98 @@ export default {
     currentTab: 0,
     products: [],
     headers: [
-      { text: "Imagen", value: "images", align: "center", sortable: false },
+      { text: 'Imagen', value: 'images', align: 'center', sortable: false },
       {
-        text: "Modelo",
-        value: "model",
-        align: "center",
+        text: 'Modelo',
+        value: 'model',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Stock Meta",
-        value: "stock",
-        align: "center",
+        text: 'Stock Meta',
+        value: 'stock',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Marca",
-        value: "brand",
-        align: "center",
+        text: 'Marca',
+        value: 'brand',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Precio unitario",
-        value: "price_unit",
-        align: "center",
+        text: 'Precio unitario',
+        value: 'price_unit',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Cantidad por Producto",
-        value: "quantity_group",
-        align: "center",
+        text: 'Cantidad por Producto',
+        value: 'quantity_group',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Precio por Grupo (P)",
-        value: "price_group",
-        align: "center",
+        text: 'Precio por Grupo (P)',
+        value: 'price_group',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Typo de Grupo",
-        value: "type_group",
-        align: "center",
+        text: 'Typo de Grupo',
+        value: 'type_group',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Categoria",
-        value: "category.name",
-        align: "center",
+        text: 'Categoria',
+        value: 'category.name',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Catálogo",
-        value: "catalogue.name",
-        align: "center",
+        text: 'Catálogo',
+        value: 'catalogue.name',
+        align: 'center',
         sortable: false,
       },
-      { text: "Acciones", value: "actions", sortable: false, align: "center" },
+      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
     productForRange: [],
     headersProductForRange: [
-      { text: "Imagen", value: "images", align: "center", sortable: false },
+      { text: 'Imagen', value: 'images', align: 'center', sortable: false },
       {
-        text: "Modelo",
-        value: "model",
-        align: "center",
+        text: 'Modelo',
+        value: 'model',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Stock Meta",
-        value: "stock",
-        align: "center",
+        text: 'Stock Meta',
+        value: 'stock',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Marca",
-        value: "brand",
-        align: "center",
+        text: 'Marca',
+        value: 'brand',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Categoria",
-        value: "category.name",
-        align: "center",
+        text: 'Categoria',
+        value: 'category.name',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Catalogo",
-        value: "catalogue.name",
-        align: "center",
+        text: 'Catalogo',
+        value: 'catalogue.name',
+        align: 'center',
         sortable: false,
       },
-      { text: "Acciones", value: "actions", sortable: false, align: "center" },
-      { text: "", value: "data-table-expand", sortable: false },
+      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
+      { text: '', value: 'data-table-expand', sortable: false },
     ],
 
     expanded: [],
@@ -306,48 +281,48 @@ export default {
     getList() {
       if (this.page0 == 1) {
         axios
-          .get("/api/v1/products")
-          .then((response) => {
+          .get('/api/v1/products')
+          .then(response => {
             this.loading = false;
             this.products = response.data.data;
             this.pagination0 = response.data.meta.last_page;
           })
-          .catch((error) => {});
+          .catch(error => {});
       } else {
         axios
           .get(`/api/v1/products?page=${page}`)
-          .then((response) => {
+          .then(response => {
             this.loading = false;
             this.products = response.data.data;
             this.pagination = response.data.meta.last_page;
             console.log(response);
           })
-          .catch((error) => {});
+          .catch(error => {});
       }
     },
 
     getListForRange() {
       if (this.page == 1) {
         axios
-          .get("/api/v1/product-ranges")
-          .then((response) => {
+          .get('/api/v1/product-ranges')
+          .then(response => {
             this.loading = false;
             this.productForRange = response.data.data;
             this.pagination = response.data.meta.last_page;
             console.log(this.pagination);
             console.log(response);
           })
-          .catch((error) => {});
+          .catch(error => {});
       } else {
         axios
           .get(`/api/v1/product-ranges?page=${this.page}`)
-          .then((response) => {
+          .then(response => {
             this.loading = false;
             this.productForRange = response.data.data;
             this.pagination = response.data.meta.last_page;
             console.log(response);
           })
-          .catch((error) => {});
+          .catch(error => {});
       }
     },
 
@@ -365,19 +340,19 @@ export default {
       if (this.currentTab == 0) {
         axios
           .delete(`/api/v1/products/${this.idDeleteProduct}`)
-          .then((response) => {
+          .then(response => {
             this.getList();
             this.closeDelete();
           })
-          .catch((error) => {});
+          .catch(error => {});
       } else {
         axios
           .delete(`/api/v1/product-ranges/${this.idDeleteProductRange}`)
-          .then((response) => {
+          .then(response => {
             this.getListForRange();
             this.closeDelete();
           })
-          .catch((error) => {});
+          .catch(error => {});
       }
     },
 
@@ -388,14 +363,14 @@ export default {
     editItem(item) {
       if (this.currentTab == 0) {
         this.$router.push({
-          name: "editProduct",
+          name: 'editProduct',
           params: {
             id: item.id,
           },
         });
       } else {
         this.$router.push({
-          name: "editProductRange",
+          name: 'editProductRange',
           params: {
             id: item.id,
           },
@@ -405,35 +380,35 @@ export default {
     newProduct() {
       if (this.currentTab == 0) {
         this.$router.push({
-          name: "addProduct",
+          name: 'addProduct',
         });
       } else {
         this.$router.push({
-          name: "addProductRange",
+          name: 'addProductRange',
         });
       }
     },
     next(page) {
       axios
         .get(`/api/v1/product-ranges?page=${page}`)
-        .then((response) => {
+        .then(response => {
           this.loading = false;
           this.productForRange = response.data.data;
           this.pagination = response.data.meta.last_page;
           console.log(response);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     next0(page) {
       axios
         .get(`/api/v1/products?page=${page}`)
-        .then((response) => {
+        .then(response => {
           this.loading = false;
           this.products = response.data.data;
           this.pagination = response.data.meta.last_page;
           console.log(response);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
   },
   computed: {},

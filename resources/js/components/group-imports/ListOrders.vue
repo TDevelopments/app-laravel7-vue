@@ -45,12 +45,17 @@
               <v-tab> Pagos </v-tab>
             </v-tabs>
             <v-tabs-items v-model="currentTab">
-              <v-tab-item>
+              <v-tab-item v-if="order.orderDetails.length == 0 || order.orderDetails == null">
+                No se encontraron pedidos
+              </v-tab-item>
+              <v-tab-item v-else>
+                <br />
+                <br />
                 <v-data-table
                   :items="order.orderDetails"
                   :headers="orderHeaders"
                   dense
-                  class="hidden-xs-only"
+                  class="hidden-xs-only "
                 >
                   <template v-slot:[`item.image`]="{ item }">
                     <div class="d-flex justify-center aling-center">
@@ -147,7 +152,14 @@
                   </template>
                 </v-data-table>
               </v-tab-item>
-              <v-tab-item>
+              <v-tab-item v-if="order.payment.length == 0 || order.payment == null">
+                <br />
+                <br />
+                No se encontraron pagos hechos.
+              </v-tab-item>
+              <v-tab-item v-else>
+                <br />
+                <br />
                 <v-data-table
                   :items="order.payment"
                   :headers="paymentHeaders"
