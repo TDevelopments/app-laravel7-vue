@@ -48,7 +48,7 @@ export default {
     },
     updateState() {
       axios
-        .put('/api/v1/state-orders', this.state)
+        .put(`/api/v1/state-orders/${this.$route.params.id}`, this.state)
         .then(response => {
           this.$router.replace({ name: 'listState' });
         })

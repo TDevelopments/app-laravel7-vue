@@ -3,7 +3,7 @@
     <v-container>
       <v-row class="mt-5 justify-space-around align-center">
         <v-col cols="12" sm="12" md="5" lg="5">
-          <v-card class="mx-auto rounded-xl" max-width="450" elevation="12">
+          <v-card class="mx-auto rounded-xl" max-width="450" elevation="12" @click="showCatalogues">
             <v-img src="/images/import.jpg"> </v-img>
             <v-card-title>
               <div class="mx-auto" style="text-align: justify">
@@ -33,6 +33,8 @@
 
             <v-card-text class="font-weight-bold px-5 py-5">
               "Productos a la venta por mayor. Listos para recojer o enviar."
+              <br />
+              <br />
             </v-card-text>
             <v-card-actions>
               <v-btn color="blue" class="mx-auto" dark rounded> Ingresar </v-btn>

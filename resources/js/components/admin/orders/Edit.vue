@@ -17,9 +17,9 @@
             Estado de Orden
             <v-select
               v-model="order.status"
-              :items="states"
+              :items="state"
               item-text="name"
-              item-value="send"
+              item-value="id"
               menu-props="auto"
               hide-details
               prepend-inner-icon="mdi-credit-card"
@@ -28,7 +28,7 @@
           </v-col>
           <v-col cols="12" sm="6" md="6">
             Nombre de Cliente
-            <v-text-field v-model="completeName" solo required readonly></v-text-field>
+            <v-text-field v-model="user.name" solo required readonly></v-text-field>
           </v-col>
         </v-row>
       </v-form>
@@ -70,79 +70,90 @@
       </v-expansion-panels>
       <br /><br />
       <div class="d-flex">
-        <h4 class="mt-5">Añadir Pago</h4>
-        <v-btn color="black" fab x-small class="mt-4 ml-3" dark>
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        <h4 class="mt-5">Pagos</h4>
       </div>
-
-      <v-row>
-        <v-col cols="12" md="2">
-          Imagen
-          <v-file-input accept="image/*" solo placeholder="Pago"></v-file-input>
-        </v-col>
-        <v-col cols="12" md="3">
-          Concepto
-          <v-select
-            :items="concept"
-            item-text="name"
-            item-value="id"
-            menu-props="auto"
-            hide-details
-            prepend-inner-icon="mdi-map"
-            solo
-          ></v-select>
-        </v-col>
-        <v-col cols="12" md="2">
-          <v-menu
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              Fecha
-              <v-text-field
-                prepend-inner-icon="mdi-calendar"
-                solo
-                v-bind="attrs"
-                v-on="on"
-                placeholder="2001-02-03"
-              ></v-text-field>
-            </template>
-            <v-date-picker @input="input.calendar = false"></v-date-picker>
-          </v-menu>
-        </v-col>
-        <v-col cols="12" md="2">
-          Monto
-          <v-text-field placeholder="0.00" solo type="number"> </v-text-field>
-        </v-col>
-        <v-col cols="12" md="2">
-          Banco
-          <v-select
-            :items="bank"
-            item-value="id"
-            item-text="name"
-            menu-props="auto"
-            hide-details
-            prepend-inner-icon="mdi-map"
-            solo
-            placeholder="Selecciona"
-          ></v-select>
-        </v-col>
-        <v-col cols="1" md="1" class="text-center">
-          <v-btn color="error" fab x-small class="mt-5" elevation="2">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-      <div class="text-center"></div>
+      <div v-for="(paymentG, index) in payments" :key="index">
+        <v-row>
+          <v-col cols="12" md="2">
+            Imagen
+            <v-file-input
+              accept="image/png, image/jpeg"
+              prepend-icon="mdi-camera"
+              solo
+              multiple
+              placeholder="Pago"
+              v-model="paymentG.image_upload"
+              @change="addImages(paymentG.image_upload, index)"
+              @click="addImages(paymentG.image_upload, index)"
+            ></v-file-input>
+          </v-col>
+          <v-col cols="12" md="3">
+            Concepto
+            <v-select
+              v-model="paymentG.payment_concept_id"
+              :items="concept"
+              item-text="name"
+              item-value="id"
+              menu-props="auto"
+              hide-details
+              prepend-inner-icon="mdi-map"
+              solo
+            ></v-select>
+          </v-col>
+          <v-col cols="12" md="2">
+            <v-menu
+              v-model="paymentG.calendar"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                Fecha de Pago
+                <v-text-field
+                  v-model="paymentG.payment_date"
+                  prepend-inner-icon="mdi-calendar"
+                  solo
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="paymentG.payment_date"
+                @input="paymentG.calendar = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="12" md="1">
+            Monto
+            <v-text-field v-model="paymentG.mount" placeholder="0.00" solo type="number">
+            </v-text-field>
+          </v-col>
+          <v-col cols="12" md="2">
+            Banco
+            <v-select
+              v-model="paymentG.bank_entity_id"
+              :items="bank"
+              item-value="id"
+              item-text="name"
+              menu-props="auto"
+              hide-details
+              prepend-inner-icon="mdi-map"
+              solo
+              placeholder="Selecciona"
+            ></v-select>
+          </v-col>
+        </v-row>
+      </div>
     </v-card-text>
+    <v-btn @click="validate">Guardar</v-btn>
   </v-card>
 </template>
 <script>
 import axios from 'axios';
+import moment from 'moment';
+
 export default {
   data: () => ({
     headers: [
@@ -180,7 +191,7 @@ export default {
     user: {
       name: '',
     },
-    payment: {},
+    payments: [],
     concept: [],
     state: [],
     bank: [],
@@ -189,37 +200,34 @@ export default {
     completeName() {
       return this.user.name;
     },
-    states() {
-      let s = [
-        {
-          name: 'Pendiente',
-          send: 'pending',
-        },
-        {
-          name: 'Separado',
-          send: 'separated',
-        },
-        {
-          name: 'Primer Pago del ' + this.catalogue.first_payment + ' %',
-          send: 'first_payment',
-        },
-        {
-          name: 'Segundo Pago del ' + this.catalogue.second_payment + ' %',
-          send: 'second_payment',
-        },
-        {
-          name: 'Pago Completado',
-          send: 'paid',
-        },
-        {
-          name: 'Anulado',
-          send: 'cancelled',
-        },
-      ];
-      return s;
-    },
   },
   methods: {
+    validate() {
+      this.addPayment();
+    },
+    addImages(images, id) {
+      const data = new FormData();
+      images.forEach((elements, index) => {
+        data.append(`image_uploads[${index}]`, elements);
+      });
+
+      axios
+        .post(`/api/v1/uploads`, data, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(response => {
+          this.payments[id].image = response.data[0];
+          console.log('aqui', response.data[0]);
+        })
+        .catch(error => {
+          console.log(error);
+          // reject(error);
+        });
+    },
+
     editOrders() {
       axios
         .get('/api/v1/orders', this.user)
@@ -231,6 +239,21 @@ export default {
           // reject(error);
         });
     },
+
+    addPayment() {
+      let ultimo = this.payments.length - 1;
+      axios
+        .post(`/api/v1/orders/${this.$route.params.id}/payments`, this.payments[ultimo])
+        .then(response => {
+          console.log(response);
+          this.getOrders();
+        })
+        .catch(error => {
+          console.log(error);
+          // reject(error);
+        });
+    },
+
     getOrders() {
       axios
         .get(`/api/v1/orders/${this.$route.params.id}`)
@@ -240,6 +263,16 @@ export default {
           this.order = response.data.data;
           this.user = response.data.data.user;
           this.catalogue = response.data.data.catalogue;
+          this.payments = response.data.data.payment;
+          this.payments.push({
+            mount: '',
+            payment_date: '',
+            image: [],
+            image_upload: [],
+            payment_concept_id: '',
+            bank_entity_id: '',
+          });
+          console.log(this.payments);
         })
         .catch(error => {
           console.log(error);

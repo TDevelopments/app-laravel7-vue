@@ -48,7 +48,7 @@ export default {
     },
     updateConcept() {
       axios
-        .put('/api/v1/payment-concepts', this.concept)
+        .put(`/api/v1/payment-concepts/${this.$route.params.id}`, this.concept)
         .then(response => {
           this.$router.replace({ name: 'listConcept' });
         })

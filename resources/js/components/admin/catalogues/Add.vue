@@ -294,7 +294,7 @@ export default {
     inputs: [
       {
         calendar: false,
-        city: 'Arequipa',
+        city: 'Lima',
         arrival_date: new Date().toISOString().substr(0, 10),
       },
     ],

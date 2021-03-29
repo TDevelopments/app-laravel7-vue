@@ -7,7 +7,10 @@
         <v-expansion-panel v-for="order in orders" :key="order.id">
           <v-expansion-panel-header>
             <v-row class="d-flex d-flex justify-space-between align-center">
-              <v-col cols="4" class="pr-0"> Pedido de {{ order.catalogue.name }} </v-col>
+              <v-col cols="4" class="pr-0">
+                Pedido de {{ order.catalogue.name }} <br />
+                Nro. Pedido {{ order.id }}
+              </v-col>
               <v-col cols="4" class="d-flex justify-center align-center">
                 <v-row>
                   <v-col class="p-0 pb-1 pr-2 d-flex justify-end align-center text-center">
@@ -37,103 +40,195 @@
             </template>
           </v-expansion-panel-header>
           <v-expansion-panel-content style="padding: 0 0 0 0 !important">
-            <v-data-table
-              :items="order.orderDetails"
-              :headers="orderHeaders"
-              dense
-              class="hidden-xs-only"
-            >
-              <template v-slot:[`item.image`]="{ item }">
-                <div class="d-flex justify-center aling-center">
-                  <v-img
-                    v-if="item.product.images == null || item.product.images.length == 0"
-                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    max-width="150"
-                    max-height="150"
-                    contain
-                    class="m-1 my-5"
-                  />
-                  <v-img
-                    v-else
-                    contain
-                    :src="item.product.images[0].path"
-                    max-width="150"
-                    class="text-center align-center my-5"
-                  />
-                </div>
-              </template>
-              <template v-slot:[`item.quantity`]="{ item }">
-                {{ item.quantity }}
-                <div class="text-capitalize">{{ item.product.type_group }}</div>
-              </template>
-              <template v-slot:[`item.price`]="{ item }">
-                {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
-                {{ item.price | currency }}
-              </template>
-              <template v-slot:[`item.total`]="{ item }">
-                {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
-                {{ item.total | currency }}
-              </template>
-              <template v-slot:[`item.button`]="{ item }">
-                <v-btn small class="my-5" @click="prueba(item.product)">Ver Mas</v-btn>
-              </template>
-            </v-data-table>
-            <v-data-table
-              :items="order.orderDetails"
-              :headers="orderHeaders"
-              dense
-              class="hidden-sm-and-up"
-              disable-pagination
-              hide-default-footer
-            >
-              <template v-slot:item="props">
-                <tr class="mt-5 bb">
-                  <td class="px-0">
+            <v-tabs v-model="currentTab" centered>
+              <v-tab> Productos </v-tab>
+              <v-tab> Pagos </v-tab>
+            </v-tabs>
+            <v-tabs-items v-model="currentTab">
+              <v-tab-item>
+                <v-data-table
+                  :items="order.orderDetails"
+                  :headers="orderHeaders"
+                  dense
+                  class="hidden-xs-only"
+                >
+                  <template v-slot:[`item.image`]="{ item }">
                     <div class="d-flex justify-center aling-center">
                       <v-img
-                        v-if="
-                          props.item.product.images == null || props.item.product.images.length == 0
-                        "
+                        v-if="item.product.images == null || item.product.images.length == 0"
                         src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="75"
-                        max-height="75"
+                        max-width="150"
+                        max-height="150"
                         contain
                         class="m-1 my-5"
                       />
                       <v-img
                         v-else
                         contain
-                        :src="props.item.product.images[0].path"
-                        max-width="75"
+                        :src="item.product.images[0].path"
+                        max-width="150"
                         class="text-center align-center my-5"
                       />
                     </div>
-                  </td>
-                  <td class="px-0 py-5">
-                    <div class="d-flex">
-                      <strong>Modelo: </strong> {{ props.item.product.model }}
+                  </template>
+                  <template v-slot:[`item.quantity`]="{ item }">
+                    {{ item.quantity }}
+                    <div class="text-capitalize">{{ item.product.type_group }}</div>
+                  </template>
+                  <template v-slot:[`item.price`]="{ item }">
+                    {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
+                    {{ item.price | currency }}
+                  </template>
+                  <template v-slot:[`item.total`]="{ item }">
+                    {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
+                    {{ item.total | currency }}
+                  </template>
+                  <template v-slot:[`item.button`]="{ item }">
+                    <v-btn small class="my-5" @click="prueba(item.product)">Ver Mas</v-btn>
+                  </template>
+                </v-data-table>
+                <v-data-table
+                  :items="order.orderDetails"
+                  :headers="orderHeaders"
+                  dense
+                  class="hidden-sm-and-up"
+                  disable-pagination
+                  hide-default-footer
+                >
+                  <template v-slot:item="props">
+                    <tr class="mt-5 bb">
+                      <td class="px-0">
+                        <div class="d-flex justify-center aling-center">
+                          <v-img
+                            v-if="
+                              props.item.product.images == null ||
+                                props.item.product.images.length == 0
+                            "
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="75"
+                            max-height="75"
+                            contain
+                            class="m-1 my-5"
+                          />
+                          <v-img
+                            v-else
+                            contain
+                            :src="props.item.product.images[0].path"
+                            max-width="75"
+                            class="text-center align-center my-5"
+                          />
+                        </div>
+                      </td>
+                      <td class="px-0 py-5">
+                        <div class="d-flex">
+                          <strong>Modelo: </strong> {{ props.item.product.model }}
+                        </div>
+                        <div class="d-flex">
+                          <strong>Cant.</strong>
+                          {{ props.item.quantity }}
+                        </div>
+                        <div class="d-flex">
+                          <strong>P.U: </strong>
+                          {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
+                          {{ props.item.price | currency }}
+                        </div>
+                        <div class="d-flex">
+                          <strong>Tot.Prod: </strong>
+                          {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
+                          {{ props.item.total | currency }}
+                        </div>
+                      </td>
+                      <td class="px-0">
+                        <v-btn small class="my-5" @click="prueba(props.item.product)"
+                          >Ver Mas</v-btn
+                        >
+                      </td>
+                    </tr>
+                  </template>
+                </v-data-table>
+              </v-tab-item>
+              <v-tab-item>
+                <v-data-table
+                  :items="order.payment"
+                  :headers="paymentHeaders"
+                  disable-pagination
+                  hide-default-footer
+                  dense
+                  class="hidden-xs-only"
+                >
+                  <template v-slot:[`item.image`]="{ item }">
+                    <div class="d-flex justify-center aling-center">
+                      <v-img
+                        v-if="item.image == null || !item.image"
+                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                        max-width="150"
+                        max-height="150"
+                        contain
+                        class="m-1 my-5"
+                      />
+                      <v-img
+                        v-else
+                        contain
+                        :src="item.image.path"
+                        max-width="150"
+                        class="text-center align-center my-5"
+                      />
                     </div>
-                    <div class="d-flex">
-                      <strong>Cant.</strong>
-                      {{ props.item.quantity }}
-                    </div>
-                    <div class="d-flex">
-                      <strong>P.U: </strong>
-                      {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
-                      {{ props.item.price | currency }}
-                    </div>
-                    <div class="d-flex">
-                      <strong>Tot.Prod: </strong>
-                      {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
-                      {{ props.item.total | currency }}
-                    </div>
-                  </td>
-                  <td class="px-0">
-                    <v-btn small class="my-5" @click="prueba(props.item.product)">Ver Mas</v-btn>
-                  </td>
-                </tr>
-              </template>
-            </v-data-table>
+                  </template>
+                  <template v-slot:[`item.mount`]="{ item }">
+                    {{ item.mount | currency }}
+                  </template>
+                  <template v-slot:[`item.payment_date`]="{ item }">
+                    {{ item.payment_date | date }}
+                  </template>
+                </v-data-table>
+                <v-data-table
+                  :items="order.payment"
+                  :headers="paymentHeaders"
+                  dense
+                  class="hidden-sm-and-up"
+                  disable-pagination
+                  hide-default-footer
+                >
+                  <template v-slot:item="props">
+                    <tr class="mt-5 bb">
+                      <td class="px-0">
+                        <div class="d-flex justify-center aling-center">
+                          <v-img
+                            v-if="props.item.image == null || !props.item.image"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="150"
+                            max-height="150"
+                            contain
+                            class="m-1 my-5"
+                          />
+                          <v-img
+                            v-else
+                            contain
+                            :src="props.item.image.path"
+                            max-width="150"
+                            class="text-center align-center my-5"
+                          />
+                        </div>
+                      </td>
+                      <td class="py-5">
+                        <div class="d-flex">
+                          <strong>Monto: </strong> {{ props.item.mount | currency }}
+                        </div>
+                        <div class="d-flex">
+                          <strong>Fecha:.</strong>
+                          {{ props.item.payment_date | date }}
+                        </div>
+                        <!-- <div class="d-flex">
+                          <strong>Banco:.</strong>
+                          {{ props.item.bank_entity_id }}
+                        </div> -->
+                      </td>
+                    </tr>
+                  </template>
+                </v-data-table>
+              </v-tab-item>
+            </v-tabs-items>
           </v-expansion-panel-content>
           <Product
             v-model="showScheduleForm"
@@ -149,6 +244,7 @@
 </template>
 <script>
 import Product from './product';
+import moment from 'moment';
 export default {
   components: {
     Product,
@@ -161,6 +257,7 @@ export default {
     itemSelected: null,
     panel: 0,
     orders: [],
+    currentTab: 0,
     orderHeaders: [
       {
         text: 'Imagen',
@@ -198,6 +295,32 @@ export default {
         align: 'center',
         sortable: false,
       },
+    ],
+    paymentHeaders: [
+      {
+        text: 'Imagen',
+        value: 'image',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Monto',
+        value: 'mount',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Fecha de pago',
+        value: 'payment_date',
+        align: 'center',
+        sortable: false,
+      },
+      // {
+      //   text: 'Banco',
+      //   value: 'bank_entity_id',
+      //   align: 'center',
+      //   sortable: false,
+      // },
     ],
   }),
   methods: {

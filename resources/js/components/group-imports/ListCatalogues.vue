@@ -20,7 +20,7 @@
               class="m-1"
             />
             <v-img v-else contain :src="item.image.path" height="400px" />
-            <v-card-title class="justify-center py-0">
+            <v-card-title class="justify-center py-3">
               <v-btn color="#0D52D6" @click="showProduct(item)" rounded dark>
                 Ver Productos
               </v-btn>

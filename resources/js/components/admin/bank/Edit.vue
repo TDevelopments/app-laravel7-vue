@@ -58,7 +58,7 @@ export default {
     },
     updateBank() {
       axios
-        .put('/api/v1/banks', this.bank)
+        .put(`/api/v1/banks/${this.$route.params.id}`, this.bank)
         .then(response => {
           this.$router.replace({ name: 'listBank' });
         })
