@@ -81,6 +81,7 @@
               prepend-icon="mdi-camera"
               solo
               multiple
+              dense
               placeholder="Pago"
               v-model="paymentG.image_upload"
               @change="addImages(paymentG.image_upload, index)"
@@ -93,6 +94,7 @@
               v-model="paymentG.payment_concept_id"
               :items="concept"
               item-text="name"
+              dense
               item-value="id"
               menu-props="auto"
               hide-details
@@ -105,6 +107,7 @@
               v-model="paymentG.calendar"
               :close-on-content-click="false"
               :nudge-right="40"
+              dense
               transition="scale-transition"
               offset-y
               min-width="auto"
@@ -115,6 +118,7 @@
                   v-model="paymentG.payment_date"
                   prepend-inner-icon="mdi-calendar"
                   solo
+                  dense
                   v-bind="attrs"
                   v-on="on"
                 ></v-text-field>
@@ -127,7 +131,7 @@
           </v-col>
           <v-col cols="12" md="1">
             Monto
-            <v-text-field v-model="paymentG.mount" placeholder="0.00" solo type="number">
+            <v-text-field v-model="paymentG.mount" dense placeholder="0.00" solo type="number">
             </v-text-field>
           </v-col>
           <v-col cols="12" md="2">
@@ -135,6 +139,7 @@
             <v-select
               v-model="paymentG.bank_entity_id"
               :items="bank"
+              dense
               item-value="id"
               item-text="name"
               menu-props="auto"
