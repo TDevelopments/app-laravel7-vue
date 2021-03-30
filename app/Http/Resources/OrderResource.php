@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\OrderDetailResource;
+use App\Http\Resources\PaymentResource;
 
 class OrderResource extends JsonResource
 {
@@ -24,7 +25,7 @@ class OrderResource extends JsonResource
             'state_order' => $this->stateOrder,
             'orderDetails' => OrderDetailResource::collection($this->orderDetails),
             'total_order' => $this->orderDetails->sum('total'),
-            'payment' => $this->payments,
+            'payment' => PaymentResource::collection($this->payments),
         ];
     }
 }
