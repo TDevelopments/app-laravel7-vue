@@ -111,6 +111,7 @@ Route::group(['prefix' => 'v1'], function () {
         // Route::put('payment-concepts/{payment_concept}', [PaymentConceptController::class, 'update']);
         // Route::delete('payment-concepts/{payment_concept}', [PaymentConceptController::class, 'destroy']);
         
+        // Product and Product Range massive
         Route::post('products-massive', [ProductController::class, 'createMassive']);
         Route::post('product-ranges-massive', [ProductRangeController::class, 'createMassive']);
 
@@ -123,11 +124,12 @@ Route::group(['prefix' => 'v1'], function () {
         // Route::post('catalogues/{catalogue}/arrivals/multiple', [ArrivalController::class, 'create']);
         // Route::put('arrivals/{arrival}', [ArrivalController::class, 'update']);
         Route::delete('arrivals', [ArrivalController::class, 'destroy']);
-        Route::post('product-ranges/{product_range}/ranges', [RangeController::class, 'store']);
         // Route::put('ranges/{range}', [RangeController::class, 'update']);
         // Route::delete('ranges/{range}', [RangeController::class, 'destroy']);
+
+        // Ranges
+        Route::post('product-ranges/{product_range}/ranges', [RangeController::class, 'store']);
         Route::delete('ranges', [RangeController::class, 'destroy']);
-        // Route::delete('catalogues/{catalogue}/arrivals/{arrival}', [ArrivalController::class, 'destroy']);
         
         // Orders
         Route::get('orders', [OrderController::class, 'index']);
@@ -136,13 +138,13 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('orders/{order}', [OrderController::class, 'show']);
         Route::delete('orders/{order}', [OrderController::class, 'destroy']);
 
-        Route::post('orders/{order}/order-details', [OrderDetailController::class, 'store']);
 
         // Payments
         Route::post('orders/{order}/payments', [PaymentController::class, 'store']);
         Route::delete('payments', [PaymentController::class, 'destroy']);
         
-        
+        // Order Details
+        Route::post('orders/{order}/order-details', [OrderDetailController::class, 'store']);
         Route::delete('order-details', [OrderDetailController::class, 'destroy']);
         
         // Image
