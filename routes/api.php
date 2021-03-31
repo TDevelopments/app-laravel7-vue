@@ -41,7 +41,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('signup', [AuthController::class, 'signup']);
     Route::get('catalogues-availables', [CatalogueController::class, 'availables']);
     Route::get('banks', [BankEntityController::class, 'index']);
-    Route::get('advisers', [BankEntityController::class, 'index']);
+    Route::get('advisers', [AdviserController::class, 'index']);
     
     // Las siguientes rutas además del prefijo requieren que el usuario tenga un token válido
     Route::group(['middleware' => ['cors', 'auth:api', 'json.response']], function() {
