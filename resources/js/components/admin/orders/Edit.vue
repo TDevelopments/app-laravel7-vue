@@ -65,7 +65,7 @@
                 </div>
               </template>
               <template v-slot:[`item.actions`]="{ item, index }">
-                <v-icon @click="deleteProducts(item.product.id, index)">mdi-delete</v-icon>
+                <v-icon @click="deleteProducts(item.id, index)">mdi-delete</v-icon>
               </template>
               <template v-slot:[`item.quantity`]="{ item }">
                 <v-text-field
@@ -373,7 +373,9 @@ export default {
     deleteItems() {
       axios
         .delete(`/api/v1/order-details`, {
-          order_details: this.idDelete,
+          data: {
+            order_details: this.idDelete,
+          },
         })
         .then(response => {
           console.log(response);

@@ -12,12 +12,74 @@
         <v-row>
           <v-col cols="12" sm="12" md="6" lg="6">
             <div class="text-center">
-              <ZoomOnHover
-                img-normal="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                v-if="product.images == null || product.images.length == 0"
-              ></ZoomOnHover>
-
-              <ZoomOnHover :img-normal="product.images[model].path" v-else></ZoomOnHover>
+              <v-zoomer
+                ref="zoomer"
+                style="width: 100%; height: 100%;"
+                :max-scale="10"
+                :zooming-elastic="false"
+                :zoomed.sync="zoomed"
+              >
+                <v-hover v-slot="{ hover }">
+                  <v-img
+                    contain
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="550"
+                    max-height="550"
+                    v-if="product.images == null || product.images.length == 0"
+                    class="text-center align-center"
+                  >
+                    <v-btn
+                      v-if="hover"
+                      color="#0D52D6"
+                      fab
+                      small
+                      dark
+                      @click="$refs.zoomer.zoomIn()"
+                    >
+                      <v-icon>mdi-magnify-plus</v-icon>
+                    </v-btn>
+                    <v-btn
+                      v-if="hover"
+                      color="#0D52D6"
+                      fab
+                      small
+                      dark
+                      @click="$refs.zoomer.zoomOut()"
+                    >
+                      <v-icon>mdi-magnify-minus</v-icon>
+                    </v-btn>
+                  </v-img>
+                  <v-img
+                    contain
+                    :src="product.images[model].path"
+                    v-else
+                    max-width="550"
+                    max-height="550"
+                    class="text-center align-center"
+                  >
+                    <v-btn
+                      v-if="hover"
+                      color="#0D52D6"
+                      fab
+                      small
+                      dark
+                      @click="$refs.zoomer.zoomIn()"
+                    >
+                      <v-icon>mdi-magnify-plus</v-icon>
+                    </v-btn>
+                    <v-btn
+                      v-if="hover"
+                      color="#0D52D6"
+                      fab
+                      small
+                      dark
+                      @click="$refs.zoomer.zoomOut()"
+                    >
+                      <v-icon>mdi-magnify-minus</v-icon>
+                    </v-btn>
+                  </v-img>
+                </v-hover>
+              </v-zoomer>
             </div>
             <v-sheet class="mx-auto" max-width="800">
               <v-slide-group v-model="model" show-arrows>
@@ -27,8 +89,8 @@
                 >
                   <v-img
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    max-width="120"
-                    height="90"
+                    max-width="90"
+                    max-height="90"
                     contain
                     class="m-1"
                     @click="toggle"
