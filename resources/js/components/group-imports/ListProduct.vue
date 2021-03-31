@@ -205,14 +205,14 @@
           </li>
         </ul>
       </v-col>
-      <v-row>
+      <v-row class="my-3">
         <v-col v-for="(item, index) in adviser" :key="index" class="px-0 text-center mx-1">
           <div class="text-h6">Asesor {{ index + 1 }}</div>
-          <v-btn x-large color="teal lighten-2" rounded @click="goToLink(item.link)">
+          <v-btn x-large color="#00E676" rounded @click="goToLink(item.link)" elevation="12">
             {{ item.name }}
             <br />
             {{ item.phone }}
-            <v-icon class="ml-2">mdi-open-in-new</v-icon>
+            <v-icon class="ml-2">mdi-whatsapp</v-icon>
           </v-btn>
         </v-col>
       </v-row>
@@ -243,6 +243,93 @@
                 disable-pagination
                 v-if="catalogue.products.length != 0"
               >
+                <template v-slot:item="props">
+                  <tr class="style-table-th">
+                    <td>
+                      <v-checkbox
+                        :input-value="props.isSelected"
+                        @change="props.select($event)"
+                        hide-details
+                        style="display: block"
+                        class="px-0 mx-0"
+                      ></v-checkbox>
+                    </td>
+                    <td class="style-table-td">
+                      <v-row class="d-flex align-center justify-center">
+                        <v-col cols="1">
+                          <strong>{{ props.index + 1 }}</strong>
+                        </v-col>
+                        <v-col cols="9">
+                          <v-img
+                            v-if="props.item.images == null || props.item.images.length == 0"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="200"
+                            max-height="200"
+                            contain
+                            class="m-1 my-5"
+                          />
+                          <v-img
+                            v-else
+                            contain
+                            :src="props.item.images[0].path"
+                            max-width="200"
+                            class="text-center align-center my-5"
+                          />
+                        </v-col>
+                      </v-row>
+                    </td>
+                    <td class="style-table-td">
+                      {{ props.item.model }}
+                      <br />
+                      <v-btn small class="mt-2 mx-2" @click="prueba(props.item)">
+                        Ver Mas
+                      </v-btn>
+                    </td>
+                    <td class="style-table-td">
+                      {{ props.item.brand }}
+                    </td>
+                    <td class="style-table-td">
+                      {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                      {{ props.item.price_unit | currency }}
+                    </td>
+                    <td class="style-table-td">
+                      {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                      {{ props.item.price_group | currency }}
+                    </td>
+                    <td class="style-table-td">
+                      {{ props.item.quantity_group + ' ' }}
+                      <br />
+                      {{ props.item.type_group }}
+                    </td>
+                    <td class="style-table-td pr-5">
+                      <div class="form-inline justify-content-center">
+                        <v-btn
+                          @click="minusFunction(props.item, index)"
+                          color="secondary"
+                          fab
+                          x-small
+                          elevation="1"
+                        >
+                          <v-icon>mdi-minus</v-icon>
+                        </v-btn>
+                        <input
+                          type="text"
+                          class="w mx-2 text-center"
+                          v-model="props.item.quantity"
+                        />
+                        <v-btn
+                          @click="plusFunctionO(props.index)"
+                          color="secondary"
+                          fab
+                          elevation="1"
+                          x-small
+                        >
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
                 <template v-slot:[`item.images`]="{ item, index }">
                   <v-row class="d-flex align-center justify-center">
                     <v-col cols="1">
@@ -252,8 +339,6 @@
                       <v-img
                         v-if="item.images == null || item.images.length == 0"
                         src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="150"
-                        max-height="150"
                         contain
                         class="m-1 my-5"
                       />
@@ -261,7 +346,6 @@
                         v-else
                         contain
                         :src="item.images[0].path"
-                        max-width="150"
                         class="text-center align-center my-5"
                       />
                     </v-col>
@@ -1173,7 +1257,17 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
-
+.style-table-th {
+  border-bottom: 2px solid !important;
+}
+.style-table-th:hover {
+  background-color: #ffcdd2 !important;
+}
+.style-table-td {
+  text-align: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
 .font-text {
   font-family: 'Poppins', sans-serif;
   font-size: 1.2rem;
@@ -1181,22 +1275,7 @@ export default {
   color: #444;
   font-weight: bold;
 }
-.v-data-table /deep/ tbody /deep/ tr:hover:not(.v-data-table__expanded__content) {
-  background: #ff7676 !important;
-}
-.v-data-table /deep/ tbody /deep/ tr:not(.v-data-table__expanded__content) {
-  border-top: 2px solid black;
-}
-.v-data-table /deep/ tbody /deep/ td:not(.v-data-table__expanded__content) {
-  padding-right: 0;
-  padding-left: 0;
-  text-align: center !important;
-}
-.v-data-table /deep/ thead /deep/ th:not(.v-data-table__expanded__content) {
-  padding-right: 0;
-  padding-left: 0;
-  text-align: center !important;
-}
+
 .display-md {
   visibility: hidden;
 }
@@ -1242,12 +1321,12 @@ export default {
   visibility: hidden;
 }
 .m-page {
-  margin-right: 10%;
-  margin-left: 10%;
+  margin-right: 5%;
+  margin-left: 5%;
 }
 .p-page {
-  padding-right: 10%;
-  padding-left: 10%;
+  padding-right: 5%;
+  padding-left: 5%;
 }
 @media (max-width: 360px) {
   .m-page {

@@ -2,7 +2,7 @@
   <div>
     <v-app class="color-background">
       <v-system-bar height="35" window color="#fff" class="px-0">
-        <v-container class="px-0 m-page">
+        <div class="px-0 m-page-new">
           <v-btn small text class="text-capitalize" @click="welcomeRoute">
             <v-icon>mdi-home-outline</v-icon>Home</v-btn
           >
@@ -12,9 +12,9 @@
           <v-btn small text class="text-capitalize">
             <v-icon>mdi-email-outline</v-icon>Contacto</v-btn
           >
-        </v-container>
+        </div>
       </v-system-bar>
-      <v-app-bar dark color="#709FA5" class="hidden-xs-only p-page nav-font" max-height="64">
+      <v-app-bar dark color="#709FA5" class="hidden-xs-only p-page-new nav-font" max-height="64">
         <v-toolbar-title @click="catalogueRoute">Importaciones Grupales</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
@@ -241,22 +241,22 @@ export default {
 .nav-font {
   font-family: 'Gothic A1', sans-serif;
 }
-.m-page {
-  margin-right: 15%;
-  margin-left: 15%;
+.m-page-new {
+  margin-right: 5%;
+  margin-left: 5%;
 }
-.p-page {
-  padding-right: 15%;
-  padding-left: 15%;
+.p-page-new {
+  padding-right: 5%;
+  padding-left: 5%;
 }
 @media (max-width: 500px) {
-  .m-page {
+  .m-page-new {
     margin-right: auto;
     margin-left: auto;
   }
 }
 @media (max-width: 360px) {
-  .m-page {
+  .m-page-new {
     margin-right: auto;
     margin-left: auto;
   }
