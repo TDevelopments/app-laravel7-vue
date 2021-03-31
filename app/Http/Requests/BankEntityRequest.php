@@ -25,7 +25,12 @@ class BankEntityRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'short_name' => ['required', 'string'],
+            'short_name' => ['string'],
+            'account_name' => ['string'],
+            'account_soles' => ['string'],
+            'account_interbank_soles' => ['string'],
+            'account_dollar' => ['string'],
+            'account_interbank_dollar' => ['string'],
         ];
     }
 }

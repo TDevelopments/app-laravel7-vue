@@ -78,7 +78,7 @@ class OrderController extends Controller
             $order = $this->order->where('state_order_id', $stateOrder->id)->paginate();
             return OrderResourceAdmin::collection($order);
         }   
-        return OrderResourceAdmin::collection($this->order->paginate());
+        return OrderResourceAdmin::collection($this->order->orderBy('created_at', 'desc')->paginate());
     }
 
     /**
@@ -102,7 +102,7 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
-        $stateOrder = $this->stateOrder->where('name', 'like', '%Pendiente%')->first();
+        $stateOrder = $this->stateOrder->firstOrCreate(['name' => 'Pendiente']);
         $order = $this->order->create([
             'user_id' => $request->user()->id,
             'catalogue_id' => $request->catalogue_id,
