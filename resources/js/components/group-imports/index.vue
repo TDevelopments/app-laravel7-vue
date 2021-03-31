@@ -15,10 +15,11 @@
         </v-container>
       </v-system-bar>
       <v-app-bar dark color="blue-grey darken-1" class="hidden-xs-only p-page" max-height="64">
-        <v-toolbar-title @click="catalogueRoute">Bizzperu</v-toolbar-title>
+        <v-toolbar-title @click="catalogueRoute">Importaciones Grupales</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
           <!-- <v-btn text @click="cartView">Carrito</v-btn> -->
+          <v-btn text :to="{ name: 'homeGroupImport' }"> Cátalogos </v-btn>
           <v-menu rounded offset-y>
             <template v-slot:activator="{ attrs, on }">
               <v-btn text v-bind="attrs" v-on="on"> {{ user.name }}</v-btn>

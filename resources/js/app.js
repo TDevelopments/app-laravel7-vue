@@ -8,6 +8,7 @@ import store from './store';
 import App from './components/App';
 import Axios from 'axios';
 import Vue from 'vue';
+import VueZoomer from 'vue-zoomer';
 
 Vue.prototype.$http = Axios;
 Vue.prototype.$http.defaults.baseURL = process.env.APP_URL;
@@ -29,6 +30,8 @@ router.beforeEach((to, from, next) => {
     next(); // make sure to always call next()!
   }
 });
+
+Vue.use(VueZoomer);
 
 const app = new Vue({
   el: '#app',

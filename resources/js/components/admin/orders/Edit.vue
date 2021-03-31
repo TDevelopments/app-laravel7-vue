@@ -11,15 +11,15 @@
           </v-col>
           <v-col cols="12" sm="6" md="6">
             Total de Orden
-            <v-text-field v-model="order.total_order" solo required readonly></v-text-field>
+            <v-text-field v-model="totalOrder" solo required readonly></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="6">
             Estado de Orden
             <v-select
-              v-model="order.status"
-              :items="state"
-              item-text="name"
+              v-model="order.state_order"
               item-value="id"
+              item-text="name"
+              :items="state"
               menu-props="auto"
               hide-details
               prepend-inner-icon="mdi-credit-card"
@@ -64,6 +64,18 @@
                   />
                 </div>
               </template>
+              <template v-slot:[`item.actions`]="{ item, index }">
+                <v-icon @click="deleteProducts(item.product.id, index)">mdi-delete</v-icon>
+              </template>
+              <template v-slot:[`item.quantity`]="{ item }">
+                <v-text-field
+                  v-model="item.quantity"
+                  solo
+                  style="width:100px"
+                  type="number"
+                  hide-details
+                />
+              </template>
             </v-data-table>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -74,6 +86,26 @@
       </div>
       <div v-for="(paymentG, index) in payments" :key="index">
         <v-row>
+          <v-col cols="1" class="text-center">
+            <v-img
+              v-if="paymentG.image == null || !paymentG.image || paymentG.image.length == 0"
+              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+              max-width="100"
+              max-height="100"
+              contain
+              class="my-auto"
+              @click="prueba('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
+            />
+            <v-img
+              @click="prueba(paymentG.image.path)"
+              v-else
+              contain
+              class="my-auto"
+              :src="paymentG.image.path"
+              max-width="100"
+              max-height="100"
+            />
+          </v-col>
           <v-col cols="12" md="2">
             Imagen
             <v-file-input
@@ -85,7 +117,6 @@
               placeholder="Pago"
               v-model="paymentG.image_upload"
               @change="addImages(paymentG.image_upload, index)"
-              @click="addImages(paymentG.image_upload, index)"
             ></v-file-input>
           </v-col>
           <v-col cols="12" md="3">
@@ -129,7 +160,7 @@
               ></v-date-picker>
             </v-menu>
           </v-col>
-          <v-col cols="12" md="1">
+          <v-col cols="12" md="2">
             Monto
             <v-text-field v-model="paymentG.mount" dense placeholder="0.00" solo type="number">
             </v-text-field>
@@ -150,17 +181,25 @@
             ></v-select>
           </v-col>
         </v-row>
+        <v-divider></v-divider>
       </div>
     </v-card-text>
     <v-btn @click="validate">Guardar</v-btn>
+    <v-btn @click="validateProduct">Guardar Productos</v-btn>
+    <ImagePaymen v-model="dialogImage" v-if="dialogImage" :image="itemSelected" />
   </v-card>
 </template>
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import ImagePaymen from './ImagePayment';
 
 export default {
+  components: {
+    ImagePaymen,
+  },
   data: () => ({
+    dialogImage: false,
     headers: [
       {
         text: 'Imagen',
@@ -179,10 +218,17 @@ export default {
         value: 'quantity',
         align: 'center',
         sortable: false,
+        width: 10,
       },
       {
         text: 'Precio del Producto Total',
         value: 'total',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Acciones',
+        value: 'actions',
         align: 'center',
         sortable: false,
       },
@@ -200,10 +246,14 @@ export default {
     concept: [],
     state: [],
     bank: [],
+    itemSelected: '',
+    idDelete: [],
   }),
   computed: {
-    completeName() {
-      return this.user.name;
+    totalOrder() {
+      let a = this.order.total_order;
+
+      return parseFloat(a).toFixed(2);
     },
   },
   methods: {
@@ -247,16 +297,30 @@ export default {
 
     addPayment() {
       let ultimo = this.payments.length - 1;
-      axios
-        .post(`/api/v1/orders/${this.$route.params.id}/payments`, this.payments[ultimo])
-        .then(response => {
-          console.log(response);
-          this.getOrders();
-        })
-        .catch(error => {
-          console.log(error);
-          // reject(error);
-        });
+      if (this.payments[ultimo].mount == '' || null) {
+        this.payments.splice(ultimo, 1);
+        axios
+          .post(`/api/v1/orders/${this.$route.params.id}/payments`, { payments: this.payments })
+          .then(response => {
+            console.log(response);
+            this.getOrders();
+          })
+          .catch(error => {
+            console.log(error);
+            // reject(error);
+          });
+      } else {
+        axios
+          .post(`/api/v1/orders/${this.$route.params.id}/payments`, { payments: this.payments })
+          .then(response => {
+            console.log(response);
+            this.getOrders();
+          })
+          .catch(error => {
+            console.log(error);
+            // reject(error);
+          });
+      }
     },
 
     getOrders() {
@@ -284,8 +348,55 @@ export default {
           // reject(error);
         });
     },
-    createPayment() {
-      console.log(this.payment);
+
+    updateCreate() {
+      let data = [];
+      this.product.forEach(element => {
+        data.push({
+          product_id: element.product.id,
+          quantity: element.quantity,
+        });
+      });
+
+      axios
+        .post(`/api/v1/orders/${this.$route.params.id}/order-details`, { products: data })
+        .then(response => {
+          console.log(response);
+          this.getOrders();
+        })
+        .catch(error => {
+          console.log(error);
+          // reject(error);
+        });
+    },
+
+    deleteItems() {
+      axios
+        .delete(`/api/v1/order-details`, {
+          order_details: this.idDelete,
+        })
+        .then(response => {
+          console.log(response);
+          this.updateCreate();
+        })
+        .catch(error => {
+          console.log(error);
+          // reject(error);
+        });
+    },
+
+    validateProduct() {
+      if (this.idDelete.length != 0) {
+        this.deleteItems();
+      } else {
+        this.updateCreate();
+      }
+    },
+
+    deleteProducts(id, index) {
+      this.idDelete.push(id);
+      this.product.splice(index, 1);
+      console.log(this.idDelete);
     },
 
     getConcept() {
@@ -315,6 +426,23 @@ export default {
           console.log(response);
         })
         .catch(error => {});
+    },
+
+    prueba(value) {
+      this.itemSelected = value;
+      this.dialogImage = true;
+      console.log(this.itemSelected);
+    },
+  },
+  filters: {
+    currency: function(value) {
+      return parseFloat(value).toFixed(2);
+    },
+    porcent: function(value) {
+      return parseFloat(value) * 100 + ' %';
+    },
+    date: function(value) {
+      return moment(value).format('YYYY-MM-DD');
     },
   },
   mounted() {

@@ -3,7 +3,7 @@
     <v-col class="mt-5">
       <h2>Mis Pedidos</h2>
       <v-divider></v-divider>
-      <v-expansion-panels v-model="panel">
+      <v-expansion-panels>
         <v-expansion-panel v-for="order in orders" :key="order.id">
           <v-expansion-panel-header>
             <v-row class="d-flex d-flex justify-space-between align-center">
@@ -65,14 +65,13 @@
                         max-width="150"
                         max-height="150"
                         contain
-                        class="m-1 my-5"
                       />
                       <v-img
                         v-else
                         contain
                         :src="item.product.images[0].path"
                         max-width="150"
-                        class="text-center align-center my-5"
+                        max-height="150"
                       />
                     </div>
                   </template>
@@ -160,85 +159,13 @@
               <v-tab-item v-else>
                 <br />
                 <br />
-                <v-data-table
-                  :items="order.payment"
-                  :headers="paymentHeaders"
-                  disable-pagination
-                  hide-default-footer
-                  dense
-                  class="hidden-xs-only"
-                >
-                  <template v-slot:[`item.image`]="{ item }">
-                    <div class="d-flex justify-center aling-center">
-                      <v-img
-                        v-if="item.image == null || !item.image"
-                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                        max-width="150"
-                        max-height="150"
-                        contain
-                        class="m-1 my-5"
-                      />
-                      <v-img
-                        v-else
-                        contain
-                        :src="item.image.path"
-                        max-width="150"
-                        class="text-center align-center my-5"
-                      />
-                    </div>
-                  </template>
-                  <template v-slot:[`item.mount`]="{ item }">
-                    {{ item.mount | currency }}
-                  </template>
-                  <template v-slot:[`item.payment_date`]="{ item }">
-                    {{ item.payment_date | date }}
-                  </template>
-                </v-data-table>
-                <v-data-table
-                  :items="order.payment"
-                  :headers="paymentHeaders"
-                  dense
-                  class="hidden-sm-and-up"
-                  disable-pagination
-                  hide-default-footer
-                >
-                  <template v-slot:item="props">
-                    <tr class="mt-5 bb">
-                      <td class="px-0">
-                        <div class="d-flex justify-center aling-center">
-                          <v-img
-                            v-if="props.item.image == null || !props.item.image"
-                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                            max-width="150"
-                            max-height="150"
-                            contain
-                            class="m-1 my-5"
-                          />
-                          <v-img
-                            v-else
-                            contain
-                            :src="props.item.image.path"
-                            max-width="150"
-                            class="text-center align-center my-5"
-                          />
-                        </div>
-                      </td>
-                      <td class="py-5">
-                        <div class="d-flex">
-                          <strong>Monto: </strong> {{ props.item.mount | currency }}
-                        </div>
-                        <div class="d-flex">
-                          <strong>Fecha:.</strong>
-                          {{ props.item.payment_date | date }}
-                        </div>
-                        <!-- <div class="d-flex">
-                          <strong>Banco:.</strong>
-                          {{ props.item.bank_entity_id }}
-                        </div> -->
-                      </td>
-                    </tr>
-                  </template>
-                </v-data-table>
+
+                <div v-for="(item, index) in order.payment" :key="index">
+                  <strong> Pago Nro :</strong> {{ index + 1 }} <br />
+                  Monto Pagado: {{ item.mount }} <br />
+                  Fecha de Pago: {{ item.payment_date | date }}
+                  <v-divider></v-divider>
+                </div>
               </v-tab-item>
             </v-tabs-items>
           </v-expansion-panel-content>

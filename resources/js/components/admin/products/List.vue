@@ -6,6 +6,41 @@
     </v-tabs>
     <v-tabs-items v-model="currentTab">
       <v-tab-item>
+        <br />
+        <br />
+        <v-row>
+          <v-col>
+            Search
+            <v-text-field
+              v-model="filterGeneral"
+              clearable
+              dense
+              solo
+              append-icon="mdi-magnify"
+              @click:append="getListFilterGeneral"
+              @click:clear="getList"
+              @keyup.enter="getListFilterGeneral"
+            />
+          </v-col>
+          <v-col>
+            Meta
+            <v-autocomplete
+              v-model="value"
+              :search-input.sync="filterMeta"
+              :items="bol"
+              clearable
+              hide-details
+              hide-selected
+              solo
+              dense
+              append-icon="mdi-magnify"
+              @click:append="getListFilterMeta"
+              @click:clear="getList"
+              @keyup.enter="getListFilterMeta"
+            />
+          </v-col>
+        </v-row>
+
         <v-card flat>
           <v-data-table
             :headers="headers"
@@ -167,6 +202,10 @@
 <script>
 export default {
   data: () => ({
+    value: null,
+    bol: ['true', 'false'],
+    filterGeneral: '',
+    filterMeta: '',
     dialogDelete: false,
     loading: false,
     currentTab: 0,
@@ -301,6 +340,35 @@ export default {
       }
     },
 
+    getListFilterGeneral() {
+      console.log(this.filterGeneral, 'tmr');
+
+      axios
+        .get(`/api/v1/products?model=${this.filterGeneral}&sku=${this.filterGeneral}`)
+        .then(response => {
+          this.loading = false;
+          this.products = response.data.data;
+          this.pagination0 = 1;
+          console.log(response.data.data);
+        })
+        .catch(error => {});
+    },
+
+    getListFilterMeta() {
+      console.log(this.filterMeta, 'tmr');
+
+      axios
+        .get(`/api/v1/products?meta=${this.filterMeta}`)
+        .then(response => {
+          this.loading = false;
+          this.products = response.data.data;
+          this.pagination0 = response.data.meta.last_page;
+
+          console.log(response.data.data);
+        })
+        .catch(error => {});
+    },
+
     getListForRange() {
       if (this.page == 1) {
         axios
@@ -411,7 +479,13 @@ export default {
         .catch(error => {});
     },
   },
-  computed: {},
+  watch: {
+    filterGeneral(val) {
+      if (val == '' || val == null) {
+        this.getList;
+      }
+    },
+  },
   mounted() {
     this.getList();
     this.getListForRange();

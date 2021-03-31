@@ -31,6 +31,7 @@
         "moment": "^2.29.1",
         "vee-validate": "^3.4.5",
         "vue-router": "^3.5.1",
+        "vue-zoomer": "^0.3.9",
         "vuelidate": "^0.7.6",
         "vuetify": "^2.4.7",
         "vuetify-loader": "^1.7.2",

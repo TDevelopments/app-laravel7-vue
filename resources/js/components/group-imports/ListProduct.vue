@@ -13,157 +13,215 @@
           <v-img v-else contain :src="catalogue.image.path" />
         </v-col>
         <v-col cols="12" sm="12" md="7" lg="7">
-          <v-card-title class="pt-1">
-            <v-row>
-              <v-col cols="12" class="pt-0"> Información y Condiciones </v-col>
-            </v-row>
+          <v-card-title class="pt-1 pl-0 pb-0">
+            <v-col cols="12" class="pt-0 pl-0"> Información y Condiciones </v-col>
           </v-card-title>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                Todos los montos se encuentran en:
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2 text-capitalize">
-                  {{ catalogue.coin }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                Monto de separación de cupo / Garantía de participación:
-                <br />
-                <small class="my-0">(El monto de separación es parte de la primera cuota)</small>
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2">
-                  {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
-                  {{ catalogue.quota_price | currency }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                Inversión minima:
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2">
-                  {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
-                  {{ catalogue.minimum_investment | currency }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon> % de Primera cuota:
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2">
-                  <v-icon left> mdi-percent </v-icon>
-                  {{ catalogue.first_payment }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon> % de Segunda cuota:
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2">
-                  <v-icon left> mdi-percent </v-icon>
-                  {{ catalogue.second_payment }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-title>
-            <v-row>
-              <v-col cols="12"> Fechas </v-col>
-            </v-row>
+          <ul class="pb-0 mb-0">
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  Todos los montos se encuentran en:
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2 text-capitalize">
+                    {{ catalogue.coin }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
+          <ul class="pb-0 mb-0">
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  Monto de separación de cupo / Garantía de participación:
+                  <br />
+                  <small class="my-0">(El monto de separación es parte de la primera cuota)</small>
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
+                    {{ catalogue.quota_price | currency }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
+          <ul class="pb-0 mb-0">
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  Inversión minima:
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
+                    {{ catalogue.minimum_investment | currency }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
+          <ul class="pb-0 mb-0">
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  % de Primera cuota:
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    <v-icon left> mdi-percent </v-icon>
+                    {{ catalogue.first_payment }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
+          <ul class="pb-0 mb-0">
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  % de Segunda cuota:
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    <v-icon left> mdi-percent </v-icon>
+                    {{ catalogue.second_payment }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
+          <v-card-title class="pl-0 pb-0 pt-0">
+            <v-col cols="12" class="pl-0"> Fechas </v-col>
           </v-card-title>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                Ultimo día para la separación de cupo:
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2">
-                  <v-icon left> mdi-calendar-month </v-icon>
-                  {{ catalogue.quota_date | date }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                Fecha limite para el pago de la primera cuota:
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2">
-                  <v-icon left> mdi-calendar-month </v-icon>
-                  {{ catalogue.date_first_payment | date }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text class="font-weight-medium pb-0 pt-1">
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                Fecha limite para el pago de la segunda cuota:
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2">
-                  <v-icon left> mdi-calendar-month </v-icon>
-                  {{ catalogue.date_second_payment | date }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text
+          <ul class="pb-0 mb-0">
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  Ultimo día para la separación de cupo:
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    <v-icon left> mdi-calendar-month </v-icon>
+                    {{ catalogue.quota_date | date }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
+          <ul class="pb-0 mb-0">
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  Fecha limite para el pago de la primera cuota:
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    <v-icon left> mdi-calendar-month </v-icon>
+                    {{ catalogue.date_first_payment | date }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
+          <ul class="pb-0 mb-0">
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  Fecha limite para el pago de la segunda cuota:
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    <v-icon left> mdi-calendar-month </v-icon>
+                    {{ catalogue.date_second_payment | date }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
+          <ul
             class="font-weight-medium pb-0 pt-1"
             v-for="(arrival, index) in catalogue.arrivals"
             :key="index"
           >
-            <v-row>
-              <v-col sm="6" md="8">
-                <v-icon color="black" x-small>mdi-circle</v-icon>
-                Fecha estimada para recojos y envios desde {{ arrival.city }}
-              </v-col>
-              <v-col sm="6" md="4" class="text-right">
-                <v-chip class="mr-2">
-                  <v-icon left> mdi-calendar-month </v-icon>
-                  {{ arrival.arrival_date | date }}
-                </v-chip>
-              </v-col>
-            </v-row>
-          </v-card-text>
+            <li>
+              <v-row>
+                <v-col sm="6" md="8">
+                  Fecha estimada para recojos y envios desde {{ arrival.city }}
+                </v-col>
+                <v-col sm="6" md="4" class="text-right">
+                  <v-chip class="mr-2">
+                    <v-icon left> mdi-calendar-month </v-icon>
+                    {{ arrival.arrival_date | date }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+            </li>
+          </ul>
         </v-col>
       </v-row>
       <v-col class="px-0 content-card pt-0 mt-5">
         <v-toolbar color="black" class="px-0 text-h6" dark flat>Términos y Condiciones</v-toolbar>
-        <v-card-text
-          v-for="(element, index) in catalogue.conditions"
-          :key="index"
-          class="pb-0 pt-1 text-justify"
-        >
-          <v-icon color="black" x-small>mdi-circle</v-icon>
-          {{ element }}
-        </v-card-text>
+        <ul>
+          <li
+            v-for="(element, index) in catalogue.conditions"
+            :key="index"
+            class="pb-0 pt-1 text-justify"
+          >
+            {{ element }}
+          </li>
+          <li>
+            Para realizar su separación de pedido debe pagar
+            <strong>${{ catalogue.quota_price }}</strong>
+            o S/.300.00, el monto a depositar debe ser en la misma moneda del banco receptor.
+          </li>
+          <li>CUENTAS:</li>
+          <ul>
+            <li>BCP A NOMBRE DE BIZZPERU SA:</li>
+            <ul>
+              <li>
+                CUENTA SOLES: 215-31690893-0-98
+              </li>
+              <li>
+                CÓDIGO DE CUENTA INTERBANCARIA: 00221513169089309824
+              </li>
+              <br />
+              <li>
+                CUENTA DÓLARES: 215-91784070-1-76
+              </li>
+              <li>
+                CÓDIGO DE CUENTA INTERBANCARIA: 00221519178407017621
+              </li>
+            </ul>
+            <br />
+            <li>
+              BBVA A NOMBRE DE BIZZPERU COMPANY EIRL:
+            </li>
+            <ul>
+              <li>
+                CUENTA SOLES:0011-0220-0201770773
+              </li>
+              <li>
+                CÓDIGO DE CUENTA INTERBANCARIA: 01122000020177077314
+              </li>
+              <br />
+              <li>
+                CUENTA DÓLARES: 0011-0220-0201770803
+              </li>
+              <li>
+                CÓDIGO DE CUENTA INTERBANCARIA: 01122000020177080319
+              </li>
+            </ul>
+            <br />
+            <li>
+              YAPE A NOMBRE DE BIZZPERU SA: 958073710
+            </li>
+          </ul>
+          <!-- <li>
+            Y enviar su constancia al siguiente número de Whatsapp: <strong>927750048</strong>
+          </li> -->
+        </ul>
       </v-col>
       <v-row class="mt-5">
         <v-col cols="12" sm="12" md="9" lg="9">
