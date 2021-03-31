@@ -51,7 +51,7 @@ class OrderController extends Controller
     {
         if ($request->query("orderId")) {
             $value = $request->query("orderId");
-            $order = $this->order->where('id', 'like', "%$value%")->paginate();
+            $order = $this->order->where('id f', 'like', "%$value%")->paginate();
             return OrderResourceAdmin::collection($order);
         }
         if ($request->query("username"))
@@ -102,7 +102,7 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
-        $stateOrder = $this->stateOrder->where('name', 'like', '%eparado%')->first();
+        $stateOrder = $this->stateOrder->where('name', 'like', '%Pendiente%')->first();
         $order = $this->order->create([
             'user_id' => $request->user()->id,
             'catalogue_id' => $request->catalogue_id,

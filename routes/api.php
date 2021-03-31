@@ -115,6 +115,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('products-massive', [ProductController::class, 'createMassive']);
         Route::post('product-ranges-massive', [ProductRangeController::class, 'createMassive']);
 
+        // Advisers 
+        Route::apiResource('advisers', 'Api\v1\AdviserController');
+
         // List
         Route::get('list-catalogues', [CatalogueController::class, 'list']);
         Route::get('list-categories', [CategoryController::class, 'list']);
