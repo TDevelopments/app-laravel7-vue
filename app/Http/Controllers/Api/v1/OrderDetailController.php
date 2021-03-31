@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\ProductRange;
 use App\Models\Order;
+use App\Models\Range;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderDetailResource;
 use Illuminate\Http\Request;
@@ -15,11 +17,17 @@ class OrderDetailController extends Controller
     
     protected $orderDetail;
     protected $product;
+    protected $productRange;
+    protected $range;
 
-    public function __construct(OrderDetail $orderDetail, Product $product)
+    public function __construct(OrderDetail $orderDetail, Product $product, 
+      ProductRange $productRange, Range $range)
     {
+        $this->middleware('api.admin');
         $this->orderDetail = $orderDetail;
         $this->product = $product;
+        $this->productRange = $productRange;
+        $this->range = $range;
     }
 
     /**
@@ -43,25 +51,55 @@ class OrderDetailController extends Controller
         $validator = Validator::make($request->all(), [
             'products.*.product_id' => ['required', 'integer', 'exists:App\Models\Product,id'],
             'products.*.quantity' => ['required', 'integer'],
+            'product_ranges.*.product_id' => ['required', 'integer', 'exists:App\Models\ProductRange,id'],
+            'product_ranges.*.quantity' => ['required', 'integer'],
         ]);
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
         $data = $request->products;
+        $data2 = $request->product_ranges;
         $products = array();
-        foreach($data as $row)
+        if($request->products)
         {
-            $productReference = $this->product->find($row['product_id']);
-            $products[] = $this->orderDetail->updateOrCreate(
-                [
-                    'product_id' => $row['product_id'],
-                    'order_id' => $order->id,
-                ],
-                [
-                    'quantity' => $row['quantity'],
-                    'price' => $productReference->price_unit,
-                    'total' => $productReference->price_unit * $row['quantity']
-                ]);
+
+            foreach($data as $row)
+            {
+                $productReference = $this->product->find($row['product_id']);
+                $products[] = $this->orderDetail->updateOrCreate(
+                    [
+                        'product_id' => $row['product_id'],
+                        'order_id' => $order->id,
+                    ],
+                    [
+                        'quantity' => $row['quantity'],
+                        'price' => $productReference->price_unit,
+                        'total' => $productReference->price_unit * $row['quantity']
+                    ]);
+            }
+        }
+        if($request->product_ranges)
+        {
+            foreach($data2 as $row)
+            {
+                $productRangeReference = $this->productRange->find($row['product_id']);
+                $rangeReference = $this->range->where('product_range_id', $productRangeReference->id)
+                                              ->where('max', '>=', $row['quantity'])->first();
+                if(!isset($rangeReference))
+                {
+                    continue;
+                }
+                $product_ranges[] = $this->orderDetail->updateOrCreate(
+                    [
+                        'product_range_id' => $productRangeReference->id,
+                        'order_id' => $order->id,
+                    ],[
+                        'price' => $rangeReference->price,
+                        'quantity' => $row['quantity'],
+                        'total' => $rangeReference->price * $row['quantity']
+                    ]);
+                $productRangeReference->increment('count', $row['quantity']);
+            }
         }
         return OrderDetailResource::collection($products);
     }
@@ -98,13 +136,13 @@ class OrderDetailController extends Controller
     public function destroy(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'products' => ['required', 'array'],
-            'products.*' => ['required', 'integer','exists:App\Models\Product,id'],
+            'order_details' => ['required', 'array'],
+            'order_details.*' => ['required', 'integer','exists:App\Models\OrderDetail,id'],
         ]);
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
-        $this->orderDetail->destroy($request->products);
+        $this->orderDetail->destroy($request->order_details);
         return response()->json(['success' => 'Order Detail Delete successfully.']);
     }
 }

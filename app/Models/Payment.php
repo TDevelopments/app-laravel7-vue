@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Order;
+use App\Models\PaymentConcept;
+use App\Models\BankEntity;
 
 class Payment extends Model
 {
@@ -26,5 +28,15 @@ class Payment extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function paymentConcept()
+    {
+        return $this->belongsTo(PaymentConcept::class);
+    }
+
+    public function bankEntity()
+    {
+        return $this->belongsTo(BankEntity::class);
     }
 }
