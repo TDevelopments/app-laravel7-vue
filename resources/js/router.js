@@ -54,6 +54,11 @@ import ListBank from './components/admin/bank/List';
 import AddBank from './components/admin/bank/Add';
 import EditBank from './components/admin/bank/Edit';
 
+// Pages View CRUD Advisers
+import ListAdviser from './components/admin/adviser/List';
+import AddAdviser from './components/admin/adviser/Add';
+import EditAdviser from './components/admin/adviser/Edit';
+
 // Pages View Orders
 import ListOrder from './components/admin/orders/List';
 import EditOrder from './components/admin/orders/Edit';
@@ -320,6 +325,22 @@ export default new Router({
           path: '/admin/bank/:id/edit',
           name: 'editBank',
           component: EditBank,
+        },
+        // Adviser
+        {
+          path: '/admin/adviser',
+          name: 'listAdviser',
+          component: ListAdviser,
+        },
+        {
+          path: '/admin/adviser/add',
+          name: 'addAdviser',
+          component: AddAdviser,
+        },
+        {
+          path: '/admin/adviser/:id/edit',
+          name: 'editAdviser',
+          component: EditAdviser,
         },
       ],
     },

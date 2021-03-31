@@ -122,6 +122,9 @@
           <v-list-item link :to="{ name: 'listBank' }">
             <v-list-item-title>Bancos</v-list-item-title>
           </v-list-item>
+          <v-list-item link :to="{ name: 'listAdviser' }">
+            <v-list-item-title>Asesores</v-list-item-title>
+          </v-list-item>
         </v-list-group>
       </v-list>
 

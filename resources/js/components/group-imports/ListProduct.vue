@@ -162,7 +162,39 @@
         </v-col>
       </v-row>
       <v-col class="px-0 content-card pt-0 mt-5">
+        <v-toolbar color="black" class="px-0 text-h6" dark flat>Información</v-toolbar>
+        <br />
+        <ul>
+          <li>CUENTAS:</li>
+          <ul>
+            <div v-for="(item, index) in bank" :key="index">
+              <div v-if="item.short_name != 'YAPE' && item.short_name != 'Yape'">
+                <li>{{ item.short_name }} A NOMBRE DE {{ item.account_name }}:</li>
+                <ul>
+                  <li>CUENTA SOLES: {{ item.account_soles }}</li>
+                  <li>CÓDIGO DE CUENTA INTERBANCARIA: {{ item.account_interbank_soles }}</li>
+                  <br />
+                  <li>CUENTA DÓLARES: {{ item.account_dollar }}</li>
+                  <li>CÓDIGO DE CUENTA INTERBANCARIA: {{ item.account_interbank_dollar }}</li>
+                </ul>
+                <br />
+              </div>
+              <div v-else>
+                <li>
+                  {{ item.short_name }} A NOMBRE DE {{ item.account_name }}:
+                  {{ item.account_soles }}
+                </li>
+              </div>
+            </div>
+          </ul>
+          <!-- <li>
+            Y enviar su constancia al siguiente número de Whatsapp: <strong>927750048</strong>
+          </li> -->
+        </ul>
+      </v-col>
+      <v-col class="px-0 content-card pt-0 mt-5">
         <v-toolbar color="black" class="px-0 text-h6" dark flat>Términos y Condiciones</v-toolbar>
+        <br />
         <ul>
           <li
             v-for="(element, index) in catalogue.conditions"
@@ -171,65 +203,25 @@
           >
             {{ element }}
           </li>
-          <li>
-            Para realizar su separación de pedido debe pagar
-            <strong>${{ catalogue.quota_price }}</strong>
-            o S/.300.00, el monto a depositar debe ser en la misma moneda del banco receptor.
-          </li>
-          <li>CUENTAS:</li>
-          <ul>
-            <li>BCP A NOMBRE DE BIZZPERU SA:</li>
-            <ul>
-              <li>
-                CUENTA SOLES: 215-31690893-0-98
-              </li>
-              <li>
-                CÓDIGO DE CUENTA INTERBANCARIA: 00221513169089309824
-              </li>
-              <br />
-              <li>
-                CUENTA DÓLARES: 215-91784070-1-76
-              </li>
-              <li>
-                CÓDIGO DE CUENTA INTERBANCARIA: 00221519178407017621
-              </li>
-            </ul>
-            <br />
-            <li>
-              BBVA A NOMBRE DE BIZZPERU COMPANY EIRL:
-            </li>
-            <ul>
-              <li>
-                CUENTA SOLES:0011-0220-0201770773
-              </li>
-              <li>
-                CÓDIGO DE CUENTA INTERBANCARIA: 01122000020177077314
-              </li>
-              <br />
-              <li>
-                CUENTA DÓLARES: 0011-0220-0201770803
-              </li>
-              <li>
-                CÓDIGO DE CUENTA INTERBANCARIA: 01122000020177080319
-              </li>
-            </ul>
-            <br />
-            <li>
-              YAPE A NOMBRE DE BIZZPERU SA: 958073710
-            </li>
-          </ul>
-          <!-- <li>
-            Y enviar su constancia al siguiente número de Whatsapp: <strong>927750048</strong>
-          </li> -->
         </ul>
       </v-col>
+      <v-row>
+        <v-col v-for="(item, index) in adviser" :key="index" class="px-0 text-center mx-1">
+          <div class="text-h6">Asesor {{ index + 1 }}</div>
+          <v-btn x-large color="teal lighten-2" rounded @click="goToLink(item.link)">
+            {{ item.name }}
+            <br />
+            {{ item.phone }}
+            <v-icon class="ml-2">mdi-open-in-new</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
       <v-row class="mt-5">
         <v-col cols="12" sm="12" md="9" lg="9">
           <v-tabs
             fixed-tabs
-            background-color="#6694BB"
+            background-color="#bcdaf1"
             v-model="currentTab"
-            dark
             show-arrows=""
             v-if="catalogue.products.length != 0 || catalogue.productRanges != 0"
           >
@@ -1005,6 +997,8 @@ export default {
     catalogueGet: null,
     alert: true,
     proCa: [],
+    adviser: [],
+    bank: [],
   }),
   components: {
     Product,
@@ -1137,10 +1131,31 @@ export default {
       this.catalogue.productRanges[1].quantity++;
       console.log(this.catalogue.productRanges[1].quantity);
     },
+    getAdvisers() {
+      axios
+        .get('/api/v1/advisers')
+        .then(response => {
+          this.adviser = response.data.data;
+        })
+        .catch(error => {});
+    },
+    getBanks() {
+      axios
+        .get('/api/v1/banks')
+        .then(response => {
+          this.bank = response.data;
+        })
+        .catch(error => {});
+    },
+    goToLink(link) {
+      window.open(link);
+    },
   },
   mounted() {
     this.getCatalogue(this.$route.params.id);
     console.log(this.catalogue);
+    this.getBanks();
+    this.getAdvisers();
   },
   filters: {
     currency: function(value) {

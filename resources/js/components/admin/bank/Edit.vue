@@ -7,13 +7,12 @@
           <v-card-text>
             <v-row>
               <v-col cols="12" sm="6" md="6">
-                Nombre de Bank
+                Nombre de Banco
                 <v-text-field
                   v-model="bank.name"
                   solo
                   required
                   placeholder="Example"
-                  v-on:keyup.enter="updateBank"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="6">
@@ -23,7 +22,52 @@
                   solo
                   required
                   placeholder="Example"
-                  v-on:keyup.enter="addBank"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                Nombre de la Cuenta Soles
+                <v-text-field
+                  v-model="bank.account_name"
+                  solo
+                  required
+                  placeholder="Example"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                Cuenta en Soles
+                <v-text-field
+                  v-model="bank.account_soles"
+                  solo
+                  required
+                  placeholder="Example"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                Cuenta Interbancaria en Soles
+                <v-text-field
+                  v-model="bank.account_interbank_soles"
+                  solo
+                  required
+                  placeholder="Example"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" sm="6" md="6">
+                Cuenta en Dolares
+                <v-text-field
+                  v-model="bank.account_dollar"
+                  solo
+                  required
+                  placeholder="Example"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                Cuenta Interbancaria en Dolares
+                <v-text-field
+                  v-model="bank.account_interbank_dollar"
+                  solo
+                  required
+                  placeholder="Example"
                 ></v-text-field>
               </v-col>
             </v-row>

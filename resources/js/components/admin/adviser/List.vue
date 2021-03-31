@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="bank"
+      :items="adviser"
       :loading="loading"
       loading-text="Loading... Please wait"
       :page.sync="page"
@@ -11,19 +11,19 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Bancos</v-toolbar-title>
+          <v-toolbar-title>Asesores</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
 
-          <v-btn color="#1B1B1B" dark @click="newBank">
-            Nuevo Banco
+          <v-btn color="#1B1B1B" dark @click="newAdviser">
+            Nuevo Asesor
           </v-btn>
 
           <v-dialog v-model="dialogDelete" max-width="290">
             <v-card>
-              <v-card-title class="headline"> Eliminar Banco </v-card-title>
+              <v-card-title class="headline"> Eliminar Item </v-card-title>
 
-              <v-card-text> ¿Estas seguro de eliminar este <strong>banco</strong>? </v-card-text>
+              <v-card-text> ¿Estas seguro de eliminar este <strong>asesor</strong>? </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
 
@@ -61,20 +61,26 @@ export default {
     loading: false,
     headers: [
       {
-        text: 'Nombre Banco',
+        text: 'Nombre de Asesor',
         value: 'name',
         align: 'center',
         sortable: false,
       },
       {
-        text: 'Nombre Corto',
-        value: 'short_name',
+        text: 'Telefono de Asesor',
+        value: 'phone',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Link',
+        value: 'link',
         align: 'center',
         sortable: false,
       },
       { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
-    bank: [],
+    adviser: [],
     idDelete: null,
     page: 1,
     pageCount: 0,
@@ -84,9 +90,10 @@ export default {
   methods: {
     getList() {
       axios
-        .get('/api/v1/banks')
+        .get('/api/v1/advisers')
         .then(response => {
-          this.bank = response.data;
+          this.adviser = response.data.data;
+          this.pagination = response.data.meta.last_page;
           console.log(response);
         })
         .catch(error => {});
@@ -94,7 +101,7 @@ export default {
 
     editItem(item) {
       this.$router.push({
-        name: 'editBank',
+        name: 'editAdviser',
         params: {
           id: item.id,
         },
@@ -108,7 +115,7 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete(`/api/v1/banks/${this.idDelete}`)
+        .delete(`/api/v1/advisers/${this.idDelete}`)
         .then(response => {
           this.getList();
           this.closeDelete();
@@ -119,14 +126,14 @@ export default {
     closeDelete() {
       this.dialogDelete = false;
     },
-    newBank() {
+    newAdviser() {
       this.$router.push({
-        name: 'addBank',
+        name: 'addAdviser',
       });
     },
     next(page) {
       axios
-        .get(`/api/v1/payment-concepts?page=${page}`)
+        .get(`/api/v1/advisers?page=${page}`)
         .then(response => {
           this.loading = false;
           this.catalogues = response.data.data;

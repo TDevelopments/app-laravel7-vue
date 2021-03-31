@@ -23,6 +23,9 @@
       :items="orders"
       item-key="item.id"
       loading-text="Loading... Please wait"
+      :page.sync="page"
+      :items-per-page="itemsPerPage"
+      hide-default-footer
     >
       <template v-slot:[`item.status`]="{ item }">
         <v-chip color="red" dark small>
@@ -40,6 +43,9 @@
         </div>
       </template>
     </v-data-table>
+    <div class="text-center pt-2">
+      <v-pagination v-model="page" :length="pagination" @input="next"></v-pagination>
+    </div>
     <v-dialog v-model="dialogDelete" max-width="290">
       <v-card>
         <v-card-title class="headline"> Eliminar Orden </v-card-title>
@@ -102,6 +108,10 @@ export default {
     ],
     idDelete: '',
     dialogDelete: false,
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 15,
+    pagination: null,
   }),
   methods: {
     getOrders() {
@@ -110,6 +120,7 @@ export default {
         .then(response => {
           console.log(response);
           this.orders = response.data.data;
+          this.pagination = response.data.meta.last_page;
         })
         .catch(error => {});
     },
@@ -138,6 +149,16 @@ export default {
     },
     closeDelete() {
       this.dialogDelete = false;
+    },
+    next(page) {
+      axios
+        .get(`/api/v1/orders?page=${page}`)
+        .then(response => {
+          console.log(response);
+          this.orders = response.data.data;
+          this.pagination = response.data.meta.last_page;
+        })
+        .catch(error => {});
     },
   },
   mounted() {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app>
+    <v-app class="color-background">
       <v-system-bar height="35" window color="#fff" class="px-0">
         <v-container class="px-0 m-page">
           <v-btn small text class="text-capitalize" @click="welcomeRoute">
@@ -14,7 +14,7 @@
           >
         </v-container>
       </v-system-bar>
-      <v-app-bar dark color="blue-grey darken-1" class="hidden-xs-only p-page" max-height="64">
+      <v-app-bar dark color="#709FA5" class="hidden-xs-only p-page nav-font" max-height="64">
         <v-toolbar-title @click="catalogueRoute">Importaciones Grupales</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items v-if="isLoggedIn">
@@ -22,7 +22,10 @@
           <v-btn text :to="{ name: 'homeGroupImport' }"> Cátalogos </v-btn>
           <v-menu rounded offset-y>
             <template v-slot:activator="{ attrs, on }">
-              <v-btn text v-bind="attrs" v-on="on"> {{ user.name }}</v-btn>
+              <v-btn text v-bind="attrs" v-on="on">
+                {{ user.name }}
+                <v-icon>mdi-menu-down</v-icon>
+              </v-btn>
             </template>
 
             <v-list>
@@ -231,6 +234,13 @@ export default {
 </script>
 
 <style scope>
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap');
+.color-background {
+  background-color: #f5f4f3 !important;
+}
+.nav-font {
+  font-family: 'Gothic A1', sans-serif;
+}
 .m-page {
   margin-right: 15%;
   margin-left: 15%;
