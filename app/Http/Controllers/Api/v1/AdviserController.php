@@ -14,7 +14,7 @@ class AdviserController extends Controller
 
     public function __construct(Adviser $adviser)
     {
-        $this->middleware('api.admin');
+        $this->middleware('api.admin')->except(['index']);
         $this->adviser = $adviser;
     }
 

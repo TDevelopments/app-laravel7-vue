@@ -20,12 +20,14 @@ class Catalogue extends Model
 
     protected $casts = [
         'conditions' => 'array',
-        'image' => 'array'
+        'image' => 'array',
+        'additional_information' => 'array',
     ];
 
     protected $fillable = [
         'name',
         'conditions',
+        'additional_information',
         'image',
         'is_available',
         'coin',

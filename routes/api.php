@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\v1\MeasureController;
 use App\Http\Controllers\Api\v1\BankEntityController;
 use App\Http\Controllers\Api\v1\StateOrderController;
 use App\Http\Controllers\Api\v1\PaymentConceptController;
+use App\Http\Controllers\Api\v1\AdviserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('signup', [AuthController::class, 'signup']);
     Route::get('catalogues-availables', [CatalogueController::class, 'availables']);
+    Route::get('banks', [BankEntityController::class, 'index']);
+    Route::get('advisers', [BankEntityController::class, 'index']);
     
     // Las siguientes rutas además del prefijo requieren que el usuario tenga un token válido
     Route::group(['middleware' => ['cors', 'auth:api', 'json.response']], function() {
@@ -90,7 +93,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::delete('measures/{measure}', [MeasureController::class, 'destroy']);
 
         // BankEntity
-        Route::get('banks', [BankEntityController::class, 'index']);
         Route::post('banks', [BankEntityController::class, 'store']);
         Route::get('banks/{bank}', [BankEntityController::class, 'show']);
         Route::put('banks/{bank}', [BankEntityController::class, 'update']);
@@ -116,7 +118,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('product-ranges-massive', [ProductRangeController::class, 'createMassive']);
 
         // Advisers 
-        Route::apiResource('advisers', 'Api\v1\AdviserController');
+        // Route::apiResource('advisers', 'Api\v1\AdviserController');
+        Route::post('advisers', [AdviserController::class, 'store']);
+        Route::get('advisers/{adviser', [AdviserController::class, 'show']);
+        Route::put('advisers/{adviser}', [AdviserController::class, 'update']);
+        Route::delete('advisers/{adviser}', [AdviserController::class, 'destroy']);
 
         // List
         Route::get('list-catalogues', [CatalogueController::class, 'list']);
