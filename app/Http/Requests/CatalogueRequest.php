@@ -30,6 +30,8 @@ class CatalogueRequest extends FormRequest
             'image.path' => ['exists:App\Models\Image,path'],
             'conditions' => ['array'],
             'conditions.*' => ['string'],
+            'additional_information' => ['array'],
+            'additional_information.*' => ['string'],
             'is_available' => ['boolean'],
             'coin' => ['required', 'in:soles,dolares'],
             'quota_date' => ['required'],

@@ -13,7 +13,7 @@ class BankEntityController extends Controller
 
     public function __construct(BankEntity $bank)
     {
-        $this->middleware('api.admin');
+        $this->middleware('api.admin')->except(['index']);
         $this->bank = $bank;
     }
 

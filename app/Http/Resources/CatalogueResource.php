@@ -20,6 +20,7 @@ class CatalogueResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'conditions' => $this->conditions,
+            'additional_information' => $this->additional_information,
             'image' => $this->image,
             'is_available' => $this->is_available,
             'coin' => $this->coin,
