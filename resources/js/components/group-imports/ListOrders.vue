@@ -58,9 +58,9 @@
                   class="hidden-xs-only "
                 >
                   <template v-slot:[`item.image`]="{ item }">
-                    <div class="d-flex justify-center aling-center">
+                    <div class="d-flex justify-center aling-center" v-if="item.product">
                       <v-img
-                        v-if="item.product.images == null || item.product.images.length == 0"
+                        v-if="!item.product.images || item.product.images.length == 0"
                         src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
                         max-width="150"
                         max-height="150"
@@ -74,10 +74,31 @@
                         max-height="150"
                       />
                     </div>
+                    <div class="d-flex justify-center aling-center" v-else>
+                      <v-img
+                        v-if="!item.product_range.images || item.product_range.images.length == 0"
+                        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                        max-width="150"
+                        max-height="150"
+                        contain
+                      />
+                      <v-img
+                        v-else
+                        contain
+                        :src="item.product_range.images[0].path"
+                        max-width="150"
+                        max-height="150"
+                      />
+                    </div>
+                  </template>
+                  <template v-slot:[`item.model`]="{ item }">
+                    {{ item.product ? item.product.model : item.product_range.model }}
                   </template>
                   <template v-slot:[`item.quantity`]="{ item }">
                     {{ item.quantity }}
-                    <div class="text-capitalize">{{ item.product.type_group }}</div>
+                    <div class="text-capitalize" v-if="item.product">
+                      {{ item.product.type_group }}
+                    </div>
                   </template>
                   <template v-slot:[`item.price`]="{ item }">
                     {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
@@ -206,7 +227,7 @@ export default {
       },
       {
         text: 'Modelo de Producto',
-        value: 'product.model',
+        value: 'model',
         align: 'center',
         sortable: false,
       },

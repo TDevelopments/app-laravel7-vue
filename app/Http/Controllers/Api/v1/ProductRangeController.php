@@ -7,6 +7,8 @@ use App\Models\ProductRange;
 use App\Models\Range;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRangeRequest;
+use App\Http\Requests\UpdateProductRangeRequest;
+use App\Http\Requests\StoreProductRangeRequest;
 use App\Http\Resources\ProductRangeResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -39,19 +41,19 @@ class ProductRangeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductRangeRequest $request)
+    public function store(StoreProductRangeRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'sku' => ['unique:product_ranges'],
-            'model' => ['required', 'unique:product_ranges'],
-            'ranges' => ['array'],
-            'ranges.*.min' => ['required', 'integer'],
-            'ranges.*.max' => ['required', 'integer'],
-            'ranges.*.price' => ['required', 'integer'],
-        ]);
-        if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error'], 422);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'sku' => ['unique:product_ranges'],
+        //     'model' => ['required', 'unique:product_ranges'],
+        //     'ranges' => ['array'],
+        //     'ranges.*.min' => ['required', 'integer'],
+        //     'ranges.*.max' => ['required', 'integer'],
+        //     'ranges.*.price' => ['required', 'integer'],
+        // ]);
+        // if ($validator->fails()) {
+        //     return response(['error' => $validator->errors(), 'Validation Error'], 422);
+        // }
         if(!isset($request->sku)){
             $request->merge(['sku' => $this->randomId()]);
         }
@@ -90,15 +92,15 @@ class ProductRangeController extends Controller
      * @param  \App\Models\ProductRange  $productRange
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRangeRequest $request, ProductRange $productRange)
+    public function update(UpdateProductRangeRequest $request, ProductRange $productRange)
     {
-        $validator = Validator::make($request->all(), [
-            'sku' => ['required', 'exists:App\Models\ProductRange,sku'],
-            'model' => ['required','exists:App\Models\ProductRange,model'],
-        ]);
-        if ($validator->fails()) {
-            return response(['error' => $validator->errors(), 'Validation Error'], 422);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'sku' => ['required', 'exists:App\Models\ProductRange,sku'],
+        //     'model' => ['required','exists:App\Models\ProductRange,model'],
+        // ]);
+        // if ($validator->fails()) {
+        //     return response(['error' => $validator->errors(), 'Validation Error'], 422);
+        // }
         $productRange->update($request->all());
         return new ProductRangeResource($productRange);
     }

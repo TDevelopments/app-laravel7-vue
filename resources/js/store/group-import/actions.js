@@ -36,18 +36,21 @@ export async function getCatalogue({ commit, getters, dispatch, state }, id) {
       });
 
       element.productRanges.forEach((productRange, index) => {
-        var minRange = 1;
+        let minRange = 1;
+        let price = 0;
         if (productRange.ranges.length != 0) {
           minRange = productRange.ranges[0].min;
+          price = productRange.ranges[0].price;
           productRange.ranges.forEach((range, index) => {
             if (range.min < minRange) {
               minRange = range.min;
+              price = range.price;
             }
           });
         }
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'quantity', minRange);
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'min', minRange);
-        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'total', 0);
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'total', price * minRange);
       });
     }
   });
@@ -84,14 +87,16 @@ export async function getProduct({ commit, getters, dispatch }, data) {
 
 export function addCart({ commit, getters }, payload) {
   let cart = getters.cart;
-  let entrada = payload.products;
+  let entrada = payload.products || [];
+  let entrada2 = payload.product_ranges || [];
+  console.log('asd', payload);
   if (!cart.length) {
     cart.push({
       id: payload.cat.id,
       name: payload.cat.name,
       minimum_investment: payload.cat.minimum_investment,
       products: entrada,
-      product_ranges: [],
+      product_ranges: entrada2,
     });
     // cart.push(payload);
   } else {
@@ -117,6 +122,7 @@ export function addCart({ commit, getters }, payload) {
       if (catalogue.id === payload.cat.id) {
         access = true;
         catalogue.products = entrada;
+        catalogue.product_ranges = entrada2;
       } else {
         // cart.push(payload);
         if (index === cart.length - 1) {
@@ -126,7 +132,7 @@ export function addCart({ commit, getters }, payload) {
               name: payload.cat.name,
               minimum_investment: payload.cat.minimum_investment,
               products: entrada,
-              product_ranges: [],
+              product_ranges: entrada2,
             });
           }
         }
@@ -171,20 +177,25 @@ export function generateOrder({ commit, getters, rootGetters }, catalogue) {
   let auth = rootGetters['account/isLoggedIn'];
   if (auth) {
     console.log('HOaskdjnasdjk', catalogue);
-    catalogue.products.forEach(product => {
-      product.product_id = product.id;
-    });
-    catalogue.product_ranges.forEach(product_range => {
-      product_range.product_id = product_range.id;
-      console.log(product_range.id);
-    });
+    if (catalogue.products) {
+      console.log('me estas jodiendo');
+      catalogue.products.forEach(product => {
+        product.product_id = product.id;
+      });
+    }
+    if (catalogue.product_ranges) {
+      catalogue.product_ranges.forEach(product_range => {
+        product_range.product_id = product_range.id;
+        console.log(product_range.id);
+      });
+    }
     axios({
       url: '/api/v1/orders',
       method: 'POST',
       data: {
         catalogue_id: catalogue.id,
-        products: catalogue.products,
-        product_ranges: catalogue.product_ranges,
+        products: catalogue.products ? catalogue.products : [],
+        product_ranges: catalogue.product_ranges ? catalogue.product_ranges : [],
       },
     })
       .then(resp => {

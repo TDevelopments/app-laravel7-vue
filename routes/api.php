@@ -120,7 +120,7 @@ Route::group(['prefix' => 'v1'], function () {
         // Advisers 
         // Route::apiResource('advisers', 'Api\v1\AdviserController');
         Route::post('advisers', [AdviserController::class, 'store']);
-        Route::get('advisers/{adviser', [AdviserController::class, 'show']);
+        Route::get('advisers/{adviser}', [AdviserController::class, 'show']);
         Route::put('advisers/{adviser}', [AdviserController::class, 'update']);
         Route::delete('advisers/{adviser}', [AdviserController::class, 'destroy']);
 

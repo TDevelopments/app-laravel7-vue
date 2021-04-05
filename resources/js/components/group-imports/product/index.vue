@@ -124,7 +124,7 @@
                   <v-icon color="black" x-small>mdi-circle</v-icon>
                   {{ item }}
                 </p>
-                <p>
+                <p v-if="type == 'normal'">
                   <v-icon color="black" x-small>mdi-circle</v-icon>
                   <strong>Género:</strong>
                   {{
@@ -144,7 +144,7 @@
                   </v-col>
                 </v-row>
               </div>
-              <v-row>
+              <v-row v-if="type == 'normal'">
                 <v-col class="mt-5 pb-0">
                   <strong
                     >PRECIO POR {{ product.quantity_group }} {{ type_group.toUpperCase() }}</strong
@@ -159,13 +159,24 @@
                   </div>
                 </v-col>
                 <v-col class="mt-5 pb-0">
-                  <strong>PRECIO UNITARIO</strong>
+                  <strong>PRECIOS UNITARIO</strong>
                   <div class="form-inline">
                     <v-avatar color="#0D52D6" size="30" class="text-white mr-1 my-2">
                       {{ catalogue.coin == 'soles' ? 'S./' : '$' }}
                     </v-avatar>
                     <p class="mt-3 ml-2">{{ product.price_unit | currency }}</p>
                   </div>
+                </v-col>
+              </v-row>
+              <v-row v-if="type == 'range'">
+                <v-col class="mt-5 pb-0">
+                  <strong>PRECIOS</strong>
+                  <ul>
+                    <li v-for="range in product.ranges" :key="range.id">
+                      De {{ range.min }} a {{ range.max }} :
+                      {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
+                    </li>
+                  </ul>
                 </v-col>
               </v-row>
             </v-card-text>

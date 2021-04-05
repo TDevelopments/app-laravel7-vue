@@ -58,7 +58,7 @@ export default {
     validate() {},
     getAdviser() {
       axios
-        .get(`/api/v1/advisers/${this.$route.params.id}`)
+        .get(`/api/v1/adviser/${this.$route.params.id}`)
         .then(response => {
           this.adviser = response.data.data;
           console.log(response);

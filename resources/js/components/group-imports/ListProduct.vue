@@ -262,7 +262,7 @@
                     </td>
                     <td class="style-table-td">
                       <v-row class="d-flex align-center justify-center">
-                        <v-col cols="1">
+                        <v-col cols="1" class="p-0 m-0 pt-4">
                           <strong>{{ props.index + 1 }}</strong>
                         </v-col>
                         <v-col cols="9">
@@ -447,7 +447,7 @@
                     </td>
                     <td class="style-table-td">
                       <v-row class="d-flex align-center justify-center">
-                        <v-col cols="1">
+                        <v-col cols="1" class="p-0 m-0 pt-4">
                           <strong>{{ props.index + 1 }}</strong>
                         </v-col>
                         <v-col cols="9">
@@ -480,8 +480,8 @@
                       {{ props.item.brand }}   
                     </td>
                     <td class="style-table-td">
-                      <ul v-for="range in props.item.ranges" :key="range.id">
-                        <li>
+                      <ul>
+                        <li v-for="range in props.item.ranges" :key="range.id">
                           De {{ range.min }} a {{ range.max }} :
                           {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
                         </li>
@@ -490,7 +490,7 @@
                     <td class="style-table-td pr-5">
                       <div class="form-inline justify-content-center">
                         <v-btn
-                          @click="minusFunctionR(index)"
+                          @click="minusFunctionR(props.item,props.index)"
                           color="secondary"
                           fab
                           x-small
@@ -687,15 +687,7 @@
                     v-if="isLoggedIn"
                     color="green darken-1"
                     text
-                    @click="
-                      generateOrder({
-                        id: catalogue.id,
-                        products: selected,
-                        product_ranges: selectedRange,
-                      }),
-                        (dialog = false),
-                        (alert = false)
-                    "
+                    @click="generateOrderAction"
                   >
                     Generar
                   </v-btn>
@@ -987,7 +979,6 @@ export default {
     showScheduleForm: false,
     singleSelect: false,
     singleSelectRange: false,
-    selectedRange: [],
     description: [],
     number: 1,
     currentTab: 0,
@@ -1096,28 +1087,8 @@ export default {
     },
 
     totalRange() {
-      let t = 0;
-      let q = 0;
-      let p = 0;
       let tot = 0;
       this.selectedRange.forEach(element => {
-        q = element.quantity;
-        if (element.ranges.length != 0) {
-          element.ranges.forEach(range => {
-            if ((q >= range.min) & (q <= range.max)) {
-              t = range.price * q;
-            }
-            p = range.price;
-            console.log(range.price);
-          });
-        }
-
-        element.total = t;
-
-        if (element.total == 0) {
-          element.total = p * element.quantity;
-        }
-
         tot += element.total;
       });
       return tot;
@@ -1141,6 +1112,23 @@ export default {
         let cat = this.catalogue;
         // cat.products = v;
         this.addCart({ cat, products: v });
+        return (this.proCa = v);
+      },
+    },
+    selectedRange: {
+      get() {
+        let pro = [];
+        this.cart.forEach(catalo => {
+          if (catalo.id === this.catalogue.id) {
+            pro = catalo.product_ranges;
+          }
+        });
+        return pro;
+      },
+      set(v) {
+        let cat = this.catalogue;
+        // cat.products = v;
+        this.addCart({ cat, product_ranges: v });
         return (this.proCa = v);
       },
     },
@@ -1182,11 +1170,46 @@ export default {
         alert(`Lo sentimos, la candidad minima de de compra de este producto es ${item.min}`);
       } else {
         this.catalogue.productRanges[index].quantity--;
+        let t = 0;
+        let p = 0;
+        if (this.catalogue.productRanges[index].ranges.length != 0) {
+          this.catalogue.productRanges[index].ranges.forEach(range => {
+            if ((this.catalogue.productRanges[index].quantity >= range.min) && (this.catalogue.productRanges[index].quantity <= range.max)) {
+              t = range.price * this.catalogue.productRanges[index].quantity;
+            }
+            p = range.price;
+            console.log(range.price);
+          });
+        }
+
+        this.catalogue.productRanges[index].total = t;
+
+        if (this.catalogue.productRanges[index].total == 0) {
+          this.catalogue.productRanges[index].total = p * this.catalogue.productRanges[index].quantity;
+        }
       }
     },
     plusFunctionR(index) {
       console.log(this.catalogue.productRanges[index]);
       this.catalogue.productRanges[index].quantity++;
+      let t = 0;
+      let p = 0;
+      if (this.catalogue.productRanges[index].ranges.length != 0) {
+        this.catalogue.productRanges[index].ranges.forEach(range => {
+          if ((this.catalogue.productRanges[index].quantity >= range.min) && (this.catalogue.productRanges[index].quantity <= range.max)) {
+            t = range.price * this.catalogue.productRanges[index].quantity;
+          }
+          p = range.price;
+          console.log(range.price);
+        });
+      }
+
+      this.catalogue.productRanges[index].total = t;
+
+      if (this.catalogue.productRanges[index].total == 0) {
+        this.catalogue.productRanges[index].total = p * this.catalogue.productRanges[index].quantity;
+      }
+
     },
 
     reserve() {
