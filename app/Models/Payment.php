@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Order;
 use App\Models\PaymentConcept;
 use App\Models\BankEntity;
+use App\Models\User;
 
 class Payment extends Model
 {
@@ -19,6 +20,10 @@ class Payment extends Model
         'payment_concept_id',
         'bank_entity_id',
         'order_id',
+        'nro_operation',
+        'dollar_price',
+        'type_coin',
+        'user_id',
     ];
 
     protected $casts = [
@@ -38,5 +43,10 @@ class Payment extends Model
     public function bankEntity()
     {
         return $this->belongsTo(BankEntity::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

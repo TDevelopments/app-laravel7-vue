@@ -84,8 +84,10 @@ class CatalogueController extends Controller
         return CatalogueResource::collection($availables);
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return response()->json(["data" => $this->catalogue->select('id', 'name')->get()], 200);
+        $value = $request->query("name");
+        $catalagues = $this->catalogue->select('id', 'name')->where('name', 'like', "%$value%")->get();
+        return response()->json(["data" => $catalagues], 200);
     }
 }

@@ -17,9 +17,13 @@ class PaymentResource extends JsonResource
       return [
           'image' => $this->image,
           'mount' => $this->mount,
+          'dollar_price' => $this->dollar_price,
+          'type_coin' => $this->type_coin,
+          'nro_operation' => $this->nro_operation,
           'payment_date' => $this->payment_date,
           'paymentConcept' => $this->paymentConcept->name,
-          'bankEntity' => $this->bankEntity->name
+          'bankEntity' => $this->bankEntity->name,
+          'user' => $this->user,
       ];
     }
 }
