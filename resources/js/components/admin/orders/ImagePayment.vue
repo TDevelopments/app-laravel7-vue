@@ -28,7 +28,7 @@
 </template>
 <script>
 export default {
-  datadata: () => ({
+  data: () => ({
     zoomed: false,
   }),
   props: ['image', 'value'],

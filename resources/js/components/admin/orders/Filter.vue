@@ -89,11 +89,12 @@ export default {
         .catch(error => {});
     },
     createObject(){
-      this.orders.forEach(order => {
-          
-
+      this.orders.forEach(order => {          
+        this.object.push({name: order.user.name})
         this.products.forEach(product => {
-          
+          order.forEach(op => {
+            
+          });
         });
       });
     },

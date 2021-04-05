@@ -574,7 +574,6 @@ export default {
             {
               model: this.productRange.model,
               stock: this.productRange.stock,
-              sku: this.productRange.sku,
               brand: this.productRange.brand,
               category_id: this.productRange.category,
               catalogue_id: this.productRange.catalogue,
@@ -646,7 +645,6 @@ export default {
         this.variaciones.push({
           model: this.productRange.model + this.cont,
           stock: this.productRange.stock,
-          sku: this.productRange.sku + this.cont,
           brand: this.productRange.brand,
           category_id: this.productRange.category,
           catalogue_id: this.productRange.catalogue,

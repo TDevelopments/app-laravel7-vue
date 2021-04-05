@@ -1,7 +1,7 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" max-width="1200" v-model="show">
     <v-toolbar color="primary" dark class="text-h6 mb-2">
-      Detalles del producto
+      Detalles del producto {{ type }}
       <v-spacer></v-spacer>
       <v-btn icon @click="show = false">
         <v-icon>mdi-close</v-icon>
@@ -187,12 +187,13 @@ export default {
   components: {
     ZoomOnHover: ZoomOnHover,
   },
-  props: ['product', 'catalogue', 'value'],
+  props: ['product', 'catalogue', 'value', 'type'],
   data: () => ({
     quantity: 1,
     loading: false,
     selection: 1,
     model: 0,
+    zoomed: false,
   }),
   methods: {
     ...mapActions('groupImport', ['addCart']),
@@ -259,7 +260,3 @@ export default {
   width: 100%;
 }
 </style>
-//
-<div class="mb-3 subtitle-1">
-//           {{ catalogue.coin }} {{ product.price_group }}
-//         </div>
