@@ -431,7 +431,7 @@
                 :items="catalogue.productRanges"
                 hide-default-footer
                 disable-pagination
-                class="elevation-1 mt-3"
+                class="elevation-1 mt-3 hidden-xs-only p-page px-0"
                 v-if="catalogue.productRanges.length != 0"
               >
                 <template v-slot:item="props">
@@ -515,9 +515,96 @@
                       </div>
                     </td>
                     <td class="style-table-td">
-                      {{ props.item.total }}   
+                      {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                      {{ props.item.total | currency }}   
                     </td>
                   </tr>
+                  </tr>
+                </template>
+              </v-data-table>
+              <v-data-table
+                v-model="selectedRange"
+                :single-select="singleSelectRange"
+                show-select
+                :headers="headersItem"
+                :items="catalogue.productRanges"
+                hide-default-footer
+                hide-default-header
+                disable-pagination
+                class="elevation-1 mt-3 hidden-sm-and-up"
+                v-if="catalogue.productRanges.length != 0"
+              >
+              <template v-slot:item="props">
+                  <tr class="mt-5 bb">
+                    <td class="px-0">
+                      <v-row class="px-2">
+                        <div>
+                          <v-checkbox
+                            :input-value="props.isSelected"
+                            @change="props.select($event)"
+                            hide-details
+                            style="display: block"
+                            class="px-0 mx-0"
+                          ></v-checkbox>
+                        </div>
+                        <div sm="11" md="11" lg="11">
+                          <v-img
+                            v-if="props.item.images == null || props.item.images.length == 0"
+                            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                            max-width="75"
+                            max-height="75"
+                            contain
+                            class="m-1"
+                          />
+                          <v-img
+                            v-else
+                            contain
+                            :src="props.item.images[0].path"
+                            max-width="75"
+                            max-height="75"
+                            class="text-center align-center"
+                          />
+                        </div>
+                      </v-row>
+                    </td>
+                    <td class="px-0 py-5">
+                      <strong>Modelo:</strong> {{ props.item.model }}
+                      <br />
+                      <strong>Marca:</strong> {{ props.item.brand }}
+                      <br />
+                      <strong>Precios:</strong>
+                      <ul>
+                        <li v-for="range in props.item.ranges" :key="range.id">
+                          De {{ range.min }} a {{ range.max }} :
+                          {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
+                        </li>
+                      </ul>
+                    </td>
+                    <td class="px-0 py-5">
+                      <v-btn small class="my-5" @click="prueba(props.item, 'range')">Ver Mas</v-btn>
+                      <br />
+                      <div class="form-inline justify-content-center">
+                        <v-btn
+                          @click="minusFunctionR(props.item,props.index)"
+                          color="#000"
+                          icon
+                          x-small
+                          elevation="1"
+                        >
+                          <v-icon>mdi-minus</v-icon>
+                        </v-btn>
+                        <input type="text" class="w mx-2" v-model="props.item.quantity" />
+                        <v-btn
+                          @click="plusFunctionR(props.index)"
+                          color="#000"
+                          icon
+                          elevation="1"
+                          x-small
+                        >
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </div>
+                    </td>
                   </tr>
                 </template>
               </v-data-table>
@@ -1152,7 +1239,7 @@ export default {
     minusFunction(item, index) {
       if (item.quantity <= item.quantity_group) {
         alert(
-          `Lo sentimos, la candidad minima de de compra de este producto es ${item.quantity_group}`
+          `Lo sentimos, la candidad minima de compra de este producto es ${item.quantity_group}`
         );
       } else {
         this.catalogue.products[index].quantity =
@@ -1167,7 +1254,7 @@ export default {
 
     minusFunctionR(item, index) {
       if (item.quantity <= item.min) {
-        alert(`Lo sentimos, la candidad minima de de compra de este producto es ${item.min}`);
+        alert(`Lo sentimos, la candidad minima de compra de este producto es ${item.min}`);
       } else {
         this.catalogue.productRanges[index].quantity--;
         let t = 0;

@@ -109,7 +109,16 @@
                     {{ item.total | currency }}
                   </template>
                   <template v-slot:[`item.button`]="{ item }">
-                    <v-btn small class="my-5" @click="prueba(item.product)">Ver Mas</v-btn>
+                    <v-btn
+                      small
+                      class="my-5"
+                      @click="
+                        item.product
+                          ? prueba(item.product, 'normal')
+                          : prueba(item.product_range, 'range')
+                      "
+                      >Ver Mas</v-btn
+                    >
                   </template>
                 </v-data-table>
                 <v-data-table
@@ -195,6 +204,7 @@
             :product="itemSelected"
             v-if="showScheduleForm"
             :catalogue="order.catalogue"
+            :type="elementType"
           />
         </v-expansion-panel>
       </v-expansion-panels>
@@ -282,6 +292,7 @@ export default {
       //   sortable: false,
       // },
     ],
+    elementType: '',
   }),
   methods: {
     getOrders() {
@@ -295,9 +306,10 @@ export default {
           console.log(error);
         });
     },
-    prueba(value) {
+    prueba(value, type) {
       this.itemSelected = value;
       this.showScheduleForm = true;
+      this.elementType = type;
       console.log(this.itemSelected);
     },
   },

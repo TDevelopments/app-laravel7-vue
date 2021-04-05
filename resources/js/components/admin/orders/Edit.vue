@@ -46,26 +46,47 @@
               loading-text="Loading... Please wait"
             >
               <template v-slot:[`item.image`]="{ item }">
-                <div class="d-flex justify-center aling-center">
+                <div class="d-flex justify-center aling-center" v-if="item.product">
                   <v-img
-                    v-if="item.product.images == null || item.product.images.length == 0"
+                    v-if="!item.product.images || item.product.images.length == 0"
                     src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    max-width="75"
-                    max-height="75"
+                    max-width="150"
+                    max-height="150"
                     contain
-                    class="m-1 my-5"
                   />
                   <v-img
                     v-else
                     contain
                     :src="item.product.images[0].path"
-                    max-width="75"
-                    class="text-center align-center my-5"
+                    max-width="150"
+                    max-height="150"
+                  />
+                </div>
+                <div class="d-flex justify-center aling-center" v-else>
+                  <v-img
+                    v-if="!item.product_range.images || item.product_range.images.length == 0"
+                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                    max-width="150"
+                    max-height="150"
+                    contain
+                  />
+                  <v-img
+                    v-else
+                    contain
+                    :src="item.product_range.images[0].path"
+                    max-width="150"
+                    max-height="150"
                   />
                 </div>
               </template>
+              <template v-slot:[`item.model`]="{ item }">
+                {{ item.product ? item.product.model : item.product_range.model }}
+              </template>
               <template v-slot:[`item.actions`]="{ item, index }">
                 <v-icon @click="deleteProducts(item.id, index)">mdi-delete</v-icon>
+              </template>
+              <template v-slot:[`item.total`]="{ item }">
+                {{ item.total | currency }}
               </template>
               <template v-slot:[`item.quantity`]="{ item }">
                 <v-text-field
@@ -177,17 +198,6 @@
             </v-text-field>
           </v-col>
           <v-col cols="12" md="2">
-            Precio $
-            <v-text-field
-              v-model="paymentG.dollar_price"
-              dense
-              placeholder="0.00"
-              solo
-              type="number"
-            >
-            </v-text-field>
-          </v-col>
-          <v-col cols="12" md="2">
             Tipo moneda
             <v-select
               v-model="paymentG.type_coin"
@@ -199,6 +209,17 @@
               solo
               placeholder="Selecciona"
             ></v-select>
+          </v-col>
+          <v-col cols="12" md="2" v-if="paymentG.type_coin == 'dolares'">
+            Precio Dolar
+            <v-text-field
+              v-model="paymentG.dollar_price"
+              dense
+              placeholder="0.00"
+              solo
+              type="number"
+            >
+            </v-text-field>
           </v-col>
           <v-col cols="12" md="2">
             Banco
@@ -244,7 +265,7 @@ export default {
       },
       {
         text: 'Model',
-        value: 'product.model',
+        value: 'model',
         align: 'center',
         sortable: false,
       },
@@ -383,6 +404,8 @@ export default {
             image_upload: [],
             payment_concept_id: '',
             bank_entity_id: '',
+            type_coin: 'soles',
+            dollar_price: 0.0,
           });
           console.log(this.payments);
         })
