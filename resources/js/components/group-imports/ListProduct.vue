@@ -140,11 +140,7 @@
               </v-row>
             </li>
           </ul>
-          <ul
-            class="font-weight-medium pb-0 pt-1"
-            v-for="(arrival, index) in catalogue.arrivals"
-            :key="index"
-          >
+          <ul class="pb-0 mb-0" v-for="(arrival, index) in catalogue.arrivals" :key="index">
             <li>
               <v-row>
                 <v-col sm="6" md="8">
@@ -164,8 +160,17 @@
       <v-col class="px-0 content-card pt-0 mt-5">
         <v-toolbar color="black" class="px-0 text-h6" dark flat>Información</v-toolbar>
         <br />
-        <ul>
-          <li>CUENTAS:</li>
+        <ul class="pb-1 mb-0">
+          <li
+            v-for="(element, index) in catalogue.additional_information"
+            :key="index"
+            class="pb-0 pt-1 text-justify"
+          >
+            {{ element }}
+          </li>
+        </ul>
+        <ul class="pb-0 mb-0">
+          <li><strong>CUENTAS:</strong></li>
           <ul>
             <div v-for="(item, index) in bank" :key="index">
               <div v-if="item.short_name != 'YAPE' && item.short_name != 'Yape'">
@@ -222,11 +227,10 @@
             fixed-tabs
             background-color="#bcdaf1"
             v-model="currentTab"
-            show-arrows=""
-            v-if="catalogue.products.length != 0 || catalogue.productRanges != 0"
+            show-arrows
           >
-            <v-tab v-if="catalogue.products.length != 0"> Productos </v-tab>
-            <v-tab v-if="catalogue.productRanges.length != 0">
+            <v-tab > Productos </v-tab>
+            <v-tab >
               Productos por rango
             </v-tab>
           </v-tabs>
@@ -239,9 +243,10 @@
                 :headers="headers"
                 :items="catalogue.products"
                 hide-default-footer
+                height="1000"
+                fixed-header
                 class="elevation-1 hidden-xs-only p-page px-0"
                 disable-pagination
-                v-if="catalogue.products.length != 0"
               >
                 <template v-slot:item="props">
                   <tr class="style-table-th">
@@ -293,13 +298,13 @@
                       {{ props.item.price_unit | currency }}
                     </td>
                     <td class="style-table-td">
-                      {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
-                      {{ props.item.price_group | currency }}
-                    </td>
-                    <td class="style-table-td">
                       {{ props.item.quantity_group + ' ' }}
                       <br />
                       {{ props.item.type_group }}
+                    </td>
+                    <td class="style-table-td">
+                      {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+                      {{ props.item.price_group | currency }}
                     </td>
                     <td class="style-table-td pr-5">
                       <div class="form-inline justify-content-center">
@@ -411,7 +416,7 @@
                 hide-default-header
                 class="elevation-1 hidden-sm-and-up"
                 disable-pagination
-                v-if="catalogue.products.length != 0"
+
               >
                 <template v-slot:item="props">
                   <tr class="mt-5 bb">
@@ -499,7 +504,6 @@
                 disable-pagination
                 class="elevation-1 mt-3"
                 @click:row="prueba"
-                v-if="catalogue.productRanges.length != 0"
               >
                 <template v-slot:[`item.images`]="{ item }">
                   <v-img
@@ -540,8 +544,6 @@
               </v-data-table>
             </v-tab-item>
           </v-tabs-items>
-          <br />
-          <br />
           <v-card class="float mx-auto display-md" max-width="80%" elevation="5">
             <p class="font-text text-center mb-0">
               RESUMEN DE MI PEDIDO
@@ -962,8 +964,6 @@
           </v-card>
         </v-col>
       </v-row>
-      <br />
-      <br />
       <Product
         v-model="showScheduleForm"
         :product="itemSelected"

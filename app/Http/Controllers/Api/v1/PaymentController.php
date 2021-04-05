@@ -34,14 +34,16 @@ class PaymentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * Store a newly created resource in storage.    *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, Order $order)
     {
         $validator = Validator::make($request->all(), [
+            'payments.*.nro_operation' => ['required', 'string'],
+            'payments.*.dollar_price' => ['required', 'numeric'],
+            'payments.*.type_coin' => ['required', 'string', 'in:soles,dolares'],
             'payments.*.image' => ['required'],
             'payments.*.image.id' => ['required', 'integer', 'exists:App\Models\Image,id'],
             'payments.*.image.name' => ['required', 'exists:App\Models\Image,name'],
@@ -65,9 +67,13 @@ class PaymentController extends Controller
               'payment_concept_id' => $row['payment_concept_id'],
             ],[
               'image' => $row['image'],
+              'nro_operation' => $row['nro_operation'],
+              'dollar_price' => $row['dollar_price'],
+              'type_coin' => $row['type_coin'],
               'mount' => $row['mount'],
               'payment_date' => $row['payment_date'],
               'bank_entity_id' => $row['bank_entity_id'],
+              'user_id' => $request->user()->id,
             ]);
         }
         return PaymentResource::collection($payments);

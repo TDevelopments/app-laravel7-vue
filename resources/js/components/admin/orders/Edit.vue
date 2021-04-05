@@ -166,6 +166,41 @@
             </v-text-field>
           </v-col>
           <v-col cols="12" md="2">
+            Nro Operación
+            <v-text-field
+              v-model="paymentG.nro_operation"
+              dense
+              placeholder="0.00"
+              solo
+              type="number"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="12" md="2">
+            Precio $
+            <v-text-field
+              v-model="paymentG.dollar_price"
+              dense
+              placeholder="0.00"
+              solo
+              type="number"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="12" md="2">
+            Tipo moneda
+            <v-select
+              v-model="paymentG.type_coin"
+              :items="typeCoin"
+              dense
+              menu-props="auto"
+              hide-details
+              prepend-inner-icon="mdi-map"
+              solo
+              placeholder="Selecciona"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" md="2">
             Banco
             <v-select
               v-model="paymentG.bank_entity_id"
@@ -248,6 +283,7 @@ export default {
     bank: [],
     itemSelected: '',
     idDelete: [],
+    typeCoin: ['soles', 'dolares'],
   }),
   computed: {
     totalOrder() {
@@ -303,7 +339,7 @@ export default {
           .post(`/api/v1/orders/${this.$route.params.id}/payments`, { payments: this.payments })
           .then(response => {
             console.log(response);
-            this.getOrders();
+            this.updateOrders();
           })
           .catch(error => {
             console.log(error);
@@ -333,6 +369,13 @@ export default {
           this.user = response.data.data.user;
           this.catalogue = response.data.data.catalogue;
           this.payments = response.data.data.payment;
+          if (this.payments.length != 0 && this.payments != null) {
+            this.payments.forEach(payment => {
+              this.order.total_order =
+                parseFloat(this.order.total_order) - parseFloat(payment.mount);
+              console.log(this.order.total_order);
+            });
+          }
           this.payments.push({
             mount: '',
             payment_date: '',
@@ -342,6 +385,19 @@ export default {
             bank_entity_id: '',
           });
           console.log(this.payments);
+        })
+        .catch(error => {
+          console.log(error);
+          // reject(error);
+        });
+    },
+
+    updateOrders() {
+      axios
+        .put(`/api/v1/orders/${this.$route.params.id}`, { state_order_id: this.order.state_order })
+        .then(response => {
+          console.log(response);
+          this.getOrders();
         })
         .catch(error => {
           console.log(error);

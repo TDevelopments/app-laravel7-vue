@@ -255,7 +255,6 @@
                   solo
                   required
                   dense
-                  prefix="$"
                   type="number"
                 ></v-text-field>
               </td>
@@ -582,6 +581,7 @@ export default {
               images: this.imageResponse,
               description: this.description,
               colors: this.colors,
+              ranges: this.inputs,
             },
             {
               headers: {
@@ -636,9 +636,7 @@ export default {
     // Add New Component Variation
     addVariation() {
       if (
-        this.productRange.model != "" &&
         this.productRange.stock != "" &&
-        this.productRange.sku != "" &&
         this.productRange.brand != "" &&
         this.productRange.category != "" &&
         this.productRange.catalogue != "" &&

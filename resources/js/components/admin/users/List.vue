@@ -1,11 +1,14 @@
 <template>
-  <v-card>
+  <div>
     <v-data-table
       :headers="headers"
       :items="users"
       :loading="loading"
       item-key="item.id"
       loading-text="Loading... Please wait"
+      :page.sync="page"
+      :items-per-page="itemsPerPage"
+      hide-default-footer
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -56,7 +59,14 @@
         </v-icon>
       </template>
     </v-data-table>
-  </v-card>
+    <div class="text-center pt-2">
+      <v-pagination
+        v-model="page"
+        :length="pagination"
+        @input="next"
+      ></v-pagination>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -117,6 +127,11 @@ export default {
     ],
     users: [],
     idDelete: null,
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 15,
+    pagination: null,
+    baseURL: "",
   }),
   computed: {},
   mounted() {
@@ -130,6 +145,7 @@ export default {
           console.log(response);
           this.loading = false;
           this.users = response.data.data;
+          this.pagination = response.data.meta.last_page;
         })
         .catch((error) => {});
     },
@@ -168,6 +184,16 @@ export default {
           id: item.id,
         },
       });
+    },
+    next(page) {
+      axios
+        .get(`/api/v1/users?page=${page}`)
+        .then((response) => {
+          this.users = response.data.data;
+          this.pagination = response.data.meta.last_page;
+          console.log(response);
+        })
+        .catch((error) => {});
     },
   },
 };

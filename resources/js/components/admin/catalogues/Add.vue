@@ -190,6 +190,31 @@
                 </template>
               </v-combobox>
             </v-col>
+            <v-col cols="12" sm="12" md="12" lg="12">
+              Información Adicional de Cátalogo
+              <v-combobox
+                v-model="catalogue.additional_information"
+                chips
+                clearable
+                multiple
+                solo
+              >
+                <template v-slot:selection="{ attrs, item, select, selected }">
+                  <v-chip
+                    v-bind="attrs"
+                    :input-value="selected"
+                    close
+                    label
+                    class="my-2"
+                    @click="remove(item)"
+                    @click:close="remove(item)"
+                    color="primary"
+                  >
+                    {{ item }}
+                  </v-chip>
+                </template>
+              </v-combobox>
+            </v-col>
             <v-col cols="12">
               <v-file-input
                 v-model="imagesCatalogue"

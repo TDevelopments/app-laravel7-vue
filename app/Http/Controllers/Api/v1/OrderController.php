@@ -51,7 +51,7 @@ class OrderController extends Controller
     {
         if ($request->query("orderId")) {
             $value = $request->query("orderId");
-            $order = $this->order->where('id f', 'like', "%$value%")->paginate();
+            $order = $this->order->where('id', 'like', "%$value%")->paginate();
             return OrderResourceAdmin::collection($order);
         }
         if ($request->query("username"))
@@ -77,7 +77,12 @@ class OrderController extends Controller
                 return response()->json(['message' => "There is no state order with that name"]);
             $order = $this->order->where('state_order_id', $stateOrder->id)->paginate();
             return OrderResourceAdmin::collection($order);
-        }   
+        }
+        if ($request->query("catalogueId")) {
+            $value =  $request->query("catalogueId");
+            $consult = $this->order->where('catalogue_id', "$value")->get();
+            return OrderResourceAdmin::collection($consult);
+        }
         return OrderResourceAdmin::collection($this->order->orderBy('created_at', 'desc')->paginate());
     }
 

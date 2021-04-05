@@ -1,115 +1,145 @@
 <template>
   <v-card>
-    <v-row class="mx-2 pt-5">
-      <v-col>
-        <v-text-field label="Cliente" solo dense></v-text-field>
-      </v-col>
-      <v-col>
-        <v-text-field label="Estado" solo dense></v-text-field>
-      </v-col>
-      <v-col>
-        <v-text-field label="Modelo" solo dense></v-text-field>
-      </v-col>
-      <v-col>
-        <v-text-field label="Comming soon" solo dense></v-text-field>
-      </v-col>
-      <v-col>
-        <v-text-field label="Comming soon" solo dense></v-text-field>
-      </v-col>
-    </v-row>
-
-    <v-data-table
-      :headers="headers"
-      :items="orders"
-      item-key="item.id"
-      loading-text="Loading... Please wait"
-    >
-      <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title>Filtros de Ordenes</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-      </template>
-      <template v-slot:[`item.status`]="{ item }">
-        <v-chip color="red" dark small>
-          {{ item.status }}
-        </v-chip>
-      </template>
-      <template v-slot:[`item.actions`]="{ item }">
-        <v-row>
-          <v-col class="px-0">
-            <v-icon small @click="editItem(item)" color="#D6B331">
-              mdi-pencil
-            </v-icon>
-          </v-col>
-        </v-row>
-      </template>
-    </v-data-table>
+    <v-select
+      placeholder="Ingresa el nombre del catálogo"
+      solo
+      v-model="catSelect"
+      :items="catalogues"
+      item-text="name"
+      item-value="id"
+      dense
+    />
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" class="sticky-col first-col">Nombre</th>
+            <th v-for="(product, index) in products" :key="index">
+              {{ product.model }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(order, index) in orders" :key="index">
+            <th class="sticky-col first-col">{{ order.user.name }}</th>
+            <td v-for="(product, index) in products" :key="index">
+              <div v-for="(op, index) in order.orderDetails" :key="index">
+                {{ op.product.id == product.id ? op.quantity : '' }}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </v-card>
 </template>
+
 <script>
 import axios from 'axios';
 
 export default {
   data: () => ({
     orders: [],
-    headers: [
-      {
-        text: 'Cliente',
-        value: 'user.name',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Modelo',
-        value: 'id',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Cantidad',
-        value: 'catalogue.name',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Total',
-        value: 'status',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Total de Orden',
-        value: 'total_order',
-        align: 'center',
-        sortable: false,
-      },
-      { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
-    ],
+    idDelete: '',
+    dialogDelete: false,
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 15,
+    pagination: null,
+    catSelect: '',
+    catalogues: [],
+    products: [],
+    object: [],
   }),
+  watch: {
+    catSelect: function() {
+      this.getProducts();
+    },
+  },
   methods: {
-    // getOrders() {
-    //   axios
-    //     .get('/api/v1/orders')
-    //     .then(response => {
-    //       console.log(response);
-    //       this.orders = response.data.data;
-    //     })
-    //     .catch(error => {});
-    // },
-    // editItem(item) {
-    //   console.log(item.id);
-    //   this.$router.push({
-    //     name: 'editOrder',
-    //     params: {
-    //       id: item.id,
-    //     },
-    //   });
-    // },
+    search() {
+      console.log('Hola');
+    },
+    getCatalogues() {
+      axios
+        .get('/api/v1/list-catalogues')
+        .then(response => {
+          this.catalogues = response.data.data;
+          console.log(response);
+        })
+        .catch(error => {});
+    },
+    getProducts() {
+      axios
+        .get(`/api/v1/catalogues/${this.catSelect}`)
+        .then(response => {
+          this.products = response.data.data.products;
+          console.log(response.data.data.products);
+          this.getOrders();
+        })
+        .catch(error => {});
+    },
+    getOrders() {
+      axios
+        .get(`/api/v1/orders?catalogueId=${this.catSelect}`)
+        .then(response => {
+          this.orders = response.data.data;
+          console.log(response.data.data);
+        })
+        .catch(error => {});
+    },
+    createObject(){
+      this.orders.forEach(order => {
+          
+
+        this.products.forEach(product => {
+          
+        });
+      });
+    },
+    editItem(item) {
+      console.log(item.id);
+      this.$router.push({
+        name: 'editOrder',
+        params: {
+          id: item.id,
+        },
+      });
+    },
+    next(page) {
+      axios
+        .get(`/api/v1/orders?page=${page}`)
+        .then(response => {
+          console.log(response);
+          this.orders = response.data.data;
+          this.pagination = response.data.meta.last_page;
+        })
+        .catch(error => {});
+    },
   },
   mounted() {
-    this.getOrders();
+    this.getCatalogues();
   },
 };
 </script>
+<style scoped>
+.sticky-col {
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: white;
+}
+
+.first-col {
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
+  left: 0px;
+}
+
+.second-col {
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  left: 100px;
+}
+</style>

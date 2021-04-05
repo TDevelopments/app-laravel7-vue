@@ -26,6 +26,9 @@ class PaymentRequest extends FormRequest
         return [
             'mount' => ['required', 'numeric'],
             'payment_date' => ['required', 'date'],
+            'nro_operation' => ['required', 'string'],
+            'dollar_price' => ['required', 'numeric'],
+            'type_coin' => ['required', 'string', 'in:soles,dolares'],
             'image' => ['required'],
             'image.id' => ['required', 'integer', 'exists:App\Models\Image,id'],
             'image.name' => ['required', 'exists:App\Models\Image,name'],

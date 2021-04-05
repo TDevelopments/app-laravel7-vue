@@ -6,10 +6,7 @@ v<template>
       </div>
       <v-spacer></v-spacer>
       <div>
-        <v-checkbox
-          v-model="catalogue.is_available"
-          label="Disponible"
-        ></v-checkbox>
+        <v-checkbox v-model="catalogue.is_available" label="Disponible"></v-checkbox>
       </div>
     </v-row>
     <v-card flat elevation="2">
@@ -174,18 +171,10 @@ v<template>
                 </v-col>
               </v-row>
               <v-row>
-                <v-col cols="12" sm="12" md="6" lg="6">
+                <v-col cols="12" sm="12" md="12" lg="12">
                   Condiciones de Cátalogo
-                  <v-combobox
-                    v-model="catalogue.conditions"
-                    chips
-                    clearable
-                    multiple
-                    solo
-                  >
-                    <template
-                      v-slot:selection="{ attrs, item, select, selected }"
-                    >
+                  <v-combobox v-model="catalogue.conditions" chips clearable multiple solo>
+                    <template v-slot:selection="{ attrs, item, select, selected }">
                       <v-chip
                         v-bind="attrs"
                         :input-value="selected"
@@ -193,6 +182,33 @@ v<template>
                         label
                         class="my-2"
                         @click="select"
+                        @click:close="remove(item)"
+                        color="primary"
+                      >
+                        {{ item }}
+                      </v-chip>
+                    </template>
+                  </v-combobox>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="12" md="12" lg="12">
+                  Información Adicional de Cátalogo
+                  <v-combobox
+                    v-model="catalogue.additional_information"
+                    chips
+                    clearable
+                    multiple
+                    solo
+                  >
+                    <template v-slot:selection="{ attrs, item, select, selected }">
+                      <v-chip
+                        v-bind="attrs"
+                        :input-value="selected"
+                        close
+                        label
+                        class="my-2"
+                        @click="remove(item)"
                         @click:close="remove(item)"
                         color="primary"
                       >
@@ -299,20 +315,14 @@ v<template>
         </v-window-item>
       </v-window>
     </v-col>
-    <v-btn
-      :disabled="!valid"
-      color="#0D52D6"
-      dark
-      class="mr-4"
-      @click="validate"
-    >
+    <v-btn :disabled="!valid" color="#0D52D6" dark class="mr-4" @click="validate">
       Guardar
     </v-btn>
   </div>
 </template>
 
 <script>
-import moment from "moment";
+import moment from 'moment';
 export default {
   data: () => ({
     e1: null,
@@ -327,48 +337,49 @@ export default {
     window: null,
     valid: true,
     catalogue: {
-      name: "",
-      minimum_investment: "",
-      quota_price: "",
-      quota_date: "",
-      first_payment: "",
-      date_first_payment: "",
-      second_payment: "",
-      date_second_payment: "",
-      coins: "",
+      name: '',
+      minimum_investment: '',
+      quota_price: '',
+      quota_date: '',
+      first_payment: '',
+      date_first_payment: '',
+      second_payment: '',
+      date_second_payment: '',
+      coins: '',
       conditions: [],
+      additional_information: [],
     },
     select: null,
     url: null,
     cities: [
-      "Amazonas",
-      "Ancash",
-      "Apurímac",
-      "Arequipa",
-      "Ayacucho",
-      "Cajamarca",
-      "Cusco",
-      "Huancavelica",
-      "Huánuco",
-      "Ica",
-      "Junín",
-      "La Libertad",
-      "Lambayeque",
-      "Lima",
-      "Loreto",
-      "Madre de Dios",
-      "Moquegua",
-      "Pasco",
-      "Piura",
-      "Puno",
-      "San Martín",
-      "Tacna",
-      "Tumbes",
-      "Ucayali",
+      'Amazonas',
+      'Ancash',
+      'Apurímac',
+      'Arequipa',
+      'Ayacucho',
+      'Cajamarca',
+      'Cusco',
+      'Huancavelica',
+      'Huánuco',
+      'Ica',
+      'Junín',
+      'La Libertad',
+      'Lambayeque',
+      'Lima',
+      'Loreto',
+      'Madre de Dios',
+      'Moquegua',
+      'Pasco',
+      'Piura',
+      'Puno',
+      'San Martín',
+      'Tacna',
+      'Tumbes',
+      'Ucayali',
     ],
     idDelete: [],
-    coins: ["soles", "dolares"],
-    iconCoin: "",
+    coins: ['soles', 'dolares'],
+    iconCoin: '',
     imagesCatalogue: [],
   }),
   mounted() {
@@ -376,18 +387,17 @@ export default {
     this.typeCoin();
   },
   computed: {
-    productQG: function () {
+    productQG: function() {
       // `this` points to the vm instance
-      this.product.price_group =
-        this.product.price_unit * this.product.quantity_group;
+      this.product.price_group = this.product.price_unit * this.product.quantity_group;
       return this.product.price_group;
     },
   },
   watch: {
-    "catalogue.first_payment": function (val) {
+    'catalogue.first_payment': function(val) {
       this.catalogue.second_payment = parseInt(100 - val).toFixed();
     },
-    "catalogue.second_payment": function (val) {
+    'catalogue.second_payment': function(val) {
       this.catalogue.first_payment = parseInt(100 - val).toFixed();
     },
   },
@@ -395,8 +405,7 @@ export default {
     validate() {
       if (this.imagesCatalogue.length != 0) {
         this.addImages();
-      }
-      else {
+      } else {
         this.udpdateCatalogue();
       }
     },
@@ -404,34 +413,32 @@ export default {
       axios
         .get(`/api/v1/catalogues/${this.$route.params.id}`, {
           headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
           },
         })
-        .then((response) => {
+        .then(response => {
           console.log(response);
           this.catalogue = response.data.data;
-          (this.catalogue.quota_date = moment(
-            response.data.data.quota_date
-          ).format("YYYY-MM-DD")),
+          (this.catalogue.quota_date = moment(response.data.data.quota_date).format('YYYY-MM-DD')),
             (this.catalogue.date_first_payment = moment(
               response.data.data.date_first_payment
-            ).format("YYYY-MM-DD")),
+            ).format('YYYY-MM-DD')),
             (this.catalogue.date_second_payment = moment(
               response.data.data.date_second_payment
-            ).format("YYYY-MM-DD")),
-            this.catalogue.arrivals.forEach((element) => {
+            ).format('YYYY-MM-DD')),
+            this.catalogue.arrivals.forEach(element => {
               this.arrivalsDates.push({
                 id: element.id,
                 calendar: false,
                 city: element.city,
                 new: true,
-                arrival_date: moment(element.arrival_date).format("YYYY-MM-DD"),
+                arrival_date: moment(element.arrival_date).format('YYYY-MM-DD'),
               });
             });
-          console.log("asd", response.data.data.conditions);
+          console.log('asd', response.data.data.conditions);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     addImages() {
       const data = new FormData();
@@ -443,16 +450,16 @@ export default {
       axios
         .post(`/api/v1/uploads`, data, {
           headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
           },
         })
-        .then((response) => {
+        .then(response => {
           this.catalogue.image = response.data[0];
-          console.log("aqui", response.data[0]);
+          console.log('aqui', response.data[0]);
           this.udpdateCatalogue();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
           // reject(error);
         });
@@ -465,47 +472,42 @@ export default {
           { items: this.arrivalsDates },
           {
             headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
             },
           }
         )
-        .then((response) => {
-          this.$router.replace({ name: "listCatalogue" });
+        .then(response => {
+          this.$router.replace({ name: 'listCatalogue' });
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     deleteArrivals() {
       axios
-        .delete("/api/v1/arrivals", {
+        .delete('/api/v1/arrivals', {
           headers: {
-            Accept: "application/json",
+            Accept: 'application/json',
           },
           data: {
             items: this.idDelete,
           },
         })
-        .then((response) => {})
-        .catch((error) => {});
+        .then(response => {})
+        .catch(error => {});
     },
     add() {
       this.arrivalsDates.push({
-        calendar: "",
-        city: "",
-        arrival_date: "",
+        calendar: '',
+        city: '',
+        arrival_date: '',
         new: false,
       });
     },
 
     udpdateCatalogue() {
       axios
-        .put(`/api/v1/catalogues/${this.$route.params.id}`, this.catalogue, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
+        .put(`/api/v1/catalogues/${this.$route.params.id}`, this.catalogue)
+        .then(response => {
           if (this.idDelete.length != 0) {
             this.deleteArrivals();
             this.addArrivals(response.data.data.id);
@@ -513,15 +515,15 @@ export default {
             this.addArrivals(response.data.data.id);
           }
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     deleteRow(index, id) {
       this.arrivalsDates.splice(index, 1);
       this.idDelete.push(id);
     },
     typeCoin() {
-      if (this.catalogue.coin == "soles") this.iconCoin = "S/.";
-      else this.iconCoin = "$";
+      if (this.catalogue.coin == 'soles') this.iconCoin = 'S/.';
+      else this.iconCoin = '$';
     },
     remove(item) {
       this.catalogue.conditions.splice(this.catalogue.conditions.indexOf(item));
