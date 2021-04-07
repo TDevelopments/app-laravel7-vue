@@ -37,7 +37,7 @@ class ProductController extends Controller
             $value2 = $request->query("sku");
             $products = $this->product->where('model', 'like', "%$value%")
                                       ->orWhere('sku', 'like', "%$value2%")
-                                      ->orderBy('model')->paginate();
+                                      ->orderBy('model')->paginate()->withQueryString();
             return ProductResource::collection($products);
         }
 
@@ -59,12 +59,12 @@ class ProductController extends Controller
             switch ($value2) {
                 case "true":
                   $products = $this->product->whereColumn('count', '>=', 'stock')
-                                            ->orderBy('count')->paginate();
+                                            ->orderBy('count')->paginate()->withQueryString();
                     return ProductResource::collection($products);
                     break;
                 case "false":
                   $products = $this->product->whereColumn('count', '<=', 'stock')
-                                            ->orderBy('count')->paginate();
+                                            ->orderBy('count')->paginate()->withQueryString();
                     return ProductResource::collection($products);
                     break;
             }

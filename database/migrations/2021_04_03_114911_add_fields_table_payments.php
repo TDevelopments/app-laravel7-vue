@@ -29,7 +29,8 @@ class AddFieldsTablePayments extends Migration
     public function down()
     {
         Schema::table('payments', function (Blueprint $table) {
-            //
+            $table->dropForeign(['user_id']);
+            $table->dropColumn(['nro_operation', 'dollar_price', 'type_coin', 'user_id']);
         });
     }
 }

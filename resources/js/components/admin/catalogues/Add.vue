@@ -192,13 +192,7 @@
             </v-col>
             <v-col cols="12" sm="12" md="12" lg="12">
               Información Adicional de Cátalogo
-              <v-combobox
-                v-model="catalogue.additional_information"
-                chips
-                clearable
-                multiple
-                solo
-              >
+              <v-combobox v-model="catalogue.additional_information" chips clearable multiple solo>
                 <template v-slot:selection="{ attrs, item, select, selected }">
                   <v-chip
                     v-bind="attrs"
@@ -305,15 +299,35 @@
         </v-window-item>
       </v-window>
     </v-col>
-    <v-btn :disabled="!valid" color="#0D52D6" class="mr-4" @click="validate" dark>
-      Guardar
-    </v-btn>
+    <editor
+      ref="toastuiEditor"
+      :initialValue="editorText"
+      :options="editorOptions"
+      heigth="500px"
+      initialEditType="wysiwyg"
+      previewStyle="vertical"
+    />
+    <viewer :initialValue="viewerText" height="500px" />
+    <v-btn :disabled="!valid" color="#0D52D6" class="mr-4" @click="validate" dark> Guardar </v-btn>
   </div>
 </template>
 
 <script>
+import 'codemirror/lib/codemirror.css'; // Editor's Dependency Style
+import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
+import '@toast-ui/editor/dist/toastui-editor-viewer.css';
+import { Editor, Viewer } from '@toast-ui/vue-editor';
 export default {
+  components: {
+    editor: Editor,
+    viewer: Viewer,
+  },
   data: () => ({
+    editorText: '',
+    viewerText: `<h1>Probando</h1> <p><strong>COMPROBANDO</strong></p> <table> <thead> <tr> <th>Tablas</th> <th>Preguntas</th> </tr> </thead> <tbody> <tr> <td>order</td> <td>No se si esto funciona</td> </tr> </tbody> </table> <p><strong>Lorem Ipsum</strong><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">&nbsp;es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.</span></p> <ul> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Hay muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió alteraciones en alguna manera, ya sea porque se le agregó humor, o palabras aleatorias que no parecen ni un poco creíbles.</span></li> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Si vas a utilizar un pasaje de Lorem Ipsum, necesitás estar seguro de que no hay nada avergonzante escondido en el medio del texto.</span></li> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Todos los generadores de Lorem Ipsum que se encuentran en Internet tienden a repetir trozos predefinidos cuando sea necesario, haciendo a este el único generador verdadero (válido) en la Internet.</span></li> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Usa un diccionario de mas de 200 palabras provenientes del latín, combinadas con estructuras muy útiles de sentencias, para generar texto de Lorem Ipsum que parezca razonable.</span></li> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Este Lorem Ipsum generado siempre estará libre de repeticiones, humor agregado o palabras no características del lenguaje, etc.</span></li> </ul>`,
+    editorOptions: {
+      hideModeSwitch: true,
+    },
     imagesCatalogue: [],
     e1: null,
     inputs: [
@@ -376,15 +390,26 @@ export default {
     iconCoin: 'S/ .',
   }),
   watch: {
-    'catalogue.first_payment': function(val) {
+    'catalogue.first_payment': function (val) {
       this.catalogue.second_payment = parseInt(100 - val).toFixed();
     },
-    'catalogue.second_payment': function(val) {
+    'catalogue.second_payment': function (val) {
       this.catalogue.first_payment = parseInt(100 - val).toFixed();
     },
   },
   methods: {
+    scroll() {
+      this.$refs.toastuiEditor.invoke('scrollTop', 10);
+    },
+    moveTop() {
+      this.$refs.toastuiEditor.invoke('moveCursorToStart');
+    },
+    getHtml() {
+      let html = this.$refs.toastuiEditor.invoke('getHtml');
+      return html;
+    },
     validate() {
+      console.log('EditorText', this.getHtml());
       if (this.imagesCatalogue.length != 0) {
         this.addImages();
       } else {
@@ -405,12 +430,12 @@ export default {
             'Content-Type': 'multipart/form-data',
           },
         })
-        .then(response => {
+        .then((response) => {
           this.catalogue.image = response.data[0];
           console.log('aqui', response.data[0]);
           this.addCatalogue();
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           // reject(error);
         });
@@ -423,10 +448,10 @@ export default {
             'Content-Type': 'application/json',
           },
         })
-        .then(response => {
+        .then((response) => {
           this.addArrivals(response.data.data.id);
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     addArrivals(id) {
       axios
@@ -440,10 +465,10 @@ export default {
             },
           }
         )
-        .then(response => {
+        .then((response) => {
           this.$router.push({ name: 'listCatalogue' });
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     add() {
       this.inputs.push({

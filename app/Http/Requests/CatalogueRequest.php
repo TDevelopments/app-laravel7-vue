@@ -28,10 +28,10 @@ class CatalogueRequest extends FormRequest
             'image.id' => ['exists:App\Models\Image,id'],
             'image.name' => ['exists:App\Models\Image,name'],
             'image.path' => ['exists:App\Models\Image,path'],
-            'conditions' => ['array'],
-            'conditions.*' => ['string'],
-            'additional_information' => ['array'],
-            'additional_information.*' => ['string'],
+            /* 'conditions' => ['array'], */
+            /* 'conditions.*' => ['string'], */
+            /* 'additional_information' => ['array'], */
+            /* 'additional_information.*' => ['string'], */
             'is_available' => ['boolean'],
             'coin' => ['required', 'in:soles,dolares'],
             'quota_date' => ['required'],

@@ -38,7 +38,6 @@ use Faker\Generator as Faker;
 $factory->define(Catalogue::class, function (Faker $faker) {
     return [
         'name'                  => $this->faker->name(),
-        'conditions'            => $this->faker->sentences(),
         'coin'                  => $this->faker->randomElement(['soles', 'dolares']),
         'is_available'          => 1,
         'quota_price'           => 200,

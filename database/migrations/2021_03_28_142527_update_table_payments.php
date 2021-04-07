@@ -27,7 +27,9 @@ class UpdateTablePayments extends Migration
     public function down()
     {
         Schema::table('payments', function (Blueprint $table) {
-            //
+            $table->dropForeign(['payment_concept_id']);
+            $table->dropForeign(['bank_entity_id']);
+            $table->dropColumn(['payment_concept_id', 'bank_entity_id']);
         });
     }
 }

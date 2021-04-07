@@ -51,7 +51,7 @@ class OrderController extends Controller
     {
         if ($request->query("orderId")) {
             $value = $request->query("orderId");
-            $order = $this->order->where('id', 'like', "%$value%")->paginate();
+            $order = $this->order->where('id', 'like', "%$value%")->paginate()->withQueryString();
             return OrderResourceAdmin::collection($order);
         }
         if ($request->query("username"))
@@ -63,7 +63,7 @@ class OrderController extends Controller
             $order = $this->order->join('users', function($join) use($value2){
                 $join->on('orders.user_id', '=', 'users.id')
                 ->where('users.name', 'like', "%$value2%");
-            })->paginate();
+            })->paginate()->withQueryString();
             return OrderResourceAdmin::collection($order);
             
         }
@@ -97,6 +97,7 @@ class OrderController extends Controller
         // $order = $this->order->create($request->all());
         $validator = Validator::make($request->all(), [
                 'catalogue_id' => ['required', 'exists:App\Models\Catalogue,id'],
+                'products' => ['array'],
                 'products.*.product_id' => ['required', 'integer', 'exists:App\Models\Product,id'],
                 'products.*.quantity' => ['required', 'integer'],
                 'product_ranges' => ['array'],
