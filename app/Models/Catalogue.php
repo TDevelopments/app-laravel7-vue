@@ -19,9 +19,9 @@ class Catalogue extends Model
      */
 
     protected $casts = [
-        'conditions' => 'array',
+        /* 'conditions' => 'array', */
         'image' => 'array',
-        'additional_information' => 'array',
+        /* 'additional_information' => 'array', */
     ];
 
     protected $fillable = [

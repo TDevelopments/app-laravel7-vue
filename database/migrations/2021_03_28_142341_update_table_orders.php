@@ -27,7 +27,8 @@ class UpdateTableOrders extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            //
+            $table->dropForeign(['state_order_id']);
+            $table->dropColumn('state_order_id');
         });
     }
 }

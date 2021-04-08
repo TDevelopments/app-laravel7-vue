@@ -14,7 +14,7 @@ class UpdateTableCataloguesConditions extends Migration
     public function up()
     {
         Schema::table('catalogues', function (Blueprint $table) {
-            $table->json('conditions')->nullable();
+            $table->text('conditions')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class UpdateTableCataloguesConditions extends Migration
     public function down()
     {
         Schema::table('catalogues', function (Blueprint $table) {
-            //
+            $table->dropColumn('conditions');
         });
     }
 }

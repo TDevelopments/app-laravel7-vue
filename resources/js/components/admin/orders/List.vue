@@ -29,7 +29,7 @@
     >
       <template v-slot:[`item.status`]="{ item }">
         <v-chip color="red" dark small>
-          {{ item.status }}
+          {{ item.state_order }}
         </v-chip>
       </template>
       <template v-slot:[`item.actions`]="{ item }">

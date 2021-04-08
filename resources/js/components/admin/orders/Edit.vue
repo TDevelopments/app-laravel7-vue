@@ -102,17 +102,27 @@
         </v-expansion-panel>
       </v-expansion-panels>
       <br /><br />
-      <div class="d-flex">
+      <div class="d-flex justify-center align-center">
         <h4 class="mt-5">Pagos</h4>
+        <v-spacer></v-spacer>
+        <div class="d-flex mt-5">
+          <h3>Total de Deuda : &nbsp;</h3>
+          <h3>{{ totalOrderPayment | currency }} - &nbsp;</h3>
+          <h3>{{ totalPayments | currency }} = &nbsp;</h3>
+          <h3>
+            <strong>{{ (totalOrderPayment - totalPayments) | currency }}</strong>
+          </h3>
+        </div>
       </div>
+      <v-divider></v-divider>
       <div v-for="(paymentG, index) in payments" :key="index">
         <v-row>
-          <v-col cols="1" class="text-center">
+          <v-col cols="1" class="d-flex text-center justify-center align-center">
             <v-img
               v-if="paymentG.image == null || !paymentG.image || paymentG.image.length == 0"
               src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              max-width="100"
-              max-height="100"
+              width="100"
+              height="150"
               contain
               class="my-auto"
               @click="prueba('https://cdn.vuetifyjs.com/images/parallax/material.jpg')"
@@ -123,126 +133,135 @@
               contain
               class="my-auto"
               :src="paymentG.image.path"
-              max-width="100"
-              max-height="100"
+              width="100"
+              height="150"
             />
           </v-col>
-          <v-col cols="12" md="2">
-            Imagen
-            <v-file-input
-              accept="image/png, image/jpeg"
-              prepend-icon="mdi-camera"
-              solo
-              multiple
-              dense
-              placeholder="Pago"
-              v-model="paymentG.image_upload"
-              @change="addImages(paymentG.image_upload, index)"
-            ></v-file-input>
-          </v-col>
-          <v-col cols="12" md="3">
-            Concepto
-            <v-select
-              v-model="paymentG.payment_concept_id"
-              :items="concept"
-              item-text="name"
-              dense
-              item-value="id"
-              menu-props="auto"
-              hide-details
-              prepend-inner-icon="mdi-map"
-              solo
-            ></v-select>
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-menu
-              v-model="paymentG.calendar"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              dense
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                Fecha de Pago
-                <v-text-field
-                  v-model="paymentG.payment_date"
-                  prepend-inner-icon="mdi-calendar"
+          <v-col class="d-flex justify-center align-center">
+            <v-row>
+              <v-col cols="12" md="2" class="py-0">
+                Imagen
+                <v-file-input
+                  accept="image/png, image/jpeg"
+                  prepend-icon="mdi-camera"
                   solo
+                  multiple
                   dense
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="paymentG.payment_date"
-                @input="paymentG.calendar = false"
-              ></v-date-picker>
-            </v-menu>
-          </v-col>
-          <v-col cols="12" md="2">
-            Monto
-            <v-text-field v-model="paymentG.mount" dense placeholder="0.00" solo type="number">
-            </v-text-field>
-          </v-col>
-          <v-col cols="12" md="2">
-            Nro Operación
-            <v-text-field
-              v-model="paymentG.nro_operation"
-              dense
-              placeholder="0.00"
-              solo
-              type="number"
-            >
-            </v-text-field>
-          </v-col>
-          <v-col cols="12" md="2">
-            Tipo moneda
-            <v-select
-              v-model="paymentG.type_coin"
-              :items="typeCoin"
-              dense
-              menu-props="auto"
-              hide-details
-              prepend-inner-icon="mdi-map"
-              solo
-              placeholder="Selecciona"
-            ></v-select>
-          </v-col>
-          <v-col cols="12" md="2" v-if="paymentG.type_coin == 'dolares'">
-            Precio Dolar
-            <v-text-field
-              v-model="paymentG.dollar_price"
-              dense
-              placeholder="0.00"
-              solo
-              type="number"
-            >
-            </v-text-field>
-          </v-col>
-          <v-col cols="12" md="2">
-            Banco
-            <v-select
-              v-model="paymentG.bank_entity_id"
-              :items="bank"
-              dense
-              item-value="id"
-              item-text="name"
-              menu-props="auto"
-              hide-details
-              prepend-inner-icon="mdi-map"
-              solo
-              placeholder="Selecciona"
-            ></v-select>
+                  placeholder="Pago"
+                  v-model="paymentG.image_upload"
+                  @change="addImages(paymentG.image_upload, index)"
+                ></v-file-input>
+              </v-col>
+              <v-col cols="12" md="2" class="py-0">
+                Concepto
+                <v-select
+                  v-model="paymentG.payment_concept_id"
+                  :items="concept"
+                  item-text="name"
+                  dense
+                  item-value="id"
+                  menu-props="auto"
+                  hide-details
+                  prepend-inner-icon="mdi-map"
+                  solo
+                ></v-select>
+              </v-col>
+              <v-col cols="12" md="2" class="py-0">
+                <v-menu
+                  v-model="paymentG.calendar"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  dense
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    Fecha de Pago
+                    <v-text-field
+                      v-model="paymentG.payment_date"
+                      prepend-inner-icon="mdi-calendar"
+                      solo
+                      dense
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="paymentG.payment_date"
+                    @input="paymentG.calendar = false"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col cols="12" md="1" class="py-0">
+                Monto
+                <v-text-field v-model="paymentG.mount" dense placeholder="0.00" solo type="number">
+                </v-text-field>
+              </v-col>
+              <v-col cols="12" md="1" class="py-0">
+                Nro.Ope
+                <v-text-field
+                  v-model="paymentG.nro_operation"
+                  dense
+                  placeholder="0.00"
+                  solo
+                  type="number"
+                >
+                </v-text-field>
+              </v-col>
+              <v-col cols="12" md="2" class="py-0">
+                Tipo moneda
+                <v-select
+                  v-model="paymentG.type_coin"
+                  :items="typeCoin"
+                  dense
+                  menu-props="auto"
+                  hide-details
+                  prepend-inner-icon="mdi-map"
+                  solo
+                  placeholder="Selecciona"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" md="2" v-if="paymentG.type_coin == 'dolares'" class="py-0">
+                Precio Dolar
+                <v-text-field
+                  v-model="paymentG.dollar_price"
+                  dense
+                  placeholder="0.00"
+                  solo
+                  type="number"
+                >
+                </v-text-field>
+              </v-col>
+              <v-col cols="12" md="2" class="py-0">
+                Banco
+                <v-select
+                  v-model="paymentG.bank_entity_id"
+                  :items="bank"
+                  dense
+                  item-value="id"
+                  item-text="name"
+                  menu-props="auto"
+                  hide-details
+                  prepend-inner-icon="mdi-map"
+                  solo
+                  placeholder="Selecciona"
+                ></v-select>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
         <v-divider></v-divider>
       </div>
     </v-card-text>
-    <v-btn @click="validate">Guardar</v-btn>
-    <v-btn @click="validateProduct">Guardar Productos</v-btn>
     <ImagePaymen v-model="dialogImage" v-if="dialogImage" :image="itemSelected" />
+    <v-col>
+      <v-row>
+        <v-spacer />
+        <v-btn @click="validate" class="mx-2" color="#0D52D6" dark>Guardar</v-btn>
+        <v-btn @click="validateProduct" class="mx-2" color="#0D52D6" dark>Guardar Productos</v-btn>
+      </v-row>
+    </v-col>
   </v-card>
 </template>
 <script>
@@ -305,6 +324,8 @@ export default {
     itemSelected: '',
     idDelete: [],
     typeCoin: ['soles', 'dolares'],
+    totalPayments: null,
+    totalOrderPayment: null,
   }),
   computed: {
     totalOrder() {
@@ -390,11 +411,11 @@ export default {
           this.user = response.data.data.user;
           this.catalogue = response.data.data.catalogue;
           this.payments = response.data.data.payment;
+          this.totalOrderPayment = this.order.total_order;
+          this.totalPayments = 0;
           if (this.payments.length != 0 && this.payments != null) {
             this.payments.forEach(payment => {
-              this.order.total_order =
-                parseFloat(this.order.total_order) - parseFloat(payment.mount);
-              console.log(this.order.total_order);
+              this.totalPayments = this.totalPayments + parseFloat(payment.mount);
             });
           }
           this.payments.push({

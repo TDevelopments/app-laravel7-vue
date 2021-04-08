@@ -160,15 +160,7 @@
       <v-col class="px-0 content-card pt-0 mt-5">
         <v-toolbar color="black" class="px-0 text-h6" dark flat>Información</v-toolbar>
         <br />
-        <ul class="pb-1 mb-0">
-          <li
-            v-for="(element, index) in catalogue.additional_information"
-            :key="index"
-            class="pb-0 pt-1 text-justify"
-          >
-            {{ element }}
-          </li>
-        </ul>
+        <viewer :initialValue="catalogue.additional_information" height="500px" />
         <ul class="pb-0 mb-0">
           <li><strong>CUENTAS:</strong></li>
           <ul>
@@ -200,15 +192,7 @@
       <v-col class="px-0 content-card pt-0 mt-5">
         <v-toolbar color="black" class="px-0 text-h6" dark flat>Términos y Condiciones</v-toolbar>
         <br />
-        <ul>
-          <li
-            v-for="(element, index) in catalogue.conditions"
-            :key="index"
-            class="pb-0 pt-1 text-justify"
-          >
-            {{ element }}
-          </li>
-        </ul>
+        <viewer :initialValue="catalogue.conditions" height="500px" />
       </v-col>
       <v-row class="my-3">
         <v-col v-for="(item, index) in adviser" :key="index" class="px-0 text-center mx-1">
@@ -223,12 +207,7 @@
       </v-row>
       <v-row class="mt-5">
         <v-col cols="12" sm="12" md="9" lg="9">
-          <v-tabs
-            fixed-tabs
-            background-color="#bcdaf1"
-            v-model="currentTab"
-            show-arrows
-          >
+          <v-tabs fixed-tabs background-color="#bcdaf1" v-model="currentTab" show-arrows>
             <v-tab v-if="catalogue.products.length != 0"> Productos </v-tab>
             <v-tab v-if="catalogue.productRanges.length != 0">
               Productos por rango
@@ -310,7 +289,7 @@
                     <td class="style-table-td pr-5">
                       <div class="form-inline justify-content-center">
                         <v-btn
-                          @click="minusFunction(props.item, index)"
+                          @click="minusFunction(props.item, props.index)"
                           color="secondary"
                           fab
                           x-small
@@ -395,7 +374,9 @@
                       {{ props.item.price_group | currency }}
                     </td>
                     <td class="px-0 py-5">
-                      <v-btn small class="my-5" @click="prueba(props.item, 'normal')">Ver Mas</v-btn>
+                      <v-btn small class="my-5" @click="prueba(props.item, 'normal')"
+                        >Ver Mas</v-btn
+                      >
                       <br />
                       <div class="form-inline justify-content-center">
                         <v-btn
@@ -477,7 +458,7 @@
                       </v-btn>
                     </td>
                     <td class="style-table-td">
-                      {{ props.item.brand }}   
+                      {{ props.item.brand }}
                     </td>
                     <td class="style-table-td">
                       <ul>
@@ -490,7 +471,7 @@
                     <td class="style-table-td pr-5">
                       <div class="form-inline justify-content-center">
                         <v-btn
-                          @click="minusFunctionR(props.item,props.index)"
+                          @click="minusFunctionR(props.item, props.index)"
                           color="secondary"
                           fab
                           x-small
@@ -516,9 +497,8 @@
                     </td>
                     <td class="style-table-td">
                       {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
-                      {{ props.item.total | currency }}   
+                      {{ props.item.total | currency }}
                     </td>
-                  </tr>
                   </tr>
                 </template>
               </v-data-table>
@@ -534,7 +514,7 @@
                 class="elevation-1 mt-3 hidden-sm-and-up"
                 v-if="catalogue.productRanges.length != 0"
               >
-              <template v-slot:item="props">
+                <template v-slot:item="props">
                   <tr class="mt-5 bb">
                     <td class="px-0">
                       <v-row class="px-2">
@@ -585,7 +565,7 @@
                       <br />
                       <div class="form-inline justify-content-center">
                         <v-btn
-                          @click="minusFunctionR(props.item,props.index)"
+                          @click="minusFunctionR(props.item, props.index)"
                           color="#000"
                           icon
                           x-small
@@ -770,12 +750,7 @@
                   <v-btn color="green darken-1" text @click="dialog = false">
                     Cancelar
                   </v-btn>
-                  <v-btn
-                    v-if="isLoggedIn"
-                    color="green darken-1"
-                    text
-                    @click="generateOrderAction"
-                  >
+                  <v-btn v-if="isLoggedIn" color="green darken-1" text @click="generateOrderAction">
                     Generar
                   </v-btn>
                   <v-btn v-else color="green darken-1" text :to="{ name: 'register' }">
@@ -1052,10 +1027,14 @@
 import Product from './product';
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
+import '@toast-ui/editor/dist/toastui-editor-viewer.css';
+import { Editor, Viewer } from '@toast-ui/vue-editor';
 
 export default {
   comments: {
     Product,
+    editor: Editor,
+    viewer: Viewer,
   },
   data: () => ({
     dialogSuccess: false,
@@ -1147,10 +1126,12 @@ export default {
     proCa: [],
     adviser: [],
     bank: [],
-    elementType: "",
+    elementType: '',
   }),
   components: {
     Product,
+    editor: Editor,
+    viewer: Viewer,
   },
   computed: {
     ...mapGetters('groupImport', ['catalogue', 'cart']),
@@ -1261,7 +1242,10 @@ export default {
         let p = 0;
         if (this.catalogue.productRanges[index].ranges.length != 0) {
           this.catalogue.productRanges[index].ranges.forEach(range => {
-            if ((this.catalogue.productRanges[index].quantity >= range.min) && (this.catalogue.productRanges[index].quantity <= range.max)) {
+            if (
+              this.catalogue.productRanges[index].quantity >= range.min &&
+              this.catalogue.productRanges[index].quantity <= range.max
+            ) {
               t = range.price * this.catalogue.productRanges[index].quantity;
             }
             p = range.price;
@@ -1272,7 +1256,8 @@ export default {
         this.catalogue.productRanges[index].total = t;
 
         if (this.catalogue.productRanges[index].total == 0) {
-          this.catalogue.productRanges[index].total = p * this.catalogue.productRanges[index].quantity;
+          this.catalogue.productRanges[index].total =
+            p * this.catalogue.productRanges[index].quantity;
         }
       }
     },
@@ -1283,7 +1268,10 @@ export default {
       let p = 0;
       if (this.catalogue.productRanges[index].ranges.length != 0) {
         this.catalogue.productRanges[index].ranges.forEach(range => {
-          if ((this.catalogue.productRanges[index].quantity >= range.min) && (this.catalogue.productRanges[index].quantity <= range.max)) {
+          if (
+            this.catalogue.productRanges[index].quantity >= range.min &&
+            this.catalogue.productRanges[index].quantity <= range.max
+          ) {
             t = range.price * this.catalogue.productRanges[index].quantity;
           }
           p = range.price;
@@ -1294,9 +1282,9 @@ export default {
       this.catalogue.productRanges[index].total = t;
 
       if (this.catalogue.productRanges[index].total == 0) {
-        this.catalogue.productRanges[index].total = p * this.catalogue.productRanges[index].quantity;
+        this.catalogue.productRanges[index].total =
+          p * this.catalogue.productRanges[index].quantity;
       }
-
     },
 
     reserve() {
@@ -1355,6 +1343,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
 .style-table-th {
   border-bottom: 2px solid !important;
 }

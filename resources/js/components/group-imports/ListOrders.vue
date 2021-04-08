@@ -18,11 +18,11 @@
                   </v-col>
                   <v-col class="p-0 pb-1">
                     <v-chip
-                      :color="order.status == 'pending' ? 'red' : 'green'"
+                      :color="order.state_order.name == 'Pendiente' ? 'red' : 'green'"
                       dark
                       small
                       class="text-capitalize d-flex justify-center align-center"
-                      >{{ order.status == 'pending' ? 'Pendiente' : 'Otro' }}</v-chip
+                      >{{ order.state_order.name }}</v-chip
                     >
                   </v-col>
                 </v-row>
@@ -189,13 +189,39 @@
               <v-tab-item v-else>
                 <br />
                 <br />
-
-                <div v-for="(item, index) in order.payment" :key="index">
-                  <strong> Pago Nro :</strong> {{ index + 1 }} <br />
-                  Monto Pagado: {{ item.mount }} <br />
-                  Fecha de Pago: {{ item.payment_date | date }}
-                  <v-divider></v-divider>
-                </div>
+                <v-data-table
+                  :headers="paymentHeaders"
+                  :items="order.payment"
+                  dense
+                  class="hidden-xs-only "
+                  hide-default-footer
+                  disable-pagination
+                >
+                  <template v-slot:top>
+                    <v-toolbar flat>
+                      <v-toolbar-title>
+                        Total Pagado : {{ order.tot }} <br />
+                        Deuda : {{ (order.total_order - order.tot) | currency }}
+                      </v-toolbar-title>
+                      <v-spacer></v-spacer>
+                    </v-toolbar>
+                  </template>
+                  <template v-slot:[`item.id`]="{ item, index }">
+                    {{ index + 1 }}
+                  </template>
+                </v-data-table>
+                <!-- <div class="d-flex">
+                  <div v-for="(item, index) in order.payment" :key="index" class="d-flex mx-2">
+                    <div>
+                      <strong> Pago Nro :</strong> {{ index + 1 }} <br />
+                      Monto Pagado: {{ item.mount }} <br />
+                      Fecha de Pago: {{ item.payment_date | date }} <br />
+                      Banco : {{ item.bankEntity }} <br />
+                      Nro de Operacion : {{ item.nro_operation }}
+                    </div>
+                    <v-divider vertical class="mx-2"></v-divider>
+                  </div>
+                </div> -->
               </v-tab-item>
             </v-tabs-items>
           </v-expansion-panel-content>
@@ -215,6 +241,8 @@
 <script>
 import Product from './product';
 import moment from 'moment';
+import _ from 'lodash';
+
 export default {
   components: {
     Product,
@@ -268,8 +296,8 @@ export default {
     ],
     paymentHeaders: [
       {
-        text: 'Imagen',
-        value: 'image',
+        text: 'Nro. Pago',
+        value: 'id',
         align: 'center',
         sortable: false,
       },
@@ -285,14 +313,23 @@ export default {
         align: 'center',
         sortable: false,
       },
-      // {
-      //   text: 'Banco',
-      //   value: 'bank_entity_id',
-      //   align: 'center',
-      //   sortable: false,
-      // },
+      {
+        text: 'Banco',
+        value: 'bankEntity',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Concepto de Pago',
+        value: 'paymentConcept',
+        align: 'center',
+        sortable: false,
+      },
     ],
     elementType: '',
+    payments: [],
+    totalOrderPayment: 0,
+    totalPayments: 0,
   }),
   methods: {
     getOrders() {
@@ -300,7 +337,14 @@ export default {
         .get('/api/v1/user-order')
         .then(response => {
           this.orders = response.data.data;
-          console.log(response.data);
+          this.orders.forEach(element => {
+            let tot = 0;
+            element.payment.forEach(pay => {
+              tot = tot + pay.mount;
+            });
+            element.tot = tot;
+          });
+          console.log(this.orders);
         })
         .catch(error => {
           console.log(error);

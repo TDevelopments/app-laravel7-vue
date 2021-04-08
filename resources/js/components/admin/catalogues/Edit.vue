@@ -173,49 +173,29 @@ v<template>
               <v-row>
                 <v-col cols="12" sm="12" md="12" lg="12">
                   Condiciones de Cátalogo
-                  <v-combobox v-model="catalogue.conditions" chips clearable multiple solo>
-                    <template v-slot:selection="{ attrs, item, select, selected }">
-                      <v-chip
-                        v-bind="attrs"
-                        :input-value="selected"
-                        close
-                        label
-                        class="my-2"
-                        @click="select"
-                        @click:close="remove(item)"
-                        color="primary"
-                      >
-                        {{ item }}
-                      </v-chip>
-                    </template>
-                  </v-combobox>
+                  <editor
+                    ref="conditions"
+                    :initialValue="catalogue.conditions"
+                    :options="editorOptions"
+                    heigth="500px"
+                    initialEditType="wysiwyg"
+                    previewStyle="vertical"
+                    v-if="loading"
+                  />
                 </v-col>
               </v-row>
               <v-row>
                 <v-col cols="12" sm="12" md="12" lg="12">
                   Información Adicional de Cátalogo
-                  <v-combobox
-                    v-model="catalogue.additional_information"
-                    chips
-                    clearable
-                    multiple
-                    solo
-                  >
-                    <template v-slot:selection="{ attrs, item, select, selected }">
-                      <v-chip
-                        v-bind="attrs"
-                        :input-value="selected"
-                        close
-                        label
-                        class="my-2"
-                        @click="remove(item)"
-                        @click:close="remove(item)"
-                        color="primary"
-                      >
-                        {{ item }}
-                      </v-chip>
-                    </template>
-                  </v-combobox>
+                  <editor
+                    v-if="loading"
+                    ref="additional_information"
+                    :options="editorOptions"
+                    heigth="500px"
+                    initialEditType="wysiwyg"
+                    previewStyle="vertical"
+                    :initialValue="catalogue.additional_information"
+                  />
                 </v-col>
               </v-row>
             </v-col>
@@ -322,8 +302,17 @@ v<template>
 </template>
 
 <script>
+import 'codemirror/lib/codemirror.css'; // Editor's Dependency Style
+import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
+import '@toast-ui/editor/dist/toastui-editor-viewer.css';
+import { Editor, Viewer } from '@toast-ui/vue-editor';
 import moment from 'moment';
+
 export default {
+  components: {
+    editor: Editor,
+    viewer: Viewer,
+  },
   data: () => ({
     e1: null,
     arrivalsDates: [],
@@ -345,9 +334,10 @@ export default {
       date_first_payment: '',
       second_payment: '',
       date_second_payment: '',
-      coins: '',
-      conditions: [],
-      additional_information: [],
+      coin: '',
+      conditions: '',
+      additional_information: '',
+      image: [],
     },
     select: null,
     url: null,
@@ -381,6 +371,10 @@ export default {
     coins: ['soles', 'dolares'],
     iconCoin: '',
     imagesCatalogue: [],
+    editorOptions: {
+      hideModeSwitch: true,
+    },
+    loading: false,
   }),
   mounted() {
     this.getCatalogue();
@@ -402,6 +396,20 @@ export default {
     },
   },
   methods: {
+    scroll() {
+      this.$refs.toastuiEditor.invoke('scrollTop', 10);
+    },
+    moveTop() {
+      this.$refs.toastuiEditor.invoke('moveCursorToStart');
+    },
+    getHtmlAdditional() {
+      let html = this.$refs.additional_information.invoke('getHtml');
+      return html;
+    },
+    getHtmlConditions() {
+      let html = this.$refs.conditions.invoke('getHtml');
+      return html;
+    },
     validate() {
       if (this.imagesCatalogue.length != 0) {
         this.addImages();
@@ -411,12 +419,7 @@ export default {
     },
     getCatalogue() {
       axios
-        .get(`/api/v1/catalogues/${this.$route.params.id}`, {
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
+        .get(`/api/v1/catalogues/${this.$route.params.id}`)
         .then(response => {
           console.log(response);
           this.catalogue = response.data.data;
@@ -436,7 +439,8 @@ export default {
                 arrival_date: moment(element.arrival_date).format('YYYY-MM-DD'),
               });
             });
-          console.log('asd', response.data.data.conditions);
+          console.log('asd', this.catalogue);
+          this.loading = true;
         })
         .catch(error => {});
     },
@@ -505,8 +509,22 @@ export default {
     },
 
     udpdateCatalogue() {
+      let data = {
+        name: this.catalogue.name,
+        minimum_investment: this.catalogue.minimum_investment,
+        quota_price: this.catalogue.quota_price,
+        quota_date: this.catalogue.quota_date,
+        first_payment: this.catalogue.first_payment,
+        date_first_payment: this.catalogue.date_first_payment,
+        second_payment: this.catalogue.second_payment,
+        date_second_payment: this.catalogue.date_second_payment,
+        coin: this.catalogue.coin,
+        conditions: this.getHtmlConditions(),
+        additional_information: this.getHtmlAdditional(),
+        image: this.catalogue.image,
+      };
       axios
-        .put(`/api/v1/catalogues/${this.$route.params.id}`, this.catalogue)
+        .put(`/api/v1/catalogues/${this.$route.params.id}`, data)
         .then(response => {
           if (this.idDelete.length != 0) {
             this.deleteArrivals();
@@ -524,10 +542,6 @@ export default {
     typeCoin() {
       if (this.catalogue.coin == 'soles') this.iconCoin = 'S/.';
       else this.iconCoin = '$';
-    },
-    remove(item) {
-      this.catalogue.conditions.splice(this.catalogue.conditions.indexOf(item));
-      this.catalogue.conditions = [...this.catalogue.conditions];
     },
   },
 };
