@@ -161,7 +161,7 @@
         <v-toolbar color="black" class="px-0 text-h6" dark flat>Información</v-toolbar>
         <br />
         <viewer :initialValue="catalogue.additional_information" height="500px" />
-        <ul class="pb-0 mb-0">
+        <!-- <ul class="pb-0 mb-0">
           <li><strong>CUENTAS:</strong></li>
           <ul>
             <div v-for="(item, index) in bank" :key="index">
@@ -183,7 +183,7 @@
                 </li>
               </div>
             </div>
-          </ul>
+          </ul> -->
           <!-- <li>
             Y enviar su constancia al siguiente número de Whatsapp: <strong>927750048</strong>
           </li> -->
