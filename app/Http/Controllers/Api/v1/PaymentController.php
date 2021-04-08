@@ -19,6 +19,7 @@ class PaymentController extends Controller
     public function __construct(Order $order, Payment $payment)
     {
         $this->middleware('api.admin');
+        $this->middleware('api.accountant');
         $this->payment = $payment;
         $this->order = $order;
     }

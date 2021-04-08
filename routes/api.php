@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\v1\BankEntityController;
 use App\Http\Controllers\Api\v1\StateOrderController;
 use App\Http\Controllers\Api\v1\PaymentConceptController;
 use App\Http\Controllers\Api\v1\AdviserController;
+use App\Http\Controllers\Api\v1\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,6 +148,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('orders/{order}', [OrderController::class, 'show']);
         Route::delete('orders/{order}', [OrderController::class, 'destroy']);
 
+        // Roles 
+        Route::get('roles', [RoleController::class, 'index']);
 
         // Payments
         Route::post('orders/{order}/payments', [PaymentController::class, 'store']);

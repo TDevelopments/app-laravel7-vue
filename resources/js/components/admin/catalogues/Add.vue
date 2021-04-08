@@ -363,11 +363,11 @@ export default {
       this.$refs.toastuiEditor.invoke('moveCursorToStart');
     },
     getHtmlAdditional() {
-      let html = this.$refs.additional_information.invoke('getHtml');
+      let html = this.$refs.additional_information.invoke('getMarkdown');
       return html;
     },
     getHtmlConditions() {
-      let html = this.$refs.conditions.invoke('getHtml');
+      let html = this.$refs.conditions.invoke('getMarkdown');
       return html;
     },
     validate() {

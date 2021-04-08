@@ -70,8 +70,8 @@ class OrderController extends Controller
         if ($request->query("stateOrder"))
         {
             $value3 = $request->query("stateOrder");
-            $consult = $this->stateOrder->where('name', $value3)->get();
-            $stateOrder = $this->stateOrder->where('name', $value3)->first();
+            $consult = $this->stateOrder->find($value3)->get();
+            $stateOrder = $this->stateOrder->find($value3)->first();
             // return response()->json(["stado" => $stateOrder, "true" => !empty($stateOrder)]);
             if (count($consult) == 0)
                 return response()->json(['message' => "There is no state order with that name"]);
@@ -204,6 +204,14 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
+      $ordersDetails = $this->orderDetail->where('order_id', $order->id)->get();
+      foreach($ordersDetails as $orderDetail)
+      {
+          if (is_null($orderDetail->product_id))
+              $this->productRange->find($orderDetail->product_range_id)->decrement('count', (int)$orderDetail->quantity);
+          else
+              $this->product->find($orderDetail->product_id)->decrement('count', (int)$orderDetail->quantity);
+      }
       $order->delete();
       return response()->json(null, 204);
     }

@@ -142,6 +142,15 @@ class OrderDetailController extends Controller
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
+        $orderDetails = $request->order_details;
+        foreach($orderDetails as $orderDetail)
+        {
+            $orderDetailReference = $this->orderDetail->find($orderDetail);
+            if (is_null($orderDetailReference->product_id))
+                $this->productRange->find($orderDetailReference->product_range_id)->decrement('count', (int)$orderDetailReference->quantity);
+            else
+                $this->product->find($orderDetailReference->product_id)->decrement('count', (int)$orderDetailReference->quantity);
+        }
         $this->orderDetail->destroy($request->order_details);
         return response()->json(['success' => 'Order Detail Delete successfully.']);
     }
