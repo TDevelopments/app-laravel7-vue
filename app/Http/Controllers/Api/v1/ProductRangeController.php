@@ -30,6 +30,14 @@ class ProductRangeController extends Controller
      */
     public function index()
     {
+        if ($request->query("model") && $request->query("sku")) {
+            $value = $request->query("model");
+            $value2 = $request->query("sku");
+            $products = $this->product->where('model', 'like', "%$value%")
+                                      ->orWhere('sku', 'like', "%$value2%")
+                                      ->orderBy('model')->paginate()->withQueryString();
+            return ProductRangeResource::collection($products);
+        }
         return ProductRangeResource::collection($this->product_range->paginate());
     }
 
