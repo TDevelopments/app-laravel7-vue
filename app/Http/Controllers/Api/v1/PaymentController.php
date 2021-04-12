@@ -19,6 +19,7 @@ class PaymentController extends Controller
     public function __construct(Order $order, Payment $payment)
     {
         $this->middleware('api.admin');
+        $this->payment = $payment;
         $this->order = $order;
     }
 
@@ -59,6 +60,9 @@ class PaymentController extends Controller
         $payments = array();
         foreach($data as $row)
         {
+            /* if (strpos($foo, 'mundo') !== false) { */
+            /*     echo 'true'; */
+            /* } */
           /* $paymentConceptReference = $this->paymentConcept->find($row['payment_concept_id']); */
           /* $ordersDetails = $this->orderDetail->where('order_id', $order->id)->get(); */
           /* foreach($ordersDetails as $orderDetail) */

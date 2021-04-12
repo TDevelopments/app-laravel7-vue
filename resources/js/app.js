@@ -9,6 +9,7 @@ import App from './components/App';
 import Axios from 'axios';
 import Vue from 'vue';
 import VueZoomer from 'vue-zoomer';
+import VueExcelEditor from 'vue-excel-editor';
 
 Vue.prototype.$http = Axios;
 Vue.prototype.$http.defaults.baseURL = process.env.APP_URL;
@@ -32,6 +33,7 @@ router.beforeEach((to, from, next) => {
 });
 
 Vue.use(VueZoomer);
+Vue.use(VueExcelEditor);
 
 const app = new Vue({
   el: '#app',
