@@ -62,21 +62,33 @@ class OrderDetailController extends Controller
         $products = array();
         if($request->products)
         {
-
             foreach($data as $row)
             {
-                $productReference = $this->product->find($row['product_id']);
-                $products[] = $this->orderDetail->updateOrCreate(
-                    [
-                        'product_id' => $row['product_id'],
-                        'order_id' => $order->id,
-                    ],
-                    [
-                        'quantity' => $row['quantity'],
-                        'model' => $productReference->sku,
-                        'sku' => $productReference->sku,
-                        'total' => $productReference->price_unit * $row['quantity']
-                    ]);
+                if((int)$row['quantity'] == 0)
+                    continue;
+                else
+                {
+                    /* $consult = $this->orderDetail->join('products', function($join){ */
+                    /*     $join->on('order_details.product_id', '=', 'products.id') */
+                    /*          ->where('products.id', 'like', "%$value2%"); */
+                    /* })->get()->first(); */
+                    /* return $consult; */
+                    /* if() */
+                    /* { */
+                    /* } */
+                    $productReference = $this->product->find($row['product_id']);
+                    $products[] = $this->orderDetail->updateOrCreate(
+                        [
+                            'product_id' => $row['product_id'],
+                            'order_id' => $order->id,
+                        ],
+                        [
+                            'quantity' => $row['quantity'],
+                            'model' => $productReference->model,
+                            'sku' => $productReference->sku,
+                            'total' => $productReference->price_unit * $row['quantity']
+                        ]);
+                }
             }
         }
         if($request->product_ranges)
@@ -90,12 +102,12 @@ class OrderDetailController extends Controller
                 {
                     continue;
                 }
-                $product_ranges[] = $this->orderDetail->updateOrCreate(
+                $products[] = $this->orderDetail->updateOrCreate(
                     [
                         'product_range_id' => $productRangeReference->id,
                         'order_id' => $order->id,
                     ],[
-                        'model' => $productRangeReference->sku,
+                        'model' => $productRangeReference->model,
                         'sku' => $productRangeReference->sku,
                         'price' => $rangeReference->price,
                         'quantity' => $row['quantity'],
@@ -104,7 +116,7 @@ class OrderDetailController extends Controller
                 /* $productRangeReference->increment('count', $row['quantity']); */
             }
         }
-        return OrderDetailResource::collection($products);
+        return OrderDetailResource::collection($order->orderDetails);
     }
 
     /**

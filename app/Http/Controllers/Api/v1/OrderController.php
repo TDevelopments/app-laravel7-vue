@@ -125,18 +125,23 @@ class OrderController extends Controller
         {
             foreach($data as $row)
             {
-                $productReference = $this->product->find($row['product_id']);
-                $products[] = $this->orderDetail->updateOrCreate(
-                    [
-                        'product_id' => $row['product_id'],
-                        'order_id' => $order->id,
-                        'quantity' => $row['quantity'],
-                        'price' => $productReference->price_unit,
-                        'model' => $productReference->model,
-                        'sku' => $productReference->sku,
-                        'total' => $productReference->price_unit * $row['quantity']
-                    ]);
-                /* $productReference->increment('count', $row['quantity']); */
+                if((int)$row['quantity'] == 0)
+                    continue;
+                else
+                {
+                    $productReference = $this->product->find($row['product_id']);
+                    $products[] = $this->orderDetail->updateOrCreate(
+                        [
+                            'product_id' => $row['product_id'],
+                            'order_id' => $order->id,
+                            'quantity' => $row['quantity'],
+                            'price' => $productReference->price_unit,
+                            'model' => $productReference->model,
+                            'sku' => $productReference->sku,
+                            'total' => $productReference->price_unit * $row['quantity']
+                        ]);
+                    /* $productReference->increment('count', $row['quantity']); */
+                }
             }
         }
         if($request->product_ranges)
