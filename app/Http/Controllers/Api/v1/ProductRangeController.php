@@ -30,7 +30,7 @@ class ProductRangeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if ($request->query("model") && $request->query("sku")) {
             $value = $request->query("model");

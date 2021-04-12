@@ -73,7 +73,8 @@ class OrderDetailController extends Controller
                     ],
                     [
                         'quantity' => $row['quantity'],
-                        'price' => $productReference->price_unit,
+                        'model' => $productReference->sku,
+                        'sku' => $productReference->sku,
                         'total' => $productReference->price_unit * $row['quantity']
                     ]);
             }
@@ -94,6 +95,8 @@ class OrderDetailController extends Controller
                         'product_range_id' => $productRangeReference->id,
                         'order_id' => $order->id,
                     ],[
+                        'model' => $productRangeReference->sku,
+                        'sku' => $productRangeReference->sku,
                         'price' => $rangeReference->price,
                         'quantity' => $row['quantity'],
                         'total' => $rangeReference->price * $row['quantity']
