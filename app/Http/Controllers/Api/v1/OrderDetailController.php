@@ -84,6 +84,7 @@ class OrderDetailController extends Controller
                         ],
                         [
                             'quantity' => $row['quantity'],
+                            'price' => $productReference->price_unit,
                             'model' => $productReference->model,
                             'sku' => $productReference->sku,
                             'total' => $productReference->price_unit * $row['quantity']
