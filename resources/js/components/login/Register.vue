@@ -3,7 +3,7 @@
     <div class="container">
       <div class="register-content">
         <v-alert dense text type="error" dismissible :hidden="alert">
-          Ocurrio un error durante el registro, vuelve a intentarlo.
+          {{ alr }}
         </v-alert>
         <h1 class="h1">Registro de Usuario</h1>
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -114,7 +114,6 @@ export default {
       min: v => v.length >= 8 || 'Min 8 characters',
     },
     generalRules: [v => !!v || 'Este campo no puede ir vacio'],
-    e6: 1,
     name: '',
     lastname: '',
     email: '',
@@ -137,6 +136,7 @@ export default {
     ],
     dialogAfterRegister: false,
     alert: true,
+    alr: 'Ocurrio un error durante el registro, vuelve a intentarlo.',
   }),
 
   computed: {
@@ -174,10 +174,17 @@ export default {
         })
         .catch(err => {
           console.log(this.authStatus);
+          console.log(this.errResponse.dni[0]);
+          if (this.errResponse.dni[0] == 'The dni has already been taken.') {
+            this.alr = 'El dni con el que intentas registrarte ya esta registrado.';
+          }
+          if (this.errResponse.email[0] == 'The email has already been taken.') {
+            this.alr = 'El email con el que intentas registrarte ya esta registrado.';
+          }
           this.alert = false;
           setTimeout(() => {
             this.alert = true;
-          }, 5000);
+          }, 10000);
         });
     },
     goBackProducts() {
@@ -222,4 +229,3 @@ h1 {
   }
 }
 </style>
->

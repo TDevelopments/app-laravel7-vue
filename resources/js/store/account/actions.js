@@ -39,9 +39,11 @@ export function register({ commit }, user) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         commit('auth_success', { token, user });
         resolve(resp);
+        console.log(resp);
       })
       .catch(err => {
         commit('auth_error', err);
+        commit('err_response', err.response.data.errors);
         localStorage.removeItem('token');
         reject(err);
       });

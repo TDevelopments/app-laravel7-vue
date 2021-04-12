@@ -84,6 +84,7 @@
               </template>
               <template v-slot:[`item.actions`]="{ item, index }">
                 <v-icon @click="deleteProducts(item.id, index)">mdi-delete</v-icon>
+                <v-icon @click="deleteProducts(item.id, index)">mdi-delete</v-icon>
               </template>
               <template v-slot:[`item.total`]="{ item }">
                 {{ item.total | currency }}
@@ -453,7 +454,7 @@ export default {
       let data = [];
       this.product.forEach(element => {
         data.push({
-          product_id: element.product.id,
+          product_id: element.product,
           quantity: element.quantity,
         });
       });
