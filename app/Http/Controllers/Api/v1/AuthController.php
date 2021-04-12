@@ -81,7 +81,7 @@ class AuthController extends Controller
                 return response($response, 422);
             }
         } else {
-            $response = ["message" =>'User does not exist'];
+            $response = ["message" =>'El usuario no existe.'];
             return response($response, 422);
         }
         // $credentials = request(['dni', 'password']);

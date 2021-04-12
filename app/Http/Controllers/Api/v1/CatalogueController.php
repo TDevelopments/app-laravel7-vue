@@ -27,7 +27,7 @@ class CatalogueController extends Controller
      */
     public function index()
     {
-        return CatalogueResource::collection($this->catalogue->paginate());
+        return CatalogueResource::collection($this->catalogue->orderBy('created_at', 'desc')->paginate());
     }
 
     /**

@@ -136,7 +136,7 @@ class OrderController extends Controller
                         'sku' => $productReference->sku,
                         'total' => $productReference->price_unit * $row['quantity']
                     ]);
-                $productReference->increment('count', $row['quantity']);
+                /* $productReference->increment('count', $row['quantity']); */
             }
         }
         if($request->product_ranges)
@@ -160,7 +160,7 @@ class OrderController extends Controller
                         'sku' => $productRangeReference->sku,
                         'total' => $rangeReference->price * $row['quantity']
                     ]);
-                $productRangeReference->increment('count', $row['quantity']);
+                /* $productRangeReference->increment('count', $row['quantity']); */
             }
         }
         return new OrderResource($order);
@@ -204,14 +204,14 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-      $ordersDetails = $this->orderDetail->where('order_id', $order->id)->get();
-      foreach($ordersDetails as $orderDetail)
-      {
-          if (is_null($orderDetail->product_id))
-              $this->productRange->find($orderDetail->product_range_id)->decrement('count', (int)$orderDetail->quantity);
-          else
-              $this->product->find($orderDetail->product_id)->decrement('count', (int)$orderDetail->quantity);
-      }
+      /* $ordersDetails = $this->orderDetail->where('order_id', $order->id)->get(); */
+      /* foreach($ordersDetails as $orderDetail) */
+      /* { */
+      /*     if (is_null($orderDetail->product_id)) */
+      /*         $this->productRange->find($orderDetail->product_range_id)->decrement('count', (int)$orderDetail->quantity); */
+      /*     else */
+      /*         $this->product->find($orderDetail->product_id)->decrement('count', (int)$orderDetail->quantity); */
+      /* } */
       $order->delete();
       return response()->json(null, 204);
     }

@@ -19,8 +19,6 @@ class PaymentController extends Controller
     public function __construct(Order $order, Payment $payment)
     {
         $this->middleware('api.admin');
-        $this->middleware('api.accountant');
-        $this->payment = $payment;
         $this->order = $order;
     }
 
@@ -57,11 +55,19 @@ class PaymentController extends Controller
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
-
         $data = $request['payments'];
         $payments = array();
         foreach($data as $row)
         {
+          /* $paymentConceptReference = $this->paymentConcept->find($row['payment_concept_id']); */
+          /* $ordersDetails = $this->orderDetail->where('order_id', $order->id)->get(); */
+          /* foreach($ordersDetails as $orderDetail) */
+          /* { */
+          /*     if (is_null($orderDetail->product_id)) */
+          /*         $this->productRange->find($orderDetail->product_range_id)->decrement('count', (int)$orderDetail->quantity); */
+          /*     else */
+          /*         $this->product->find($orderDetail->product_id)->decrement('count', (int)$orderDetail->quantity); */
+          /* } */
           $payments[] = $this->payment->updateOrCreate(
             [
               'order_id' => $order->id,
