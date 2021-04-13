@@ -65,17 +65,18 @@ class OrderDetailController extends Controller
             foreach($data as $row)
             {
                 if((int)$row['quantity'] == 0)
+                {
+                    $productReference = $this->product->find($row['product_id']);
+                    $consult = $this->orderDetail->where('order_id', '=', $order->id)->where('sku', '=', "$productReference->sku")->first();
+                    if(!is_null($consult))
+                    {
+                        $consult->delete();
+                        continue;
+                    }
                     continue;
+                }
                 else
                 {
-                    /* $consult = $this->orderDetail->join('products', function($join){ */
-                    /*     $join->on('order_details.product_id', '=', 'products.id') */
-                    /*          ->where('products.id', 'like', "%$value2%"); */
-                    /* })->get()->first(); */
-                    /* return $consult; */
-                    /* if() */
-                    /* { */
-                    /* } */
                     $productReference = $this->product->find($row['product_id']);
                     $products[] = $this->orderDetail->updateOrCreate(
                         [
@@ -96,25 +97,39 @@ class OrderDetailController extends Controller
         {
             foreach($data2 as $row)
             {
-                $productRangeReference = $this->productRange->find($row['product_id']);
-                $rangeReference = $this->range->where('product_range_id', $productRangeReference->id)
-                                              ->where('max', '>=', $row['quantity'])->first();
-                if(!isset($rangeReference))
+                if((int)$row['quantity'] == 0)
                 {
+                    $productRangeReference = $this->productRange->find($row['product_id']);
+                    $consult = $this->orderDetail->where('order_id', '=', $order->id)->where('sku', '=', "$productRangeReference->sku")->first();
+                    if(!is_null($consult))
+                    {
+                        $consult->delete();
+                        continue;
+                    }
                     continue;
                 }
-                $products[] = $this->orderDetail->updateOrCreate(
-                    [
-                        'product_range_id' => $productRangeReference->id,
-                        'order_id' => $order->id,
-                    ],[
-                        'model' => $productRangeReference->model,
-                        'sku' => $productRangeReference->sku,
-                        'price' => $rangeReference->price,
-                        'quantity' => $row['quantity'],
-                        'total' => $rangeReference->price * $row['quantity']
-                    ]);
-                /* $productRangeReference->increment('count', $row['quantity']); */
+                else
+                {
+                    $productRangeReference = $this->productRange->find($row['product_id']);
+                    $rangeReference = $this->range->where('product_range_id', $productRangeReference->id)
+                                                  ->where('max', '>=', $row['quantity'])->first();
+                    if(!isset($rangeReference))
+                    {
+                        continue;
+                    }
+                    $products[] = $this->orderDetail->updateOrCreate(
+                        [
+                            'product_range_id' => $productRangeReference->id,
+                            'order_id' => $order->id,
+                        ],[
+                            'model' => $productRangeReference->model,
+                            'sku' => $productRangeReference->sku,
+                            'price' => $rangeReference->price,
+                            'quantity' => $row['quantity'],
+                            'total' => $rangeReference->price * $row['quantity']
+                        ]);
+                    /* $productRangeReference->increment('count', $row['quantity']); */
+                }
             }
         }
         return OrderDetailResource::collection($order->orderDetails);
