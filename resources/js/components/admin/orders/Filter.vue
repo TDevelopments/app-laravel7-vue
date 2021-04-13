@@ -76,7 +76,7 @@
             <!-- <th class="sticky-col second-col">{{ order.user.dni ? order.user.dni : '' }}</th>
             <th class="sticky-col third-col">{{ order.user.phone ? order.user.phone : '' }}</th> -->
             <td class="w" v-for="(p, index) in order.product" :key="index">
-              <input type="text" v-model="p.quantity" class="w" />
+              <input type="number" v-model="p.quantity" class="w" />
             </td>
             <td class="sticky-col end-col">{{ order.total | currency }}</td>
             <td class="sticky-col end-f-col">
@@ -145,7 +145,7 @@ export default {
           console.log(response.data.data);
           if (response.data.data.products != null || response.data.data.products.length != 0) {
             response.data.data.products.forEach(element => {
-              this.products.push(element);
+              this.products.push({ ...element, type: 'normal' });
             });
           }
           if (
@@ -153,10 +153,10 @@ export default {
             response.data.data.productRanges.length != 0
           ) {
             response.data.data.productRanges.forEach(element => {
-              this.products.push(element);
+              this.products.push({ ...element, type: 'range' });
             });
           }
-          console.log(this.products);
+          console.log('prod', this.products);
           this.getOrders();
         })
         .catch(error => {});
@@ -178,7 +178,7 @@ export default {
                 product_id: element.id,
                 model: element.model,
                 quantity: 0,
-                type: 'normal',
+                type: element.type,
               });
               let toPro = 0;
               order.orderDetails.forEach(op => {
@@ -188,7 +188,6 @@ export default {
                   }
                   if (op.product.model == obp[index].model) {
                     obp[index].quantity = op.quantity;
-                    obp[index].type = 'normal';
                   }
                 }
                 if (op.product_range) {
@@ -197,7 +196,6 @@ export default {
                   }
                   if (op.product_range.model == obp[index].model) {
                     obp[index].quantity = op.quantity;
-                    obp[index].type = 'range';
                   }
                 }
               });
@@ -245,7 +243,48 @@ export default {
         .catch(error => {});
     },
     save(item) {
-      console.log(item);
+      console.log('item', item);
+      let dataNormal = [];
+      let dataRange = [];
+      let data = { product_ranges: [], products: [] };
+
+      item.product.forEach(element => {
+        if (element.type == 'normal') {
+          dataNormal.push(element);
+        }
+      });
+
+      item.product.forEach(element => {
+        if (element.type == 'range') {
+          console.log('rango');
+          dataRange.push(element);
+        }
+      });
+
+      console.log('dR', dataRange);
+      console.log('dM', dataNormal);
+
+      if (dataNormal.length != 0) {
+        console.log('normal');
+        data.products = dataNormal;
+      }
+
+      if (dataRange.length != 0) {
+        console.log('rango');
+        data.product_ranges = dataRange;
+      }
+      console.log('data', data);
+
+      axios
+        .post(`/api/v1/orders/${item.id}/order-details`, data)
+        .then(response => {
+          console.log(response);
+          this.getOrders();
+        })
+        .catch(error => {
+          console.log(error);
+          // reject(error);
+        });
     },
   },
   mounted() {
