@@ -462,8 +462,8 @@
                     </td>
                     <td class="style-table-td">
                       <ul>
-                        <li v-for="range in props.item.ranges" :key="range.id">
-                          De {{ range.min }} a {{ range.max }} :
+                        <li v-for="(range, index) in props.item.ranges" :key="index">
+                          De {{ range.min }} a {{ props.item.ranges.length-1 != index ? range.max : 'mas'}} :
                           {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
                         </li>
                       </ul>

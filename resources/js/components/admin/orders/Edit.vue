@@ -451,16 +451,42 @@ export default {
     },
 
     updateCreate() {
-      let data = [];
+      let dataNormal = [];
+      let dataRange = [];
+      let data = { product_ranges: [], products: [] };
+      console.log(this.product);
       this.product.forEach(element => {
-        data.push({
-          product_id: element.product,
-          quantity: element.quantity,
-        });
+        if (element.product) {
+          dataNormal.push({
+            product_id: element.product.id,
+            quantity: element.quantity,
+          });
+        }
       });
+      this.product.forEach(element => {
+        if (element.product_range) {
+          console.log('rango');
+          dataRange.push({
+            product_id: element.product_range.id,
+            quantity: element.quantity,
+          });
+        }
+      });
+      console.log('datarange', dataRange);
+
+      if (dataNormal.length != 0) {
+        console.log('normal');
+        data.products = dataNormal;
+      }
+
+      if (dataRange.length != 0) {
+        console.log('rango');
+        data.product_ranges = dataRange;
+      }
+      console.log('data', data);
 
       axios
-        .post(`/api/v1/orders/${this.$route.params.id}/order-details`, { products: data })
+        .post(`/api/v1/orders/${this.$route.params.id}/order-details`, data)
         .then(response => {
           console.log(response);
           this.getOrders();

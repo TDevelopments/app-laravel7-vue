@@ -9,7 +9,7 @@
       item-value="id"
       dense
     />
-    <div class="table-responsive">
+    <!-- <div class="table-responsive">
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -20,6 +20,7 @@
               {{ product.model }}
             </th>
             <th scope="col" class="sticky-col end-col">Total</th>
+            <th scope="col" class="sticky-col end-f-col"></th>
           </tr>
         </thead>
         <tbody>
@@ -38,13 +39,56 @@
               </div>
             </td>
             <td class="sticky-col end-col">{{ order.total_order | currency }}</td>
+            <td class="sticky-col end-f-col">
+              <v-icon>mdi-content-save</v-icon>
+            </td>
           </tr>
           <tr>
             <th colspan="3" class="sticky-col first-col">Total</th>
             <td v-for="(ob, index) in object" :key="index">
               {{ ob }}
             </td>
-            <td class="sticky-col end-col"></td>
+            <td class="sticky-col end-f-col" colspan="2"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br />
+    <br />
+    <br /> -->
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col" class="sticky-col first-col">Nombre</th>
+            <!-- <th scope="col" class="sticky-col second-col">DNI</th>
+            <th scope="col" class="sticky-col third-col">Numero</th> -->
+            <th scope="col" class="w" v-for="(product, index) in products" :key="index">
+              {{ product.model }}
+            </th>
+            <th scope="col" class="sticky-col end-col">Total</th>
+            <th scope="col" class="sticky-col end-f-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(order, index) in objectOrder" :key="index">
+            <th class="sticky-col first-col">{{ order.user.name }}</th>
+            <!-- <th class="sticky-col second-col">{{ order.user.dni ? order.user.dni : '' }}</th>
+            <th class="sticky-col third-col">{{ order.user.phone ? order.user.phone : '' }}</th> -->
+            <td class="w" v-for="(p, index) in order.product" :key="index">
+              <input type="text" v-model="p.quantity" class="w" />
+            </td>
+            <td class="sticky-col end-col">{{ order.total | currency }}</td>
+            <td class="sticky-col end-f-col">
+              <v-icon @click="save(order)">mdi-content-save</v-icon>
+            </td>
+          </tr>
+          <tr>
+            <th colspan="1" class="sticky-col first-col">Total</th>
+            <td v-for="(ob, index) in object" :key="index">
+              {{ ob }}
+            </td>
+            <td class="sticky-col end-f-col" colspan="2"></td>
           </tr>
         </tbody>
       </table>
@@ -73,6 +117,7 @@ export default {
     catalogues: [],
     products: [],
     object: [],
+    objectOrder: [],
   }),
   watch: {
     catSelect: function() {
@@ -121,27 +166,51 @@ export default {
         .get(`/api/v1/orders?catalogueId=${this.catSelect}`)
         .then(response => {
           this.object = [];
+          this.objectOrder = [];
           for (let index = 0; index < this.products.length; index++) {
             this.object.push(0);
           }
           this.orders = response.data.data;
           this.orders.forEach(order => {
+            let obp = [];
             this.products.forEach((element, index) => {
+              obp.push({
+                product_id: element.id,
+                model: element.model,
+                quantity: 0,
+                type: 'normal',
+              });
               let toPro = 0;
               order.orderDetails.forEach(op => {
                 if (op.product) {
                   if (op.product.model == element.model) {
                     toPro = toPro + op.quantity;
                   }
+                  if (op.product.model == obp[index].model) {
+                    obp[index].quantity = op.quantity;
+                    obp[index].type = 'normal';
+                  }
                 }
                 if (op.product_range) {
                   if (op.product_range.model == element.model) {
                     toPro = toPro + op.quantity;
                   }
+                  if (op.product_range.model == obp[index].model) {
+                    obp[index].quantity = op.quantity;
+                    obp[index].type = 'range';
+                  }
                 }
               });
               this.object[index] = this.object[index] + toPro;
             });
+            console.log('obp', obp);
+            this.objectOrder.push({
+              user: order.user,
+              product: obp,
+              total: order.total_order,
+              id: order.id,
+            });
+            console.log(this.objectOrder);
           });
           console.log('Hola', this.object);
           console.log(response.data.data);
@@ -174,6 +243,9 @@ export default {
           this.pagination = response.data.meta.last_page;
         })
         .catch(error => {});
+    },
+    save(item) {
+      console.log(item);
     },
   },
   mounted() {
@@ -222,6 +294,15 @@ export default {
   width: 100px;
   min-width: 100px;
   max-width: 100px;
+  right: 50px;
+}
+.end-f-col {
+  width: 50px;
+  min-width: 50px;
+  max-width: 50px;
   right: 0;
+}
+.w {
+  width: 50px;
 }
 </style>
