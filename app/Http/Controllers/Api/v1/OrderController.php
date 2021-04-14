@@ -96,14 +96,16 @@ class OrderController extends Controller
     {
         // $order = $this->order->create($request->all());
         $validator = Validator::make($request->all(), [
-                'catalogue_id' => ['required', 'exists:App\Models\Catalogue,id'],
-                'products' => ['array'],
-                'products.*.product_id' => ['required', 'integer', 'exists:App\Models\Product,id'],
-                'products.*.quantity' => ['required', 'integer'],
-                'product_ranges' => ['array'],
-                'product_ranges.*.product_id' => ['required', 'integer', 'exists:App\Models\ProductRange,id'],
-                'product_ranges.*.quantity' => ['required', 'integer'],
-                // 'state_order_id' => ['required', 'integer', 'exists:App\Models\StateOrder,id'],
+            'catalogue_id' => ['required', 'exists:App\Models\Catalogue,id'],
+            'products' => ['array'],
+            'products.*.product_id' => ['required', 'integer', 'exists:App\Models\Product,id'],
+            'products.*.quantity' => ['required', 'integer'],
+            'product_ranges' => ['array'],
+            'product_ranges.*.product_id' => ['required', 'integer', 'exists:App\Models\ProductRange,id'],
+            'product_ranges.*.quantity' => ['required', 'integer'],
+            'product_ranges.*.meta' => ['required', 'array'],
+            'product_ranges.*.meta.*.quantity' => ['required', 'integer'],
+            'product_ranges.*.meta.*.color' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
@@ -138,7 +140,8 @@ class OrderController extends Controller
                             'price' => $productReference->price_unit,
                             'model' => $productReference->model,
                             'sku' => $productReference->sku,
-                            'total' => $productReference->price_unit * $row['quantity']
+                            'total' => $productReference->price_unit * $row['quantity'],
+                            'meta' => array("none")
                         ]);
                     /* $productReference->increment('count', $row['quantity']); */
                 }
@@ -163,12 +166,13 @@ class OrderController extends Controller
                         'price' => $rangeReference->price,
                         'model' => $productRangeReference->model,
                         'sku' => $productRangeReference->sku,
-                        'total' => $rangeReference->price * $row['quantity']
+                        'total' => $rangeReference->price * $row['quantity'],
+                        'meta' => $row['meta'],
                     ]);
                 /* $productRangeReference->increment('count', $row['quantity']); */
             }
         }
-        return new OrderResource($order);
+        return new OrderResourceAdmin($order);
     }
 
     /**

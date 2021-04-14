@@ -53,6 +53,9 @@ class OrderDetailController extends Controller
             'products.*.quantity' => ['required', 'integer'],
             'product_ranges.*.product_id' => ['required', 'integer', 'exists:App\Models\ProductRange,id'],
             'product_ranges.*.quantity' => ['required', 'integer'],
+            'product_ranges.*.meta' => ['required', 'array'],
+            'product_ranges.*.meta.*.quantity' => ['required', 'integer'],
+            'product_ranges.*.meta.*.color' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
@@ -88,7 +91,8 @@ class OrderDetailController extends Controller
                             'price' => $productReference->price_unit,
                             'model' => $productReference->model,
                             'sku' => $productReference->sku,
-                            'total' => $productReference->price_unit * $row['quantity']
+                            'total' => $productReference->price_unit * $row['quantity'],
+                            'meta' => array("none")
                         ]);
                 }
             }
@@ -126,7 +130,8 @@ class OrderDetailController extends Controller
                             'sku' => $productRangeReference->sku,
                             'price' => $rangeReference->price,
                             'quantity' => $row['quantity'],
-                            'total' => $rangeReference->price * $row['quantity']
+                            'total' => $rangeReference->price * $row['quantity'],
+                            'meta' => $row['meta'],
                         ]);
                     /* $productRangeReference->increment('count', $row['quantity']); */
                 }

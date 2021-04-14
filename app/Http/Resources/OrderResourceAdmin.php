@@ -25,6 +25,7 @@ class OrderResourceAdmin extends JsonResource
             'orderDetails' => OrderDetailResource::collection($this->orderDetails),
             'total_order' => $this->orderDetails->sum('total'),
             'payment' => PaymentResourceAdmin::collection($this->payments),
+            'meta' => $this->meta,
         ];
     }
 }
