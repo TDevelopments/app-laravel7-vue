@@ -77,7 +77,30 @@
             <!-- <th class="sticky-col second-col">{{ order.user.dni ? order.user.dni : '' }}</th>
             <th class="sticky-col third-col">{{ order.user.phone ? order.user.phone : '' }}</th> -->
             <td class="w" v-for="(p, index) in order.product" :key="index">
-              <input type="number" v-model="p.quantity" class="w" />
+              <v-menu
+                offset-y
+                class="b-menu"
+                :close-on-content-click="false"
+                v-if="p.type == 'range'"
+              >
+                <template v-slot:activator="{ attrs, on }">
+                  <input type="number" v-model="p.quantity" class="w" v-bind="attrs" v-on="on" />
+                </template>
+
+                <div class="b-menu">
+                  <v-col>
+                    <div
+                      v-for="(o, index) in p.meta"
+                      :key="index"
+                      class="d-flex justify-center align-center my-1 "
+                    >
+                      <v-avatar :color="o.color" size="15" />
+                      <input type="text" class="w mx-2 text-center b-input" v-model="o.quantity" />
+                    </div>
+                  </v-col>
+                </div>
+              </v-menu>
+              <input type="number" v-model="p.quantity" class="w" v-else />
             </td>
             <td class="sticky-col end-col">
               {{ (order.catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
@@ -178,12 +201,21 @@ export default {
           this.orders.forEach(order => {
             let obp = [];
             this.products.forEach((element, index) => {
+              let m = [];
               obp.push({
                 product_id: element.id,
                 model: element.model,
                 quantity: 0,
                 type: element.type,
+                meta: [],
               });
+              this.products[index].colors.forEach(c => {
+                m.push({
+                  color: c,
+                  quantity: 0,
+                });
+              });
+              obp[index].meta = m;
               let toPro = 0;
               order.orderDetails.forEach(op => {
                 if (op.product) {
@@ -200,6 +232,9 @@ export default {
                   }
                   if (op.product_range.model == obp[index].model) {
                     obp[index].quantity = op.quantity;
+                    if (op.meta != null || op.meta.length != 0) {
+                      obp[index].meta = op.meta;
+                    }
                   }
                 }
               });
@@ -326,6 +361,9 @@ export default {
 };
 </script>
 <style scoped>
+.b-menu {
+  background-color: white !important;
+}
 .sticky-col {
   position: -webkit-sticky;
   position: sticky;

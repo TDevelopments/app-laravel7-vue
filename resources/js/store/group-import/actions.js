@@ -38,6 +38,7 @@ export async function getCatalogue({ commit, getters, dispatch, state }, id) {
       element.productRanges.forEach((productRange, index) => {
         let minRange = 1;
         let price = 0;
+        let col = [];
         if (productRange.ranges.length != 0) {
           minRange = productRange.ranges[0].min;
           price = productRange.ranges[0].price;
@@ -48,6 +49,16 @@ export async function getCatalogue({ commit, getters, dispatch, state }, id) {
             }
           });
         }
+        if (productRange.colors != null && productRange.colors.length != 0) {
+          productRange.colors.forEach(color => {
+            col.push({
+              color: color,
+              quantity: 0,
+            });
+          });
+        }
+        console.log(productRange.colors);
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'meta', col);
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'quantity', minRange);
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'min', minRange);
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'total', price * minRange);
