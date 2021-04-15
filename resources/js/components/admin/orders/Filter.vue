@@ -57,7 +57,7 @@
     <br />
     <br /> -->
     <div class="table-responsive">
-      <table class="table table-bordered">
+      <table class="table table-bordered mb-0">
         <thead>
           <tr>
             <th scope="col" class="sticky-col first-col">Nombre</th>
@@ -66,19 +66,23 @@
             <th scope="col" class="w" v-for="(product, index) in products" :key="index">
               {{ product.model }}
             </th>
-            <th scope="col" class="sticky-col end-col">Total</th>
-            <th scope="col" class="sticky-col end-f-col"></th>
+            <th scope="col" class="sticky-col end-f-col" colspan="2">Total</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(order, index) in objectOrder" :key="index">
-            <th class="sticky-col first-col">{{ order.user.name }}</th>
+            <th class="sticky-col first-col">
+              {{ order.user.name | name }}
+            </th>
             <!-- <th class="sticky-col second-col">{{ order.user.dni ? order.user.dni : '' }}</th>
             <th class="sticky-col third-col">{{ order.user.phone ? order.user.phone : '' }}</th> -->
             <td class="w" v-for="(p, index) in order.product" :key="index">
               <input type="number" v-model="p.quantity" class="w" />
             </td>
-            <td class="sticky-col end-col">{{ order.total | currency }}</td>
+            <td class="sticky-col end-col">
+              {{ (order.catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
+              {{ order.total | currency }}
+            </td>
             <td class="sticky-col end-f-col">
               <v-icon @click="save(order)">mdi-content-save</v-icon>
             </td>
@@ -207,6 +211,7 @@ export default {
               product: obp,
               total: order.total_order,
               id: order.id,
+              catalogue: order.catalogue,
             });
             console.log(this.objectOrder);
           });
@@ -300,6 +305,23 @@ export default {
     porcent: function(value) {
       return parseFloat(value) * 100 + ' %';
     },
+    name: function(value) {
+      let c = value;
+      let s = ' ';
+      let a = c.split(s);
+      switch (a.length) {
+        case 1:
+          return value;
+        case 2:
+          return value;
+        case 3:
+          return a[0] + ' ' + a[1];
+        case 4:
+          return a[0] + ' ' + a[2];
+        default:
+          return value;
+      }
+    },
   },
 };
 </script>
@@ -322,24 +344,28 @@ export default {
   min-width: 150px;
   max-width: 150px;
   left: 150px;
+  text-align: center;
 }
 .third-col {
   width: 150px;
   min-width: 150px;
   max-width: 150px;
   left: 300px;
+  text-align: center;
 }
 .end-col {
   width: 100px;
   min-width: 100px;
   max-width: 100px;
   right: 50px;
+  text-align: center;
 }
 .end-f-col {
   width: 50px;
   min-width: 50px;
   max-width: 50px;
   right: 0;
+  text-align: center;
 }
 .w {
   width: 50px;

@@ -84,10 +84,10 @@
               </template>
               <template v-slot:[`item.actions`]="{ item, index }">
                 <v-icon @click="deleteProducts(item.id, index)">mdi-delete</v-icon>
-                <v-icon @click="deleteProducts(item.id, index)">mdi-delete</v-icon>
               </template>
               <template v-slot:[`item.total`]="{ item }">
-                {{ item.total | currency }}
+                {{ (order.catalogue.coin == 'soles' ? 'S/.' : '$') + ' '
+                }}{{ item.total | currency }}
               </template>
               <template v-slot:[`item.quantity`]="{ item }">
                 <v-text-field

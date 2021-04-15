@@ -184,10 +184,10 @@
               </div>
             </div>
           </ul> -->
-          <!-- <li>
+        <!-- <li>
             Y enviar su constancia al siguiente número de Whatsapp: <strong>927750048</strong>
           </li> -->
-        </ul>
+        <!-- </ul> -->
       </v-col>
       <v-col class="px-0 content-card pt-0 mt-5">
         <v-toolbar color="black" class="px-0 text-h6" dark flat>Términos y Condiciones</v-toolbar>
@@ -463,7 +463,8 @@
                     <td class="style-table-td">
                       <ul>
                         <li v-for="(range, index) in props.item.ranges" :key="index">
-                          De {{ range.min }} a {{ props.item.ranges.length-1 != index ? range.max : 'mas'}} :
+                          De {{ range.min }} a
+                          {{ props.item.ranges.length - 1 != index ? range.max : 'mas' }} :
                           {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
                         </li>
                       </ul>
