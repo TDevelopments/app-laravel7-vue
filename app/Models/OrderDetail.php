@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class OrderDetail extends Model
 {
     // use HasFactory;
+    protected $casts = [
+        'meta' => 'array',
+    ];
 
     protected $fillable = [
         'product_id',
@@ -18,6 +21,7 @@ class OrderDetail extends Model
         'price',
         'quantity',
         'total',
+        'meta',
     ];
 
     public function product()
