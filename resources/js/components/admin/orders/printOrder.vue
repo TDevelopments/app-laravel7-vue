@@ -69,9 +69,7 @@
               </td>
             </tr>
             <tr>
-              <td class="table-information">
-                Vendedor:
-              </td>
+              <td class="table-information">Vendedor: {{ userAdmin }}</td>
             </tr>
           </tbody>
           <tfoot v-for="(arr, index) in order.arrivals" :key="index">
@@ -116,7 +114,7 @@
           </td>
           <td class="table-item">
             {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}
-            {{ p.product ? p.product.price_unit : p.price }}
+            {{ p.product ? p.product.price_unit : p.price | currency }}
           </td>
           <td class="table-item">
             {{ p.quantity }}
@@ -291,12 +289,25 @@ export default {
     typeCoin: ['soles', 'dolares'],
     totalPayments: null,
     totalOrderPayment: null,
+    userAdmin: '',
   }),
   computed: {},
   methods: {
     printWindow() {
       this.hbtn = false;
       window.print();
+    },
+
+    getUser() {
+      axios
+        .get('http://applaravel7.test/api/v1/user')
+        .then(r => {
+          this.userAdmin = r.data.data.name;
+        })
+        .catch(error => {
+          console.log(error);
+          // reject(error);
+        });
     },
 
     getOrders() {
@@ -346,6 +357,7 @@ export default {
   },
   mounted() {
     this.getOrders();
+    this.getUser();
   },
   filters: {
     currency: function(value) {
