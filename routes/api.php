@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\v1\StateOrderController;
 use App\Http\Controllers\Api\v1\PaymentConceptController;
 use App\Http\Controllers\Api\v1\AdviserController;
 use App\Http\Controllers\Api\v1\RoleController;
+use App\Http\Controllers\Api\v1\OrderShippingStatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,6 +107,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::put('state-orders/{state_order}', [StateOrderController::class, 'update']);
         Route::delete('state-orders/{state_order}', [StateOrderController::class, 'destroy']);
 
+        // StateOrder
+        Route::apiResource('order-shipping-status', 'Api\v1\OrderShippingStatusController');
+        
         // PaymentConcept
         Route::apiResource('payment-concepts', 'Api\v1\PaymentConceptController');
         // Route::get('payment-concepts', [PaymentConceptController::class, 'index']);
