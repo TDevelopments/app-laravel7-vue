@@ -11,19 +11,11 @@
               <v-row>
                 <v-col cols="12" sm="6" md="6">
                   Nombre (*)
-                  <v-text-field
-                    v-model="user.name"
-                    solo
-                    required
-                  ></v-text-field>
+                  <v-text-field v-model="user.name" solo required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Apellidos (*)
-                  <v-text-field
-                    v-model="user.lastname"
-                    solo
-                    required
-                  ></v-text-field>
+                  <v-text-field v-model="user.lastname" solo required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Email (*)
@@ -51,10 +43,7 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Confirmar Contraseña (*)
-                  <v-text-field
-                    v-model="user.password_confirmation"
-                    solo
-                  ></v-text-field>
+                  <v-text-field v-model="user.password_confirmation" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Dirección (*)
@@ -62,52 +51,19 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Teléfono (*)
-                  <v-text-field
-                    v-model="user.phone"
-                    solo
-                    type="number"
-                  ></v-text-field>
+                  <v-text-field v-model="user.phone" solo type="number"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   DNI (*)
-                  <v-text-field
-                    v-model="user.dni"
-                    solo
-                    type="number"
-                  ></v-text-field>
+                  <v-text-field v-model="user.dni" solo type="number"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   RUC
-                  <v-text-field
-                    v-model="user.ruc"
-                    type="number"
-                    solo
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="6">
-                  Género
-                  <v-select
-                    v-model="user.gender"
-                    :items="gender"
-                    item-text="name"
-                    item-value="send"
-                    menu-props="auto"
-                    solo-details
-                    solo
-                    prepend-inner-icon="mdi-gender-male-female"
-                  ></v-select>
+                  <v-text-field v-model="user.ruc" type="number" solo required></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Cuidad (*)
-                  <v-select
-                    v-model="user.city"
-                    :items="cities"
-                    menu-props="auto"
-                    solo-details
-                    solo
-                    prepend-inner-icon="mdi-home-city"
-                  ></v-select>
+                  <v-text-field v-model="user.city" solo required></v-text-field>
                 </v-col>
               </v-row>
             </v-col>
@@ -118,13 +74,7 @@
     <v-row class="mt-3">
       <v-spacer></v-spacer>
       <div>
-        <v-btn
-          :disabled="!valid"
-          color="#0D52D6"
-          class="mr-3"
-          @click="validate"
-          dark
-        >
+        <v-btn :disabled="!valid" color="#0D52D6" class="mr-3" @click="validate" dark>
           <v-icon class="mr-2">mdi-content-save</v-icon> Guardar
         </v-btn>
       </div>
@@ -132,47 +82,47 @@
   </v-col>
 </template>
 <script>
-import axios from "axios";
+import axios from 'axios';
 export default {
   data: () => ({
     gender: [
       {
-        name: "Masculino",
-        send: "masculine",
+        name: 'Masculino',
+        send: 'masculine',
       },
       {
-        name: "Femenino",
-        send: "female",
+        name: 'Femenino',
+        send: 'female',
       },
     ],
-    rol_user: ["admin","user"],
+    rol_user: ['admin', 'user'],
     valid: true,
     user: {},
     cities: [
-      "Amazonas",
-      "Ancash",
-      "Apurímac",
-      "Arequipa",
-      "Ayacucho",
-      "Cajamarca",
-      "Cusco",
-      "Huancavelica",
-      "Huánuco",
-      "Ica",
-      "Junín",
-      "La Libertad",
-      "Lambayeque",
-      "Lima",
-      "Loreto",
-      "Madre de Dios",
-      "Moquegua",
-      "Pasco",
-      "Piura",
-      "Puno",
-      "San Martín",
-      "Tacna",
-      "Tumbes",
-      "Ucayali",
+      'Amazonas',
+      'Ancash',
+      'Apurímac',
+      'Arequipa',
+      'Ayacucho',
+      'Cajamarca',
+      'Cusco',
+      'Huancavelica',
+      'Huánuco',
+      'Ica',
+      'Junín',
+      'La Libertad',
+      'Lambayeque',
+      'Lima',
+      'Loreto',
+      'Madre de Dios',
+      'Moquegua',
+      'Pasco',
+      'Piura',
+      'Puno',
+      'San Martín',
+      'Tacna',
+      'Tumbes',
+      'Ucayali',
     ],
   }),
   mounted() {},
@@ -182,12 +132,12 @@ export default {
     },
     addUser() {
       axios
-        .post("/api/v1/users", this.user)
-        .then((response) => {
-          this.$router.replace({ name: "listUser" });
+        .post('/api/v1/users', this.user)
+        .then(response => {
+          this.$router.replace({ name: 'listUser' });
           console.log(response);
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
     },

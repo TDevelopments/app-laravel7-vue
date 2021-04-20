@@ -2,6 +2,7 @@
   <v-card flat>
     <v-card-text>
       <h3>Edición de Orden</h3>
+      <v-btn @click="print">Orden de Compra</v-btn>
       <v-divider></v-divider>
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row>
@@ -86,8 +87,34 @@
                 <v-icon @click="deleteProducts(item.id, index)">mdi-delete</v-icon>
               </template>
               <template v-slot:[`item.total`]="{ item }">
-                {{ (order.catalogue.coin == 'soles' ? 'S/.' : '$') + ' '
-                }}{{ item.total | currency }}
+                {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }}{{ item.total | currency }}
+              </template>
+              <template v-slot:[`item.colors`]="{ item }">
+                <div v-if="item.product">
+                  <div v-if="item.product.colors">
+                    <div v-for="(col, index) in item.product.colors" :key="index">
+                      <v-avatar :color="col" size="15" />
+                    </div>
+                  </div>
+                  <div v-else>
+                    No se encontraron colores.
+                  </div>
+                </div>
+                <div v-else>
+                  <div v-if="item.meta">
+                    <div
+                      v-for="(col, index) in item.meta"
+                      :key="index"
+                      class="form-inline justify-content-center my-1"
+                    >
+                      <v-avatar :color="col.color" size="15" />
+                      <input type="text" class="w text-center ml-2" v-model="col.quantity" />
+                    </div>
+                  </div>
+                  <div v-else>
+                    No se encontraron colores.
+                  </div>
+                </div>
               </template>
               <template v-slot:[`item.quantity`]="{ item }">
                 <v-text-field
@@ -223,7 +250,7 @@
                   placeholder="Selecciona"
                 ></v-select>
               </v-col>
-              <v-col cols="12" md="2" v-if="paymentG.type_coin == 'dolares'" class="py-0">
+              <v-col cols="12" md="2" class="py-0">
                 Precio Dolar
                 <v-text-field
                   v-model="paymentG.dollar_price"
@@ -303,6 +330,12 @@ export default {
         sortable: false,
       },
       {
+        text: 'Colores',
+        value: 'colors',
+        align: 'center',
+        sortable: false,
+      },
+      {
         text: 'Acciones',
         value: 'actions',
         align: 'center',
@@ -319,6 +352,7 @@ export default {
       name: '',
     },
     payments: [],
+    pay: [],
     concept: [],
     state: [],
     bank: [],
@@ -406,7 +440,7 @@ export default {
       axios
         .get(`/api/v1/orders/${this.$route.params.id}`)
         .then(response => {
-          console.log(response);
+          console.log('response', response);
           this.product = response.data.data.orderDetails;
           this.order = response.data.data;
           this.user = response.data.data.user;
@@ -416,9 +450,26 @@ export default {
           this.totalPayments = 0;
           if (this.payments.length != 0 && this.payments != null) {
             this.payments.forEach(payment => {
-              this.totalPayments = this.totalPayments + parseFloat(payment.mount);
+              if (this.catalogue.coin == 'soles') {
+                if (payment.type_coin == 'soles') {
+                  this.totalPayments = this.totalPayments + parseFloat(payment.mount);
+                } else {
+                  this.totalPayments =
+                    this.totalPayments +
+                    parseFloat(payment.mount) * parseFloat(payment.dollar_price);
+                }
+              } else {
+                if (payment.type_coin == 'soles') {
+                  this.totalPayments =
+                    this.totalPayments +
+                    parseFloat(payment.mount) / parseFloat(payment.dollar_price);
+                } else {
+                  this.totalPayments = this.totalPayments + parseFloat(payment.mount);
+                }
+              }
             });
           }
+          this.pay = response.data.data.payment;
           this.payments.push({
             mount: '',
             payment_date: '',
@@ -429,7 +480,7 @@ export default {
             type_coin: 'soles',
             dollar_price: 0.0,
           });
-          console.log(this.payments);
+          console.log('payment', this.product);
         })
         .catch(error => {
           console.log(error);
@@ -469,6 +520,7 @@ export default {
           dataRange.push({
             product_id: element.product_range.id,
             quantity: element.quantity,
+            meta: element.meta,
           });
         }
       });
@@ -562,6 +614,14 @@ export default {
       this.dialogImage = true;
       console.log(this.itemSelected);
     },
+    print() {
+      this.$router.push({
+        name: 'printOrder',
+        params: {
+          id: this.$route.params.id,
+        },
+      });
+    },
   },
   filters: {
     currency: function(value) {
@@ -582,3 +642,42 @@ export default {
   },
 };
 </script>
+<style scoped>
+td,
+th {
+  padding: 0 10px 0 10px !important;
+}
+.table-information {
+  border: 2px solid black;
+}
+.table-product {
+  border: 2px solid black;
+}
+.table-item {
+  border-bottom: 0;
+  border-top: 0;
+  border-right: 2px solid black;
+  border-left: 2px solid black;
+}
+.table-foot {
+  border-bottom: 0;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+}
+.table-total {
+  border: 2px solid black;
+  background-color: #ffffcc;
+}
+.table-saldo {
+  background-color: #ffc000;
+}
+.table-pagado {
+  background-color: #ffffcc;
+}
+.w {
+  display: flex;
+  max-width: 30px;
+  text-align: center;
+}
+</style>

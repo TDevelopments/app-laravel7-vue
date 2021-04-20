@@ -19,6 +19,7 @@ class PaymentResourceAdmin extends JsonResource
             'mount' => $this->mount,
             'payment_date' => $this->payment_date,
             'payment_concept_id' => $this->payment_concept_id,
+            'payment_concept_name' => $this->paymentConcept->name,
             'bank_entity_id' => $this->bank_entity_id,
             'nro_operation' => $this->nro_operation,
             'dollar_price' => $this->dollar_price,

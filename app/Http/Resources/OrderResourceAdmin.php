@@ -19,6 +19,7 @@ class OrderResourceAdmin extends JsonResource
         return [
             'id' => $this->id,
             'catalogue' => $this->catalogue,
+            'arrivals' => $this->catalogue->arrivals,
             'user' => $this->user,
             // 'status' => $this->status,
             'state_order' => $this->stateOrder->id,

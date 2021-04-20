@@ -63,6 +63,7 @@ import EditAdviser from './components/admin/adviser/Edit';
 import ListOrder from './components/admin/orders/List';
 import EditOrder from './components/admin/orders/Edit';
 import FilterOrder from './components/admin/orders/Filter';
+import PrintOrder from './components/admin/orders/printOrder.vue';
 
 // Pages Product For Catalogue
 import ProductCatalogue from './components/admin/catalogues/ProductForCatalogue';
@@ -343,6 +344,11 @@ export default new Router({
           component: EditAdviser,
         },
       ],
+    },
+    {
+      path: '/print/:id/order',
+      name: 'printOrder',
+      component: PrintOrder,
     },
     {
       path: '/404',
