@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Catalogue;
 use App\Models\Payment;
 use App\Models\StateOrder;
+use App\Models\OrderShippingStatus;
 
 class Order extends Model
 {
@@ -19,7 +20,8 @@ class Order extends Model
         'total_order',
         'catalogue_id',
         'user_id',
-        'state_order_id'
+        'state_order_id',
+        'order_shipping_status_id'
     ];
 
     public function orderDetails()
@@ -45,5 +47,10 @@ class Order extends Model
     public function stateOrder()
     {
         return $this->belongsTo(StateOrder::class);
+    }
+
+    public function orderShippingStatus()
+    {
+        return $this->belongsTo(OrderShippingStatus::class);
     }
 }
