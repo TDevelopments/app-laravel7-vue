@@ -300,7 +300,7 @@ export default {
 
     getUser() {
       axios
-        .get('http://applaravel7.test/api/v1/user')
+        .get('/api/v1/user')
         .then(r => {
           this.userAdmin = r.data.data.name;
         })

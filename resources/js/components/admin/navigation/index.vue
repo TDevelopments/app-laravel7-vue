@@ -116,6 +116,9 @@
           <v-list-item link :to="{ name: 'listState' }">
             <v-list-item-title>Estados de Orden</v-list-item-title>
           </v-list-item>
+          <v-list-item link :to="{ name: 'listStateSend' }">
+            <v-list-item-title>Estados de Envio</v-list-item-title>
+          </v-list-item>
           <v-list-item link :to="{ name: 'listConcept' }">
             <v-list-item-title>Conceptos de Pago</v-list-item-title>
           </v-list-item>

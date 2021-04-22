@@ -6,13 +6,30 @@
       <v-divider></v-divider>
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row>
-          <v-col cols="12" sm="6" md="6">
+          <v-col cols="12" sm="4" md="4">
             Nombre de Catálogo
             <v-text-field v-model="catalogue.name" solo required readonly></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="6">
+          <v-col cols="12" sm="4" md="4">
             Total de Orden
             <v-text-field v-model="totalOrder" solo required readonly></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="4" md="4">
+            Nombre de Cliente
+            <v-text-field v-model="user.name" solo required readonly></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="6">
+            Estado de Envio
+            <v-select
+              v-model="order.shipping_status"
+              item-value="id"
+              item-text="name"
+              :items="stateSend"
+              menu-props="auto"
+              hide-details
+              prepend-inner-icon="mdi-airplane-takeoff "
+              solo
+            ></v-select>
           </v-col>
           <v-col cols="12" sm="6" md="6">
             Estado de Orden
@@ -27,12 +44,10 @@
               solo
             ></v-select>
           </v-col>
-          <v-col cols="12" sm="6" md="6">
-            Nombre de Cliente
-            <v-text-field v-model="user.name" solo required readonly></v-text-field>
-          </v-col>
         </v-row>
       </v-form>
+      <br />
+      <br />
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>
@@ -361,6 +376,7 @@ export default {
     typeCoin: ['soles', 'dolares'],
     totalPayments: null,
     totalOrderPayment: null,
+    stateSend: [],
   }),
   computed: {
     totalOrder() {
@@ -372,6 +388,15 @@ export default {
   methods: {
     validate() {
       this.addPayment();
+    },
+    getStateSend() {
+      axios
+        .get('/api/v1/order-shipping-status')
+        .then(response => {
+          this.stateSend = response.data.data;
+          console.log(response);
+        })
+        .catch(error => {});
     },
     addImages(images, id) {
       const data = new FormData();
@@ -490,7 +515,10 @@ export default {
 
     updateOrders() {
       axios
-        .put(`/api/v1/orders/${this.$route.params.id}`, { state_order_id: this.order.state_order })
+        .put(`/api/v1/orders/${this.$route.params.id}`, {
+          state_order_id: this.order.state_order,
+          order_shipping_status_id: this.order.shipping_status,
+        })
         .then(response => {
           console.log(response);
           this.getOrders();
@@ -639,6 +667,7 @@ export default {
     this.getConcept();
     this.getState();
     this.getBanks();
+    this.getStateSend();
   },
 };
 </script>

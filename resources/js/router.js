@@ -9,6 +9,7 @@ import NotFound from './components/login/NotFound';
 import Logout from './components/login/Logout';
 import Register from './components/login/Register';
 import Dashboard from './components/admin/dashboard/Dashboard';
+import PDFCatalogue from './components/pdf/cataloguePDF';
 
 // Pages View CRUD Catalogues
 import ListCatalogue from './components/admin/catalogues/List';
@@ -44,10 +45,15 @@ import ListConcept from './components/admin/concept/List';
 import AddConcept from './components/admin/concept/Add';
 import EditConcept from './components/admin/concept/Edit';
 
-// Pages View CRUD State Payment
+// Pages View CRUD State Order
 import ListState from './components/admin/state/List';
 import AddState from './components/admin/state/Add';
 import EditState from './components/admin/state/Edit';
+
+// Pages View CRUD State Send
+import ListStateSend from './components/admin/stateSend/List';
+import AddStateSend from './components/admin/stateSend/Add';
+import EditStateSend from './components/admin/stateSend/Edit';
 
 // Pages View CRUD Banks
 import ListBank from './components/admin/bank/List';
@@ -295,7 +301,7 @@ export default new Router({
           name: 'editConcept',
           component: EditConcept,
         },
-        // Concept
+        // State Order
         {
           path: '/admin/state',
           name: 'listState',
@@ -310,6 +316,22 @@ export default new Router({
           path: '/admin/state/:id/edit',
           name: 'editState',
           component: EditState,
+        },
+        // State Send
+        {
+          path: '/admin/state-send',
+          name: 'listStateSend',
+          component: ListStateSend,
+        },
+        {
+          path: '/admin/state-send/add',
+          name: 'addStateSend',
+          component: AddStateSend,
+        },
+        {
+          path: '/admin/state-send/:id/edit',
+          name: 'editStateSend',
+          component: EditStateSend,
         },
         // Bank
         {
@@ -349,6 +371,11 @@ export default new Router({
       path: '/print/:id/order',
       name: 'printOrder',
       component: PrintOrder,
+    },
+    {
+      path: '/print/catalogue',
+      name: 'PDFCatalogue',
+      component: PDFCatalogue,
     },
     {
       path: '/404',
