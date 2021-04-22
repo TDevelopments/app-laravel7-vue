@@ -19,7 +19,8 @@ class CreateSalePaymentsTable extends Migration
             $table->foreignId('sale_payment_status_id')->constrained();
             $table->float('TotalAmount', 8, 3);
             $table->float('TotalPaid', 8, 3);
-            $table->text('SellNote', 8, 3);
+            $table->text('SellNote', 8, 3)->nullable();
+            $table->json('Picture')->nullable();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

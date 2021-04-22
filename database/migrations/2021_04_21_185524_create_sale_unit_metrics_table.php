@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSaleCategoriesTable extends Migration
+class CreateSaleUnitMetricsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateSaleCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_categories', function (Blueprint $table) {
+        Schema::create('sale_unit_metrics', function (Blueprint $table) {
             $table->id();
-            $table->string('CategoryName');
-            $table->text('CategoryDescription')->nullable();
-            $table->boolean('Active')->default(0);
+            $table->string('MetricName');
+            $table->string('MetricSymbol');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateSaleCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_categories');
+        Schema::dropIfExists('sale_unit_metrics');
     }
 }

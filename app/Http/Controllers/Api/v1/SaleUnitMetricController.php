@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\SaleCategory;
+use App\SaleUnitMetric;
 use Illuminate\Http\Request;
 
-class SaleCategoryController extends Controller
+class SaleUnitMetricController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +31,10 @@ class SaleCategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\SaleCategory  $saleCategory
+     * @param  \App\SaleUnitMetric  $saleUnitMetric
      * @return \Illuminate\Http\Response
      */
-    public function show(SaleCategory $saleCategory)
+    public function show(SaleUnitMetric $saleUnitMetric)
     {
         //
     }
@@ -43,10 +43,10 @@ class SaleCategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\SaleCategory  $saleCategory
+     * @param  \App\SaleUnitMetric  $saleUnitMetric
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SaleCategory $saleCategory)
+    public function update(Request $request, SaleUnitMetric $saleUnitMetric)
     {
         //
     }
@@ -54,10 +54,10 @@ class SaleCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SaleCategory  $saleCategory
+     * @param  \App\SaleUnitMetric  $saleUnitMetric
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleCategory $saleCategory)
+    public function destroy(SaleUnitMetric $saleUnitMetric)
     {
         //
     }

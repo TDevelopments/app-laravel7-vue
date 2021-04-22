@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class SaleCustomer extends Model
 {
@@ -27,5 +28,11 @@ class SaleCustomer extends Model
         'BillingRegion',
         'BillingPostalCode',
         'BillingCountry',
+        'user_id',
     ];
+
+    public function User()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

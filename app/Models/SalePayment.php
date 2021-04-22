@@ -13,6 +13,7 @@ class SalePayment extends Model
         'TotalAmount',
         'TotalPaid',
         'SellNote',
+        'Picture',
         'user_id',
     ];
 }

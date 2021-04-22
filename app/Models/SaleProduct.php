@@ -5,6 +5,8 @@ namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SaleCategory;
+use App\Models\SalePicture;
+use App\Models\SaleReview;
 
 class SaleProduct extends Model
 {
@@ -13,7 +15,6 @@ class SaleProduct extends Model
     protected $casts = [
         'Size' => 'array',
         'Color' => 'array',
-        'Picture' => 'array',
     ];
 
     protected $fillable = [
@@ -22,10 +23,13 @@ class SaleProduct extends Model
         'ProductDescription',
         'QuantityPerUnit',
         'UnitPrice',
+        'SellingPrice',
         'AvailableSize',
         'AvailableColors',
+        'AvailableGender',
         'Size',
         'Color',
+        'Gender',
         'Discount',
         'UnitWeight',
         'UnitMetric',
@@ -33,23 +37,54 @@ class SaleProduct extends Model
         'UnitsInStock',
         'ProductAvailable',
         'DiscountAvailable',
-        'Picture',
-        'Ranking',
-        'sale_category_id',
     ];
 
     public function sluggable(): array
     {
         return [
-            'slug' => [
+            'Slug' => [
                 'source' => 'ProductName',
                 'onUpdate' => true
             ]
-        ]
+        ];
     }
 
     public function SaleCategories()
     {
         return $this->belongsToMany(SaleCategory::class)->withTimestamps();
+    }
+
+    public function SalePictures()
+    {
+        return $this->belongsToMany(SalePicture::class)->withTimestamps();
+    }
+
+    public function Reviews()
+    {
+        return $this->hasMany(SaleReview::class);
+    }
+
+    public function hasAnyCategory($categories)
+    {
+        if (is_array($categories)) {
+            foreach ($categories as $category) {
+                if ($this->hasCategory($category)) {
+                    return true;
+                }
+            }
+        } else {
+            if ($this->hasCategory($categories)) {
+                 return true; 
+            }   
+        }
+        return false;
+    }
+    
+    public function hasCategory($category)
+    {
+        if ($this->SaleCategories()->where('CategoryName', $category)->first()) {
+            return true;
+        }
+        return false;
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\SaleCustomer;
+use App\SaleReview;
 use Illuminate\Http\Request;
 
-class SaleCustomerController extends Controller
+class SaleReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +31,10 @@ class SaleCustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\SaleCustomer  $saleCustomer
+     * @param  \App\SaleReview  $saleReview
      * @return \Illuminate\Http\Response
      */
-    public function show(SaleCustomer $saleCustomer)
+    public function show(SaleReview $saleReview)
     {
         //
     }
@@ -43,10 +43,10 @@ class SaleCustomerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\SaleCustomer  $saleCustomer
+     * @param  \App\SaleReview  $saleReview
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SaleCustomer $saleCustomer)
+    public function update(Request $request, SaleReview $saleReview)
     {
         //
     }
@@ -54,10 +54,10 @@ class SaleCustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SaleCustomer  $saleCustomer
+     * @param  \App\SaleReview  $saleReview
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleCustomer $saleCustomer)
+    public function destroy(SaleReview $saleReview)
     {
         //
     }
