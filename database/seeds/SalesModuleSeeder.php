@@ -16,16 +16,18 @@ class SalesModuleSeeder extends Seeder
             SalePaymentMethodSeeder::class,
             SalePaymentStatusSeeder::class,
             SaleGenderSeeder::class,
-            SaleUnitMetricSeeder::class,
+            SaleProductUnitSeeder::class,
+            SaleProductTypeSeeder::class,
+            SaleBrandSeeder::class,
         ]);
 
+        factory(\App\Models\SaleCategory::class, 10)->create()
+        ->each(function ($saleCategory) {
+            $saleCategory->SalePictures()->save(factory(App\Models\SalePicture::class)->make());
         factory(\App\Models\SaleProduct::class, 35)->create()
         ->each(function ($saleProduct) {
             $saleProduct->SalePictures()->save(factory(App\Models\SalePicture::class)->make());
         });
-        factory(\App\Models\SaleCategory::class, 10)->create()
-        ->each(function ($saleCategory) {
-            $saleCategory->SalePictures()->save(factory(App\Models\SalePicture::class)->make());
         });
         factory(\App\Models\SaleCustomer::class, 20)->create();
     }

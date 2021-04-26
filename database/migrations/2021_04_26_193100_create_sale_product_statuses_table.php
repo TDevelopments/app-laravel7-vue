@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSaleUnitMetricsTable extends Migration
+class CreateSaleProductStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateSaleUnitMetricsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_unit_metrics', function (Blueprint $table) {
+        Schema::create('sale_product_statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('MetricName');
-            $table->string('MetricSymbol');
+            $table->string('StatusName');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateSaleUnitMetricsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_unit_metrics');
+        Schema::dropIfExists('sale_product_statuses');
     }
 }

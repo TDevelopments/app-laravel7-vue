@@ -32,10 +32,14 @@ class SaleProductResource extends JsonResource
             'Discount' => $this->Discount,
             'UnitWeight' => $this->UnitWeight,
             'UnitsOnOrder' => $this->UnitsOnOrder,
-            'UnitsInStock' => $this->UnitsInStock,
             'ProductAvailable' => $this->ProductAvailable,
             'DiscountAvailable' => $this->DiscountAvailable,
             'Picture' => $this->SalePictures,
+            'Category' => $this->SaleCategory,
+            'SubCategory' => $this->SaleSubCategory,
+            'Brand' => $this->SaleBrand,
+            'SaleProductType' => $this->SaleProductType,
+            'SaleProductUnit' => $this->SaleProductUnit,
             'Rating' => $this->Reviews->count() > 0 ? round($this->Reviews->sum('Star')/$this->Reviews->count(),2) : 'Sin calificación',
         ];
     }

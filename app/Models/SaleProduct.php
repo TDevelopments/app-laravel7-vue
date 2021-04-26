@@ -5,8 +5,13 @@ namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SaleCategory;
+use App\Models\SaleSubCategory;
+use App\Models\SaleProductType;
+use App\Models\SaleProductUnit;
+use App\Models\SaleBrand;
 use App\Models\SalePicture;
 use App\Models\SaleReview;
+use App\Models\SaleStockRecord;
 
 class SaleProduct extends Model
 {
@@ -32,11 +37,14 @@ class SaleProduct extends Model
         'Gender',
         'Discount',
         'UnitWeight',
-        'UnitMetric',
         'UnitsOnOrder',
-        'UnitsInStock',
         'ProductAvailable',
         'DiscountAvailable',
+        'sale_category_id',
+        'sale_sub_category_id',
+        'sale_brand_id',
+        'sale_product_unit_id',
+        'sale_product_type_id',
     ];
 
     public function sluggable(): array
@@ -49,9 +57,29 @@ class SaleProduct extends Model
         ];
     }
 
-    public function SaleCategories()
+    public function SaleCategory()
     {
-        return $this->belongsToMany(SaleCategory::class)->withTimestamps();
+        return $this->belongsTo(SaleCategory::class);
+    }
+
+    public function SaleSubCategory()
+    {
+        return $this->belongsTo(SaleSubCategory::class);
+    }
+
+    public function SaleProductType()
+    {
+        return $this->belongsTo(SaleProductType::class);
+    }
+
+    public function SaleProductUnit()
+    {
+        return $this->belongsTo(SaleProductUnit::class);
+    }
+
+    public function SaleBrand()
+    {
+        return $this->belongsTo(SaleBrand::class);
     }
 
     public function SalePictures()
@@ -62,6 +90,11 @@ class SaleProduct extends Model
     public function Reviews()
     {
         return $this->hasMany(SaleReview::class);
+    }
+
+    public function SaleStockRecord()
+    {
+        return $this->belongsTo(SaleStockRecord::class);
     }
 
     public function hasAnyCategory($categories)

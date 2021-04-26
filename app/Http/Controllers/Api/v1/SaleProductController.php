@@ -100,6 +100,7 @@ class SaleProductController extends Controller
         }
         return $sku;
     }
+
     public function handle(Request $request)
     {
         unset($request['Sku']);

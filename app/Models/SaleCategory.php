@@ -15,9 +15,9 @@ class SaleCategory extends Model
         'Active',
     ];
 
-    public function SaleProducts()
+    public function SaleProduct()
     {
-        return $this->belongsToMany(SaleProduct::class)->withTimestamps();
+        return $this->belongsTo(SaleProduct::class);
     }
 
     public function SalePictures()

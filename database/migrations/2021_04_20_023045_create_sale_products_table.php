@@ -30,13 +30,18 @@ class CreateSaleProductsTable extends Migration
             $table->string('Gender')->default('Ninguno')->nullable();
             $table->float('Discount', 8, 3)->nullable();
             $table->float('UnitWeight', 8, 3)->nullable();
-            $table->string('UnitMetric')->default('none')->nullable();
+            // $table->string('UnitMetric')->default('none')->nullable();
             $table->bigInteger('UnitsOnOrder')->default(0);
-            $table->bigInteger('UnitsInStock')->default(0);
+            // $table->bigInteger('UnitsInStock')->default(0);
             $table->boolean('ProductAvailable')->default(0);
             $table->boolean('DiscountAvailable')->default(0);
             /* $table->json('Picture')->nullable(); */
             $table->timestamps();
+            $table->foreignId('sale_category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sale_sub_category_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('sale_brand_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sale_product_unit_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sale_product_type_id')->constrained()->onDelete('cascade');
         });
     }
 
