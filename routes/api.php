@@ -165,5 +165,17 @@ Route::group(['prefix' => 'v1'], function () {
         
         // Image
         Route::post('uploads', [ImageController::class, 'store']);
+
+
+        // Sales Module
+        
+        // Categories
+        Route::apiResource('sale-categories', 'Api\v1\SaleCategoryController');
+
+        // Products 
+        Route::apiResource('sale-products', 'Api\v1\SaleProductController');
+    
+        // Products 
+        Route::apiResource('sale-customers', 'Api\v1\SaleCustomerController');
     });
 });
