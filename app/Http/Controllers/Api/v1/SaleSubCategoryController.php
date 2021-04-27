@@ -1,12 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\SaleSubCategory;
+use App\Models\SaleSubCategory;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaleSubCategoryRequest;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Controller;
 
 class SaleSubCategoryController extends Controller
 {
+    protected $saleSubCategory;
+
+    /**
+     * Constructor
+     *
+     * @param \App\Models\SaleCategory $saleCategory
+     */
+    public function __construct(SaleSubCategory $saleSubCategory)
+    {
+        $this->middleware('api.admin')->except(['store']);
+        $this->saleSubCategory = $saleSubCategory;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +30,8 @@ class SaleSubCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $saleSubCategory = $this->saleSubCategory->paginate();
+        return response($saleSubCategory, Response::HTTP_OK);
     }
 
     /**
@@ -23,9 +40,12 @@ class SaleSubCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaleSubCategoryRequest $request)
     {
-        //
+        $saleSubCategory = $this->saleSubCategory->updateOrCreate($request->toArray());
+        return response([
+            'data' => $saleSubCategory
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -36,7 +56,9 @@ class SaleSubCategoryController extends Controller
      */
     public function show(SaleSubCategory $saleSubCategory)
     {
-        //
+        return response([
+            'data' => $saleSubCategory
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -46,9 +68,12 @@ class SaleSubCategoryController extends Controller
      * @param  \App\SaleSubCategory  $saleSubCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SaleSubCategory $saleSubCategory)
+    public function update(SaleSubCategoryRequest $request, SaleSubCategory $saleSubCategory)
     {
-        //
+        $saleSubCategory->update($request->all());
+        return response([
+            'data' => $saleSubCategory
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -59,6 +84,7 @@ class SaleSubCategoryController extends Controller
      */
     public function destroy(SaleSubCategory $saleSubCategory)
     {
-        //
+        $saleSubCategory->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }
