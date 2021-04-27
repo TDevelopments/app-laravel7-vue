@@ -1,20 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\SaleStockRecord;
+use App\Models\SaleStockRecord;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaleStockRecordRequest;
+use App\Http\Resources\SaleStockRecordResource;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Controller;
 
 class SaleStockRecordController extends Controller
 {
+    protected $saleStockRecord;
+
+    public function __construct(SaleStockRecord $saleStockRecord)
+    {
+        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->saleStockRecord = $saleStockRecord;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $saleStockRecords = $this->saleStockRecord->paginate();
+        return SaleStockRecordResource::collection($saleStockRecords);
     }
 
     /**
@@ -23,9 +36,12 @@ class SaleStockRecordController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaleStockRecordRequest $request)
     {
-        //
+        $saleStockRecord = $this->saleStockRecord->create($request->toArray());
+        return response([
+            'data' => new SaleStockRecordResource($saleStockRecord)
+        ],Response::HTTP_CREATED);
     }
 
     /**
@@ -36,7 +52,7 @@ class SaleStockRecordController extends Controller
      */
     public function show(SaleStockRecord $saleStockRecord)
     {
-        //
+        return new SaleStockRecordResource($saleStockRecord);
     }
 
     /**
@@ -46,9 +62,12 @@ class SaleStockRecordController extends Controller
      * @param  \App\SaleStockRecord  $saleStockRecord
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SaleStockRecord $saleStockRecord)
+    public function update(SaleStockRecordRequest $request, SaleStockRecord $saleStockRecord)
     {
-        //
+        $saleStockRecord->update($request->all());
+        return response([
+            'data' => new SaleStockRecordResource($saleStockRecord)
+        ],Response::HTTP_CREATED);
     }
 
     /**
@@ -59,6 +78,7 @@ class SaleStockRecordController extends Controller
      */
     public function destroy(SaleStockRecord $saleStockRecord)
     {
-        //
+        $saleStockRecord->delete();
+        return response(null,Response::HTTP_NO_CONTENT);
     }
 }
