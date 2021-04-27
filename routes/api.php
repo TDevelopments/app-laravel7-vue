@@ -185,5 +185,14 @@ Route::group(['prefix' => 'v1'], function () {
 
         // Product Types
         Route::apiResource('sale-product-types', 'Api\v1\SaleProductTypeController');
+    
+        // Business Location
+        Route::apiResource('business-locations', 'Api\v1\SaleBusinessLocationController');
+    
+        // Product Status 
+        Route::apiResource('sale-product-status', 'Api\v1\SaleProductStatusController');
+    
+        // Stock Record
+        Route::apiResource('sale-stock-records', 'Api\v1\SaleStockRecordController');
     });
 });

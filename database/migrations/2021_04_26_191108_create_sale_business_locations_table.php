@@ -16,11 +16,11 @@ class CreateSaleBusinessLocationsTable extends Migration
         Schema::create('sale_business_locations', function (Blueprint $table) {
             $table->id();
             $table->string('Name');
-            $table->string('Adress');
-            $table->string('City');
-            $table->string('Region');
-            $table->string('PostalCode');
-            $table->string('Country');
+            $table->string('Address')->nullable();
+            $table->string('City')->nullable();
+            $table->string('Region')->nullable();
+            $table->string('PostalCode')->nullable();
+            $table->string('Country')->nullable();
             $table->timestamps();
         });
     }

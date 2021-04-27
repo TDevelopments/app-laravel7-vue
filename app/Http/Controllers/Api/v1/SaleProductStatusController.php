@@ -1,12 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\SaleProductStatus;
+use App\Models\SaleProductStatus;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaleProductStatusRequest;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Controller;
 
 class SaleProductStatusController extends Controller
 {
+    protected $saleProductStatus;
+
+    /**
+     * Constructor
+     *
+     * @param \App\Models\SaleProductStatus $saleProductStatus 
+     */
+    public function __construct(SaleProductStatus $saleProductStatus)
+    {
+        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->saleProductStatus = $saleProductStatus;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +30,8 @@ class SaleProductStatusController extends Controller
      */
     public function index()
     {
-        //
+        $saleProductStatuses = $this->saleProductStatus->paginate();
+        return response($saleProductStatuses, Response::HTTP_OK);
     }
 
     /**
@@ -23,9 +40,12 @@ class SaleProductStatusController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaleProductStatusRequest $request)
     {
-        //
+        $saleProductStatus = $this->saleProductStatus->updateOrCreate($request->toArray());
+        return response([
+            'data' => $saleProductStatus
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -36,7 +56,9 @@ class SaleProductStatusController extends Controller
      */
     public function show(SaleProductStatus $saleProductStatus)
     {
-        //
+        return response([
+            'data' => $saleProductStatus
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -46,9 +68,12 @@ class SaleProductStatusController extends Controller
      * @param  \App\SaleProductStatus  $saleProductStatus
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SaleProductStatus $saleProductStatus)
+    public function update(SaleProductStatusRequest $request, SaleProductStatus $saleProductStatus)
     {
-        //
+        $saleProductStatus->update($request->all());
+        return response([
+            'data' => $saleProductStatus
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -59,6 +84,7 @@ class SaleProductStatusController extends Controller
      */
     public function destroy(SaleProductStatus $saleProductStatus)
     {
-        //
+        $saleProductStatus->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

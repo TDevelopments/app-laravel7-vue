@@ -1,12 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Models\SaleBusinessLocation;
 use Illuminate\Http\Request;
+use App\Http\Requests\BusinessLocationRequest;
+use App\Http\Resources\BusinessLocationResource;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Controller;
 
 class SaleBusinessLocationController extends Controller
 {
+    protected $saleBusinessLocation;
+
+    /**
+     * Constructor
+     *
+     * @param \App\Models\SaleBusinessLocation $saleBusinessLocation 
+     */
+    public function __construct(SaleBusinessLocation $saleBusinessLocation)
+    {
+        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->saleBusinessLocation = $saleBusinessLocation;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +31,8 @@ class SaleBusinessLocationController extends Controller
      */
     public function index()
     {
-        //
+        $saleBusinessLocations = $this->saleBusinessLocation->paginate();
+        return BusinessLocationResource::collection($saleBusinessLocations);
     }
 
     /**
@@ -23,9 +41,12 @@ class SaleBusinessLocationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BusinessLocationRequest $request)
     {
-        //
+        $saleBusinessLocation = $this->saleBusinessLocation->create($request->toArray());
+        return response([
+            'data' => new BusinessLocationResource($saleBusinessLocation)
+        ],Response::HTTP_CREATED);
     }
 
     /**
@@ -34,9 +55,9 @@ class SaleBusinessLocationController extends Controller
      * @param  \App\SabeBusinessLocation  $sabeBusinessLocation
      * @return \Illuminate\Http\Response
      */
-    public function show(SabeBusinessLocation $sabeBusinessLocation)
+    public function show(SaleBusinessLocation $businessLocation)
     {
-        //
+        return new BusinessLocationResource($businessLocation);
     }
 
     /**
@@ -46,9 +67,12 @@ class SaleBusinessLocationController extends Controller
      * @param  \App\SabeBusinessLocation  $sabeBusinessLocation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SabeBusinessLocation $sabeBusinessLocation)
+    public function update(BusinessLocationRequest $request, SaleBusinessLocation $businessLocation)
     {
-        //
+        $businessLocation->update($request->all());
+        return response([
+            'data' => new BusinessLocationResource($businessLocation)
+        ],Response::HTTP_CREATED);
     }
 
     /**
@@ -57,8 +81,9 @@ class SaleBusinessLocationController extends Controller
      * @param  \App\SabeBusinessLocation  $sabeBusinessLocation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SabeBusinessLocation $sabeBusinessLocation)
+    public function destroy(SaleBusinessLocation $businessLocation)
     {
-        //
+        $businessLocation->delete();
+        return response(null,Response::HTTP_NO_CONTENT);
     }
 }
