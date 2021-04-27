@@ -1,12 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\SaleProductType;
+use App\Models\SaleProductType;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaleProductTypeRequest;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Controller;
 
 class SaleProductTypeController extends Controller
 {
+    protected $saleProductType;
+
+    /**
+     * Constructor
+     *
+     * @param \App\Models\SaleCategory $saleCategory
+     */
+    public function __construct(SaleProductType $saleProductType)
+    {
+        $this->middleware('api.admin')->except(['store']);
+        $this->saleProductType = $saleProductType;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +30,8 @@ class SaleProductTypeController extends Controller
      */
     public function index()
     {
-        //
+        $saleProductTypes = $this->saleProductType->paginate();
+        return response($saleProductTypes, Response::HTTP_OK);
     }
 
     /**
@@ -25,7 +42,10 @@ class SaleProductTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $saleProductType = $this->saleProductType->updateOrCreate($request->toArray());
+        return response([
+            'data' => $saleProductType
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -36,7 +56,9 @@ class SaleProductTypeController extends Controller
      */
     public function show(SaleProductType $saleProductType)
     {
-        //
+        return response([
+            'data' => $saleProductType
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -46,9 +68,12 @@ class SaleProductTypeController extends Controller
      * @param  \App\SaleProductType  $saleProductType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SaleProductType $saleProductType)
+    public function update(SaleProductTypeRequest $request, SaleProductType $saleProductType)
     {
-        //
+        $saleProductType->update($request->all());
+        return response([
+            'data' => $saleProductType
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -59,6 +84,7 @@ class SaleProductTypeController extends Controller
      */
     public function destroy(SaleProductType $saleProductType)
     {
-        //
+        $saleProductType->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -175,7 +175,19 @@ Route::group(['prefix' => 'v1'], function () {
         // Products 
         Route::apiResource('sale-products', 'Api\v1\SaleProductController');
     
-        // Products 
+        // Customers
         Route::apiResource('sale-customers', 'Api\v1\SaleCustomerController');
+    
+        // Brands
+        Route::apiResource('sale-brands', 'Api\v1\SaleBrandController');
+
+        // SubCategories
+        Route::apiResource('sale-sub-categories', 'Api\v1\SaleSubCategoryController');
+
+        // Units
+        Route::apiResource('sale-units', 'Api\v1\SaleProductUnitController');
+
+        // Product Types
+        Route::apiResource('sale-product-types', 'Api\v1\SaleProductTypeController');
     });
 });

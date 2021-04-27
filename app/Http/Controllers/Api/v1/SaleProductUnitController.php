@@ -1,12 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\SaleProductUnit;
+use App\Models\SaleProductUnit;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaleProductUnitRequest;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Controller;
 
 class SaleProductUnitController extends Controller
 {
+    protected $saleProductUnit;
+
+    /**
+     * Constructor
+     *
+     * @param \App\Models\SaleCategory $saleCategory
+     */
+    public function __construct(SaleProductUnit $saleProductUnit)
+    {
+        $this->middleware('api.admin')->except(['store']);
+        $this->saleProductUnit = $saleProductUnit;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +30,8 @@ class SaleProductUnitController extends Controller
      */
     public function index()
     {
-        //
+        $saleProductUnit = $this->saleProductUnit->paginate();
+        return response($saleProductUnit, Response::HTTP_OK);
     }
 
     /**
@@ -23,9 +40,12 @@ class SaleProductUnitController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaleProductUnitRequest $request)
     {
-        //
+        $saleProductUnit = $this->saleProductUnit->updateOrCreate($request->toArray());
+        return response([
+            'data' => $saleProductUnit
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -34,9 +54,11 @@ class SaleProductUnitController extends Controller
      * @param  \App\SaleProductUnit  $saleProductUnit
      * @return \Illuminate\Http\Response
      */
-    public function show(SaleProductUnit $saleProductUnit)
+    public function show(SaleProductUnit $saleUnit)
     {
-        //
+        return response([
+            'data' => $saleUnit
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -46,9 +68,12 @@ class SaleProductUnitController extends Controller
      * @param  \App\SaleProductUnit  $saleProductUnit
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SaleProductUnit $saleProductUnit)
+    public function update(SaleProductUnitRequest $request, SaleProductUnit $saleUnit)
     {
-        //
+        $saleUnit->update($request->all());
+        return response([
+            'data' => $saleUnit
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -57,8 +82,9 @@ class SaleProductUnitController extends Controller
      * @param  \App\SaleProductUnit  $saleProductUnit
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleProductUnit $saleProductUnit)
+    public function destroy(SaleProductUnit $saleUnit)
     {
-        //
+        $saleUnit->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }
