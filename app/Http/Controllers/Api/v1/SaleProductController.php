@@ -104,6 +104,7 @@ class SaleProductController extends Controller
     public function handle(Request $request)
     {
         unset($request['Sku']);
+        unset($request['Slug']);
         return $request;
     }
 }

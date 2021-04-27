@@ -45,7 +45,7 @@ class SaleProductRequest extends FormRequest
             'sale_sub_category_id' => ['integer', 'exists:App\Models\SaleSubCategory,id'],
             'sale_brand_id' => ['required', 'integer', 'exists:App\Models\SaleBrand,id'],
             'sale_product_type_id' => ['required', 'integer', 'exists:App\Models\SaleProductType,id'],
-            'sale_product_unit_id' => ['required', 'integer', 'exists:App\Models\sale_product_unit_id,id'],
+            'sale_product_unit_id' => ['required', 'integer', 'exists:App\Models\SaleProductUnit,id'],
         ];
     }
 }
