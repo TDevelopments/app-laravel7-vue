@@ -198,5 +198,8 @@ Route::group(['prefix' => 'v1'], function () {
     
         // Stock Record
         Route::apiResource('sale-stock-records', 'Api\v1\SaleStockRecordController');
+    
+        // Deliveries
+        Route::apiResource('sale-deliveries', 'Api\v1\SaleDeliveryController');
     });
 });

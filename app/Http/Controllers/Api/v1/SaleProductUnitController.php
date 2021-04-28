@@ -19,7 +19,7 @@ class SaleProductUnitController extends Controller
      */
     public function __construct(SaleProductUnit $saleProductUnit)
     {
-        $this->middleware('api.admin')->except(['store']);
+        $this->middleware('api.admin');
         $this->saleProductUnit = $saleProductUnit;
     }
 
@@ -28,8 +28,17 @@ class SaleProductUnitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleProductUnit->get();
+            $count = $this->saleProductUnit->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
         $saleProductUnit = $this->saleProductUnit->paginate();
         return response($saleProductUnit, Response::HTTP_OK);
     }

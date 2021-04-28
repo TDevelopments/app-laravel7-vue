@@ -20,7 +20,7 @@ class SaleBusinessLocationController extends Controller
      */
     public function __construct(SaleBusinessLocation $saleBusinessLocation)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->middleware('api.admin');
         $this->saleBusinessLocation = $saleBusinessLocation;
     }
 
