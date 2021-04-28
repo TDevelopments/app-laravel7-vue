@@ -15,7 +15,7 @@ class SaleStockRecordController extends Controller
 
     public function __construct(SaleStockRecord $saleStockRecord)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->middleware('api.admin');
         $this->saleStockRecord = $saleStockRecord;
     }
 
@@ -26,6 +26,25 @@ class SaleStockRecordController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->query("BusinessId")) {
+            $value = $request->query("BusinessId");
+            $result = $this->saleStockRecord->where('sale_business_location_id', $value)->get();
+            $count = $this->saleStockRecord->where('sale_business_location_id', $value)->count();
+            return response([
+                'data' => $result,
+                'count' => $count
+            ], Response::HTTP_OK);
+        }
+        if ($request->query("BusinessId") && $request->query("StatusId")) {
+            $value1 = $request->query("BusinessId");
+            $value2 = $request->query("StatusId");
+            $result = $this->saleStockRecord->where('sale_business_location_id', $value1)->where('sale_product_status_id', $value2)->get();
+            $count = $this->saleStockRecord->where('sale_business_location_id', $value1)->where('sale_product_status_id', $value2)->count();
+            return response([
+                'data' => $result,
+                'count' => $count
+            ], Response::HTTP_OK);
+        }
         $saleStockRecords = $this->saleStockRecord->paginate();
         return SaleStockRecordResource::collection($saleStockRecords);
     }

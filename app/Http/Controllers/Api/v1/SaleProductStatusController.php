@@ -19,7 +19,7 @@ class SaleProductStatusController extends Controller
      */
     public function __construct(SaleProductStatus $saleProductStatus)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->middleware('api.admin');
         $this->saleProductStatus = $saleProductStatus;
     }
 

@@ -19,7 +19,7 @@ class SaleBrandController extends Controller
      */
     public function __construct(SaleBrand $saleBrand)
     {
-        $this->middleware('api.admin')->except(['store']);
+        $this->middleware('api.admin');
         $this->saleBrand = $saleBrand;
     }
     /**
@@ -27,8 +27,17 @@ class SaleBrandController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleBrand->get();
+            $count = $this->saleBrand->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
         $saleBrands = $this->saleBrand->paginate();
         return response($saleBrands, Response::HTTP_OK);
     }

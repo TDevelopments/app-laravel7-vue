@@ -28,8 +28,17 @@ class SaleSubCategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleSubCategory->get();
+            $count = $this->saleSubCategory->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
         $saleSubCategory = $this->saleSubCategory->paginate();
         return response($saleSubCategory, Response::HTTP_OK);
     }

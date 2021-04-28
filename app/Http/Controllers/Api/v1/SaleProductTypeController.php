@@ -19,7 +19,7 @@ class SaleProductTypeController extends Controller
      */
     public function __construct(SaleProductType $saleProductType)
     {
-        $this->middleware('api.admin')->except(['store']);
+        $this->middleware('api.admin');
         $this->saleProductType = $saleProductType;
     }
 
@@ -28,8 +28,17 @@ class SaleProductTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleProductType->get();
+            $count = $this->saleProductType->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
         $saleProductTypes = $this->saleProductType->paginate();
         return response($saleProductTypes, Response::HTTP_OK);
     }

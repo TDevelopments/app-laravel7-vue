@@ -30,6 +30,15 @@ class SaleCategoryController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleCategory->get();
+            $count = $this->saleCategory->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
         $saleCategories = $this->saleCategory->paginate();
         return SaleCategoryResource::collection($saleCategories);
     }
