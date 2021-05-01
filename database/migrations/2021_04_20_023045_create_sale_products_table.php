@@ -18,7 +18,7 @@ class CreateSaleProductsTable extends Migration
             $table->string('Sku')->unique();
             $table->string('Slug')->unique();
             $table->string('ProductName');
-            $table->text('ProductDescription');
+            $table->text('ProductDescription')->nullable();
             $table->bigInteger('QuantityPerUnit')->default(1);
             $table->float('UnitPrice', 8, 3);
             $table->float('SellingPrice', 8, 3);

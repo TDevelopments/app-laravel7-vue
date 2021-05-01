@@ -29,8 +29,17 @@ class SaleCustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleCustomer->get();
+            $count = $this->saleCustomer->count();
+            return response([
+                'count' => $count,
+                'data' => SaleCustomerResource::collection($result),
+            ], Response::HTTP_OK);
+        }
         $saleCustomer = $this->saleCustomer->paginate();
         return SaleCustomerResource::collection($saleCustomer);
     }

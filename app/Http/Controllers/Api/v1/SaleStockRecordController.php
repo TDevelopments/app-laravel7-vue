@@ -6,6 +6,7 @@ use App\Models\SaleStockRecord;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleStockRecordRequest;
 use App\Http\Resources\SaleStockRecordResource;
+use App\Http\Resources\SaleStockRecordCollection;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
 
@@ -26,20 +27,18 @@ class SaleStockRecordController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->query("BusinessId") && $request->query("StatusId")) {
+            $value1 = $request->query("BusinessId");
+            $value2 = $request->query("StatusId");
+            $result = $this->saleStockRecord->where('sale_business_location_id', $value1)
+                        ->where('sale_product_status_id', $value2)
+                      ->paginate()->withQueryString();
+            return new SaleStockRecordCollection($result);
+        }
         if ($request->query("BusinessId")) {
             $value = $request->query("BusinessId");
             $result = $this->saleStockRecord->where('sale_business_location_id', $value)->get();
             $count = $this->saleStockRecord->where('sale_business_location_id', $value)->count();
-            return response([
-                'data' => $result,
-                'count' => $count
-            ], Response::HTTP_OK);
-        }
-        if ($request->query("BusinessId") && $request->query("StatusId")) {
-            $value1 = $request->query("BusinessId");
-            $value2 = $request->query("StatusId");
-            $result = $this->saleStockRecord->where('sale_business_location_id', $value1)->where('sale_product_status_id', $value2)->get();
-            $count = $this->saleStockRecord->where('sale_business_location_id', $value1)->where('sale_product_status_id', $value2)->count();
             return response([
                 'data' => $result,
                 'count' => $count
