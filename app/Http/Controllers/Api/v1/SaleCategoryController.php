@@ -81,7 +81,7 @@ class SaleCategoryController extends Controller
         $saleCategory->update($request->all());
         return response([
             'data' => new SaleCategoryResource($saleCategory)
-        ],Response::HTTP_CREATED);
+        ],Response::HTTP_OK);
     }
 
     /**

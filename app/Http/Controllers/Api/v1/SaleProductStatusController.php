@@ -28,8 +28,17 @@ class SaleProductStatusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleProductStatus->get();
+            $count = $this->saleProductStatus->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
         $saleProductStatuses = $this->saleProductStatus->paginate();
         return response($saleProductStatuses, Response::HTTP_OK);
     }

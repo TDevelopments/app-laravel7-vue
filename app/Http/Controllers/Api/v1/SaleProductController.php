@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Models\SaleProduct;
+use App\Models\SalePicture;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleProductRequest;
 use App\Http\Resources\SaleProductResource;
@@ -33,6 +34,36 @@ class SaleProductController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleProduct->select('id', 'ProductName')->get();
+            return response([
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
+        if ($request->query("ProductName")) {
+            $value = $request->query("ProductName");
+            $result = $this->saleProduct->where('ProductName', 'like', "%$value%")->get();
+            return response([
+                'data' => $result,
+            ], Response::HTTP_OK);
+        }
+        if ($request->query("ProductAvailable")) 
+        {
+            $value = $request->query("ProductAvailable");
+            switch ($value2) {
+                case "true":
+                    $products = $this->product->where('ProductAvailable', 1)
+                                            ->orderBy('ProductName')->paginate()->withQueryString();
+                    return SaleProductResource::collection($products);
+                    break;
+                case "false":
+                    $products = $this->product->where('ProductAvailable', 0)
+                                            ->orderBy('ProductName')->paginate()->withQueryString();
+                    return SaleProductResource::collection($products);
+                    break;
+            }
+        }
         $saleProducts = $this->saleProduct->paginate();
         return SaleProductResource::collection($saleProducts);
     }
@@ -48,6 +79,18 @@ class SaleProductController extends Controller
         $this->handle($request);
         $request->merge(['Sku' => $this->randomId()]);
         $saleProduct = $this->saleProduct->create($request->toArray());
+        if ($request->has('Image')) {
+            foreach($request->file('Image') as $file)
+            {
+                $name = Str::uuid() . "." . $file->getClientOriginalExtension();
+                $file->move(public_path().'/uploads/salesModule', $name);
+                $picture = new SalePicture();
+                $picture->PictureName = $name;
+                $picture->PicturePath = '/uploads/salesModule/'.$name;
+                $picture->save();
+                $saleProduct->SalePictures()->attach($picture);
+            }
+        }
         return response([
             'data' => new SaleProductResource($saleProduct)
         ],Response::HTTP_CREATED);
@@ -75,9 +118,21 @@ class SaleProductController extends Controller
     {
         $this->handle($request);
         $saleProduct->update($request->all());
+        if ($request->has('Image')) {
+            foreach($request->file('Image') as $file)
+            {
+                $name = Str::uuid() . "." . $file->getClientOriginalExtension();
+                $file->move(public_path().'/uploads/salesModule', $name);
+                $picture = new SalePicture();
+                $picture->PictureName = $name;
+                $picture->PicturePath = '/uploads/salesModule/'.$name;
+                $picture->save();
+                $saleProduct->SalePictures()->attach($picture);
+            }
+        }
         return response([
             'data' => new SaleProductResource($saleProduct)
-        ],Response::HTTP_CREATED);
+        ],Response::HTTP_OK);
     }
 
     /**

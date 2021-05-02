@@ -29,8 +29,17 @@ class SaleBusinessLocationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleBusinessLocation->get();
+            $count = $this->saleBusinessLocation->count();
+            return response([
+                'count' => $count,
+                'data' => BusinessLocationResource::collection($result),
+            ], Response::HTTP_OK);
+        }
         $saleBusinessLocations = $this->saleBusinessLocation->paginate();
         return BusinessLocationResource::collection($saleBusinessLocations);
     }

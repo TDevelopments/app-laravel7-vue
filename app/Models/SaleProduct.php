@@ -92,9 +92,9 @@ class SaleProduct extends Model
         return $this->hasMany(SaleReview::class);
     }
 
-    public function SaleStockRecord()
+    public function SaleStockRecords()
     {
-        return $this->belongsTo(SaleStockRecord::class);
+        return $this->hasMany(SaleStockRecord::class);
     }
 
     public function hasAnyCategory($categories)
