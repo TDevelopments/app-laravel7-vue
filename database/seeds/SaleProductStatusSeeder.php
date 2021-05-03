@@ -13,11 +13,11 @@ class SaleProductStatusSeeder extends Seeder
     public function run()
     {
         $business = new SaleProductStatus();
-        $business->StatusName = 'Observado';
+        $business->StatusName = 'Reservado';
         $business->save();
 
         $business = new SaleProductStatus();
-        $business->StatusName = 'Reservado';
+        $business->StatusName = 'Observado';
         $business->save();
 
         $business = new SaleProductStatus();

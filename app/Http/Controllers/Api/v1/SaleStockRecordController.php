@@ -32,7 +32,7 @@ class SaleStockRecordController extends Controller
             $value2 = $request->query("StatusId");
             $result = $this->saleStockRecord->where('sale_business_location_id', $value1)
                         ->where('sale_product_status_id', $value2)
-                      ->paginate()->withQueryString();
+                        ->paginate()->withQueryString();
             return new SaleStockRecordCollection($result);
         }
         if ($request->query("BusinessId")) {
