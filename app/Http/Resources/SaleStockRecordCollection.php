@@ -16,7 +16,6 @@ class SaleStockRecordCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'SumQuantity' => $this->collection->sum('Quantity'),
             'data' => SaleStockRecordResource::collection($this->collection),
         ];
     }
