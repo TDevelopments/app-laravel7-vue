@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Models\SaleStockRecord;
+use App\Models\SaleProduct;
+use App\Models\SaleCustomer;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleStockRecordRequest;
 use App\Http\Resources\SaleStockRecordResource;
@@ -13,11 +15,15 @@ use App\Http\Controllers\Controller;
 class SaleStockRecordController extends Controller
 {
     protected $saleStockRecord;
+    protected $saleProduct;
+    protected $saleCustomer;
 
-    public function __construct(SaleStockRecord $saleStockRecord)
+    public function __construct(SaleStockRecord $saleStockRecord, SaleCustomer $saleCustomer, SaleProduct $saleProduct)
     {
         $this->middleware('api.admin');
         $this->saleStockRecord = $saleStockRecord;
+        $this->saleCustomer = $saleCustomer;
+        $this->saleProduct = $saleProduct;
     }
 
     /**
@@ -27,24 +33,35 @@ class SaleStockRecordController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->query("BusinessId") && $request->query("StatusId")) {
+        if ($request->query("BusinessId") || $request->query("StatusId") || $request->query("ProductName") || $request->query("CustomerName")) {
             $value1 = $request->query("BusinessId");
             $value2 = $request->query("StatusId");
-            $result = $this->saleStockRecord->where('sale_business_location_id', $value1)
-                        ->where('sale_product_status_id', $value2)
-                        ->paginate()->withQueryString();
-            return new SaleStockRecordCollection($result);
+            $value3 = $request->query("ProductName");
+            $value4 = $request->query("CustomerName");
+            $query = $this->saleStockRecord->where('Quantity', '>', 0);
+            if($request->query("BusinessId"))
+            {
+                $query->where('sale_business_location_id', $value1);
+            }
+            if($request->query("StatusId"))
+            {
+                $query->where("sale_product_status_id", $value2);
+            }
+            if($request->query("ProductName"))
+            {
+                $productReference = $this->saleProduct->firstWhere("ProductName", "like", "%$value3%");
+                if (!empty($productReference))
+                    $query->where("sale_product_id", $productReference->id);
+            }
+            if($request->query("CustomerName"))
+            {
+                $customerReference = $this->saleCustomer->where("FirstName", "like", "%$value4%")->orWhere("LastName", "like", "%$value4%")->first();
+                if (!empty($customerReference))
+                    $query->where("sale_customer_id", $customerReference->id);
+            }
+            return new SaleStockRecordCollection($query->paginate()->withQueryString());
         }
-        if ($request->query("BusinessId")) {
-            $value = $request->query("BusinessId");
-            $result = $this->saleStockRecord->where('sale_business_location_id', $value)->get();
-            $count = $this->saleStockRecord->where('sale_business_location_id', $value)->count();
-            return response([
-                'data' => $result,
-                'count' => $count
-            ], Response::HTTP_OK);
-        }
-        $saleStockRecords = $this->saleStockRecord->paginate();
+        $saleStockRecords = $this->saleStockRecord->orderBy('created_at', 'desc')->paginate();
         return SaleStockRecordResource::collection($saleStockRecords);
     }
 
