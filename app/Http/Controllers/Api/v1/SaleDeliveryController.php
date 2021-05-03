@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Models\SaleDelivery;
+use App\Models\SaleStockRecord;
+use App\Models\SaleProductStatus;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleDeliveryRequest;
 use App\Http\Resources\SaleDeliveryResource;
@@ -13,10 +15,12 @@ class SaleDeliveryController extends Controller
 {
     protected $saleDelivery;
 
-    public function __construct(SaleDelivery $saleDelivery)
+    public function __construct(SaleDelivery $saleDelivery, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin');
         $this->saleDelivery = $saleDelivery;
+        $this->saleStockRecord = $saleStockRecord;
+        $this->saleProductStatus = $saleProductStatus;
     }
     /**
      * Display a listing of the resource.
@@ -27,8 +31,8 @@ class SaleDeliveryController extends Controller
     {
         if ($request->query("CustomerId")) {
             $value = $request->query("CustomerId");
-            $result = $this->saleStockRecord->where('sale_customer_id', $value)->get();
-            $count = $this->saleStockRecord->where('sale_customer_id', $value)->count();
+            $result = $this->saleDelivery->where('sale_customer_id', $value)->get();
+            $count = $this->saleDelivery->where('sale_customer_id', $value)->count();
             return response([
                 'data' => $result,
                 'count' => $count
@@ -48,6 +52,15 @@ class SaleDeliveryController extends Controller
     {
         $request->merge(['user_id' => $request->user()->id]);
         $saleDelivery = $this->saleDelivery->create($request->toArray());
+        $productStatus = $this->saleProductStatus->firstWhere('StatusName', 'Reservado');
+        $saleStockRecords = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
+                ->where('sale_product_id', $request->sale_product_id)
+                ->where('sale_customer_id', $request->sale_customer_id)->sum('Quantity');
+        // if (empty($saleStockRecords))
+        // {
+        //     return "hola";
+        // }
+        // return $saleStockRecords;
         return response([
             'data' => new SaleDeliveryResource($saleDelivery)
         ], Response::HTTP_CREATED);

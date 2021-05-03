@@ -54,7 +54,7 @@ class SaleCustomerController extends Controller
     {
         $saleCustomer = $this->saleCustomer->create($request->toArray());
         return response([
-            'data' => new SaleCustomerResource($saleCategory)
+            'data' => new SaleCustomerResource($saleCustomer)
         ],Response::HTTP_CREATED);
     }
 
@@ -92,7 +92,7 @@ class SaleCustomerController extends Controller
      */
     public function destroy(SaleCustomer $saleCustomer)
     {
-        $saleCategory->delete();
+        $saleCustomer->delete();
         return response(null,Response::HTTP_NO_CONTENT);
     }
 }
