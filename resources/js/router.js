@@ -8,71 +8,121 @@ import Home from './components/admin/navigation';
 import NotFound from './components/login/NotFound';
 import Logout from './components/login/Logout';
 import Register from './components/login/Register';
-import Dashboard from './components/admin/dashboard/Dashboard';
+import Dashboard from './components/admin/group-import/dashboard/Dashboard';
 import PDFCatalogue from './components/pdf/cataloguePDF';
 
 // Pages View CRUD Catalogues
-import ListCatalogue from './components/admin/catalogues/List';
-import AddCatalogue from './components/admin/catalogues/Add';
-import EditCatalogue from './components/admin/catalogues/Edit';
+import ListCatalogue from './components/admin/group-import/catalogues/List';
+import AddCatalogue from './components/admin/group-import/catalogues/Add';
+import EditCatalogue from './components/admin/group-import/catalogues/Edit';
 
 // Pages View CRUD Products
-import ListProduct from './components/admin/products/List';
-import AddProduct from './components/admin/products/Add';
-import EditProduct from './components/admin/products/Edit';
+import ListProduct from './components/admin/group-import/products/List';
+import AddProduct from './components/admin/group-import/products/Add';
+import EditProduct from './components/admin/group-import/products/Edit';
 
 // Pages View CRUD ProductsRange
-import AddProductRange from './components/admin/products/AddRange';
-import EditProductRange from './components/admin/products/EditRange';
+import AddProductRange from './components/admin/group-import/products/AddRange';
+import EditProductRange from './components/admin/group-import/products/EditRange';
 
 // Pages View CRUD Categories
-import ListCategory from './components/admin/categories/List';
-import AddCategory from './components/admin/categories/Add';
-import EditCategory from './components/admin/categories/Edit';
+import ListCategory from './components/admin/group-import/categories/List';
+import AddCategory from './components/admin/group-import/categories/Add';
+import EditCategory from './components/admin/group-import/categories/Edit';
 
 // Pages View CRUD Categories
-import ListUser from './components/admin/users/List';
-import AddUser from './components/admin/users/Add';
-import EditUser from './components/admin/users/Edit';
+import ListUser from './components/admin/group-import/users/List';
+import AddUser from './components/admin/group-import/users/Add';
+import EditUser from './components/admin/group-import/users/Edit';
 
 // Pages View CRUD Measures
-import ListMeasure from './components/admin/measure/List';
-import AddMeasure from './components/admin/measure/Add';
-import EditMeasure from './components/admin/measure/Edit';
+import ListMeasure from './components/admin/group-import/measure/List';
+import AddMeasure from './components/admin/group-import/measure/Add';
+import EditMeasure from './components/admin/group-import/measure/Edit';
 
 // Pages View CRUD Concept Payment
-import ListConcept from './components/admin/concept/List';
-import AddConcept from './components/admin/concept/Add';
-import EditConcept from './components/admin/concept/Edit';
+import ListConcept from './components/admin/group-import/concept/List';
+import AddConcept from './components/admin/group-import/concept/Add';
+import EditConcept from './components/admin/group-import/concept/Edit';
 
 // Pages View CRUD State Order
-import ListState from './components/admin/state/List';
-import AddState from './components/admin/state/Add';
-import EditState from './components/admin/state/Edit';
+import ListState from './components/admin/group-import/state/List';
+import AddState from './components/admin/group-import/state/Add';
+import EditState from './components/admin/group-import/state/Edit';
 
 // Pages View CRUD State Send
-import ListStateSend from './components/admin/stateSend/List';
-import AddStateSend from './components/admin/stateSend/Add';
-import EditStateSend from './components/admin/stateSend/Edit';
+import ListStateSend from './components/admin/group-import/stateSend/List';
+import AddStateSend from './components/admin/group-import/stateSend/Add';
+import EditStateSend from './components/admin/group-import/stateSend/Edit';
 
 // Pages View CRUD Banks
-import ListBank from './components/admin/bank/List';
-import AddBank from './components/admin/bank/Add';
-import EditBank from './components/admin/bank/Edit';
+import ListBank from './components/admin/group-import/bank/List';
+import AddBank from './components/admin/group-import/bank/Add';
+import EditBank from './components/admin/group-import/bank/Edit';
 
 // Pages View CRUD Advisers
-import ListAdviser from './components/admin/adviser/List';
-import AddAdviser from './components/admin/adviser/Add';
-import EditAdviser from './components/admin/adviser/Edit';
+import ListAdviser from './components/admin/group-import/adviser/List';
+import AddAdviser from './components/admin/group-import/adviser/Add';
+import EditAdviser from './components/admin/group-import/adviser/Edit';
 
 // Pages View Orders
-import ListOrder from './components/admin/orders/List';
-import EditOrder from './components/admin/orders/Edit';
-import FilterOrder from './components/admin/orders/Filter';
-import PrintOrder from './components/admin/orders/printOrder.vue';
+import ListOrder from './components/admin/group-import/orders/List';
+import EditOrder from './components/admin/group-import/orders/Edit';
+import FilterOrder from './components/admin/group-import/orders/Filter';
+import PrintOrder from './components/admin/group-import/orders/printOrder';
+
+// Pages Stock Product
+import ListStockProduct from './components/admin/stock/product/List';
+import AddStockProduct from './components/admin/stock/product/Add';
+import EditStockProduct from './components/admin/stock/product/Edit';
+
+// Pages Stock Location
+import ListStockLocation from './components/admin/stock/location/List';
+import AddStockLocation from './components/admin/stock/location/Add';
+import EditStockLocation from './components/admin/stock/location/Edit';
+
+// Pages Stock Customer
+import ListStockCustomer from './components/admin/stock/customer/List';
+import AddStockCustomer from './components/admin/stock/customer/Add';
+import EditStockCustomer from './components/admin/stock/customer/Edit';
+
+// Pages Stock Brand
+import ListStockBrand from './components/admin/stock/brand/List';
+import AddStockBrand from './components/admin/stock/brand/Add';
+import EditStockBrand from './components/admin/stock/brand/Edit';
+
+// Pages Stock Categories
+import ListStockCategorie from './components/admin/stock/categorie/List';
+import AddStockCategorie from './components/admin/stock/categorie/Add';
+import EditStockCategorie from './components/admin/stock/categorie/Edit';
+
+// Pages Stock Categories
+import ListStockSubCategorie from './components/admin/stock/subCategorie/List';
+import AddStockSubCategorie from './components/admin/stock/subCategorie/Add';
+import EditStockSubCategorie from './components/admin/stock/subCategorie/Edit';
+
+// Pages Stock Categories
+import ListStockProductType from './components/admin/stock/productType/List';
+import AddStockProductType from './components/admin/stock/productType/Add';
+import EditStockProductType from './components/admin/stock/productType/Edit';
+
+// Pages Stock Unit
+import ListStockUnit from './components/admin/stock/unit/List';
+import AddStockUnit from './components/admin/stock/unit/Add';
+import EditStockUnit from './components/admin/stock/unit/Edit';
+
+// Pages Stock Status
+import ListStockStatus from './components/admin/stock/status/List';
+import AddStockStatus from './components/admin/stock/status/Add';
+import EditStockStatus from './components/admin/stock/status/Edit';
+
+// Pages Stock StockRecord
+import ListStockStockRecord from './components/admin/stock/stockRecord/List';
+import AddStockStockRecord from './components/admin/stock/stockRecord/Add';
+import EditStockStockRecord from './components/admin/stock/stockRecord/Edit';
 
 // Pages Product For Catalogue
-import ProductCatalogue from './components/admin/catalogues/ProductForCatalogue';
+import ProductCatalogue from './components/admin/group-import/catalogues/ProductForCatalogue';
 
 // Pages User
 import Welcome from './components/Welcome';
@@ -364,6 +414,167 @@ export default new Router({
           path: '/admin/adviser/:id/edit',
           name: 'editAdviser',
           component: EditAdviser,
+        },
+        // Module Sale
+        // -> Product
+        {
+          path: '/admin/stock/products',
+          name: 'listStockProduct',
+          component: ListStockProduct,
+        },
+        {
+          path: '/admin/stock/product/add',
+          name: 'addStockProduct',
+          component: AddStockProduct,
+        },
+        {
+          path: '/admin/stock/product/:id/edit',
+          name: 'editStockProduct',
+          component: EditStockProduct,
+        },
+        // -> Brand
+        {
+          path: '/admin/stock/brands',
+          name: 'listStockBrand',
+          component: ListStockBrand,
+        },
+        {
+          path: '/admin/stock/brand/add',
+          name: 'addStockBrand',
+          component: AddStockBrand,
+        },
+        {
+          path: '/admin/stock/brand/:id/edit',
+          name: 'editStockBrand',
+          component: EditStockBrand,
+        },
+        // -> Categorie
+        {
+          path: '/admin/stock/categories',
+          name: 'listStockCategorie',
+          component: ListStockCategorie,
+        },
+        {
+          path: '/admin/stock/categorie/add',
+          name: 'addStockCategorie',
+          component: AddStockCategorie,
+        },
+        {
+          path: '/admin/stock/categorie/:id/edit',
+          name: 'editStockCategorie',
+          component: EditStockCategorie,
+        },
+        // -> Product Type
+        {
+          path: '/admin/stock/product-types',
+          name: 'listStockProductType',
+          component: ListStockProductType,
+        },
+        {
+          path: '/admin/stock/product-type/add',
+          name: 'addStockProductType',
+          component: AddStockProductType,
+        },
+        {
+          path: '/admin/stock/product-type/:id/edit',
+          name: 'editStockProductType',
+          component: EditStockProductType,
+        },
+        // -> Sub-Categorie
+        {
+          path: '/admin/stock/sub-categories',
+          name: 'listStockSubCategorie',
+          component: ListStockSubCategorie,
+        },
+        {
+          path: '/admin/stock/sub-categorie/add',
+          name: 'addStockSubCategorie',
+          component: AddStockSubCategorie,
+        },
+        {
+          path: '/admin/stock/sub-categorie/:id/edit',
+          name: 'editStockSubCategorie',
+          component: EditStockSubCategorie,
+        },
+        // -> Units
+        {
+          path: '/admin/stock/units',
+          name: 'listStockUnit',
+          component: ListStockUnit,
+        },
+        {
+          path: '/admin/stock/unit/add',
+          name: 'addStockUnit',
+          component: AddStockUnit,
+        },
+        {
+          path: '/admin/stock/unit/:id/edit',
+          name: 'editStockUnit',
+          component: EditStockUnit,
+        },
+        // -> Status
+        {
+          path: '/admin/stock/statuss',
+          name: 'listStockStatus',
+          component: ListStockStatus,
+        },
+        {
+          path: '/admin/stock/status/add',
+          name: 'addStockStatus',
+          component: AddStockStatus,
+        },
+        {
+          path: '/admin/stock/status/:id/edit',
+          name: 'editStockStatus',
+          component: EditStockStatus,
+        },
+        // -> Locations
+        {
+          path: '/admin/stock/locations',
+          name: 'listStockLocation',
+          component: ListStockLocation,
+        },
+        {
+          path: '/admin/stock/location/add',
+          name: 'addStockLocation',
+          component: AddStockLocation,
+        },
+        {
+          path: '/admin/stock/location/:id/edit',
+          name: 'editStockLocation',
+          component: EditStockLocation,
+        },
+        // -> Customers
+        {
+          path: '/admin/stock/customers',
+          name: 'listStockCustomer',
+          component: ListStockCustomer,
+        },
+        {
+          path: '/admin/stock/customer/add',
+          name: 'addStockCustomer',
+          component: AddStockCustomer,
+        },
+        {
+          path: '/admin/stock/customer/:id/edit',
+          name: 'editStockCustomer',
+          component: EditStockCustomer,
+        },
+        // -> Stock
+        {
+          path: '/admin/stock/stock-records',
+          name: 'listStockStockRecord',
+          component: ListStockStockRecord,
+        },
+        {
+          path: '/admin/stock/stock-record/add',
+          name: 'addStockStockRecord',
+          component: AddStockStockRecord,
+        },
+        {
+          path: '/admin/stock/stock-record/:id/edit',
+          name: 'editStockStockRecord',
+          component: EditStockStockRecord,
         },
       ],
     },
