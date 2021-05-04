@@ -51,19 +51,36 @@ class SaleDeliveryController extends Controller
     public function store(SaleDeliveryRequest $request)
     {
         $request->merge(['user_id' => $request->user()->id]);
-        $saleDelivery = $this->saleDelivery->create($request->toArray());
         $productStatus = $this->saleProductStatus->firstWhere('StatusName', 'Reservado');
-        $saleStockRecords = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
+        $sumQuantity = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
                 ->where('sale_product_id', $request->sale_product_id)
                 ->where('sale_customer_id', $request->sale_customer_id)->sum('Quantity');
-        // if (empty($saleStockRecords))
-        // {
-        //     return "hola";
-        // }
-        // return $saleStockRecords;
-        return response([
-            'data' => new SaleDeliveryResource($saleDelivery)
-        ], Response::HTTP_CREATED);
+        $saleStockRecords = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
+                ->where('sale_product_id', $request->sale_product_id)
+                ->where('sale_customer_id', $request->sale_customer_id)->get();
+        $quantity = (int)$request->input('Quantity');
+        if (!empty($sumQuantity) && $quantity <= $sumQuantity && $quantity > 0)
+        {
+            foreach( $saleStockRecords as $stockRecord )
+            {
+                $quantityRecord = (int)$stockRecord['Quantity'];
+                if ($quantity <= $quantityRecord)
+                {
+                    $stockRecord->decrement('Quantity', $quantity);
+                    break;
+                }
+                else
+                {
+                    $quantity = $quantity - $quantityRecord;
+                    $stockRecord->decrement('Quantity', $quantityRecord);
+                }
+            }
+            $saleDelivery = $this->saleDelivery->create($request->toArray());
+            return response([
+                'data' => new SaleDeliveryResource($saleDelivery)
+            ], Response::HTTP_CREATED);
+        }
+        return response(null , Response::HTTP_FORBIDDEN);
     }
 
     /**

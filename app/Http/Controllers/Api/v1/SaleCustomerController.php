@@ -50,8 +50,9 @@ class SaleCustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaleCustomerRequest $request)
     {
+        $request->merge(['FullName' => "{$request->input('FirstName')} {$request->input('LastName')}"]);
         $saleCustomer = $this->saleCustomer->create($request->toArray());
         return response([
             'data' => new SaleCustomerResource($saleCustomer)
@@ -78,6 +79,7 @@ class SaleCustomerController extends Controller
      */
     public function update(SaleCustomerRequest $request, SaleCustomer $saleCustomer)
     {
+        $request->add(['FullName' => "{$request->input('FirstName')} {$request->input('LastName')}"]);
         $saleCustomer->update($request->all());
         return response([
             'data' => new SaleCustomerResource($saleCustomer)

@@ -41,4 +41,23 @@ class SaleCustomer extends Model
     {
         return $this->belongsTo(SaleStockRecord::class);
     }
+    
+    public function getFullNameAttribute()
+    {
+        return "{$this->FirstName} {$this->LastName}";
+    }
+
+    function scopeWithName($query, $name)
+    {
+        // Split each Name by Spaces
+        $names = explode(" ", $name);
+    
+        // Search each Name Field for any specified Name
+        return $this->where(function($query) use ($names) {
+            $query->whereIn('FirstName', $names);
+            $query->orWhere(function($query) use ($names) {
+                $query->whereIn('LastName', $names);
+            });
+        });
+    }
 }

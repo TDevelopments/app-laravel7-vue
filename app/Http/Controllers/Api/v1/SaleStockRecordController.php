@@ -55,11 +55,12 @@ class SaleStockRecordController extends Controller
             }
             if($request->query("CustomerName"))
             {
-                $customerReference = $this->saleCustomer->where("FirstName", "like", "%$value4%")->orWhere("LastName", "like", "%$value4%")->first();
+                // $customerReference = $this->saleCustomer->where("FirstName", "like", "%$value4%")->orWhere("LastName", "like", "%$value4%")->first();
+                $customerReference = $this->saleCustomer->withName($value4)->first();
                 if (!empty($customerReference))
                     $query->where("sale_customer_id", $customerReference->id);
             }
-            return new SaleStockRecordCollection($query->paginate()->withQueryString());
+            return new SaleStockRecordCollection($query->orderBy('created_at', 'desc')->paginate()->withQueryString());
         }
         $saleStockRecords = $this->saleStockRecord->orderBy('created_at', 'desc')->paginate();
         return SaleStockRecordResource::collection($saleStockRecords);
