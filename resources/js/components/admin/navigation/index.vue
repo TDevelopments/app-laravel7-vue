@@ -251,10 +251,10 @@
             <template v-slot:activator>
               <v-list-item-title>Almacenes</v-list-item-title>
             </template>
-            <v-list-item link :to="{ name: 'listStockCustomer' }">
+            <v-list-item link :to="{ name: 'listStockLocation' }">
               <v-list-item-title>Listar Almacenes</v-list-item-title>
             </v-list-item>
-            <v-list-item link :to="{ name: 'addStockCustomer' }">
+            <v-list-item link :to="{ name: 'addStockLocation' }">
               <v-list-item-title>Crear Almacenes</v-list-item-title>
             </v-list-item>
           </v-list-group>
@@ -262,10 +262,10 @@
             <template v-slot:activator>
               <v-list-item-title>Stock</v-list-item-title>
             </template>
-            <v-list-item link :to="{ name: 'listStockCustomer' }">
+            <v-list-item link :to="{ name: 'listStockStockRecord' }">
               <v-list-item-title>Listar Stock</v-list-item-title>
             </v-list-item>
-            <v-list-item link :to="{ name: 'addStockCustomer' }">
+            <v-list-item link :to="{ name: 'addStockStockRecord' }">
               <v-list-item-title>Crear Stock</v-list-item-title>
             </v-list-item>
           </v-list-group>

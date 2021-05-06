@@ -190,8 +190,15 @@ export default {
     },
 
     deleteItem(item) {
-      this.dialogDelete = true;
-      this.idDelete = item.CategoryId;
+      // this.dialogDelete = true;
+      // this.idDelete = item.CategoryId;
+      axios
+        .delete(`/api/v1/sale-stock-records/${item.Id}`)
+        .then(response => {
+          this.getList();
+          this.closeDelete();
+        })
+        .catch(error => {});
     },
 
     deleteItemConfirm() {
