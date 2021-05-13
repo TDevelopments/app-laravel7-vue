@@ -128,7 +128,6 @@ class OrderController extends Controller
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
         $stateOrder = $this->stateOrder->firstOrCreate(['name' => 'Pendiente']);
-<<<<<<< HEAD
         $saleCustomer = $this->saleCustomer->firstOrCreate(['user_id' => $request->user()->id],
             [
                'FullName' => $request->user()->name,
@@ -136,9 +135,7 @@ class OrderController extends Controller
                'Email' => $request->user()->email,
                'Dni' => $request->user()->dni
             ]);
-=======
         $orderShippingStatus = $this->shippingStatus->firstOrCreate(['name' => 'Pendiente']);
->>>>>>> 9f8ab4b12dfe3648d1a6a04bbc3e57e2d0f041af
         $order = $this->order->create([
             'user_id' => $request->user()->id,
             'sale_customer_id' => $saleCustomer->id,
