@@ -10,6 +10,7 @@ class SaleCustomer extends Model
 {
     protected $fillable = [
         'FullName',
+        'Dni',
         'Address1',
         'Address2',
         'City',

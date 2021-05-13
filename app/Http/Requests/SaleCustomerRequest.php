@@ -25,6 +25,7 @@ class SaleCustomerRequest extends FormRequest
     {
         return [
             'FullName' => ['required', 'string'],
+            'Dni' => ['required', 'integer', 'unique:sale_customers,Dni'],
             'Address1' => ['string'],
             'Address2' => ['string'],
             'City' => ['string'],

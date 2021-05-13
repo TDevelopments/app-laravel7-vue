@@ -50,20 +50,8 @@ export default {
         sortable: false,
       },
       {
-        text: 'Usuario',
-        value: 'user',
-        align: 'center',
-        sortable: false,
-      },
-      {
         text: 'Stock',
-        value: 'stock',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Almacen',
-        value: 'locations',
+        value: 'Stock',
         align: 'center',
         sortable: false,
       },

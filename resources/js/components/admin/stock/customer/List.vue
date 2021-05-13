@@ -33,13 +33,7 @@ export default {
     headers: [
       {
         text: 'Nombre',
-        value: 'FirstName',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Apellido',
-        value: 'LastName',
+        value: 'FullName',
         align: 'center',
         sortable: false,
       },

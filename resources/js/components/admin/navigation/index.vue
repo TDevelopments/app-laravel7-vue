@@ -162,10 +162,10 @@
               <v-list-item-title>Productos</v-list-item-title>
             </template>
             <v-list-item link :to="{ name: 'listStockProduct' }">
-              <v-list-item-title>Listar Usuarios</v-list-item-title>
+              <v-list-item-title>Listar Productos</v-list-item-title>
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockProduct' }">
-              <v-list-item-title>Crear Usuarios</v-list-item-title>
+              <v-list-item-title>Crear Producto</v-list-item-title>
             </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-view-list" no-action color="#FCF3F3">
@@ -173,10 +173,10 @@
               <v-list-item-title>Categorias</v-list-item-title>
             </template>
             <v-list-item link :to="{ name: 'listStockCategorie' }">
-              <v-list-item-title>Listar Usuarios</v-list-item-title>
+              <v-list-item-title>Listar Categorias</v-list-item-title>
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockCategorie' }">
-              <v-list-item-title>Crear Usuarios</v-list-item-title>
+              <v-list-item-title>Crear Categoria</v-list-item-title>
             </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-format-list-checkbox" no-action color="#FCF3F3">
@@ -184,10 +184,10 @@
               <v-list-item-title>Sub-Categorias</v-list-item-title>
             </template>
             <v-list-item link :to="{ name: 'listStockSubCategorie' }">
-              <v-list-item-title>Listar Usuarios</v-list-item-title>
+              <v-list-item-title>Listar Sub-Categorias</v-list-item-title>
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockSubCategorie' }">
-              <v-list-item-title>Crear Usuarios</v-list-item-title>
+              <v-list-item-title>Crear Sub-Categoria</v-list-item-title>
             </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-watermark" no-action color="#FCF3F3">
@@ -195,10 +195,10 @@
               <v-list-item-title>Marcas</v-list-item-title>
             </template>
             <v-list-item link :to="{ name: 'listStockBrand' }">
-              <v-list-item-title>Listar Usuarios</v-list-item-title>
+              <v-list-item-title>Listar Marcas</v-list-item-title>
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockBrand' }">
-              <v-list-item-title>Crear Usuarios</v-list-item-title>
+              <v-list-item-title>Crear Marca</v-list-item-title>
             </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-unity" no-action color="#FCF3F3">
@@ -206,10 +206,10 @@
               <v-list-item-title>Unidades</v-list-item-title>
             </template>
             <v-list-item link :to="{ name: 'listStockUnit' }">
-              <v-list-item-title>Listar Usuarios</v-list-item-title>
+              <v-list-item-title>Listar Unidades</v-list-item-title>
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockUnit' }">
-              <v-list-item-title>Crear Usuarios</v-list-item-title>
+              <v-list-item-title>Crear Unidad</v-list-item-title>
             </v-list-item>
           </v-list-group>
           <v-list-group prepend-icon="mdi-format-list-bulleted-type" no-action color="#FCF3F3">
@@ -217,10 +217,10 @@
               <v-list-item-title>Tipos de Productos</v-list-item-title>
             </template>
             <v-list-item link :to="{ name: 'listStockProductType' }">
-              <v-list-item-title>Listar Usuarios</v-list-item-title>
+              <v-list-item-title>Listar Tipos de Producto</v-list-item-title>
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockProductType' }">
-              <v-list-item-title>Crear Usuarios</v-list-item-title>
+              <v-list-item-title>Crear Tipo de Producto</v-list-item-title>
             </v-list-item>
           </v-list-group>
 

@@ -12,16 +12,16 @@
           hide-details
           solo
           dense
-          v-model="FirstName"
+          v-model="dataUser.FullName"
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Apellidos
-        <v-text-field class="border" flat hide-details solo dense v-model="LastName"></v-text-field>
+        DNI 
+        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Dni"></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Direccion
-        <v-text-field class="border" flat hide-details solo dense v-model="Address1"></v-text-field>
+        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Address1"></v-text-field>
       </v-col>
       <!-- <v-col cols="12" md="3" sm="6">
         Unidades en Orden
@@ -29,19 +29,19 @@
       </v-col> -->
       <v-col cols="12" md="3" sm="6">
         Pais
-        <v-text-field class="border" flat hide-details solo dense v-model="Country"></v-text-field>
+        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Country"></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Ciudad
-        <v-text-field class="border" flat hide-details solo dense v-model="City"></v-text-field>
+        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.City"></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Telefono
-        <v-text-field class="border" flat hide-details solo dense v-model="Phone"></v-text-field>
+        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Phone"></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Email
-        <v-text-field class="border" flat hide-details solo dense v-model="Email"></v-text-field>
+        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Email"></v-text-field>
       </v-col>
 
       <!-- <v-col cols="12" md="3" sm="6">
@@ -62,8 +62,8 @@
 <script>
 export default {
   data: () => ({
-    FirstName: null,
-    LastName: null,
+    dataUser: {},
+    FullName: null,
     Address1: null,
     Address2: null,
     City: null,
@@ -85,8 +85,7 @@ export default {
   methods: {
     addCustomer() {
       let data = {
-        FirstName: this.FirstName,
-        LastName: this.LastName,
+        FullName: this.FullName,
         Address1: this.Address1,
         Address2: this.Address2,
         City: this.City,
@@ -108,7 +107,7 @@ export default {
       };
       console.log(data);
       axios
-        .post('/api/v1/sale-customers', data)
+        .post('/api/v1/sale-customers', this.dataUser)
         .then(response => {
           console.log(response);
           this.$router.replace({

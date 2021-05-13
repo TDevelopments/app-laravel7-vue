@@ -1,7 +1,7 @@
 <template>
   <div class="my-3 mx-5">
     <v-row>
-      <h3>Editar Producto</h3>
+      <h3>Editar Stock</h3>
     </v-row>
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
@@ -70,7 +70,7 @@
           dense
           v-model="sale_customer_id"
           :items="customers"
-          item-text="FirstName"
+          item-text="FullName"
           item-value="Id"
           no-data-text="No hay se encontraron datos"
         ></v-select>

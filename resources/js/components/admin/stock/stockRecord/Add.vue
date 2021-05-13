@@ -63,7 +63,7 @@
           dense
           v-model="sale_customer_id"
           :items="customers"
-          item-text="FirstName"
+          item-text="FullName"
           item-value="Id"
           no-data-text="No hay se encontraron datos"
         ></v-select>

@@ -61,12 +61,8 @@
           ></v-select>
         </v-col>
         <v-col class="text-center align-center justify-center px-0 d-flex">
-          <v-btn small @click="search" class="mx-1" color="#0D52D6" dark>
-            Buscar
-          </v-btn>
-          <v-btn small @click="clear" class="mx-1">
-            Limpiar
-          </v-btn>
+          <v-btn small @click="search" class="mx-1" color="#0D52D6" dark> Buscar </v-btn>
+          <v-btn small @click="clear" class="mx-1"> Limpiar </v-btn>
         </v-col>
       </v-row>
     </div>
@@ -74,9 +70,7 @@
     <div class="d-flex my-3">
       <h3>Stock</h3>
       <v-spacer></v-spacer>
-      <v-btn @click="newItem" small>
-        Nuevo Stock
-      </v-btn>
+      <v-btn @click="newItem" small> Nuevo Stock </v-btn>
     </div>
     <v-data-table
       class="border"
@@ -87,15 +81,11 @@
       no-data-text="No se encontraron datos"
     >
       <template v-slot:[`item.Customer`]="{ item }">
-        {{ item.Customer.FirstName }} {{ item.Customer.LastName }}
+        {{ item.Customer.FullName }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon color="#D6B331" small class="mr-2" @click="editItem(item)">
-          mdi-pencil
-        </v-icon>
-        <v-icon color="black" small @click="deleteItem(item)">
-          mdi-delete
-        </v-icon>
+        <v-icon color="#D6B331" small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon color="black" small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
   </div>
@@ -149,29 +139,29 @@ export default {
     getProductStatus() {
       axios
         .get('/api/v1/sale-product-status?list=true')
-        .then(response => {
+        .then((response) => {
           this.status = response.data.data;
           console.log(response);
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     getLocations() {
       axios
         .get('/api/v1/business-locations?list=true')
-        .then(response => {
+        .then((response) => {
           this.locations = response.data.data;
           console.log(response);
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     getList() {
       axios
         .get('/api/v1/sale-stock-records')
-        .then(response => {
+        .then((response) => {
           this.stock = response.data.data;
           console.log(response.data.data);
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
 
     newItem() {
@@ -194,21 +184,21 @@ export default {
       // this.idDelete = item.CategoryId;
       axios
         .delete(`/api/v1/sale-stock-records/${item.Id}`)
-        .then(response => {
+        .then((response) => {
           this.getList();
           this.closeDelete();
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
 
     deleteItemConfirm() {
       axios
         .delete(`/api/v1/sale-stock-records/${this.idDelete}`)
-        .then(response => {
+        .then((response) => {
           this.getList();
           this.closeDelete();
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
 
     closeDelete() {
@@ -220,11 +210,11 @@ export default {
         .get(
           `/api/v1/sale-stock-records?BusinessId=${this.nameLocation}&StatusId=${this.nameStatus}&ProductName=${this.nameProduct}&CustomerName=${this.nameCustomer}`
         )
-        .then(response => {
+        .then((response) => {
           console.log('mundo', response);
           this.stock = response.data.data;
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     clear() {
       this.getList();
