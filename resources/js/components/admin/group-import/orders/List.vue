@@ -29,7 +29,7 @@
     >
       <template v-slot:[`item.status`]="{ item }">
         <v-chip color="red" dark small>
-          {{ item.state_order }}
+          {{ item.state_order | stateOrder }}
         </v-chip>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
@@ -112,6 +112,7 @@ export default {
     pageCount: 0,
     itemsPerPage: 15,
     pagination: null,
+    stateO: [],
   }),
   methods: {
     getOrders() {
@@ -160,9 +161,35 @@ export default {
         })
         .catch(error => {});
     },
+    getStateOrder() {
+      axios
+        .get('/api/v1/state-orders')
+        .then(response => {
+          this.stateO = response.data;
+        })
+        .catch(error => {});
+    },
   },
   mounted() {
     this.getOrders();
+    this.getStateOrder();
+  },
+  filters: {
+    currency: function(value) {
+      return parseFloat(value).toFixed(2);
+      moment(element.arrival_date).format('YYYY-MM-DD');
+    },
+    date: function(value) {
+      return moment(value).format('YYYY-MM-DD');
+    },
+    porcent: function(value) {
+      return parseFloat(value) * 100 + ' %';
+    },
+    stateOrder: function(value) {
+      let resp = '';
+
+      return value;
+    },
   },
 };
 </script>

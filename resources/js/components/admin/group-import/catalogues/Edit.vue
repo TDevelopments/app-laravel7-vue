@@ -522,6 +522,7 @@ export default {
         conditions: this.getHtmlConditions(),
         additional_information: this.getHtmlAdditional(),
         image: this.catalogue.image,
+        is_available: this.catalogue.is_available,
       };
       axios
         .put(`/api/v1/catalogues/${this.$route.params.id}`, data)

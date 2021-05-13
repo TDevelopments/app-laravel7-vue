@@ -270,7 +270,7 @@
       </v-window>
     </v-col>
 
-    <viewer :initialValue="viewerText" height="500px" />
+    <!-- <viewer :initialValue="viewerText" height="500px" /> -->
     <v-btn :disabled="!valid" color="#0D52D6" class="mr-4" @click="validate" dark> Guardar </v-btn>
   </div>
 </template>

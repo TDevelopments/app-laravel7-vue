@@ -7,6 +7,7 @@
       <v-toolbar-items>
         <v-btn text @click="iG"> Importaciones Grupales</v-btn>
         <v-btn text @click="sS"> Ventas en Stock</v-btn>
+        <v-btn text @click="sM"> Stock</v-btn>
         <v-btn icon @click="logout()">
           <v-icon>mdi-export</v-icon>
         </v-btn>
@@ -116,6 +117,9 @@
           <v-list-item link :to="{ name: 'listState' }">
             <v-list-item-title>Estados de Orden</v-list-item-title>
           </v-list-item>
+          <v-list-item link :to="{ name: 'listStateSend' }">
+            <v-list-item-title>Estados de Envio</v-list-item-title>
+          </v-list-item>
           <v-list-item link :to="{ name: 'listConcept' }">
             <v-list-item-title>Conceptos de Pago</v-list-item-title>
           </v-list-item>
@@ -142,10 +146,136 @@
         </v-list-item-group>
       </v-list>
 
+      <v-list dense nav shaped v-if="module == 'SaleModule'">
+        <v-subheader>Stock</v-subheader>
+        <v-list-item-group>
+          <v-list-item :to="{ name: 'dashboard' }">
+            <v-list-item-icon>
+              <v-icon>mdi-speedometer </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Dashboard</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-group prepend-icon="mdi-archive" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Productos</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockProduct' }">
+              <v-list-item-title>Listar Usuarios</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockProduct' }">
+              <v-list-item-title>Crear Usuarios</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-view-list" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Categorias</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockCategorie' }">
+              <v-list-item-title>Listar Usuarios</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockCategorie' }">
+              <v-list-item-title>Crear Usuarios</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-format-list-checkbox" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Sub-Categorias</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockSubCategorie' }">
+              <v-list-item-title>Listar Usuarios</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockSubCategorie' }">
+              <v-list-item-title>Crear Usuarios</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-watermark" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Marcas</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockBrand' }">
+              <v-list-item-title>Listar Usuarios</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockBrand' }">
+              <v-list-item-title>Crear Usuarios</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-unity" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Unidades</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockUnit' }">
+              <v-list-item-title>Listar Usuarios</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockUnit' }">
+              <v-list-item-title>Crear Usuarios</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-format-list-bulleted-type" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Tipos de Productos</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockProductType' }">
+              <v-list-item-title>Listar Usuarios</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockProductType' }">
+              <v-list-item-title>Crear Usuarios</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+
+          <v-list-group prepend-icon="mdi-format-list-bulleted-square" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Estado de Productos</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockStatus' }">
+              <v-list-item-title>Listar Estados</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockStatus' }">
+              <v-list-item-title>Crear Estados</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+
+          <v-list-group prepend-icon="mdi-account-circle" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Clientes</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockCustomer' }">
+              <v-list-item-title>Listar Clientes</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockCustomer' }">
+              <v-list-item-title>Crear Clientes</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-map-marker" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Almacenes</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockLocation' }">
+              <v-list-item-title>Listar Almacenes</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockLocation' }">
+              <v-list-item-title>Crear Almacenes</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-stocking" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Stock</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockStockRecord' }">
+              <v-list-item-title>Listar Stock</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockStockRecord' }">
+              <v-list-item-title>Crear Stock</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+        </v-list-item-group>
+      </v-list>
+
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn color="#1867C0" block class="text-capitalize" @click="viewUser"
-            ><v-icon class="mr-2">mdi-eye</v-icon> Ver Como Usuario
+          <v-btn color="#1867C0" block class="text-capitalize" @click="viewUser">
+            <v-icon class="mr-2">mdi-eye</v-icon> Ver Como Usuario
           </v-btn>
         </div>
       </template>
@@ -169,13 +299,14 @@ export default {
     wheight: window.innerHeight,
     drawer: null,
     permanent: null,
-    module: 'ImportGroup',
+    module: '',
   }),
   computed: {
     ...mapGetters('account', ['user']),
   },
   mounted() {
     this.getUser();
+    this.module = localStorage.getItem('module');
   },
   methods: {
     ...mapActions('account', ['logout', 'getUser']),
@@ -184,11 +315,23 @@ export default {
         name: 'group-import',
       });
     },
+    firstEnter() {
+      let m = localStorage.getItem('module');
+      if (!m) {
+        localStorage.setItem('module', 'ImportGroup');
+      }
+    },
     iG() {
       this.module = 'ImportGroup';
+      localStorage.setItem('module', 'ImportGroup');
     },
     sS() {
       this.module = 'SellStock';
+      localStorage.setItem('module', 'SellStock');
+    },
+    sM() {
+      this.module = 'SaleModule';
+      localStorage.setItem('module', 'SaleModule');
     },
     viewUser() {
       this.$router.push({ name: 'group-import' });

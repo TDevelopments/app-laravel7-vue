@@ -236,7 +236,7 @@ export default {
 <style scope>
 @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap');
 .color-background {
-  background-color: #f5f4f3 !important;
+  background-color: #fff !important;
 }
 .nav-font {
   font-family: 'Gothic A1', sans-serif;

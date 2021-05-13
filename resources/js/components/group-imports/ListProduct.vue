@@ -184,10 +184,10 @@
               </div>
             </div>
           </ul> -->
-          <!-- <li>
+        <!-- <li>
             Y enviar su constancia al siguiente número de Whatsapp: <strong>927750048</strong>
           </li> -->
-        </ul>
+        <!-- </ul> -->
       </v-col>
       <v-col class="px-0 content-card pt-0 mt-5">
         <v-toolbar color="black" class="px-0 text-h6" dark flat>Términos y Condiciones</v-toolbar>
@@ -288,29 +288,18 @@
                     </td>
                     <td class="style-table-td pr-5">
                       <div class="form-inline justify-content-center">
-                        <v-btn
+                        <v-icon
+                          class="back"
                           @click="minusFunction(props.item, props.index)"
-                          color="secondary"
-                          fab
-                          x-small
-                          elevation="1"
+                          small
+                          dark
                         >
-                          <v-icon>mdi-minus</v-icon>
-                        </v-btn>
-                        <input
-                          type="text"
-                          class="w mx-2 text-center"
-                          v-model="props.item.quantity"
-                        />
-                        <v-btn
-                          @click="plusFunctionO(props.index)"
-                          color="secondary"
-                          fab
-                          elevation="1"
-                          x-small
-                        >
-                          <v-icon>mdi-plus</v-icon>
-                        </v-btn>
+                          mdi-minus
+                        </v-icon>
+                        <input type="text" class="w text-center" v-model="props.item.quantity" />
+                        <v-icon class="back" @click="plusFunctionO(props.index)" small dark>
+                          mdi-plus
+                        </v-icon>
                       </div>
                     </td>
                   </tr>
@@ -457,42 +446,47 @@
                         Ver Mas
                       </v-btn>
                     </td>
-                    <td class="style-table-td">
+                    <!-- <td class="style-table-td">
                       {{ props.item.brand }}
-                    </td>
+                    </td> -->
                     <td class="style-table-td">
-                      <ul>
-                        <li v-for="(range, index) in props.item.ranges" :key="index">
-                          De {{ range.min }} a {{ props.item.ranges.length-1 != index ? range.max : 'mas'}} :
-                          {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
-                        </li>
-                      </ul>
+                      <div v-for="(range, index) in props.item.ranges" :key="index">
+                        De {{ range.min }} a
+                        {{ props.item.ranges.length - 1 != index ? range.max : 'mas' }} :
+                        {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
+                      </div>
                     </td>
                     <td class="style-table-td pr-5">
                       <div class="form-inline justify-content-center">
-                        <v-btn
+                        <v-icon
+                          class="back"
+                          dark
+                          small
                           @click="minusFunctionR(props.item, props.index)"
-                          color="secondary"
-                          fab
-                          x-small
-                          elevation="1"
+                          >mdi-minus</v-icon
                         >
-                          <v-icon>mdi-minus</v-icon>
-                        </v-btn>
-                        <input
-                          type="text"
-                          class="w mx-2 text-center"
-                          v-model="props.item.quantity"
-                        />
-                        <v-btn
-                          @click="plusFunctionR(props.index)"
-                          color="secondary"
-                          fab
-                          elevation="1"
-                          x-small
+
+                        <input type="text" class="w text-center" v-model="props.item.quantity" />
+
+                        <v-icon class="back" dark small @click="plusFunctionR(props.index)"
+                          >mdi-plus</v-icon
                         >
-                          <v-icon>mdi-plus</v-icon>
-                        </v-btn>
+                      </div>
+                    </td>
+                    <td class="style-table-td">
+                      <div v-if="props.item.meta">
+                        <div
+                          v-for="(c, index) in props.item.meta"
+                          :key="index"
+                          class="d-flex justify-center align-center my-1 "
+                        >
+                          <v-avatar :color="c.color" size="15" />
+                          <input
+                            type="text"
+                            class="w mx-2 text-center b-input"
+                            v-model="c.quantity"
+                          />
+                        </div>
                       </div>
                     </td>
                     <td class="style-table-td">
@@ -553,12 +547,10 @@
                       <strong>Marca:</strong> {{ props.item.brand }}
                       <br />
                       <strong>Precios:</strong>
-                      <ul>
-                        <li v-for="range in props.item.ranges" :key="range.id">
-                          De {{ range.min }} a {{ range.max }} :
-                          {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
-                        </li>
-                      </ul>
+                      <div v-for="range in props.item.ranges" :key="range.id">
+                        De {{ range.min }} a {{ range.max }} :
+                        {{ (catalogue.coin == 'soles' ? 'S/.' : '$') + ' ' }} {{ range.price }}
+                      </div>
                     </td>
                     <td class="px-0 py-5">
                       <v-btn small class="my-5" @click="prueba(props.item, 'range')">Ver Mas</v-btn>
@@ -573,7 +565,7 @@
                         >
                           <v-icon>mdi-minus</v-icon>
                         </v-btn>
-                        <input type="text" class="w mx-2" v-model="props.item.quantity" />
+                        <input type="text" class="w" v-model="props.item.quantity" />
                         <v-btn
                           @click="plusFunctionR(props.index)"
                           color="#000"
@@ -1096,12 +1088,12 @@ export default {
         align: 'center',
         sortable: false,
       },
-      {
-        text: 'Marca',
-        value: 'brand',
-        align: 'center',
-        sortable: false,
-      },
+      // {
+      //   text: 'Marca',
+      //   value: 'brand',
+      //   align: 'center',
+      //   sortable: false,
+      // },
       {
         text: 'Precio por cantidad de Pedido',
         value: 'ranges',
@@ -1111,6 +1103,12 @@ export default {
       {
         text: 'Cantidad de Pedido',
         value: 'quantity_order',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Colores',
+        value: 'colors',
         align: 'center',
         sortable: false,
       },
@@ -1343,7 +1341,11 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
-
+.back {
+  background-color: black;
+  border-radius: 100%;
+  padding: 2px;
+}
 .style-table-th {
   border-bottom: 2px solid !important;
 }
@@ -1352,8 +1354,8 @@ export default {
 }
 .style-table-td {
   text-align: center !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding-left: 2px !important;
+  padding-right: 2px !important;
 }
 .font-text {
   font-family: 'Poppins', sans-serif;
@@ -1362,7 +1364,10 @@ export default {
   color: #444;
   font-weight: bold;
 }
-
+.b-input {
+  border: 1px solid black;
+  border-radius: 10%;
+}
 .display-md {
   visibility: hidden;
 }
@@ -1384,7 +1389,8 @@ export default {
 }
 .w {
   display: flex;
-  max-width: 20px;
+  max-width: 30px;
+  text-align: center;
 }
 .w1 {
   display: flex;

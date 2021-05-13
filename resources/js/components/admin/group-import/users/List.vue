@@ -24,9 +24,7 @@
             <v-card>
               <v-card-title class="headline"> Eliminar Usuario </v-card-title>
 
-              <v-card-text>
-                ¿Estas seguro de eliminar este <strong>Usuario</strong>?
-              </v-card-text>
+              <v-card-text> ¿Estas seguro de eliminar este <strong>Usuario</strong>? </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
 
@@ -43,12 +41,10 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.gender`]="{ item }">
-        {{ item.gender == "masculine" ? "Masculino" : "Femenino" }}
+        {{ item.gender == 'masculine' ? 'Masculino' : 'Femenino' }}
       </template>
       <template v-slot:[`item.arrivals`]="{ item }">
-        <p v-for="ar in item.arrivals" :key="ar.id">
-          {{ ar.city }} -> {{ ar.arrival_date }}
-        </p>
+        <p v-for="ar in item.arrivals" :key="ar.id">{{ ar.city }} -> {{ ar.arrival_date }}</p>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small @click="editItem(item)" color="#D6B331">
@@ -60,11 +56,7 @@
       </template>
     </v-data-table>
     <div class="text-center pt-2">
-      <v-pagination
-        v-model="page"
-        :length="pagination"
-        @input="next"
-      ></v-pagination>
+      <v-pagination v-model="page" :length="pagination" @input="next"></v-pagination>
     </div>
   </div>
 </template>
@@ -76,54 +68,42 @@ export default {
     loading: false,
     headers: [
       {
-        text: "Nombre",
-        value: "name",
-        align: "center",
+        text: 'Nombre',
+        value: 'name',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Apellido",
-        value: "lastname",
-        align: "center",
+        text: 'Apellido',
+        value: 'lastname',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Email",
-        value: "email",
-        align: "center",
+        text: 'Email',
+        value: 'email',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Dirección",
-        value: "address",
-        align: "center",
+        text: 'DNI',
+        value: 'dni',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "DNI",
-        value: "dni",
-        align: "center",
+        text: 'Celular',
+        value: 'phone',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Celular",
-        value: "phone",
-        align: "center",
+        text: 'Cuidad',
+        value: 'city',
+        align: 'center',
         sortable: false,
       },
-      {
-        text: "Género",
-        value: "gender",
-        align: "center",
-        sortable: false,
-      },
-      {
-        text: "Cuidad",
-        value: "city",
-        align: "center",
-        sortable: false,
-      },
-      { text: "Acciones", value: "actions", sortable: false, align: "center" },
+      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
     users: [],
     idDelete: null,
@@ -131,7 +111,7 @@ export default {
     pageCount: 0,
     itemsPerPage: 15,
     pagination: null,
-    baseURL: "",
+    baseURL: '',
   }),
   computed: {},
   mounted() {
@@ -140,14 +120,14 @@ export default {
   methods: {
     getList() {
       axios
-        .get("/api/v1/users")
-        .then((response) => {
+        .get('/api/v1/users')
+        .then(response => {
           console.log(response);
           this.loading = false;
           this.users = response.data.data;
           this.pagination = response.data.meta.last_page;
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     deleteItem(item) {
       this.idDelete = item.id;
@@ -157,12 +137,12 @@ export default {
     deleteItemConfirm() {
       axios
         .delete(`/api/v1/users/${this.idDelete}`)
-        .then((response) => {
+        .then(response => {
           console.log(response);
           this.getList();
           this.closeDelete();
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     close() {
@@ -174,12 +154,12 @@ export default {
     },
     newProduct() {
       this.$router.push({
-        name: "addUser",
+        name: 'addUser',
       });
     },
     editItem(item) {
       this.$router.push({
-        name: "editUser",
+        name: 'editUser',
         params: {
           id: item.id,
         },
@@ -188,12 +168,12 @@ export default {
     next(page) {
       axios
         .get(`/api/v1/users?page=${page}`)
-        .then((response) => {
+        .then(response => {
           this.users = response.data.data;
           this.pagination = response.data.meta.last_page;
           console.log(response);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
   },
 };

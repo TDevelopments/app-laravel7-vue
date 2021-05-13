@@ -200,14 +200,20 @@
                   <template v-slot:top>
                     <v-toolbar flat>
                       <v-toolbar-title>
-                        Total Pagado : {{ order.tot }} <br />
-                        Deuda : {{ (order.total_order - order.tot) | currency }}
+                        Total Pagado :
+                        {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
+                        {{ order.tot | currency }} <br />
+                        Deuda : {{ order.catalogue.coin == 'soles' ? 'S/. ' : '$ ' }}
+                        {{ (order.total_order - order.tot) | currency }}
                       </v-toolbar-title>
                       <v-spacer></v-spacer>
                     </v-toolbar>
                   </template>
                   <template v-slot:[`item.id`]="{ item, index }">
                     {{ index + 1 }}
+                  </template>
+                  <template v-slot:[`item.mount`]="{ item, index }">
+                    {{ item.type_coin == 'soles' ? 'S/. ' : '$ ' }}{{ item.mount | currency }}
                   </template>
                 </v-data-table>
                 <!-- <div class="d-flex">
@@ -340,7 +346,19 @@ export default {
           this.orders.forEach(element => {
             let tot = 0;
             element.payment.forEach(pay => {
-              tot = tot + pay.mount;
+              if (element.catalogue.coin == 'soles') {
+                if (pay.type_coin == 'soles') {
+                  tot = tot + parseFloat(pay.mount);
+                } else {
+                  tot = tot + parseFloat(pay.mount) * parseFloat(pay.dollar_price);
+                }
+              } else {
+                if (pay.type_coin == 'soles') {
+                  tot = tot + parseFloat(pay.mount) / parseFloat(pay.dollar_price);
+                } else {
+                  tot = tot + parseFloat(pay.mount);
+                }
+              }
             });
             element.tot = tot;
           });

@@ -15,6 +15,7 @@ class BusinessLocationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'Name' => $this->Name,
             'Address' => $this->Address,
             'City' => $this->City,

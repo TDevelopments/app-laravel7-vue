@@ -19,10 +19,12 @@ class OrderResourceAdmin extends JsonResource
         return [
             'id' => $this->id,
             'catalogue' => $this->catalogue,
+            'arrivals' => $this->catalogue->arrivals,
             'user' => $this->user,
             'customer' => $this->saleCustomer,
             // 'status' => $this->status,
             'state_order' => $this->stateOrder->id,
+            'shipping_status' => $this->order_shipping_status_id,
             'orderDetails' => OrderDetailResource::collection($this->orderDetails),
             'total_order' => $this->orderDetails->sum('total'),
             'payment' => PaymentResourceAdmin::collection($this->payments),

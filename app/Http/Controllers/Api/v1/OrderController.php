@@ -16,6 +16,7 @@ use App\Models\SaleProductStatus;
 use App\Models\SalePicture;
 use App\Models\StateOrder;
 use App\Models\Catalogue;
+use App\Models\OrderShippingStatus;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResourceAdmin;
 use App\Http\Resources\OrderResource;
@@ -41,7 +42,7 @@ class OrderController extends Controller
 
     public function __construct(
         Order $order, Catalogue $catalogue, Product $product, OrderDetail $orderDetail, 
-        ProductRange $productRange, Range $range, StateOrder $stateOrder, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus)
+        ProductRange $productRange, Range $range, StateOrder $stateOrder, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, OrderShippingStatus $shippingStatus)
     {
         $this->middleware('api.admin')->except(['store']);
         $this->order = $order;
@@ -55,6 +56,7 @@ class OrderController extends Controller
         $this->saleProduct = $saleProduct;
         $this->saleStockRecord = $saleStockRecord;
         $this->saleProductStatus = $saleProductStatus;
+        $this->shippingStatus = $shippingStatus;
     }
 
     /**
@@ -126,6 +128,7 @@ class OrderController extends Controller
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
         $stateOrder = $this->stateOrder->firstOrCreate(['name' => 'Pendiente']);
+<<<<<<< HEAD
         $saleCustomer = $this->saleCustomer->firstOrCreate(['user_id' => $request->user()->id],
             [
                'FullName' => $request->user()->name,
@@ -133,11 +136,15 @@ class OrderController extends Controller
                'Email' => $request->user()->email,
                'Dni' => $request->user()->dni
             ]);
+=======
+        $orderShippingStatus = $this->shippingStatus->firstOrCreate(['name' => 'Pendiente']);
+>>>>>>> 9f8ab4b12dfe3648d1a6a04bbc3e57e2d0f041af
         $order = $this->order->create([
             'user_id' => $request->user()->id,
             'sale_customer_id' => $saleCustomer->id,
             'catalogue_id' => $request->catalogue_id,
             'state_order_id' => $stateOrder->id,
+            'order_shipping_status_id' => $orderShippingStatus->id,
             // 'state_order_id' => $request->state_order_id,
             // 'status' => 'pending',
         ]);
@@ -293,11 +300,15 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'state_order_id' => ['required', 'integer', 'exists:App\Models\StateOrder,id'],
+            'order_shipping_status_id' => ['required', 'integer', 'exists:App\Models\OrderShippingStatus,id'],
         ]);
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
-        $order->update(['state_order_id' => $request->state_order_id]);
+        $order->update([
+            'state_order_id' => $request->state_order_id,
+            'order_shipping_status_id' => $request->order_shipping_status_id
+        ]);
         return new OrderResourceAdmin($order);
     }
 
