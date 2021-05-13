@@ -9,6 +9,7 @@ use Faker\Generator as Faker;
 $factory->define(SaleProduct::class, function (Faker $faker) {
     return [
         'Sku' => $this->faker->regexify('[A-Z]{5}[0-4]{3}'),
+        'Model' => $this->faker->bothify('??-####'),
         'ProductName' => $this->faker->name(),
         'ProductDescription' => $this->faker->sentence(),
         'QuantityPerUnit' => $this->faker->randomElement([0, 1]),

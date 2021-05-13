@@ -7,10 +7,12 @@ use App\Models\SaleProduct;
 use App\Models\SaleProductStatus;
 use App\Models\SaleBusinessLocation;
 use App\Models\SaleCustomer;
+use App\Models\OrderDetail;
 
 class SaleStockRecord extends Model
 {
     protected $fillable = [
+        'order_detail_id',
         'sale_product_id',
         'Quantity',
         'sale_product_status_id',
@@ -36,5 +38,10 @@ class SaleStockRecord extends Model
     public function SaleCustomer()
     {
         return $this->belongsTo(SaleCustomer::class);
+    }
+
+    public function OrderDetail()
+    {
+        return $this->belongsTo(OrderDetail::class);
     }
 }

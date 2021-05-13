@@ -17,6 +17,7 @@ class SaleProductResource extends JsonResource
         return [
             'id' => $this->id,
             'Sku' => $this->Sku,
+            'Model' => $this->Model,
             'Slug' => $this->Slug,
             'Stock' => $this->SaleStockRecords->count() > 0 ? $this->SaleStockRecords->sum('Quantity') : 'Sin Stock',
             'ProductName' => $this->ProductName,

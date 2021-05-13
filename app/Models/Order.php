@@ -5,7 +5,7 @@ namespace App\Models;
 // use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\OrderDetail;
-use App\Models\User;
+use App\Models\SaleCustomer;
 use App\Models\Catalogue;
 use App\Models\Payment;
 use App\Models\StateOrder;
@@ -19,6 +19,7 @@ class Order extends Model
         'total_order',
         'catalogue_id',
         'user_id',
+        'sale_customer_id',
         'state_order_id'
     ];
 
@@ -30,6 +31,11 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function saleCustomer()
+    {
+        return $this->belongsTo(SaleCustomer::class);
     }
 
     public function payments()

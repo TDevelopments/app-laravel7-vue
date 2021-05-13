@@ -46,6 +46,11 @@ class SaleProductRequest extends FormRequest
             'sale_brand_id' => ['required', 'integer', 'exists:App\Models\SaleBrand,id'],
             'sale_product_type_id' => ['required', 'integer', 'exists:App\Models\SaleProductType,id'],
             'sale_product_unit_id' => ['required', 'integer', 'exists:App\Models\SaleProductUnit,id'],
+            'stock' => ['array'],
+            'stock.*.sale_product_status_id' => ['required', 'integer', 'exists:App\Models\SaleProductStatus,id'],
+            'stock.*.sale_business_location_id' => ['required', 'integer', 'exists:App\Models\SaleBusinessLocation,id'],
+            'stock.*.sale_customer_id' => ['integer', 'exists:App\Models\SaleCustomer,id'],
+            'stock.*.Quantity' => ['required', 'integer'],
         ];
     }
 }

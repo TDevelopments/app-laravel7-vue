@@ -15,8 +15,8 @@ class CreateSaleCustomersTable extends Migration
     {
         Schema::create('sale_customers', function (Blueprint $table) {
             $table->id();
-            $table->string('FirstName');
-            $table->string('LastName');
+            $table->string('FullName');
+            $table->string('Dni')->unitque();
             $table->string('Address1')->nullable();
             $table->string('Address2')->nullable();
             $table->string('City')->nullable();

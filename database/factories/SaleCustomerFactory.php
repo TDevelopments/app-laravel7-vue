@@ -7,8 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(SaleCustomer::class, function (Faker $faker) {
     return [
-        'FirstName' => $this->faker->firstName(),
-        'LastName' => $this->faker->lastname(),
+        'FullName' => $this->faker->name(),
+        'Dni' => $this->faker->randomNumber(8, true),
         'Address1' => $this->faker->streetAddress(),
         'Address2' => $this->faker->streetAddress(),
         'City' => $this->faker->city(),

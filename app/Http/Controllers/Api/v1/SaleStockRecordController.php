@@ -56,7 +56,7 @@ class SaleStockRecordController extends Controller
             if($request->query("CustomerName"))
             {
                 // $customerReference = $this->saleCustomer->where("FirstName", "like", "%$value4%")->orWhere("LastName", "like", "%$value4%")->first();
-                $customerReference = $this->saleCustomer->withName($value4)->first();
+                $customerReference = $this->saleCustomer->where('FullName', 'like', "%$value4%")->first();
                 if (!empty($customerReference))
                     $query->where("sale_customer_id", $customerReference->id);
             }
@@ -101,6 +101,7 @@ class SaleStockRecordController extends Controller
     public function update(SaleStockRecordRequest $request, SaleStockRecord $saleStockRecord)
     {
         $saleStockRecord->update($request->all());
+        $saleStockRecord->update(['order_detail_id' => NULL]);
         return response([
             'data' => new SaleStockRecordResource($saleStockRecord)
         ],Response::HTTP_CREATED);

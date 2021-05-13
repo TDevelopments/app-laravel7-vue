@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Models\SaleProduct;
 use App\Models\SalePicture;
+use App\Models\SaleStockRecord;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleProductRequest;
 use App\Http\Resources\SaleProductResource;
@@ -83,12 +84,28 @@ class SaleProductController extends Controller
             foreach($request->file('Image') as $file)
             {
                 $name = Str::uuid() . "." . $file->getClientOriginalExtension();
-                $file->move(public_path().'/uploads/salesModule', $name);
+                $file->move(public_path().'/uploads/salesModule/', $name);
                 $picture = new SalePicture();
                 $picture->PictureName = $name;
                 $picture->PicturePath = '/uploads/salesModule/'.$name;
                 $picture->save();
                 $saleProduct->SalePictures()->attach($picture);
+            }
+        }
+        if ($request->has('stock'))
+        {
+            foreach($request->input('stock') as $stock)
+            {
+                $stockRecord = new SaleStockRecord();
+                $stockRecord->sale_product_id = $saleProduct->id;
+                $stockRecord->Quantity = $stock['Quantity'];
+                $stockRecord->sale_product_status_id = $stock['sale_product_status_id'];
+                $stockRecord->sale_business_location_id = $stock['sale_business_location_id'];
+                if(empty($stock['sale_customer_id']))
+                {
+                $stockRecord->sale_customer_id = $stock['sale_customer_id'];
+                }
+                $stockRecord->save();
             }
         }
         return response([
@@ -122,7 +139,7 @@ class SaleProductController extends Controller
             foreach($request->file('Image') as $file)
             {
                 $name = Str::uuid() . "." . $file->getClientOriginalExtension();
-                $file->move(public_path().'/uploads/salesModule', $name);
+                $file->move(public_path().'/uploads/salesModule/', $name);
                 $picture = new SalePicture();
                 $picture->PictureName = $name;
                 $picture->PicturePath = '/uploads/salesModule/'.$name;

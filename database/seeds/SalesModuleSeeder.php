@@ -27,11 +27,11 @@ class SalesModuleSeeder extends Seeder
         ->each(function ($saleCategory) {
             $saleCategory->SalePictures()->save(factory(App\Models\SalePicture::class)->make());
         });
-        factory(\App\Models\SaleProduct::class, 35)->create()
-        ->each(function ($saleProduct) {
-            $saleProduct->SalePictures()->save(factory(App\Models\SalePicture::class)->make());
-        });
+        /* factory(\App\Models\SaleProduct::class, 35)->create() */
+        /* ->each(function ($saleProduct) { */
+        /*     $saleProduct->SalePictures()->save(factory(App\Models\SalePicture::class)->make()); */
+        /* }); */
         factory(\App\Models\SaleCustomer::class, 20)->create();
-        factory(\App\Models\SaleStockRecord::class, 15)->create();
+        /* factory(\App\Models\SaleStockRecord::class, 15)->create(); */
     }
 }

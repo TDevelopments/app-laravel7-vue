@@ -52,7 +52,6 @@ class SaleCustomerController extends Controller
      */
     public function store(SaleCustomerRequest $request)
     {
-        $request->merge(['FullName' => "{$request->input('FirstName')} {$request->input('LastName')}"]);
         $saleCustomer = $this->saleCustomer->create($request->toArray());
         return response([
             'data' => new SaleCustomerResource($saleCustomer)

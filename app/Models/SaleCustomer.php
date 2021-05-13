@@ -9,8 +9,7 @@ use App\Models\SaleStockRecord;
 class SaleCustomer extends Model
 {
     protected $fillable = [
-        'FirstName',
-        'LastName',
+        'FullName',
         'Address1',
         'Address2',
         'City',
@@ -42,11 +41,6 @@ class SaleCustomer extends Model
         return $this->belongsTo(SaleStockRecord::class);
     }
     
-    public function getFullNameAttribute()
-    {
-        return "{$this->FirstName} {$this->LastName}";
-    }
-
     function scopeWithName($query, $name)
     {
         // Split each Name by Spaces

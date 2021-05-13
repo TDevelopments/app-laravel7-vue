@@ -24,6 +24,7 @@ class SaleProduct extends Model
 
     protected $fillable = [
         'Sku',
+        'Model',
         'ProductName',
         'ProductDescription',
         'QuantityPerUnit',

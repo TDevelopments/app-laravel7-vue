@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Order;
+use App\Models\SaleCustomer;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -40,6 +41,13 @@ class AuthController extends Controller
         $request['password']=Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
         $user = User::create($request->toArray());
+        $SaleCustomer::create([
+            'FullName' => $user->name,
+            'Phone' => $user->phone,
+            'Email' => $user->email,
+            'Dni' => $user->dni,
+            'user_id' => $user->id
+        ]);
         $user->roles()->attach(Role::where('name', 'user')->first());
         // $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         $tokenResult = $user->createToken('Personal Access Token');

@@ -24,8 +24,7 @@ class SaleCustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            'FirstName' => ['required', 'string'],
-            'LastName' => ['required', 'string'],
+            'FullName' => ['required', 'string'],
             'Address1' => ['string'],
             'Address2' => ['string'],
             'City' => ['string'],

@@ -16,12 +16,13 @@ class CreateSaleProductsTable extends Migration
         Schema::create('sale_products', function (Blueprint $table) {
             $table->id();
             $table->string('Sku')->unique();
+            $table->string('Model')->unique();
             $table->string('Slug')->unique();
-            $table->string('ProductName');
+            $table->string('ProductName')->nullable();
             $table->text('ProductDescription')->nullable();
             $table->bigInteger('QuantityPerUnit')->default(1);
-            $table->float('UnitPrice', 8, 3);
-            $table->float('SellingPrice', 8, 3);
+            $table->float('UnitPrice', 8, 3)->nullable();
+            $table->float('SellingPrice', 8, 3)->nullable();
             $table->boolean('AvailableSize')->default(0);
             $table->boolean('AvailableColors')->default(0);
             $table->boolean('AvailableGender')->default(0);
@@ -37,11 +38,11 @@ class CreateSaleProductsTable extends Migration
             $table->boolean('DiscountAvailable')->default(0);
             /* $table->json('Picture')->nullable(); */
             $table->timestamps();
-            $table->foreignId('sale_category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sale_category_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('sale_sub_category_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('sale_brand_id')->constrained()->onDelete('cascade');
-            $table->foreignId('sale_product_unit_id')->constrained()->onDelete('cascade');
-            $table->foreignId('sale_product_type_id')->constrained()->onDelete('cascade');
+            $table->foreignId('sale_brand_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('sale_product_unit_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('sale_product_type_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 

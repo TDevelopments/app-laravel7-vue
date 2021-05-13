@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\SaleCustomer;
 
 use Carbon\Carbon;
 
@@ -33,6 +34,13 @@ class DatabaseSeeder extends Seeder
             'city' => 'Arequipa',
         ]);
 
+        SaleCustomer::create([
+            'FullName' => 'George Miguel Puma Salcedo',
+            'Phone' => '969266730',
+            'Email' => 'g@gmail.com',
+            'Dni' => '74867621',
+            'user_id' => $user->id
+        ]);
         $user->roles()->attach(Role::where('name', 'admin')->first());
 
         // \App\Models\Catalogue::factory(1)->create();

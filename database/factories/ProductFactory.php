@@ -50,5 +50,9 @@ $factory->define(Product::class, function (Faker $faker) {
         'type_group'    => $this->faker->randomElement(['unidades', 'sets']),
         'catalogue_id'  => $this->faker->numberBetween(1, 2),
         'category_id'   => rand(1, 4),
+        'images'        => array(array(
+            'name' => $faker->word(),
+            'path' => '/uploads/'.$faker->image(public_path().'/uploads/',640,480, 'animals', false),
+        ))
     ];
 });

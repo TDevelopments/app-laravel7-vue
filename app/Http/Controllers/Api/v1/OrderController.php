@@ -9,6 +9,11 @@ use App\Models\Product;
 use App\Models\ProductRange;
 use App\Models\Range;
 use App\Models\User;
+use App\Models\SaleCustomer;
+use App\Models\SaleProduct;
+use App\Models\SaleStockRecord;
+use App\Models\SaleProductStatus;
+use App\Models\SalePicture;
 use App\Models\StateOrder;
 use App\Models\Catalogue;
 use Illuminate\Http\Request;
@@ -16,6 +21,8 @@ use App\Http\Resources\OrderResourceAdmin;
 use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\OrderRequest;
+use Illuminate\Support\Str;
+use File;
 
 class OrderController extends Controller
 {
@@ -27,10 +34,14 @@ class OrderController extends Controller
     protected $orderDetail;
     protected $range;
     protected $stateOrder;
+    protected $saleCustomer;
+    protected $saleProduct;
+    protected $saleStockRecord;
+    protected $saleProductStatus;
 
     public function __construct(
         Order $order, Catalogue $catalogue, Product $product, OrderDetail $orderDetail, 
-        ProductRange $productRange, Range $range, StateOrder $stateOrder)
+        ProductRange $productRange, Range $range, StateOrder $stateOrder, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin')->except(['store']);
         $this->order = $order;
@@ -40,6 +51,10 @@ class OrderController extends Controller
         $this->orderDetail = $orderDetail;
         $this->range = $range;
         $this->stateOrder = $stateOrder;
+        $this->saleCustomer = $saleCustomer;
+        $this->saleProduct = $saleProduct;
+        $this->saleStockRecord = $saleStockRecord;
+        $this->saleProductStatus = $saleProductStatus;
     }
 
     /**
@@ -111,8 +126,16 @@ class OrderController extends Controller
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
         $stateOrder = $this->stateOrder->firstOrCreate(['name' => 'Pendiente']);
+        $saleCustomer = $this->saleCustomer->firstOrCreate(['user_id' => $request->user()->id],
+            [
+               'FullName' => $request->user()->name,
+               'Phone' => $request->user()->phone,
+               'Email' => $request->user()->email,
+               'Dni' => $request->user()->dni
+            ]);
         $order = $this->order->create([
             'user_id' => $request->user()->id,
+            'sale_customer_id' => $saleCustomer->id,
             'catalogue_id' => $request->catalogue_id,
             'state_order_id' => $stateOrder->id,
             // 'state_order_id' => $request->state_order_id,
@@ -132,18 +155,60 @@ class OrderController extends Controller
                 else
                 {
                     $productReference = $this->product->find($row['product_id']);
-                    $products[] = $this->orderDetail->updateOrCreate(
-                        [
-                            'product_id' => $row['product_id'],
-                            'order_id' => $order->id,
-                            'quantity' => $row['quantity'],
-                            'price' => $productReference->price_unit,
-                            'model' => $productReference->model,
-                            'sku' => $productReference->sku,
-                            'total' => $productReference->price_unit * $row['quantity'],
-                            'meta' => array("none")
-                        ]);
-                    /* $productReference->increment('count', $row['quantity']); */
+                    if (empty($productReference))
+                        continue;
+                    else
+                    {
+                        $saleProduct = $this->saleProduct->firstWhere('Model', $productReference->model);
+                        if (empty($saleProduct))
+                        {
+                            $saleProduct = $this->saleProduct->create(
+                                ['Model' => $productReference->model, 'ProductName' => $productReference->model, 'Sku' => $this->randomId()]
+                            );
+                            if (!empty($productReference->images))
+                            {
+                                foreach ($productReference->images as $image)
+                                {
+                                    $file = File::get(public_path($image['path']));
+                                    $name = Str::uuid() . ".jpg";
+                                    // $file->move(public_path().'/uploads/salesModule/', $name);
+                                    File::copy(public_path($image['path']), public_path('uploads/salesModule/'.$name));
+                                    $picture = new SalePicture();
+                                    $picture->PictureName = $name;
+                                    $picture->PicturePath = '/uploads/salesModule/'.$name;
+                                    $picture->save();
+                                    $saleProduct->SalePictures()->attach($picture);
+                                }
+                            }
+                        }
+                        $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
+                        $user = User::find($order->user_id);
+                        // $saleCustomer = $this->saleCustomer->create([
+                        //     'FullName' => $user->name,
+                        //     'Phone' => $user->phone,
+                        //     'Email' => $user->email,
+                        //     'Dni' => $user->dni
+                        // ]);
+                        $orderDetail = $this->orderDetail->updateOrCreate(
+                            [
+                                'product_id' => $row['product_id'],
+                                'order_id' => $order->id,
+                                'quantity' => $row['quantity'],
+                                'price' => $productReference->price_unit,
+                                'model' => $productReference->model,
+                                'sku' => $productReference->sku,
+                                'total' => $productReference->price_unit * $row['quantity'],
+                                'meta' => array("none"),
+                                // 'sale_stock_record_id' => $saleStockRecord->id
+                            ]);
+                        $saleStockRecord = $this->saleStockRecord->create([
+                            'order_detail_id' => $orderDetail->id,
+                            'sale_product_id' => $saleProduct->id,
+                            'sale_product_status_id' => $saleProductStatus->id,
+                            'sale_business_location_id' => 1,
+                            'sale_customer_id' => $order->sale_customer_id,
+                            'Quantity' => $row['quantity']]);
+                    }
                 }
             }
         }
@@ -154,11 +219,34 @@ class OrderController extends Controller
                 $productRangeReference = $this->productRange->find($row['product_id']);
                 $rangeReference = $this->range->where('product_range_id', $productRangeReference->id)
                                               ->where('max', '>=', $row['quantity'])->first();
-                if(!isset($rangeReference))
+                if(empty($rangeReference))
                 {
                     continue;
                 }
-                $product_ranges[] = $this->orderDetail->create(
+                $saleProduct = $this->saleProduct->firstWhere('Model', $productRangeReference->model);
+                if (empty($saleProduct))
+                {
+                    $saleProduct = $this->saleProduct->create(
+                        ['Model' => $productRangeReference->model, 'ProductName' => $productRangeReference->model, 'Sku' => $this->randomId()]
+                    );
+                    if (!empty($productRangeReference->images))
+                    {
+                        foreach ($productRangeReference->images as $image)
+                        {
+                            $file = File::get(public_path($image['path']));
+                            $name = Str::uuid() . ".jpg";
+                            // $file->move(public_path().'/uploads/salesModule/', $name);
+                            File::copy(public_path($image['path']), public_path('uploads/salesModule/'.$name));
+                            $picture = new SalePicture();
+                            $picture->PictureName = $name;
+                            $picture->PicturePath = '/uploads/salesModule/'.$name;
+                            $picture->save();
+                            $saleProduct->SalePictures()->attach($picture);
+                        }
+                    }
+                }
+                $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
+                $orderDetail = $this->orderDetail->create(
                     [
                         'product_range_id' => $productRangeReference->id,
                         'order_id' => $order->id,
@@ -168,7 +256,15 @@ class OrderController extends Controller
                         'sku' => $productRangeReference->sku,
                         'total' => $rangeReference->price * $row['quantity'],
                         'meta' => $row['meta'],
+                        // 'sale_stock_record_id' => $saleStockRecord->id
                     ]);
+                $saleStockRecord = $this->saleStockRecord->create([
+                    'order_detail_id' => $orderDetail->id,
+                    'sale_product_id' => $saleProduct->id,
+                    'sale_product_status_id' => $saleProductStatus->id,
+                    'sale_business_location_id' => 1,
+                    'sale_customer_id' => $order->sale_customer_id,
+                    'Quantity' => $row['quantity']]);
                 /* $productRangeReference->increment('count', $row['quantity']); */
             }
         }
@@ -223,5 +319,14 @@ class OrderController extends Controller
       /* } */
       $order->delete();
       return response()->json(null, 204);
+    }
+
+    public function randomId() {
+        $sku = strtoupper(Str::random(10));
+        $validator = Validator::make(['Sku'=>$sku],['Sku'=>'unique:sale_products,Sku']);
+        if($validator->fails()){
+            return $this->randomId();
+        }
+        return $sku;
     }
 }

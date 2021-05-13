@@ -20,6 +20,7 @@ class OrderResourceAdmin extends JsonResource
             'id' => $this->id,
             'catalogue' => $this->catalogue,
             'user' => $this->user,
+            'customer' => $this->saleCustomer,
             // 'status' => $this->status,
             'state_order' => $this->stateOrder->id,
             'orderDetails' => OrderDetailResource::collection($this->orderDetails),

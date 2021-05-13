@@ -38,4 +38,9 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Order::class);
     }
+    
+    public function saleStockRecord()
+    {
+        return $this->hasOne(SaleStockRecord::class);
+    }
 }
