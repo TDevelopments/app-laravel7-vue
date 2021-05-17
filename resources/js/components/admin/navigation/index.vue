@@ -95,12 +95,27 @@
           </v-list-item>
         </v-list-group>
 
+        <v-list-group prepend-icon="mdi-account-circle" no-action color="#FCF3F3">
+          <template v-slot:activator>
+            <v-list-item-title>Clientes</v-list-item-title>
+          </template>
+          <v-list-item link :to="{ name: 'listStockCustomer' }">
+            <v-list-item-title>Listar Clientes</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'addStockCustomer' }">
+            <v-list-item-title>Crear Clientes</v-list-item-title>
+          </v-list-item>
+        </v-list-group>
+        
         <v-list-group prepend-icon="mdi-view-list" no-action color="#FCF3F3">
           <template v-slot:activator>
             <v-list-item-title>Ordenes</v-list-item-title>
           </template>
           <v-list-item link :to="{ name: 'listOrder' }">
             <v-list-item-title>Listar Ordenes</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'addOrder' }">
+            <v-list-item-title>Crear Orden</v-list-item-title>
           </v-list-item>
           <v-list-item link :to="{ name: 'filterOrder' }">
             <v-list-item-title>Filtros de Ordenes</v-list-item-title>

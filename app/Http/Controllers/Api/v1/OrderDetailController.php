@@ -78,6 +78,17 @@ class OrderDetailController extends Controller
         $data = $request->products;
         $data2 = $request->product_ranges;
         $products = array();
+        if (empty($order->sale_customer_id)) 
+        {
+            $saleCustomer = $this->saleCustomer->firstOrCreate(['user_id' => $order->user_id],
+                [
+                   'FullName' => $order->user->name,
+                   'Phone' => $order->user->phone,
+                   'Email' => $order->user->email,
+                   'Dni' => $order->user->dni
+                ]);
+            $order->update(['sale_customer_id' => $saleCustomer->id]);
+        }
         if($request->products)
         {
             foreach($data as $row)
@@ -152,6 +163,8 @@ class OrderDetailController extends Controller
                         else
                         {
                             // $this->saleStockRecord->find($orderDetail->sale_stock_record_id)->update(['Quantity' => $row['quantity']]);
+                            if (empty($orderDetail->saleStockRecord->sale_customer_id)) 
+                                $orderDetail->saleStockRecord->update(['sale_customer_id' => $order->sale_customer_id]);
                             $orderDetail->saleStockRecord->update(['Quantity' => $row['quantity']]);
                         }
                     }

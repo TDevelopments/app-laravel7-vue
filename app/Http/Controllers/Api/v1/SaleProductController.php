@@ -7,6 +7,7 @@ use App\Models\SalePicture;
 use App\Models\SaleStockRecord;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleProductRequest;
+use App\Http\Requests\UpdateSaleProductRequest;
 use App\Http\Resources\SaleProductResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
@@ -101,10 +102,6 @@ class SaleProductController extends Controller
                 $stockRecord->Quantity = $stock['Quantity'];
                 $stockRecord->sale_product_status_id = $stock['sale_product_status_id'];
                 $stockRecord->sale_business_location_id = $stock['sale_business_location_id'];
-                if(empty($stock['sale_customer_id']))
-                {
-                $stockRecord->sale_customer_id = $stock['sale_customer_id'];
-                }
                 $stockRecord->save();
             }
         }
@@ -131,7 +128,7 @@ class SaleProductController extends Controller
      * @param  \App\SaleProduct  $saleProduct
      * @return \Illuminate\Http\Response
      */
-    public function update(SaleProductRequest $request, SaleProduct $saleProduct)
+    public function update(UpdateSaleProductRequest $request, SaleProduct $saleProduct)
     {
         $this->handle($request);
         $saleProduct->update($request->all());
