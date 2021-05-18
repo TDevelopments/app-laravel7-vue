@@ -1,19 +1,75 @@
 <template>
-  <v-card>
-    <v-row>
-      <v-col>
-        <v-combobox solo append-icon="mdi-magnify" dense class="mt-3"></v-combobox>
-      </v-col>
-      <v-col>
-        <v-combobox solo append-icon="mdi-magnify" dense class="mt-3"></v-combobox>
-      </v-col>
-      <v-col>
-        <v-combobox solo append-icon="mdi-magnify" dense class="mt-3"></v-combobox>
-      </v-col>
-      <v-col>
-        <v-combobox solo append-icon="mdi-magnify" dense class="mt-3"></v-combobox>
-      </v-col>
-    </v-row>
+  <div>
+    <div>
+      <h3>Filtros</h3>
+      <v-row>
+        <v-col>
+          Numero de Orden
+          <v-text-field
+            class="border"
+            flat
+            hide-details
+            solo
+            dense
+            append-icon="mdi-magnify"
+            v-model="numberOrder"
+            ref="nomCli"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          Nombre de Cliente
+          <v-text-field
+            class="border"
+            flat
+            hide-details
+            solo
+            dense
+            append-icon="mdi-magnify"
+            v-model="nameClient"
+          ></v-text-field>
+        </v-col>
+        <v-col>
+          Estado
+          <v-select
+            hide-details
+            flat
+            class="border"
+            solo
+            dense
+            v-model="nameState"
+            :items="states"
+            item-text="name"
+            item-value="name"
+            append-icon="mdi-magnify"
+            no-data-text="No hay se encontraron datos"
+          ></v-select>
+        </v-col>
+        <v-col>
+          Catalogo
+          <v-select
+            hide-details
+            flat
+            class="border"
+            solo
+            dense
+            v-model="idCatalogue"
+            :items="catalogues"
+            item-text="Name"
+            item-value="id"
+            append-icon="mdi-magnify"
+            no-data-text="No hay se encontraron datos"
+          ></v-select>
+        </v-col>
+        <v-col class="text-center align-center justify-center px-0 d-flex">
+          <v-btn small @click="getOrders" class="mx-1" color="#0D52D6" dark>
+            Buscar
+          </v-btn>
+          <v-btn small class="mx-1">
+            Limpiar
+          </v-btn>
+        </v-col>
+      </v-row>
+    </div>
     <v-card-title>
       Ordenes de Cliente
       <v-spacer></v-spacer>
@@ -65,7 +121,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-card>
+  </div>
 </template>
 <script>
 import axios from 'axios';
@@ -113,11 +169,19 @@ export default {
     itemsPerPage: 15,
     pagination: null,
     stateO: [],
+    numberOrder: '',
+    nameClient: '',
+    nameState: '',
+    states: [],
+    idCatalogue: '',
+    catalogues: [],
   }),
   methods: {
     getOrders() {
       axios
-        .get('/api/v1/orders')
+        .get(
+          `/api/v1/orders?orderId=${this.numberOrder}&username=${this.nameClient}&stateOrder=${this.nameState}&catalogueId=${this.idCatalogue}`
+        )
         .then(response => {
           console.log(response);
           this.orders = response.data.data;
@@ -153,7 +217,9 @@ export default {
     },
     next(page) {
       axios
-        .get(`/api/v1/orders?page=${page}`)
+        .get(
+          `/api/v1/orders?orderId=${this.numberOrder}&username=${this.nameClient}&stateOrder=${this.nameState}&catalogueId=${this.idCatalogue}&page=${page}`
+        )
         .then(response => {
           console.log(response);
           this.orders = response.data.data;
@@ -165,7 +231,8 @@ export default {
       axios
         .get('/api/v1/state-orders')
         .then(response => {
-          this.stateO = response.data;
+          this.states = response.data;
+          console.log(response.data);
         })
         .catch(error => {});
     },

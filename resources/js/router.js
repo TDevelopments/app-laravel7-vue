@@ -121,6 +121,11 @@ import ListStockStockRecord from './components/admin/stock/stockRecord/List';
 import AddStockStockRecord from './components/admin/stock/stockRecord/Add';
 import EditStockStockRecord from './components/admin/stock/stockRecord/Edit';
 
+// Pages Stock Delivery
+import ListStockDelivery from './components/admin/stock/delivery/List';
+import AddStockDelivery from './components/admin/stock/delivery/Add';
+import EditStockDelivery from './components/admin/stock/delivery/Edit';
+
 // Pages Product For Catalogue
 import ProductCatalogue from './components/admin/group-import/catalogues/ProductForCatalogue';
 
@@ -575,6 +580,22 @@ export default new Router({
           path: '/admin/stock/stock-record/:id/edit',
           name: 'editStockStockRecord',
           component: EditStockStockRecord,
+        },
+        // -> Delivery
+        {
+          path: '/admin/stock/deliveries',
+          name: 'listStockDelivery',
+          component: ListStockDelivery,
+        },
+        {
+          path: '/admin/stock/delivery/add',
+          name: 'addStockDelivery',
+          component: AddStockDelivery,
+        },
+        {
+          path: '/admin/stock/delivery/:id/edit',
+          name: 'editStockDelivery',
+          component: EditStockDelivery,
         },
       ],
     },
