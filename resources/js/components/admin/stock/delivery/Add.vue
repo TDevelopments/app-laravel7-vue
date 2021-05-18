@@ -29,7 +29,7 @@
           dense
           v-model="sale_customer_id"
           :items="customers"
-          item-text="FirstName"
+          item-text="FullName"
           item-value="Id"
           no-data-text="No hay se encontraron datos"
         ></v-select>
@@ -86,6 +86,7 @@ export default {
         .get('/api/v1/sale-customers?list=true')
         .then(response => {
           this.customers = response.data.data;
+          console.log(response.data);
         })
         .catch(error => {
           console.log(error);

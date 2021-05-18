@@ -106,7 +106,7 @@
             <v-list-item-title>Crear Clientes</v-list-item-title>
           </v-list-item>
         </v-list-group>
-        
+
         <v-list-group prepend-icon="mdi-view-list" no-action color="#FCF3F3">
           <template v-slot:activator>
             <v-list-item-title>Ordenes</v-list-item-title>
@@ -282,6 +282,17 @@
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockStockRecord' }">
               <v-list-item-title>Crear Stock</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-stocking" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Delivery</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockDelivery' }">
+              <v-list-item-title>Listar Delivery</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockDelivery' }">
+              <v-list-item-title>Crear Delivery</v-list-item-title>
             </v-list-item>
           </v-list-group>
         </v-list-item-group>

@@ -44,7 +44,7 @@ export default {
   data: () => ({
     valid: true,
     name: '',
-    note: '',
+    note: null,
   }),
   methods: {
     validate() {
@@ -55,6 +55,9 @@ export default {
         BrandName: this.name,
         Note: this.note,
       };
+      if (this.note == null) {
+        delete data.Note;
+      }
       axios
         .post('/api/v1/sale-brands', data)
         .then(response => {

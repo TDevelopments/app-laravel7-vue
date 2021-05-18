@@ -5,16 +5,37 @@
     </v-row>
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
-        Nombre
-        <v-text-field class="border" flat hide-details solo dense v-model="Name"></v-text-field>
+        Nombre (*)
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataLocation.Name"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Direccion
-        <v-text-field class="border" flat hide-details solo dense v-model="Address"></v-text-field>
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataLocation.Address"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Pais
-        <v-text-field class="border" flat hide-details solo dense v-model="Country"></v-text-field>
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataLocation.Country"
+        ></v-text-field>
       </v-col>
       <!-- <v-col cols="12" md="3" sm="6">
         Unidades en Orden
@@ -22,11 +43,25 @@
       </v-col> -->
       <v-col cols="12" md="3" sm="6">
         Cuidad
-        <v-text-field class="border" flat hide-details solo dense v-model="City"></v-text-field>
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataLocation.City"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Region
-        <v-text-field class="border" flat hide-details solo dense v-model="Region"></v-text-field>
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataLocation.Region"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Codigo Postal
@@ -63,6 +98,7 @@ export default {
     Region: null,
     PostalCode: null,
     Country: null,
+    dataLocation: {},
   }),
   methods: {
     addLocation() {
@@ -75,7 +111,7 @@ export default {
         Country: this.Country,
       };
       axios
-        .post('/api/v1/business-locations', data)
+        .post('/api/v1/business-locations', this.dataLocation)
         .then(response => {
           this.$router.replace({ name: 'listStockLocation' });
         })

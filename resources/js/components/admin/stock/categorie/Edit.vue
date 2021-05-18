@@ -59,6 +59,9 @@ export default {
         .catch(error => {});
     },
     updateCategorie() {
+      if (this.categorie.CategoryDescription == null) {
+        delete this.categorie.CategoryDescription;
+      }
       axios
         .put(`/api/v1/sale-categories/${this.$route.params.id}`, this.categorie)
         .then(response => {

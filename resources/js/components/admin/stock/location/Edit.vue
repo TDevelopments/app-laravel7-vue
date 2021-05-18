@@ -5,7 +5,7 @@
     </v-row>
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
-        Nombre
+        Nombre (*)
         <v-text-field
           class="border"
           flat

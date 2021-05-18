@@ -5,6 +5,17 @@
     </v-row>
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
+        Modelo (*)
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="product.Model"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" md="3" sm="6">
         Nombre de Producto
         <v-text-field
           class="border"
@@ -37,16 +48,16 @@
           v-model="product.SellingPrice"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="3" sm="6">
+      <!-- <v-col cols="12" md="3" sm="6">
         Unidades en Stock
         <v-text-field class="border" flat hide-details solo dense></v-text-field>
-      </v-col>
+      </v-col> -->
       <!-- <v-col cols="12" md="3" sm="6">
         Unidades en Orden
         <v-text-field class="border" flat hide-details solo dense></v-text-field>
       </v-col> -->
       <v-col cols="12" md="3" sm="6">
-        Categoria
+        Categoria (*)
         <v-select
           hide-details
           flat
@@ -77,7 +88,7 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Marca
+        Marca (*)
         <v-select
           hide-details
           flat
@@ -92,7 +103,7 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Tipo de Producto
+        Tipo de Producto (*)
         <v-select
           hide-details
           flat
@@ -107,7 +118,7 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Unidad
+        Unidad (*)
         <v-select
           hide-details
           flat
@@ -268,7 +279,7 @@ export default {
       Sale_product_unit_id: [],
       Gender: [],
       Size: [],
-      Colors: [],
+      Color: [],
     },
     loading: false,
     categories: [],
@@ -395,20 +406,47 @@ export default {
     },
     updateProduct() {
       if (this.product.AvailableColors == false) {
-        delete this.product.Colors;
+        delete this.product.Color;
       } else {
-        this.product.Colors = this.colors;
+        this.product.Color = this.colors;
       }
 
       if (this.product.AvailableSize == false) {
         delete this.product.Size;
       }
 
+      if (this.subcat == null || this.subcat == '') {
+        delete this.product.sale_sub_category_id;
+      } else {
+        this.product.sale_sub_category_id = this.subcat;
+      }
+
+      if (this.getHtml() == '' || this.getHtml() == null) {
+        delete this.product.ProductDescription;
+      } else {
+        this.product.ProductDescription = this.getHtml();
+      }
+      if (this.product.ProductName == '' || this.product.ProductName == null) {
+        delete this.product.ProductName;
+      }
+      if (this.product.SellingPrice == '' || this.product.SellingPrice == null) {
+        delete this.product.SellingPrice;
+      }
+      if (this.product.UnitPrice == '' || this.product.UnitPrice == null) {
+        delete this.product.UnitPrice;
+      }
+      if (this.product.Discount == '' || this.product.Discount == null) {
+        delete this.product.Discount;
+      }
+      if (this.product.UnitWeight == '' || this.product.UnitWeight == null) {
+        delete this.product.UnitWeight;
+      }
+
+      console.log(this.subcat);
       axios
         .put(`/api/v1/sale-products/${this.$route.params.id}`, {
           ...this.product,
           sale_category_id: this.cat,
-          sale_sub_category_id: this.subcat,
           sale_brand_id: this.br,
           sale_product_type_id: this.tp,
           sale_product_unit_id: this.un,

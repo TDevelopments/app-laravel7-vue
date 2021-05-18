@@ -139,29 +139,29 @@ export default {
     getProductStatus() {
       axios
         .get('/api/v1/sale-product-status?list=true')
-        .then((response) => {
+        .then(response => {
           this.status = response.data.data;
           console.log(response);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     getLocations() {
       axios
         .get('/api/v1/business-locations?list=true')
-        .then((response) => {
+        .then(response => {
           this.locations = response.data.data;
           console.log(response);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     getList() {
       axios
         .get('/api/v1/sale-stock-records')
-        .then((response) => {
+        .then(response => {
           this.stock = response.data.data;
           console.log(response.data.data);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     newItem() {
@@ -184,21 +184,21 @@ export default {
       // this.idDelete = item.CategoryId;
       axios
         .delete(`/api/v1/sale-stock-records/${item.Id}`)
-        .then((response) => {
+        .then(response => {
           this.getList();
           this.closeDelete();
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     deleteItemConfirm() {
       axios
         .delete(`/api/v1/sale-stock-records/${this.idDelete}`)
-        .then((response) => {
+        .then(response => {
           this.getList();
           this.closeDelete();
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     closeDelete() {
@@ -206,22 +206,32 @@ export default {
     },
 
     search() {
+      this.nameLocation != null ? this.nameLocation : '';
+      this.nameStatus != null ? this.nameStatus : '';
+      this.nameProduct != null ? this.nameProduct : '';
+      this.nameCustomer != null ? this.nameCustomer : '';
+
+      console.log(this.nameLocation);
+      console.log(this.nameStatus);
+      console.log(this.nameProduct);
+      console.log(this.nameCustomer);
+
       axios
         .get(
           `/api/v1/sale-stock-records?BusinessId=${this.nameLocation}&StatusId=${this.nameStatus}&ProductName=${this.nameProduct}&CustomerName=${this.nameCustomer}`
         )
-        .then((response) => {
+        .then(response => {
           console.log('mundo', response);
           this.stock = response.data.data;
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     clear() {
       this.getList();
-      this.nameLocation = null;
-      this.nameCustomer = null;
-      this.nameStatus = null;
-      this.nameProduct = null;
+      this.nameLocation = '';
+      this.nameCustomer = '';
+      this.nameStatus = '';
+      this.nameProduct = '';
     },
   },
   mounted() {

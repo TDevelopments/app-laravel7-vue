@@ -54,7 +54,7 @@
             dense
             v-model="idCatalogue"
             :items="catalogues"
-            item-text="Name"
+            item-text="name"
             item-value="id"
             append-icon="mdi-magnify"
             no-data-text="No hay se encontraron datos"
@@ -64,7 +64,7 @@
           <v-btn small @click="getOrders" class="mx-1" color="#0D52D6" dark>
             Buscar
           </v-btn>
-          <v-btn small class="mx-1">
+          <v-btn small @click="clear" class="mx-1">
             Limpiar
           </v-btn>
         </v-col>
@@ -242,10 +242,27 @@ export default {
         })
         .catch(error => {});
     },
+    getCatalogue() {
+      axios
+        .get('/api/v1/catalogues')
+        .then(response => {
+          console.log(response.data);
+          this.catalogues = response.data.data;
+        })
+        .catch(error => {});
+    },
+    clear() {
+      this.numberOrder = '';
+      this.nameClient = '';
+      this.nameState = '';
+      this.idCatalogue = '';
+      this.getOrders();
+    },
   },
   mounted() {
     this.getOrders();
     this.getStateOrder();
+    this.getCatalogue();
   },
   filters: {
     currency: function(value) {

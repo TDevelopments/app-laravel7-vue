@@ -5,7 +5,11 @@
     </v-row>
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
-        Nombre de Producto
+        Modelo (*)
+        <v-text-field class="border" flat hide-details solo dense v-model="model"></v-text-field>
+      </v-col>
+      <v-col cols="12" md="3" sm="6">
+        Nombre de Producto (*)
         <v-text-field
           class="border"
           flat
@@ -37,16 +41,16 @@
           v-model="sellingPrice"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="3" sm="6">
+      <!-- <v-col cols="12" md="3" sm="6">
         Unidades en Stock
         <v-text-field class="border" flat hide-details solo dense></v-text-field>
-      </v-col>
+      </v-col> -->
       <!-- <v-col cols="12" md="3" sm="6">
         Unidades en Orden
         <v-text-field class="border" flat hide-details solo dense></v-text-field>
       </v-col> -->
       <v-col cols="12" md="3" sm="6">
-        Categoria
+        Categoria (*)
         <v-select
           hide-details
           flat
@@ -76,7 +80,7 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Marca
+        Marca (*)
         <v-select
           hide-details
           flat
@@ -91,7 +95,7 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Tipo de Producto
+        Tipo de Producto (*)
         <v-select
           hide-details
           flat
@@ -106,7 +110,7 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Unidad
+        Unidad (*)
         <v-select
           hide-details
           flat
@@ -243,6 +247,7 @@ export default {
       hideModeSwitch: true,
     },
     description: '',
+    model: '',
     productName: '',
     unitPrice: '',
     sellingPrice: '',
@@ -250,11 +255,11 @@ export default {
     availableColors: false,
     availableSize: false,
     availableGender: false,
-    sale_category_id: [],
-    sale_sub_category_id: [],
-    sale_brand_id: [],
-    sale_product_type_id: [],
-    sale_product_unit_id: [],
+    sale_category_id: null,
+    sale_sub_category_id: null,
+    sale_brand_id: null,
+    sale_product_type_id: null,
+    sale_product_unit_id: null,
     gender: [],
     size: [],
     colors: [],
@@ -301,27 +306,45 @@ export default {
     },
     addProduct() {
       let data = {
-        ProductName: this.productName,
-        ProductDescription: this.getHtml(),
-        UnitPrice: this.unitPrice,
-        SellingPrice: this.sellingPrice,
+        ProductName: this.productName != null ? this.productName : '',
+        ProductDescription: this.getHtml() != null ? this.getHtml() : '',
+        Model: this.model, // R
+        UnitPrice: this.unitPrice != null ? this.unitPrice : '',
+        SellingPrice: this.sellingPrice != null ? this.sellingPrice : '',
         ProductAvailable: this.productAvailable,
         AvailableColors: this.availableColors,
         AvailableSize: this.availableSize,
         AvailableGender: this.availableGender,
-        Color: this.colors,
-        Size: this.size,
+        Color: this.colors != null ? this.colors : [], // R
+        Size: this.size != null ? this.size : [], // R
         Gender: 'Ninguno',
-        sale_category_id: this.sale_category_id,
+        sale_category_id: this.sale_category_id, // R
         sale_sub_category_id: this.sale_sub_category_id,
-        sale_brand_id: this.sale_brand_id,
-        sale_product_type_id: this.sale_product_type_id,
-        sale_product_unit_id: this.sale_product_unit_id,
+        sale_brand_id: this.sale_brand_id, // R
+        sale_product_type_id: this.sale_product_type_id, // R
+        sale_product_unit_id: this.sale_product_unit_id, // R
       };
-      console.log(data);
+      if (this.sale_sub_category_id == null) {
+        delete data.sale_sub_category_id;
+      }
+      if (this.getHtml() == '') {
+        delete data.ProductDescription;
+      }
+      if (this.productName == '') {
+        delete data.ProductName;
+      }
+      if (this.sellingPrice == '') {
+        delete data.SellingPrice;
+      }
+      if (this.unitPrice == '') {
+        delete data.UnitPrice;
+      }
       axios
         .post('/api/v1/sale-products', data)
         .then(response => {
+          this.$router.push({
+            name: 'listStockProduct',
+          });
           console.log(response);
         })
         .catch(error => {});

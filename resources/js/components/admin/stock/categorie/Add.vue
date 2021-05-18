@@ -44,7 +44,7 @@ export default {
   data: () => ({
     valid: true,
     name: '',
-    descripcion: '',
+    descripcion: null,
   }),
   methods: {
     validate() {
@@ -55,6 +55,10 @@ export default {
         CategoryName: this.name,
         CategoryDescription: this.descripcion,
       };
+
+      if (this.descripcion == null) {
+        delete data.CategoryDescription;
+      }
       axios
         .post('/api/v1/sale-categories', data)
         .then(response => {

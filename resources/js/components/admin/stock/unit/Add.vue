@@ -44,7 +44,7 @@ export default {
   data: () => ({
     valid: true,
     name: '',
-    shortName: '',
+    shortName: null,
   }),
   methods: {
     validate() {
@@ -55,6 +55,9 @@ export default {
         UnitName: this.name,
         UnitShortName: this.shortName,
       };
+      if (this.shortName == null) {
+        delete data.UnitShortName;
+      }
       axios
         .post('/api/v1/sale-units', data)
         .then(response => {

@@ -5,7 +5,7 @@
     </v-row>
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
-        Nombres
+        Nombres (*)
         <v-text-field
           class="border"
           flat
@@ -16,12 +16,26 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        DNI 
-        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Dni"></v-text-field>
+        DNI (*)
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataUser.Dni"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Direccion
-        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Address1"></v-text-field>
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataUser.Address1"
+        ></v-text-field>
       </v-col>
       <!-- <v-col cols="12" md="3" sm="6">
         Unidades en Orden
@@ -29,19 +43,47 @@
       </v-col> -->
       <v-col cols="12" md="3" sm="6">
         Pais
-        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Country"></v-text-field>
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataUser.Country"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Ciudad
-        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.City"></v-text-field>
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataUser.City"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Telefono
-        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Phone"></v-text-field>
+        Telefono (*)
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataUser.Phone"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Email
-        <v-text-field class="border" flat hide-details solo dense v-model="dataUser.Email"></v-text-field>
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="dataUser.Email"
+        ></v-text-field>
       </v-col>
 
       <!-- <v-col cols="12" md="3" sm="6">

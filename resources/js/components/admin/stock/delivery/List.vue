@@ -32,12 +32,6 @@ export default {
   data: () => ({
     headers: [
       {
-        text: 'Nombre',
-        value: 'Customer.FirstName',
-        align: 'center',
-        sortable: false,
-      },
-      {
         text: 'Producto',
         value: 'Product.ProductName',
         align: 'center',

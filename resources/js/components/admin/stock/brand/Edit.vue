@@ -59,6 +59,9 @@ export default {
         .catch(error => {});
     },
     updateBrand() {
+      if (this.brand.Note == null) {
+        delete this.brand.Note;
+      }
       axios
         .put(`/api/v1/sale-brands/${this.$route.params.id}`, this.brand)
         .then(response => {
