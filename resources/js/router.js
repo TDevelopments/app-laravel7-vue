@@ -67,6 +67,7 @@ import EditAdviser from './components/admin/group-import/adviser/Edit';
 
 // Pages View Orders
 import ListOrder from './components/admin/group-import/orders/List';
+import AddOrder from './components/admin/group-import/orders/Add';
 import EditOrder from './components/admin/group-import/orders/Edit';
 import FilterOrder from './components/admin/group-import/orders/Filter';
 import PrintOrder from './components/admin/group-import/orders/printOrder';
@@ -329,6 +330,11 @@ export default new Router({
           path: '/admin/order',
           name: 'listOrder',
           component: ListOrder,
+        },
+        {
+          path: '/admin/order/add',
+          name: 'addOrder',
+          component: AddOrder,
         },
         {
           path: '/admin/order/:id/edit',

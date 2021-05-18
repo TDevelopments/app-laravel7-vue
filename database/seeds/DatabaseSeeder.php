@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             'Dni' => '74867621',
             'user_id' => $user->id
         ]);
+        $user->roles()->attach(Role::where('name', 'user')->first());
         $user->roles()->attach(Role::where('name', 'admin')->first());
 
         // \App\Models\Catalogue::factory(1)->create();

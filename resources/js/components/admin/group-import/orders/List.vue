@@ -137,8 +137,14 @@ export default {
         sortable: false,
       },
       {
-        text: 'Cliente',
+        text: 'Creado por',
         value: 'user.name',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Cliente',
+        value: 'customer.FullName',
         align: 'center',
         sortable: false,
       },

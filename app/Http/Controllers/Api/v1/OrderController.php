@@ -42,7 +42,9 @@ class OrderController extends Controller
 
     public function __construct(
         Order $order, Catalogue $catalogue, Product $product, OrderDetail $orderDetail, 
-        ProductRange $productRange, Range $range, StateOrder $stateOrder, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, OrderShippingStatus $shippingStatus)
+        ProductRange $productRange, Range $range, StateOrder $stateOrder, SaleCustomer $saleCustomer, 
+        SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, 
+        OrderShippingStatus $shippingStatus)
     {
         $this->middleware('api.admin')->except(['store']);
         $this->order = $order;
@@ -66,40 +68,67 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->query("orderId")) {
-            $value = $request->query("orderId");
-            $order = $this->order->where('id', 'like', "%$value%")->paginate()->withQueryString();
-            return OrderResourceAdmin::collection($order);
-        }
-        if ($request->query("username"))
+        if ($request->query("orderId") || $request->query("username") || $request->query("stateOrder") || $request->query("catalogueId"))
         {
+            $value1 = $request->query("orderId");
             $value2 = $request->query("username");
-            $user = User::where('name', 'like', "%$value2%")->get();
-            if (count($user) == 0)
-                return response()->json(['message' => "There is no user with that name"]);
-            $order = $this->order->join('users', function($join) use($value2){
-                $join->on('orders.user_id', '=', 'users.id')
-                ->where('users.name', 'like', "%$value2%");
-            })->paginate()->withQueryString();
-            return OrderResourceAdmin::collection($order);
-            
-        }
-        if ($request->query("stateOrder"))
-        {
             $value3 = $request->query("stateOrder");
-            $consult = $this->stateOrder->find($value3)->get();
-            $stateOrder = $this->stateOrder->find($value3)->first();
-            // return response()->json(["stado" => $stateOrder, "true" => !empty($stateOrder)]);
-            if (count($consult) == 0)
-                return response()->json(['message' => "There is no state order with that name"]);
-            $order = $this->order->where('state_order_id', $stateOrder->id)->paginate();
-            return OrderResourceAdmin::collection($order);
+            $value4 = $request->query("catalogueId");
+            $query = $this->order->where('id', '>', 0);
+            if($request->query("orderId"))
+            {
+                $query->where('id', 'like', "$value1");
+            }
+            if($request->query("stateOrder"))
+            {
+                $query->where('state_order_id', "$value3");
+            }
+            if($request->query("catalogueId"))
+            {
+                $query->where('catalogue_id', "$value4");
+            }
+            if($request->query("username"))
+            {
+                $userReference = User::firstWhere("name", "like", "%$value2%");
+                if (!empty($productReference))
+                    $query->where("user_id", $userReference->id);
+            }
+            return OrderResourceAdmin::collection($query->orderBy('created_at', 'desc')->paginate()->withQueryString());
         }
-        if ($request->query("catalogueId")) {
-            $value =  $request->query("catalogueId");
-            $consult = $this->order->where('catalogue_id', "$value")->get();
-            return OrderResourceAdmin::collection($consult);
-        }
+        // if ($request->query("orderId"))
+        //     $value = $request->query("orderId");
+        //     $order = $this->order->where('id', 'like', "%$value%")->paginate()->withQueryString();
+        //     return OrderResourceAdmin::collection($order);
+        // }
+        // if ($request->query("username"))
+        // {
+        //     $value2 = $request->query("username");
+        //     $user = User::where('name', 'like', "%$value2%")->get();
+        //     if (count($user) == 0)
+        //         return response()->json(['message' => "There is no user with that name"]);
+        //     $order = $this->order->join('users', function($join) use($value2){
+        //         $join->on('orders.user_id', '=', 'users.id')
+        //         ->where('users.name', 'like', "%$value2%");
+        //     })->paginate()->withQueryString();
+        //     return OrderResourceAdmin::collection($order);
+        //     
+        // }
+        // if ($request->query("stateOrder"))
+        // {
+        //     $value3 = $request->query("stateOrder");
+        //     $consult = $this->stateOrder->find($value3)->get();
+        //     $stateOrder = $this->stateOrder->find($value3)->first();
+        //     // return response()->json(["stado" => $stateOrder, "true" => !empty($stateOrder)]);
+        //     if (count($consult) == 0)
+        //         return response()->json(['message' => "There is no state order with that name"]);
+        //     $order = $this->order->where('state_order_id', $stateOrder->id)->paginate();
+        //     return OrderResourceAdmin::collection($order);
+        // }
+        // if ($request->query("catalogueId")) {
+        //     $value =  $request->query("catalogueId");
+        //     $consult = $this->order->where('catalogue_id', "$value")->get();
+        //     return OrderResourceAdmin::collection($consult);
+        // }
         return OrderResourceAdmin::collection($this->order->orderBy('created_at', 'desc')->paginate());
     }
 
@@ -111,8 +140,9 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        // $order = $this->order->create($request->all());
         $validator = Validator::make($request->all(), [
+            'customer_id' => ['integer', 'exists:App\Models\SaleCustomer,id'],
+            'sale_product_status_id' => ['integer', 'exists:App\Models\SaleProductStatus,id'],
             'catalogue_id' => ['required', 'exists:App\Models\Catalogue,id'],
             'products' => ['array'],
             'products.*.product_id' => ['required', 'integer', 'exists:App\Models\Product,id'],
@@ -127,6 +157,11 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
+        $userIdentity = false;
+        foreach ($request->user()->roles as $role) {
+            if ($role['name'] != 'user')
+                $userIdentity = true; 
+        }
         $stateOrder = $this->stateOrder->firstOrCreate(['name' => 'Pendiente']);
         $saleCustomer = $this->saleCustomer->firstOrCreate(['user_id' => $request->user()->id],
             [
@@ -136,9 +171,25 @@ class OrderController extends Controller
                'Dni' => $request->user()->dni
             ]);
         $orderShippingStatus = $this->shippingStatus->firstOrCreate(['name' => 'Pendiente']);
+        $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
+        if ($userIdentity) {
+            if (empty($request->customer_id))
+                $requestCustomer = $saleCustomer->id;
+            else
+                $requestCustomer = $request->customer_id;
+            if (empty($request->sale_product_status_id))
+                $requestProductStatus = $saleProductStatus->id;
+            else
+                $requestProductStatus = $request->sale_product_status_id;
+        } else {
+            return "hola";
+            $requestCustomer = $saleCustomer->id;
+            $requestProductStatus = $saleProductStatus->id;
+        }
         $order = $this->order->create([
             'user_id' => $request->user()->id,
-            'sale_customer_id' => $saleCustomer->id,
+            /* 'sale_customer_id' => $saleCustomer->id, */
+            'sale_customer_id' => $requestCustomer,
             'catalogue_id' => $request->catalogue_id,
             'state_order_id' => $stateOrder->id,
             'order_shipping_status_id' => $orderShippingStatus->id,
@@ -185,7 +236,6 @@ class OrderController extends Controller
                                 }
                             }
                         }
-                        $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
                         $user = User::find($order->user_id);
                         // $saleCustomer = $this->saleCustomer->create([
                         //     'FullName' => $user->name,
@@ -208,7 +258,7 @@ class OrderController extends Controller
                         $saleStockRecord = $this->saleStockRecord->create([
                             'order_detail_id' => $orderDetail->id,
                             'sale_product_id' => $saleProduct->id,
-                            'sale_product_status_id' => $saleProductStatus->id,
+                            'sale_product_status_id' => $requestProductStatus,
                             'sale_business_location_id' => 1,
                             'sale_customer_id' => $order->sale_customer_id,
                             'Quantity' => $row['quantity']]);
@@ -249,7 +299,6 @@ class OrderController extends Controller
                         }
                     }
                 }
-                $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
                 $orderDetail = $this->orderDetail->create(
                     [
                         'product_range_id' => $productRangeReference->id,
@@ -265,7 +314,7 @@ class OrderController extends Controller
                 $saleStockRecord = $this->saleStockRecord->create([
                     'order_detail_id' => $orderDetail->id,
                     'sale_product_id' => $saleProduct->id,
-                    'sale_product_status_id' => $saleProductStatus->id,
+                    'sale_product_status_id' => $requestProductStatus,
                     'sale_business_location_id' => 1,
                     'sale_customer_id' => $order->sale_customer_id,
                     'Quantity' => $row['quantity']]);
