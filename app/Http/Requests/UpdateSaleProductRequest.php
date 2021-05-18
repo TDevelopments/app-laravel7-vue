@@ -24,7 +24,7 @@ class UpdateSaleProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'ProductName' => ['string'],
+            'ProductName' => ['required', 'string'],
             'ProductDescription' => ['string'],
             'Model' => ['required', 'string', 'unique:sale_products,model,'.$this->sale_product->id],
             'QuantityPerUnit' => ['integer'],

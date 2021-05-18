@@ -62,7 +62,7 @@ class SaleStockRecordController extends Controller
             }
             return new SaleStockRecordCollection($query->orderBy('created_at', 'desc')->paginate()->withQueryString());
         }
-        $saleStockRecords = $this->saleStockRecord->orderBy('created_at', 'desc')->paginate();
+        $saleStockRecords = $this->saleStockRecord->where('Quantity', '>', 0)->orderBy('created_at', 'desc')->paginate();
         return SaleStockRecordResource::collection($saleStockRecords);
     }
 

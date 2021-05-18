@@ -22,7 +22,8 @@ class Order extends Model
         'user_id',
         'sale_customer_id',
         'state_order_id',
-        'order_shipping_status_id'
+        'order_shipping_status_id',
+        'sale_product_status_id',
     ];
 
     public function orderDetails()
@@ -58,5 +59,10 @@ class Order extends Model
     public function orderShippingStatus()
     {
         return $this->belongsTo(OrderShippingStatus::class);
+    }
+
+    public function saleProductStatus()
+    {
+        return $this->belongsTo(SaleProductStatus::class);
     }
 }

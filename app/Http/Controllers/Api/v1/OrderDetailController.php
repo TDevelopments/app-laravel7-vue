@@ -75,6 +75,11 @@ class OrderDetailController extends Controller
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
+        $userIdentity = false;
+        foreach ($request->user()->roles as $role) {
+            if ($role['name'] != 'user')
+                $userIdentity = true; 
+        }
         $data = $request->products;
         $data2 = $request->product_ranges;
         $products = array();
@@ -89,6 +94,11 @@ class OrderDetailController extends Controller
                 ]);
             $order->update(['sale_customer_id' => $saleCustomer->id]);
         }
+        $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
+        if (empty($order->sale_product_status_id))
+            $requestProductStatus = $saleProductStatus->id;
+        else
+            $requestProductStatus = $order->sale_product_status_id;
         if($request->products)
         {
             foreach($data as $row)
@@ -150,11 +160,10 @@ class OrderDetailController extends Controller
                                     }
                                 }
                             }
-                            $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
                             $saleStockRecord = $this->saleStockRecord->create([
                                 'order_detail_id' => $orderDetail->id,
                                 'sale_product_id' => $saleProduct->id,
-                                'sale_product_status_id' => $saleProductStatus->id,
+                                'sale_product_status_id' => $requestProductStatus,
                                 'sale_business_location_id' => 1,
                                 'sale_customer_id' => $order->sale_customer_id,
                                 'Quantity' => $row['quantity']]);
@@ -162,10 +171,12 @@ class OrderDetailController extends Controller
                         }
                         else
                         {
-                            // $this->saleStockRecord->find($orderDetail->sale_stock_record_id)->update(['Quantity' => $row['quantity']]);
                             if (empty($orderDetail->saleStockRecord->sale_customer_id)) 
                                 $orderDetail->saleStockRecord->update(['sale_customer_id' => $order->sale_customer_id]);
-                            $orderDetail->saleStockRecord->update(['Quantity' => $row['quantity']]);
+                            $orderDetail->saleStockRecord->update([
+                                'Quantity' => $row['quantity'], 
+                                'sale_product_status_id' => $requestProductStatus
+                            ]);
                         }
                     }
                 }
@@ -233,11 +244,10 @@ class OrderDetailController extends Controller
                                 }
                             }
                         }
-                        $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
                         $saleStockRecord = $this->saleStockRecord->create([
                             'order_detail_id' => $orderDetail->id,
                             'sale_product_id' => $saleProduct->id,
-                            'sale_product_status_id' => $saleProductStatus->id,
+                            'sale_product_status_id' => $requestProductStatus,
                             'sale_business_location_id' => 1,
                             'sale_customer_id' => $order->sale_customer_id,
                             'Quantity' => $row['quantity']]);
@@ -245,8 +255,12 @@ class OrderDetailController extends Controller
                     }
                     else
                     {
-                        // $this->saleStockRecord->find($orderDetail->sale_stock_record_id)->update(['Quantity' => $row['quantity']]);
-                            $orderDetail->saleStockRecord->update(['Quantity' => $row['quantity']]);
+                            if (empty($orderDetail->saleStockRecord->sale_customer_id)) 
+                                $orderDetail->saleStockRecord->update(['sale_customer_id' => $order->sale_customer_id]);
+                            $orderDetail->saleStockRecord->update([
+                                'Quantity' => $row['quantity'], 
+                                'sale_product_status_id' => $requestProductStatus
+                            ]);
                     }
                     /* $productRangeReference->increment('count', $row['quantity']); */
                 }

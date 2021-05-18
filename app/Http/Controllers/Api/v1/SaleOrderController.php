@@ -14,7 +14,7 @@ class SaleOrderController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**

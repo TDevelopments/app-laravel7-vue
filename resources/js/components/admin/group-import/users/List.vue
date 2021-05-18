@@ -74,12 +74,6 @@ export default {
         sortable: false,
       },
       {
-        text: 'Apellido',
-        value: 'lastname',
-        align: 'center',
-        sortable: false,
-      },
-      {
         text: 'Email',
         value: 'email',
         align: 'center',
