@@ -17,7 +17,7 @@ class CreateSaleOrderDetailsTable extends Migration
             $table->id();
             $table->float('Price', 8, 3);
             $table->bigInteger('Quantity');
-            $table->string('ProductSKU');
+            $table->string('ProductSku');
             $table->float('Discount', 8, 3)->nullable();
             $table->json('Size')->nullable();
             $table->json('Color')->nullable();

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\SaleStockRecordResource;
 
 class SaleProductResource extends JsonResource
 {
@@ -43,6 +44,7 @@ class SaleProductResource extends JsonResource
             'SaleProductType' => $this->SaleProductType,
             'SaleProductUnit' => $this->SaleProductUnit,
             'Rating' => $this->Reviews->count() > 0 ? round($this->Reviews->sum('Star')/$this->Reviews->count(),2) : 'Sin calificación',
+            'StockRecords' => SaleStockRecordResource::collection($this->SaleStockRecords),
         ];
     }
 }
