@@ -72,11 +72,18 @@
         <tbody>
           <tr v-for="(order, index) in objectOrder" :key="index">
             <th class="sticky-col first-col">
-              {{ order.user.name | name }}
+              {{ order.customer.FullName | name }}
             </th>
             <!-- <th class="sticky-col second-col">{{ order.user.dni ? order.user.dni : '' }}</th>
             <th class="sticky-col third-col">{{ order.user.phone ? order.user.phone : '' }}</th> -->
-            <td class="w" v-for="(p, index) in order.product" :key="index">
+            <td
+              class="w"
+              v-bind:class="{
+                'yes-zero': p.quantity != 0,
+              }"
+              v-for="(p, index) in order.product"
+              :key="index"
+            >
               <v-menu
                 offset-y
                 class="b-menu"
@@ -92,7 +99,7 @@
                     <div
                       v-for="(o, index) in p.meta"
                       :key="index"
-                      class="d-flex justify-center align-center my-1 "
+                      class="d-flex justify-center align-center my-1"
                     >
                       <v-avatar :color="o.color" size="15" />
                       <input type="text" class="w mx-2 text-center b-input" v-model="o.quantity" />
@@ -112,7 +119,13 @@
           </tr>
           <tr>
             <th colspan="1" class="sticky-col first-col">Total</th>
-            <td v-for="(ob, index) in object" :key="index">
+            <td
+              v-for="(ob, index) in object"
+              :key="index"
+              v-bind:class="{
+                'a-zero': ob != 0,
+              }"
+            >
               {{ ob }}
             </td>
             <td class="sticky-col end-f-col" colspan="2"></td>
@@ -198,7 +211,9 @@ export default {
             this.object.push(0);
           }
           this.orders = response.data.data;
+          console.log('data', response);
           this.orders.forEach(order => {
+            console.log('order', order);
             let obp = [];
             this.products.forEach((element, index) => {
               let m = [];
@@ -209,12 +224,14 @@ export default {
                 type: element.type,
                 meta: [],
               });
-              this.products[index].colors.forEach(c => {
-                m.push({
-                  color: c,
-                  quantity: 0,
+              if (this.products[index].colors != null) {
+                this.products[index].colors.forEach(c => {
+                  m.push({
+                    color: c,
+                    quantity: 0,
+                  });
                 });
-              });
+              }
               obp[index].meta = m;
               let toPro = 0;
               order.orderDetails.forEach(op => {
@@ -242,13 +259,14 @@ export default {
             });
             console.log('obp', obp);
             this.objectOrder.push({
+              customer: order.customer,
               user: order.user,
               product: obp,
               total: order.total_order,
               id: order.id,
               catalogue: order.catalogue,
             });
-            console.log(this.objectOrder);
+            console.log('objeto', this.objectOrder);
           });
           console.log('Hola', this.object);
           console.log(response.data.data);
@@ -404,6 +422,15 @@ export default {
   max-width: 50px;
   right: 0;
   text-align: center;
+}
+.yes-zero {
+  background-color: rgb(148, 233, 166);
+}
+.a-zero {
+  background-color: rgb(170, 207, 241);
+}
+.not-zero {
+  background-color: white;
 }
 .w {
   width: 50px;

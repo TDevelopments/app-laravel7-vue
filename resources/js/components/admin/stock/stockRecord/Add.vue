@@ -53,7 +53,7 @@
           no-data-text="No hay se encontraron datos"
         ></v-select>
       </v-col>
-      <v-col cols="12" md="3" sm="6">
+      <v-col cols="12" md="3" sm="6" v-if="stateStock">
         Cliente
         <v-select
           hide-details
@@ -97,6 +97,7 @@ export default {
     sale_product_status_id: null,
     sale_business_location_id: null,
     sale_customer_id: null,
+    stateStock: false,
   }),
   methods: {
     getProducts() {
@@ -143,6 +144,9 @@ export default {
         sale_business_location_id: this.sale_business_location_id,
         sale_customer_id: this.sale_customer_id,
       };
+      if (this.sale_customer_id == null) {
+        delete data.sale_customer_id;
+      }
       console.log(data);
       axios
         .post('/api/v1/sale-stock-records', data)
@@ -153,6 +157,22 @@ export default {
           });
         })
         .catch(error => {});
+    },
+  },
+  watch: {
+    sale_product_status_id: function(val) {
+      this.status.forEach(element => {
+        let cont = 0;
+        if (element.id == val && element.StatusName == 'Reservado' && cont == 0) {
+          this.stateStock = true;
+          cont++;
+          console.log(this.stateStock);
+        }
+        if (element.id == val && element.StatusName != 'Reservado' && cont == 0) {
+          this.stateStock = false;
+          console.log(this.stateStock);
+        }
+      });
     },
   },
   mounted() {

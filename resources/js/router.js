@@ -327,7 +327,7 @@ export default new Router({
         },
         // Orders
         {
-          path: '/admin/order',
+          path: '/admin/orders',
           name: 'listOrder',
           component: ListOrder,
         },
@@ -342,7 +342,7 @@ export default new Router({
           component: EditOrder,
         },
         {
-          path: '/admin/orders/filter',
+          path: '/admin/orders-filter',
           name: 'filterOrder',
           component: FilterOrder,
         },
