@@ -81,7 +81,7 @@
       no-data-text="No se encontraron datos"
     >
       <template v-slot:[`item.Customer`]="{ item }">
-        {{ item.Customer.FullName }}
+        {{ item.Customer == null ? 'Sin referencias' : item.Customer.FullName }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon color="#D6B331" small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
