@@ -17,7 +17,7 @@ class CreateSaleOrdersTable extends Migration
             $table->id();
             $table->dateTime('OrderDate');
             $table->dateTime('ShipDate')->nullable();
-            $table->float('SalesTax', 8, 3);
+            $table->float('SalesTax', 8, 3)->default(0);
             $table->boolean('Delete')->default(0);
             $table->timestamps();
             $table->foreignId('sale_customer_id')->constrained()->onDelete('cascade');

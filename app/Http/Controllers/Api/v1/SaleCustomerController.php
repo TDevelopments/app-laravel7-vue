@@ -20,7 +20,7 @@ class SaleCustomerController extends Controller
      */
     public function __construct(SaleCustomer $saleCustomer)
     {
-        $this->middleware('api.admin')->except(['store']);
+        $this->middleware('api.admin');
         $this->saleCustomer = $saleCustomer;
     }
 
@@ -33,11 +33,11 @@ class SaleCustomerController extends Controller
     {
         if ($request->query("list")) {
             $value = $request->query("list");
-            $result = $this->saleCustomer->get();
+            $result = $this->saleCustomer->select('id', 'FullName')->get();
             $count = $this->saleCustomer->count();
             return response([
                 'count' => $count,
-                'data' => SaleCustomerResource::collection($result),
+                'data' => $result,
             ], Response::HTTP_OK);
         }
         $saleCustomer = $this->saleCustomer->paginate();

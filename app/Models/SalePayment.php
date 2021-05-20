@@ -16,4 +16,10 @@ class SalePayment extends Model
         'Picture',
         'user_id',
     ];
+
+    public function SaleOrder()
+    {
+        return $this->hasOne(SaleOrder::class);
+    }
+
 }

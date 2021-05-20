@@ -10,4 +10,9 @@ class SaleStateOrder extends Model
         'Name',
         'ShortName',
     ];
+
+    public function SaleOrder()
+    {
+        return $this->hasOne(SaleOrder::class);
+    }
 }

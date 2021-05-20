@@ -41,6 +41,11 @@ class SaleCustomer extends Model
     {
         return $this->belongsTo(SaleStockRecord::class);
     }
+
+    public function SaleOrder()
+    {
+        return $this->hasMany(SaleOrder::class);
+    }
     
     function scopeWithName($query, $name)
     {
