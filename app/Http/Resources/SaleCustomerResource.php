@@ -17,6 +17,7 @@ class SaleCustomerResource extends JsonResource
         return [
             'Id' => $this->id,
             'FullName' => $this->FullName,
+            'Dni' => $this->Dni,
             'Address1' => $this->Address1,
             'Address2' => $this->Address2,
             'City' => $this->City,
