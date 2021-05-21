@@ -43,6 +43,23 @@
           </div>
         </td>
       </template>
+      <template v-slot:[`item.image`]="{ item }">
+        <div>
+          <v-img
+            max-height="150"
+            max-width="250"
+            :src="item.Picture[0].PicturePath"
+            v-if="item.Picture != null"
+          ></v-img>
+          <v-img
+            lazy-src="https://picsum.photos/id/11/10/6"
+            max-height="150"
+            max-width="250"
+            src="/images/image-not-found.png"
+            v-else
+          ></v-img>
+        </div>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon color="#D6B331" small class="mr-2" @click="editItem(item)">
           mdi-pencil
@@ -60,6 +77,12 @@ export default {
     prodc: [],
     expanded: [],
     headers: [
+      {
+        text: 'Imagen',
+        value: 'image',
+        align: 'center',
+        sortable: false,
+      },
       {
         text: 'Nombre del Producto',
         value: 'ProductName',
