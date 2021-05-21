@@ -43,28 +43,13 @@ class SaleProductController extends Controller
                 'data' => $result
             ], Response::HTTP_OK);
         }
-        if ($request->query("ProductName")) {
-            $value = $request->query("ProductName");
-            $result = $this->saleProduct->where('ProductName', 'like', "%$value%")->get();
-            return response([
-                'data' => $result,
-            ], Response::HTTP_OK);
-        }
-        if ($request->query("ProductAvailable")) 
-        {
-            $value = $request->query("ProductAvailable");
-            switch ($value2) {
-                case "true":
-                    $products = $this->product->where('ProductAvailable', 1)
-                                            ->orderBy('ProductName')->paginate()->withQueryString();
-                    return SaleProductResource::collection($products);
-                    break;
-                case "false":
-                    $products = $this->product->where('ProductAvailable', 0)
-                                            ->orderBy('ProductName')->paginate()->withQueryString();
-                    return SaleProductResource::collection($products);
-                    break;
-            }
+        if ($request->query("Search")) {
+            $value = $request->query("Search");
+            $result = $this->saleProduct->where('ProductName', 'like', "%$value%")->orWhere('Model', 'like', "%$value%")->paginate()->withQueryString();
+            return SaleProductResource::collection($result);
+            /* return response([ */
+            /*     'data' => $result, */
+            /* ], Response::HTTP_OK); */
         }
         $saleProducts = $this->saleProduct->paginate();
         return SaleProductResource::collection($saleProducts);

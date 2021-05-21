@@ -41,6 +41,17 @@ class SaleCustomerController extends Controller
                 'data' => $result,
             ], Response::HTTP_OK);
         }
+        if ($request->query("Search")) {
+            $value = $request->query("Search");
+            $result = $this->saleCustomer->where('FullName', 'like', "%$value%")
+                    ->orWhere('Email', 'like', "%$value%")
+                    ->orWhere('Phone', 'like', "%$value%")
+                    ->orWhere('Dni', 'like', "%$value%")->paginate()->withQueryString();
+            return SaleProductResource::collection($result);
+            /* return response([ */
+            /*     'data' => $result, */
+            /* ], Response::HTTP_OK); */
+        }
         $saleCustomer = $this->saleCustomer->paginate();
         return SaleCustomerResource::collection($saleCustomer);
     }

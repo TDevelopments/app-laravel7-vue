@@ -31,12 +31,13 @@ class SaleDeliveryController extends Controller
     {
         if ($request->query("CustomerId")) {
             $value = $request->query("CustomerId");
-            $result = $this->saleDelivery->where('sale_customer_id', $value)->get();
+            $result = $this->saleDelivery->where('sale_customer_id', $value)->paginate()->withQueryString();
             $count = $this->saleDelivery->where('sale_customer_id', $value)->count();
-            return response([
-                'data' => $result,
-                'count' => $count
-            ], Response::HTTP_OK);
+            return SaleDeliveryResource::collection($result);
+            /* return response([ */
+            /*     'data' => $result, */
+            /*     'count' => $count */
+            /* ], Response::HTTP_OK); */
         }
         $saleDeliveries = $this->saleDelivery->paginate();
         return SaleDeliveryResource::collection($saleDeliveries);
