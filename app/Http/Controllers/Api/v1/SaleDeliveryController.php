@@ -83,6 +83,29 @@ class SaleDeliveryController extends Controller
         return response(null , Response::HTTP_FORBIDDEN);
     }
 
+    /* public function create() */
+    /* { */
+    /*     $productStatus = $this->saleProductStatus->firstWhere('StatusName', 'Disponible'); */
+    /*     $saleStockRecords = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id); */
+    /*     $sumStockRecords = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)->sum('Quantity'); */
+    /*     $quantity = (int)$request->input('Quantity'); */
+    /*     if ($sumStockRecords > 0) { */
+    /*         foreach ($saleStockRecords as $stockRecord) { */
+    /*             $quantityRecord = (int)$stockRecord['Quantity']; */
+    /*             if ($quantity <= $quantityRecord) */
+    /*             { */
+    /*                 $stockRecord->decrement('Quantity', $quantity); */
+    /*                 break; */
+    /*             } */
+    /*             else */
+    /*             { */
+    /*                 $quantity = $quantity - $quantityRecord; */
+    /*                 $stockRecord->decrement('Quantity', $quantityRecord); */
+    /*             } */
+    /*         } */
+    /*     } */
+    /* } */
+
     /**
      * Display the specified resource.
      *

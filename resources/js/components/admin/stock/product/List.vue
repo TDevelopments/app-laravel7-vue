@@ -19,18 +19,22 @@
       :items="prodc"
     >
       <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length">
+        <td :colspan="headers.length" class="p-0">
           <v-data-table
             v-if="item.StockRecords != null"
             :headers="headersStock"
             :items="item.StockRecords"
+            disable-pagination
+            hide-default-footer
           >
             <template v-slot:[`item.actions`]="{ item }">
-              <div v-if="item.Customer != null">
-                {{ item.Customer.FullName }}
-              </div>
-              <div v-else>
-                No se Encontro un Cliente
+              <div>
+                <div v-if="item.Customer != null">
+                  {{ item.Customer.FullName }}
+                </div>
+                <div v-if="item.Customer == null">
+                  No se Encontro un Cliente
+                </div>
               </div>
             </template>
           </v-data-table>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Models\SaleCustomer;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleCustomerRequest;
+use App\Http\Requests\UpdateSaleCustomerRequest;
 use App\Http\Resources\SaleCustomerResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
@@ -76,9 +77,8 @@ class SaleCustomerController extends Controller
      * @param  \App\SaleCustomer  $saleCustomer
      * @return \Illuminate\Http\Response
      */
-    public function update(SaleCustomerRequest $request, SaleCustomer $saleCustomer)
+    public function update(UpdateSaleCustomerRequest $request, SaleCustomer $saleCustomer)
     {
-        $request->add(['FullName' => "{$request->input('FirstName')} {$request->input('LastName')}"]);
         $saleCustomer->update($request->all());
         return response([
             'data' => new SaleCustomerResource($saleCustomer)

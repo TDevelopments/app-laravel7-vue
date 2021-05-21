@@ -116,9 +116,17 @@ export default {
         .catch(error => {});
     },
     editCustomer() {
+      let data = {};
+      for (const property in this.customer) {
+        if (this.customer[property] != null) {
+          data.[property] = this.customer[property];
+        }
+      }
       axios
-        .put(`/api/v1/sale-customers/${this.$route.params.id}`, this.customer)
-        .then(response => {})
+        .put(`/api/v1/sale-customers/${this.$route.params.id}`, data)
+        .then(response => {
+          this.$router.replace({ name: 'listStockCustomer' });
+        })
         .catch(error => {});
     },
   },
