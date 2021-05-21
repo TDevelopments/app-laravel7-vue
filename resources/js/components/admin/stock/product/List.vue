@@ -11,10 +11,34 @@
       class="border"
       disable-pagination
       hide-default-footer
+      show-expand
+      :expanded.sync="expanded"
+      single-expand
       no-data-text="No se encontraron datos"
       :headers="headers"
       :items="prodc"
     >
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          <v-data-table
+            v-if="item.StockRecords != null"
+            :headers="headersStock"
+            :items="item.StockRecords"
+          >
+            <template v-slot:[`item.actions`]="{ item }">
+              <div v-if="item.Customer != null">
+                {{ item.Customer.FullName }}
+              </div>
+              <div v-else>
+                No se Encontro un Cliente
+              </div>
+            </template>
+          </v-data-table>
+          <div v-else>
+            No se entontraron datos
+          </div>
+        </td>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon color="#D6B331" small class="mr-2" @click="editItem(item)">
           mdi-pencil
@@ -30,6 +54,7 @@
 export default {
   data: () => ({
     prodc: [],
+    expanded: [],
     headers: [
       {
         text: 'Nombre del Producto',
@@ -58,6 +83,32 @@ export default {
       {
         text: 'Acciones',
         value: 'actions',
+        align: 'center',
+        sortable: false,
+      },
+    ],
+    headersStock: [
+      {
+        text: 'Almacen',
+        value: 'BusinessLocation.Name',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Estado',
+        value: 'ProductStatus.StatusName',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Cantidad',
+        value: 'Quantity',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Cliente',
+        value: 'Customer.FullName',
         align: 'center',
         sortable: false,
       },

@@ -5,25 +5,25 @@
     </v-row>
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
-        Nombres
+        Nombres (*)
         <v-text-field
           class="border"
           flat
           hide-details
           solo
           dense
-          v-model="customer.FirstName"
+          v-model="customer.FullName"
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Apellidos
+        DNI (*)
         <v-text-field
           class="border"
           flat
           hide-details
           solo
           dense
-          v-model="customer.LastName"
+          v-model="customer.Dni"
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
@@ -64,7 +64,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Telefono
+        Telefono (*)
         <v-text-field
           class="border"
           flat
@@ -93,7 +93,7 @@
     </v-row>
     <v-row class="my-3">
       <v-spacer></v-spacer>
-      <v-btn class="mx-1 my-4 border" elevation="0" color="#0D52D6" dark small @click="addCustomer"
+      <v-btn class="mx-1 my-4 border" elevation="0" color="#0D52D6" dark small @click="editCustomer"
         >Guardar</v-btn
       >
       <v-btn class="mx-1 my-4 border" elevation="0" small>Cancelar</v-btn>
@@ -115,13 +115,10 @@ export default {
         })
         .catch(error => {});
     },
-    addCustomer() {
-      console.log(data);
+    editCustomer() {
       axios
-        .get(`/api/v1/sale-customers/${this.$route.params.id}`)
-        .then(response => {
-          this.customer = response.data.data;
-        })
+        .put(`/api/v1/sale-customers/${this.$route.params.id}`, this.customer)
+        .then(response => {})
         .catch(error => {});
     },
   },
