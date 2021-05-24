@@ -45,19 +45,18 @@
       </template>
       <template v-slot:[`item.image`]="{ item }">
         <div>
-          <v-img
-            max-height="150"
-            max-width="250"
-            :src="item.Picture[0].PicturePath"
-            v-if="item.Picture != null"
-          ></v-img>
-          <v-img
-            lazy-src="https://picsum.photos/id/11/10/6"
-            max-height="150"
-            max-width="250"
-            src="/images/image-not-found.png"
-            v-else
-          ></v-img>
+          <div v-if="item.Picture.length != 0 && item.Picture != null">
+            <v-img max-height="150" max-width="250" :src="item.Picture[0].PicturePath"></v-img>
+          </div>
+
+          <div v-else>
+            <v-img
+              lazy-src="https://picsum.photos/id/11/10/6"
+              max-height="150"
+              max-width="250"
+              src="/images/image-not-found.png"
+            ></v-img>
+          </div>
         </div>
       </template>
       <template v-slot:[`item.actions`]="{ item }">

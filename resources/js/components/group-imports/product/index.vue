@@ -1,7 +1,7 @@
 <template>
   <v-dialog transition="dialog-bottom-transition" max-width="1200" v-model="show">
     <v-toolbar color="primary" dark class="text-h6 mb-2">
-      Detalles del producto {{ type }}
+      Detalles del producto
       <v-spacer></v-spacer>
       <v-btn icon @click="show = false">
         <v-icon>mdi-close</v-icon>
@@ -138,9 +138,27 @@
               </div>
               <div>
                 Colores:
-                <v-row>
+                <v-row v-if="type == 'normal'">
                   <v-col cols="1" v-for="(color, index) in product.colors" :key="index">
                     <v-avatar :color="color" size="15" style="border: 1px solid black"> </v-avatar>
+                  </v-col>
+                </v-row>
+                <v-row v-if="type == 'range'">
+                  <v-col class="mt-5 pb-0">
+                    <div v-if="product.meta">
+                      <div
+                        v-for="(c, index) in product.meta"
+                        :key="index"
+                        class="d-flex justify-center align-center my-1 "
+                      >
+                        <v-avatar :color="c.color" size="15" />
+                        <input
+                          type="text"
+                          class="w mx-2 text-center b-input"
+                          v-model="c.quantity"
+                        />
+                      </div>
+                    </div>
                   </v-col>
                 </v-row>
               </div>
@@ -257,7 +275,7 @@ export default {
     },
   },
   mounted() {
-    // console.log("Component", this.product);
+    console.log('Component', this.product);
   },
 };
 </script>

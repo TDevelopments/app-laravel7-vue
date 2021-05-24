@@ -23,7 +23,7 @@
           v-model="cusSelect"
           :items="customers"
           item-text="FullName"
-          item-value="Id"
+          item-value="id"
           label="Seleccionar Cliente"
           no-data-text="No hay se encontraron datos"
           dense

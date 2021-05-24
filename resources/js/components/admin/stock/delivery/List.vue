@@ -1,5 +1,32 @@
 <template>
   <div>
+    <div>
+      <h3>Filtros</h3>
+      <v-row>
+        <v-col>
+          Nombre Cliente
+          <v-select
+            hide-details
+            flat
+            class="border"
+            solo
+            dense
+            v-model="nameCustomer"
+            :items="customers"
+            item-text="FullName"
+            item-value="id"
+            no-data-text="No hay se encontraron datos"
+            clearable
+            @click:clear="clearSearch"
+          ></v-select>
+        </v-col>
+        <!-- <v-col class="text-center align-center justify-center px-0 d-flex">
+          <v-btn small class="mx-1" color="#0D52D6" dark> Buscar </v-btn>
+          <v-btn small @click="clear" class="mx-1"> Limpiar </v-btn>
+        </v-col> -->
+      </v-row>
+    </div>
+    <v-divider></v-divider>
     <div class="d-flex my-3">
       <h3>Delivery</h3>
       <v-spacer></v-spacer>
@@ -24,6 +51,9 @@
         </v-icon>
       </template>
     </v-data-table>
+    <div class="text-center pt-2">
+      <v-pagination v-model="page" :length="pagination" @input="next"></v-pagination>
+    </div>
   </div>
 </template>
 
@@ -32,14 +62,20 @@ export default {
   data: () => ({
     headers: [
       {
-        text: 'Producto',
-        value: 'Product.ProductName',
+        text: 'Cliente',
+        value: 'Customer.FullName',
         align: 'center',
         sortable: false,
       },
       {
-        text: 'Usuario',
+        text: 'Hecho por',
         value: 'User.name',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        text: 'Producto',
+        value: 'Product.ProductName',
         align: 'center',
         sortable: false,
       },
@@ -52,14 +88,48 @@ export default {
       { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
     deliveries: [],
+    customers: [],
+    nameCustomer: '',
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 15,
+    pagination: null,
   }),
   methods: {
     getList() {
+      if (this.nameCustomer == null) {
+        this.nameCustomer = '';
+      }
       axios
         .get('/api/v1/sale-deliveries')
         .then(response => {
           this.deliveries = response.data.data;
-          console.log(response.data.data);
+          this.pagination = response.data.meta.last_page;
+          console.log(response);
+        })
+        .catch(error => {});
+    },
+    next(page) {
+      if (this.nameCustomer == null) {
+        this.nameCustomer = '';
+      }
+      console.log(this.nameCustomer);
+      axios
+        .get(`/api/v1/sale-deliveries?CustomerId=${this.nameCustomer}&page=${page}`)
+        .then(response => {
+          this.loading = false;
+          this.deliveries = response.data.data;
+          this.pagination = response.data.meta.last_page;
+          console.log(response);
+        })
+        .catch(error => {});
+    },
+
+    getCustomer() {
+      axios
+        .get('/api/v1/sale-customers?list=true')
+        .then(response => {
+          this.customers = response.data.data;
         })
         .catch(error => {});
     },
@@ -97,9 +167,31 @@ export default {
     closeDelete() {
       this.dialogDelete = false;
     },
+    clearSearch() {
+      this.getList();
+    },
+  },
+  watch: {
+    nameCustomer: function(newQuestion) {
+      if (this.page != 1) {
+        this.page = 1;
+      }
+      if (this.nameCustomer == null) {
+        this.nameCustomer = '';
+      }
+      axios
+        .get(`/api/v1/sale-deliveries?CustomerId=${newQuestion}&page=${this.page}`)
+        .then(response => {
+          this.deliveries = response.data.data;
+          this.pagination = response.data.meta.last_page;
+          console.log(response.data.data);
+        })
+        .catch(error => {});
+    },
   },
   mounted() {
     this.getList();
+    this.getCustomer();
   },
 };
 </script>

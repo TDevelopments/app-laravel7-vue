@@ -30,7 +30,7 @@
           v-model="sale_customer_id"
           :items="customers"
           item-text="FullName"
-          item-value="Id"
+          item-value="id"
           no-data-text="No hay se encontraron datos"
         ></v-select>
       </v-col>
@@ -94,7 +94,7 @@ export default {
     },
     addDelivery() {
       let data = {
-        sale_product_id: this.sale_customer_id,
+        sale_product_id: this.sale_product_id,
         sale_customer_id: this.sale_customer_id,
         Quantity: this.Quantity,
       };
