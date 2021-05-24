@@ -47,7 +47,7 @@ class SaleCustomerController extends Controller
                     ->orWhere('Email', 'like', "%$value%")
                     ->orWhere('Phone', 'like', "%$value%")
                     ->orWhere('Dni', 'like', "%$value%")->paginate()->withQueryString();
-            return SaleProductResource::collection($result);
+            return SaleCustomerResource::collection($result);
             /* return response([ */
             /*     'data' => $result, */
             /* ], Response::HTTP_OK); */

@@ -16,7 +16,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Nombre de Producto
+        Nombre de Producto (*)
         <v-text-field
           class="border"
           flat

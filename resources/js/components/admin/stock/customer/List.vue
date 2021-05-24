@@ -1,5 +1,27 @@
 <template>
   <div>
+    <div>
+      <h3>Filtros</h3>
+      <v-row>
+        <v-col>
+          Búsqueda (Nombre, DNI, Email, Teléfono)
+          <v-text-field
+            class="border"
+            flat
+            hide-details
+            solo
+            dense
+            append-icon="mdi-magnify"
+            v-model="searchCustomer"
+            ref="nomCli"
+          ></v-text-field>
+        </v-col>
+        <v-col class="text-center align-center justify-center px-0 d-flex">
+          <v-btn small @click="search" class="mx-1" color="#0D52D6" dark> Buscar </v-btn>
+          <v-btn small @click="clear" class="mx-1"> Limpiar </v-btn>
+        </v-col>
+      </v-row>
+    </div>
     <div class="d-flex my-3">
       <h3>Clientes</h3>
       <v-spacer></v-spacer>
@@ -24,6 +46,9 @@
         </v-icon>
       </template>
     </v-data-table>
+    <div class="text-center pt-2">
+      <v-pagination v-model="page" :length="pagination" @input="next"></v-pagination>
+    </div>
   </div>
 </template>
 
@@ -70,14 +95,36 @@ export default {
       { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
     customers: [],
+    searchCustomer: '',
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 15,
+    pagination: null,
   }),
   methods: {
     getList() {
+      if (this.searchCustomer == null) {
+        this.searchCustomer = '';
+      }
       axios
         .get('/api/v1/sale-customers')
         .then(response => {
           this.customers = response.data.data;
+          this.pagination = response.data.meta.last_page;
           console.log(response.data.data);
+        })
+        .catch(error => {});
+    },
+    next(page) {
+      if (this.searchCustomer == null) {
+        this.searchCustomer = '';
+      }
+      axios
+        .get(`/api/v1/sale-customers?Search=${this.searchCustomer}&page=${page}`)
+        .then(response => {
+          this.customers = response.data.data;
+          this.pagination = response.data.meta.last_page;
+          console.log(response);
         })
         .catch(error => {});
     },
@@ -114,6 +161,26 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false;
+    },
+    search() {
+      if (this.page != 1) {
+        this.page = 1;
+      }
+      if (this.searchCustomer == null) {
+        this.searchCustomer = '';
+      }
+      axios
+        .get(`/api/v1/sale-customers?Search=${this.searchCustomer}&page=${this.page}`)
+        .then(response => {
+          this.customers = response.data.data;
+          this.pagination = response.data.meta.last_page;
+          console.log(response);
+        })
+        .catch(error => {});
+    },
+    clear() {
+      this.searchCustomer = '';
+      this.getList();
     },
   },
   mounted() {
