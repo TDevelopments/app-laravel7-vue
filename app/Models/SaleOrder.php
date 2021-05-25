@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class SaleOrder extends Model
 {
+
+    protected $casts = [
+        'Delete' => 'boolean',
+    ];
+
     protected $fillable = [
         'OrderDate',
         'ShipDate',
@@ -13,7 +18,7 @@ class SaleOrder extends Model
         'Delete',
         'sale_customer_id',
         'sale_state_order_id',
-        'sale_payment_id',
+        'user_id',
     ];
 
     public function SaleCustomer()

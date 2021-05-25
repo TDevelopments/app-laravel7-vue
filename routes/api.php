@@ -201,5 +201,11 @@ Route::group(['prefix' => 'v1'], function () {
     
         // Deliveries
         Route::apiResource('sale-deliveries', 'Api\v1\SaleDeliveryController');
+    
+        // StateOrder 
+        Route::apiResource('sale-state-orders', 'Api\v1\SaleStateOrderController');
+
+        // Order 
+        Route::apiResource('sale-orders', 'Api\v1\SaleOrderController');
     });
 });

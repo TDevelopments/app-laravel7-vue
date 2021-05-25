@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Models\SaleOrder;
 use App\Models\SaleCustomer;
+use App\Models\SaleStateOrder;
+use App\Models\SaleProduct;
+use App\Models\SaleOrderDetails;
+use App\Models\SaleStockRecord;
+use App\Models\SaleProductStatus;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Resources\SaleOrderResourceAdmin;
 use App\Http\Resources\SaleOrderResourceUser;
 use App\Http\Requests\SaleOrderRequest;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
 
 class SaleOrderController extends Controller
@@ -15,11 +22,20 @@ class SaleOrderController extends Controller
 
     protected $saleOrder;
     protected $saleCustomer;
+    protected $saleStateOrder;
+    protected $saleProduct;
+    protected $saleStockRecord;
+    protected $saleProductStatus;
 
-    public function __construct(SaleOrder $saleOrder, SaleCustomer $saleCustomer)
+    public function __construct(SaleOrder $saleOrder, SaleCustomer $saleCustomer, SaleStateOrder $saleStateOrder, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin')->except(['store']);
         $this->saleOrder = $saleOrder;
+        $this->saleCustomer = $saleCustomer;
+        $this->saleStateOrder = $saleStateOrder;
+        $this->saleProduct = $saleProduct;
+        $this->saleStockRecord = $saleStockRecord;
+        $this->saleProductStatus = $saleProductStatus;
     }
 
     /**
@@ -73,6 +89,39 @@ class SaleOrderController extends Controller
                'Dni' => $request->user()->dni
             ]);
         $saleStateOrder = $this->saleStateOrder->firstOrCreate(['name' => 'Pendiente']);
+        $productStatus = $this->saleProductStatus->firstWhere('StatusName', 'Disponible');
+        if ($request->Products) {
+            foreach ($request->Products as $product) {
+                $saleProductReference = $this->saleProduct->find($product['ProductId']);
+                if (empty($saleProductReference->UnitPrice) || empty($saleProductReference->SellingPrice) || empty($saleProductReference->ProductAvailable)) {
+                    return response(['message' => 'El producto debe contener un precio y estar habilitado.'], Response::HTTP_NOT_FOUND);
+                }
+            }
+            $saleOrder = $this->saleOrder->create([
+                'sale_customer_id' => $saleCustomer->id,
+                'sale_state_order_id' => $saleStateOrder->id,
+                'user_id' => $request->user()->id,
+                'OrderDate' => Carbon::now(),
+            ]);
+            foreach ($request->Products as $product) {
+                $saleProductReference = $this->saleProduct->find($product['ProductId']);
+                $quantityStock = $saleProductReference->SaleStockRecords->sum('Quantity');
+                $quantityRequest = (int)$product['Quantity'];
+                if (quantityRequest <= $quantityStock && quantityRequest > 0) {
+                    $saleOrderDetail = $this->saleOrderDetail->create([
+                        'Price' => $saleProductReference->SellingPrice,
+                        'ProductSku' => $saleProductReference->Sku,
+                        'Quantity' => $quantityRequest,
+                        'Total' => $saleProductReference->SellingPrice * $quantityRequest,
+                        'sale_order_id' => $saleOrder->id,
+                        'sale_product_id' => $saleProductReference->id,
+                    ]);
+                } else {
+                    continue;
+                }
+
+            }
+        }
     }
 
     /**

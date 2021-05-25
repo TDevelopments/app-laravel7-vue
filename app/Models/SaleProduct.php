@@ -20,6 +20,11 @@ class SaleProduct extends Model
     protected $casts = [
         'Size' => 'array',
         'Color' => 'array',
+        'ProductAvailable' => 'boolean',
+        'DiscountAvailable' => 'boolean',
+        'AvailableSize' => 'boolean',
+        'AvailableColors' => 'boolean',
+        'AvailableGender' => 'boolean',
     ];
 
     protected $fillable = [

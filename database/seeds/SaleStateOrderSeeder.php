@@ -13,8 +13,8 @@ class SaleStateOrderSeeder extends Seeder
     public function run()
     {
         $state = new SaleStateOrder();
-        $state->Name = 'pendiente';
-        $state->ShortName = 'p';
+        $state->Name = 'Pendiente';
+        $state->ShortName = 'P';
         $state->save();
         
         $state = new SaleStateOrder();

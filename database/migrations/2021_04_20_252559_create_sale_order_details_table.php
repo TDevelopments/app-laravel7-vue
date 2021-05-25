@@ -22,7 +22,7 @@ class CreateSaleOrderDetailsTable extends Migration
             $table->json('Size')->nullable();
             $table->json('Color')->nullable();
             $table->float('Total', 8, 3);
-            $table->dateTime('ShipDate');
+            $table->dateTime('ShipDate')->nullable();
             $table->timestamps();
             $table->foreignId('sale_order_id')->constrained();
             $table->foreignId('sale_product_id')->constrained();

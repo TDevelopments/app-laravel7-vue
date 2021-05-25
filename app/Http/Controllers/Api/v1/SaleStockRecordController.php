@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Models\SaleStockRecord;
 use App\Models\SaleProduct;
+use App\Models\SaleProductStatus;
 use App\Models\SaleCustomer;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleStockRecordRequest;
@@ -17,13 +18,15 @@ class SaleStockRecordController extends Controller
     protected $saleStockRecord;
     protected $saleProduct;
     protected $saleCustomer;
+    protected $saleProductStatus;
 
-    public function __construct(SaleStockRecord $saleStockRecord, SaleCustomer $saleCustomer, SaleProduct $saleProduct)
+    public function __construct(SaleStockRecord $saleStockRecord, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin');
         $this->saleStockRecord = $saleStockRecord;
         $this->saleCustomer = $saleCustomer;
         $this->saleProduct = $saleProduct;
+        $this->saleProductStatus = $saleProductStatus;
     }
 
     /**
@@ -33,6 +36,12 @@ class SaleStockRecordController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->query('ByCustomer')) {
+            $value = $request->query('ByCustomer');
+            $saleProductStatus = $this->saleProductStatus->firstWhere('StatusName', 'Reservado');
+            $consult = $this->saleStockRecord->where('sale_product_status_id', $saleProductStatus->id)->where('sale_customer_id', $value);
+            return SaleStockRecordResource::collection($consult);
+        }
         if ($request->query("BusinessId") || $request->query("StatusId") || $request->query("ProductName") || $request->query("CustomerName")) {
             $value1 = $request->query("BusinessId");
             $value2 = $request->query("StatusId");

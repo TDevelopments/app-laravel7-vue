@@ -1,20 +1,41 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\SaleStateOrder;
+use App\Models\SaleStateOrder;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaleStateOrderRequest;
+use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class SaleStateOrderController extends Controller
 {
+
+    protected $saleStateOrder;
+
+    public function __construct(SaleStateOrder $saleStateOrder)
+    {
+        $this->middleware('api.admin');
+        $this->saleStateOrder = $saleStateOrder;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->saleStateOrder->select('id', 'Name', 'ShortName')->get();
+            $count = $this->saleStateOrder->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
+        $saleStateOrders = $this->saleStateOrder->select('id', 'Name', 'ShortName')->paginate();
+        return response($saleStateOrders, Response::HTTP_OK);
     }
 
     /**
@@ -23,9 +44,12 @@ class SaleStateOrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaleStateOrderRequest $request)
     {
-        //
+        $saleStateOrder = $this->saleStateOrder->updateOrCreate($request->toArray());
+        return response([
+            'data' => $saleStateOrder
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -36,7 +60,9 @@ class SaleStateOrderController extends Controller
      */
     public function show(SaleStateOrder $saleStateOrder)
     {
-        //
+        return response([
+            'data' => $saleStateOrder
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -46,9 +72,12 @@ class SaleStateOrderController extends Controller
      * @param  \App\SaleStateOrder  $saleStateOrder
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SaleStateOrder $saleStateOrder)
+    public function update(SaleStateOrderRequest $request, SaleStateOrder $saleStateOrder)
     {
-        //
+        $saleStateOrder->update($request->all());
+        return response([
+            'data' => $saleStateOrder
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -59,6 +88,7 @@ class SaleStateOrderController extends Controller
      */
     public function destroy(SaleStateOrder $saleStateOrder)
     {
-        //
+        $saleStateOrder->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }
