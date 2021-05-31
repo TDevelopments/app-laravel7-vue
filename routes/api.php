@@ -207,5 +207,11 @@ Route::group(['prefix' => 'v1'], function () {
 
         // Order 
         Route::apiResource('sale-orders', 'Api\v1\SaleOrderController');
+
+        // Method Payment 
+        Route::apiResource('sale-payment-methods', 'Api\v1\SalePaymentMethodController');
+
+        // Method Payment 
+        Route::apiResource('sale-payment-status', 'Api\v1\SalePaymentStatusController');
     });
 });

@@ -1,20 +1,42 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\SalePaymentMethod;
+use App\Models\SalePaymentMethod;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SalePaymentMethodRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class SalePaymentMethodController extends Controller
 {
+
+    protected $salePaymentMethod;
+
+    public function __construct(SalePaymentMethod $salePaymentMethod)
+    {
+        $this->middleware('api.admin');
+        $this->salePaymentMethod = $salePaymentMethod;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->salePaymentMethod->select('id', 'PaymentMethodName')->get();
+            $count = $this->salePaymentMethod->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
+        $paymentMethods = $this->salePaymentMethod->select('id', 'PaymentMethodName')->paginate();
+        return response($paymentMethods, Response::HTTP_OK);
     }
 
     /**
@@ -23,9 +45,12 @@ class SalePaymentMethodController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SalePaymentMethodRequest $request)
     {
-        //
+        $salePaymentMethod = $this->salePaymentMethod->updateOrCreate($request->toArray());
+        return response([
+            'data' => $salePaymentMethod
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -36,7 +61,9 @@ class SalePaymentMethodController extends Controller
      */
     public function show(SalePaymentMethod $salePaymentMethod)
     {
-        //
+        return response([
+            'data' => $salePaymentMethod
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -46,9 +73,12 @@ class SalePaymentMethodController extends Controller
      * @param  \App\SalePaymentMethod  $salePaymentMethod
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SalePaymentMethod $salePaymentMethod)
+    public function update(SalePaymentMethodRequest $request, SalePaymentMethod $salePaymentMethod)
     {
-        //
+        $salePaymentMethod->update($request->all());
+        return response([
+            'data' => $salePaymentMethod
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -59,6 +89,7 @@ class SalePaymentMethodController extends Controller
      */
     public function destroy(SalePaymentMethod $salePaymentMethod)
     {
-        //
+        $salePaymentMethod->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

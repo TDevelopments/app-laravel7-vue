@@ -26,7 +26,7 @@ class UpdateSaleProductRequest extends FormRequest
         return [
             'ProductName' => ['required', 'string'],
             'ProductDescription' => ['string'],
-            'Model' => ['required', 'string', 'unique:sale_products,model,'.$this->sale_product->id],
+            'Model' => ['string', 'unique:sale_products,model,'.$this->sale_product->id],
             'QuantityPerUnit' => ['integer'],
             'UnitPrice' => ['numeric'],
             'SellingPrice' => ['numeric'],

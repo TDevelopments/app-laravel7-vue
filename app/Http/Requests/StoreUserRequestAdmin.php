@@ -25,15 +25,15 @@ class StoreUserRequestAdmin extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'lastname' => ['required','string'],
+            'lastname' => ['string'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'min:8', 'confirmed', 'max:255','string'],
-            'address' => ['required','string'],
+            'address' => ['string'],
             'ruc' => ['integer' ,'unique:users,ruc'],
             'dni' => ['required', 'integer', 'unique:users,dni'],
             'phone' => ['required','integer'],
             'gender' => ['string', 'in:masculine,female'],
-            'city' => ['required', 'string'],
+            'city' => ['string'],
             'roles' => ['required', 'array'],
             'roles.*' => ['required', 'string'],
         ];

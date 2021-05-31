@@ -21,6 +21,12 @@ class SaleProductResource extends JsonResource
             'Model' => $this->Model,
             'Slug' => $this->Slug,
             'Stock' => $this->SaleStockRecords->count() > 0 ? $this->SaleStockRecords->sum('Quantity') : 'Sin Stock',
+            'AvailableStock' => $this->SaleStockRecords->groupBy('sale_product_status_id')->map(function ($row) {
+                return $row->sum('Quantity');
+            }),
+            /* 'AvailableStockName' => SaleStockRecordResource::collection($this->SaleStockRecords)->groupBy('sale_product_status_id')->map(function ($row) { */
+            /*     return $row->sum('Quantity'); */
+            /* }), */
             'ProductName' => $this->ProductName,
             'ProductDescription' => $this->ProductDescription,
             'QuantityPerUnit' => $this->QuantityPerUnit,

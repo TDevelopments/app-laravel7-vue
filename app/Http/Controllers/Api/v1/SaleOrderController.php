@@ -9,6 +9,10 @@ use App\Models\SaleProduct;
 use App\Models\SaleOrderDetails;
 use App\Models\SaleStockRecord;
 use App\Models\SaleProductStatus;
+use App\Models\SalePayment;
+use App\Models\SalePaymentMethod;
+use App\Models\SalePaymentStatus;
+use App\Models\SaleOrderDetail;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Resources\SaleOrderResourceAdmin;
@@ -26,8 +30,12 @@ class SaleOrderController extends Controller
     protected $saleProduct;
     protected $saleStockRecord;
     protected $saleProductStatus;
+    protected $salePaymentMethod;
+    protected $salePaymentStatus;
+    protected $salePayment;
+    protected $saleOrderDetail;
 
-    public function __construct(SaleOrder $saleOrder, SaleCustomer $saleCustomer, SaleStateOrder $saleStateOrder, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus)
+    public function __construct(SaleOrder $saleOrder, SaleCustomer $saleCustomer, SaleStateOrder $saleStateOrder, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, SalePaymentMethod $salePaymentMethod, SalePaymentStatus $salePaymentStatus, SalePayment $salePayment, SaleOrderDetail $saleOrderDetail)
     {
         $this->middleware('api.admin')->except(['store']);
         $this->saleOrder = $saleOrder;
@@ -36,6 +44,10 @@ class SaleOrderController extends Controller
         $this->saleProduct = $saleProduct;
         $this->saleStockRecord = $saleStockRecord;
         $this->saleProductStatus = $saleProductStatus;
+        $this->salePaymentMethod = $salePaymentMethod;
+        $this->salePaymentStatus = $salePaymentStatus;
+        $this->salePayment = $salePayment;
+        $this->saleOrderDetail = $saleOrderDetail;
     }
 
     /**
@@ -43,14 +55,14 @@ class SaleOrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if ($request->query("orderId") || $request->query("customerId") || $request->query("stateOrder"))
         {
             $value1 = $request->query("orderId");
             $value2 = $request->query("customerId");
             $value3 = $request->query("stateOrderId");
-            $query = $this->saleOrder->where('id', '>', 0);
+            $query = $this->saleOrder->where('Delete', false);
             if($request->query("orderId"))
             {
                 $query->where('id', 'like', "$value1");
@@ -65,7 +77,7 @@ class SaleOrderController extends Controller
             }
             return SaleOrderResourceAdmin::collection($query->orderBy('created_at', 'desc')->paginate()->withQueryString());
         }
-        return SaleOrderResourceAdmin::collection($this->saleOrder->orderBy('created_at', 'desc')->paginate());
+        return SaleOrderResourceAdmin::collection($this->saleOrder->where('Delete', false)->orderBy('created_at', 'desc')->paginate());
     }
 
     /**
@@ -105,9 +117,10 @@ class SaleOrderController extends Controller
             ]);
             foreach ($request->Products as $product) {
                 $saleProductReference = $this->saleProduct->find($product['ProductId']);
-                $quantityStock = $saleProductReference->SaleStockRecords->sum('Quantity');
+                $quantityStock = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
+                        ->where('sale_product_id', $saleProductReference->id)->sum('Quantity');
                 $quantityRequest = (int)$product['Quantity'];
-                if (quantityRequest <= $quantityStock && quantityRequest > 0) {
+                if ($quantityRequest <= $quantityStock && $quantityRequest > 0) {
                     $saleOrderDetail = $this->saleOrderDetail->create([
                         'Price' => $saleProductReference->SellingPrice,
                         'ProductSku' => $saleProductReference->Sku,
@@ -119,9 +132,22 @@ class SaleOrderController extends Controller
                 } else {
                     continue;
                 }
-
             }
         }
+        if ($request->Payment && $saleOrder->SaleOrderDetails->isNotEmpty()) {
+            $salePaymentMethod = $this->salePaymentMethod->find($request->Payment['PaymentMethodId']);
+            $salePaymentStatus = $this->salePaymentStatus->find($request->Payment['PaymentStatusId']);
+            $salePayment = $this->salePayment->create([
+                'sale_order_id' => $saleOrder->id,
+                'sale_payment_method_id' => $salePaymentMethod->id,
+                'sale_payment_status_id' => $salePaymentStatus->id,
+                'TotalAmount' => $saleOrder->SaleOrderDetails->sum('Total'),
+                'TotalPaid' => $request->Payment['TotalPaid'],
+                'SellNote' => $request->Payment['SellNote'],
+                'user_id' => $request->user()->id
+            ]);
+        }
+        return new SaleOrderResourceAdmin($saleOrder);
     }
 
     /**
@@ -132,7 +158,7 @@ class SaleOrderController extends Controller
      */
     public function show(SaleOrder $saleOrder)
     {
-        //
+        return new SaleOrderResourceAdmin($saleOrder);
     }
 
     /**
@@ -144,7 +170,7 @@ class SaleOrderController extends Controller
      */
     public function update(Request $request, SaleOrder $saleOrder)
     {
-        //
+        $saleOrder->update($request->toArray());
     }
 
     /**
@@ -155,6 +181,7 @@ class SaleOrderController extends Controller
      */
     public function destroy(SaleOrder $saleOrder)
     {
-        //
+        $saleOrder->update(['Delete' => true]);
+        return response(null,Response::HTTP_NO_CONTENT);
     }
 }

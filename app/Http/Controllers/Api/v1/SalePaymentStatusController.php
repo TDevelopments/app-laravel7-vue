@@ -1,20 +1,42 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
-use App\SalePaymentStatus;
+use App\Models\SalePaymentStatus;
 use Illuminate\Http\Request;
+use App\Http\Requests\SalePaymentStatusRequest;
+use App\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class SalePaymentStatusController extends Controller
 {
+
+    protected $salePaymentStatus;
+
+    public function __construct(SalePaymentStatus $salePaymentStatus)
+    {
+        $this->middleware('api.admin');
+        $this->salePaymentStatus = $salePaymentStatus;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->salePaymentStatus->select('id', 'PaymentStatusName')->get();
+            $count = $this->salePaymentStatus->count();
+            return response([
+                'count' => $count,
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
+        $paymentStatus = $this->salePaymentStatus->select('id', 'PaymentStatusName')->paginate();
+        return response($paymentStatus, Response::HTTP_OK);
     }
 
     /**
@@ -23,9 +45,12 @@ class SalePaymentStatusController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SalePaymentStatusRequest $request)
     {
-        //
+        $salePaymentStatus = $this->salePaymentStatus->updateOrCreate($request->toArray());
+        return response([
+            'data' => $salePaymentStatus
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -36,7 +61,9 @@ class SalePaymentStatusController extends Controller
      */
     public function show(SalePaymentStatus $salePaymentStatus)
     {
-        //
+        return response([
+            'data' => $salePaymentStatus
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -46,9 +73,12 @@ class SalePaymentStatusController extends Controller
      * @param  \App\SalePaymentStatus  $salePaymentStatus
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SalePaymentStatus $salePaymentStatus)
+    public function update(SalePaymentStatusRequest $request, SalePaymentStatus $salePaymentStatus)
     {
-        //
+        $salePaymentStatus->update($request->all());
+        return response([
+            'data' => $salePaymentStatus
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -59,6 +89,7 @@ class SalePaymentStatusController extends Controller
      */
     public function destroy(SalePaymentStatus $salePaymentStatus)
     {
-        //
+        $salePaymentStatus->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

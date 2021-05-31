@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Role;
+/* use App\Models\Role; */
+use Spatie\Permission\Models\Role;
 
 class RoleTableSeeder extends Seeder
 {
@@ -14,12 +15,12 @@ class RoleTableSeeder extends Seeder
     {
         $role = new Role();
         $role->name = 'admin';
-        $role->description = 'Administrator';
+        /* $role->description = 'Administrator'; */
         $role->save();
         
         $role = new Role();
         $role->name = 'user';
-        $role->description = 'User';
+        /* $role->description = 'User'; */
         $role->save();
     }
 }

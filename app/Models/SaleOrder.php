@@ -9,6 +9,7 @@ class SaleOrder extends Model
 
     protected $casts = [
         'Delete' => 'boolean',
+        'OrderDate' => 'datetime',
     ];
 
     protected $fillable = [
@@ -28,7 +29,7 @@ class SaleOrder extends Model
 
     public function SaleOrderDetails()
     {
-        return $this->belongsTo(SaleOrderDetails::class);
+        return $this->hasMany(SaleOrderDetail::class);
     }
 
     public function SaleStateOrder()
@@ -38,6 +39,11 @@ class SaleOrder extends Model
 
     public function SalePayment()
     {
-        return $this->belongsTo(SalePayment::class);
+        return $this->hasOne(SalePayment::class);
+    }
+
+    public function User()
+    {
+        return $this->belongsTo(User::class);
     }
 }

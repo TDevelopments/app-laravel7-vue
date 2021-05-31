@@ -16,12 +16,14 @@ class SaleOrderResourceAdmin extends JsonResource
     {
         return [
             'OrderId' => $this->id,
+            'CreatedBy' => $this->User,
             'OrderDate' => $this->OrderDate,
             'ShipDate' => $this->ShipDate,
             'SalesTax' => $this->SalesTax,
             'Customer' => $this->SaleCustomer,
             'StateOrder' => $this->SaleStateOrder,
+            'OrderDetails' => $this->SaleOrderDetails,
             'Payment' => $this->SalePayment,
-        ]
+        ];
     }
 }

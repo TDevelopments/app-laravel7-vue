@@ -27,6 +27,11 @@ class SaleOrderRequest extends FormRequest
             'Products' => ['required', 'array'],
             'Products.*.ProductId' => ['required', 'integer', 'exists:App\Models\SaleProduct,id'],
             'Products.*.Quantity' => ['required', 'integer'],
+            'Payment' => ['array'],
+            'Payment.TotalPaid' => ['required', 'numeric'],
+            'Payment.SellNote' => ['required'],
+            'Payment.PaymentMethodId' => ['required', 'integer', 'exists:App\Models\SalePaymentMethod,id'],
+            'Payment.PaymentStatusId' => ['required', 'integer', 'exists:App\Models\SalePaymentStatus,id'],
         ];
     }
 }

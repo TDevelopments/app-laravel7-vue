@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,4 +18,9 @@ class SaleOrderDetail extends Model
         'sale_order_id',
         'sale_product_id',
     ];
+
+    public function SaleOrder()
+    {
+        return $this->belongsTo(SaleOrder::class);
+    }
 }

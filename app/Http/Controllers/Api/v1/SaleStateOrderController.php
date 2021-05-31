@@ -18,6 +18,7 @@ class SaleStateOrderController extends Controller
         $this->middleware('api.admin');
         $this->saleStateOrder = $saleStateOrder;
     }
+
     /**
      * Display a listing of the resource.
      *

@@ -33,7 +33,7 @@ class UpdateUserRequestAdmin extends FormRequest
             'dni' => ['required', 'integer', 'unique:users,dni,'.$this->user->id],
             'phone' => ['required','integer'],
             'gender' => ['string', 'in:masculine,female'],
-            'city' => ['required', 'string'],
+            'city' => ['string'],
             'roles' => ['array'],
             'roles.*' => ['required', 'string']
         ];

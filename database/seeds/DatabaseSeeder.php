@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Role;
+/* use App\Models\Role; */
+use Spatie\Permission\Models\Role;
 use App\Models\SaleCustomer;
 
 use Carbon\Carbon;

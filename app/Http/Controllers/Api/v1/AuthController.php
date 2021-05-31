@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Role;
+/* use App\Models\Role; */
 use App\Models\Order;
 use App\Models\SaleCustomer;
 use App\Http\Requests\UserRequest;
@@ -18,6 +18,7 @@ use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -41,7 +42,7 @@ class AuthController extends Controller
         $request['password']=Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
         $user = User::create($request->toArray());
-        $SaleCustomer::create([
+        SaleCustomer::create([
             'FullName' => $user->name,
             'Phone' => $user->phone,
             'Email' => $user->email,
