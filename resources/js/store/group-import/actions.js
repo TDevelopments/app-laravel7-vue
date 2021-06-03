@@ -60,6 +60,7 @@ export async function getCatalogue({ commit, getters, dispatch, state }, id) {
         console.log(productRange.colors);
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'meta', col);
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'quantity', minRange);
+        Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'cont', false);
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'min', minRange);
         Vue.set(state.catalogues[indexCatalogue].productRanges[index], 'total', price * minRange);
       });

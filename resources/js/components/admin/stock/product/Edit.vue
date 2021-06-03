@@ -335,17 +335,23 @@ export default {
       this.colors.splice(index, 1);
     },
     getProduct() {
-      axios
+      -axios
         .get(`/api/v1/sale-products/${this.$route.params.id}`)
         .then(response => {
           console.log(response);
           this.product = response.data.data;
-          this.cat = response.data.data.Category.id;
+          this.cat = response.data.data.Category != null ? response.data.data.Category.id : null;
           this.subcat =
             response.data.data.SubCategory != null ? response.data.data.SubCategory.id : null;
-          this.br = response.data.data.Brand.id;
-          this.un = response.data.data.SaleProductUnit.id;
-          this.tp = response.data.data.SaleProductType.id;
+          this.br = response.data.data.Brand != null ? response.data.data.Brand.id : null;
+          this.un =
+            response.data.data.SaleProductUnit != null
+              ? response.data.data.SaleProductUnit.id
+              : null;
+          this.tp =
+            response.data.data.SaleProductType != null
+              ? response.data.data.SaleProductType.id
+              : null;
           this.colors = response.data.data.Color != null ? response.data.data.Color : [];
           this.size = response.data.data.Size != null ? response.data.data.Size : [];
           this.loading = true;

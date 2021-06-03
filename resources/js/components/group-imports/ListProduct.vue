@@ -468,7 +468,11 @@
 
                         <input type="text" class="w text-center" v-model="props.item.quantity" />
 
-                        <v-icon class="back" dark small @click="plusFunctionR(props.index)"
+                        <v-icon
+                          class="back"
+                          dark
+                          small
+                          @click="plusFunctionR(props.index, props.item.meta, props.item.quantity)"
                           >mdi-plus</v-icon
                         >
                       </div>
@@ -485,6 +489,15 @@
                             type="text"
                             class="w mx-2 text-center b-input"
                             v-model="c.quantity"
+                            @change="
+                              changeQuantity(
+                                props.item.meta,
+                                props.item.quantity,
+                                props.index,
+                                index
+                              )
+                            "
+                            :disabled="props.item.cont"
                           />
                         </div>
                       </div>
@@ -1258,7 +1271,13 @@ export default {
             p * this.catalogue.productRanges[index].quantity;
         }
       }
+      this.changeQuantityMOP(
+        this.catalogue.productRanges[index].meta,
+        this.catalogue.productRanges[index].quantity,
+        index
+      );
     },
+
     plusFunctionR(index) {
       console.log(this.catalogue.productRanges[index]);
       this.catalogue.productRanges[index].quantity++;
@@ -1283,6 +1302,12 @@ export default {
         this.catalogue.productRanges[index].total =
           p * this.catalogue.productRanges[index].quantity;
       }
+
+      this.changeQuantityMOP(
+        this.catalogue.productRanges[index].meta,
+        this.catalogue.productRanges[index].quantity,
+        index
+      );
     },
 
     reserve() {
@@ -1317,6 +1342,41 @@ export default {
     },
     goToLink(link) {
       window.open(link);
+    },
+    changeQuantityMOP(meta, quantity, index) {
+      console.log('aqui');
+      let suma = 0;
+      meta.forEach(element => {
+        suma = suma + parseInt(element.quantity);
+      });
+      if (suma == quantity) {
+        this.catalogue.productRanges[index].cont = true;
+      } else if (suma > quantity) {
+        alert('Vuelva a insertar la cantidad de colores que desea');
+        this.catalogue.productRanges[index].meta.forEach(element => {
+          element.quantity = 0;
+        });
+        this.catalogue.productRanges[index].cont = true;
+      } else {
+        this.catalogue.productRanges[index].cont = false;
+      }
+      console.log(suma);
+    },
+    changeQuantity(meta, quantity, index, indexMeta) {
+      console.log('aqui');
+      let suma = 0;
+      meta.forEach(element => {
+        suma = suma + parseInt(element.quantity);
+      });
+      if (suma == quantity) {
+        this.catalogue.productRanges[index].cont = true;
+      } else if (suma > quantity) {
+        alert('Lo sentimos, aumente mas cantidad.');
+        this.catalogue.productRanges[index].meta[indexMeta].quantity = 0;
+      } else {
+        this.catalogue.productRanges[index].cont = false;
+      }
+      console.log(suma);
     },
   },
   mounted() {

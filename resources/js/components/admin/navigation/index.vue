@@ -158,6 +158,17 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <v-list-group prepend-icon="mdi-stocking" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Ordenes</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockOrder' }">
+              <v-list-item-title>Listar Ordenes</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockOrder' }">
+              <v-list-item-title>Crear Orden</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
         </v-list-item-group>
       </v-list>
 
@@ -293,6 +304,28 @@
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockDelivery' }">
               <v-list-item-title>Crear Delivery</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-stocking" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Metodos de Pago</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockPaymentMethod' }">
+              <v-list-item-title>Listar Metodos</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockPaymentMethod' }">
+              <v-list-item-title>Crear Metodo</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-group prepend-icon="mdi-stocking" no-action color="#FCF3F3">
+            <template v-slot:activator>
+              <v-list-item-title>Estados de Pago</v-list-item-title>
+            </template>
+            <v-list-item link :to="{ name: 'listStockPaymentStatus' }">
+              <v-list-item-title>Listar Estados</v-list-item-title>
+            </v-list-item>
+            <v-list-item link :to="{ name: 'addStockPaymentStatus' }">
+              <v-list-item-title>Crear Estado</v-list-item-title>
             </v-list-item>
           </v-list-group>
         </v-list-item-group>

@@ -39,7 +39,7 @@ class SaleStockRecordController extends Controller
         if ($request->query('ByCustomer')) {
             $value = $request->query('ByCustomer');
             $saleProductStatus = $this->saleProductStatus->firstWhere('StatusName', 'Reservado');
-            $consult = $this->saleStockRecord->where('sale_product_status_id', $saleProductStatus->id)->where('sale_customer_id', $value);
+            $consult = $this->saleStockRecord->where('sale_product_status_id', $saleProductStatus->id)->where('sale_customer_id', $value)->paginate()->withQueryString();
             return SaleStockRecordResource::collection($consult);
         }
         if ($request->query("BusinessId") || $request->query("StatusId") || $request->query("ProductName") || $request->query("CustomerName")) {

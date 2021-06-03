@@ -127,6 +127,21 @@ import ListStockDelivery from './components/admin/stock/delivery/List';
 import AddStockDelivery from './components/admin/stock/delivery/Add';
 import EditStockDelivery from './components/admin/stock/delivery/Edit';
 
+// Pages Stock Orders
+import ListStockOrder from './components/admin/stock/orders/List';
+import AddStockOrder from './components/admin/stock/orders/Add';
+import EditStockOrder from './components/admin/stock/orders/Edit';
+
+// Pages Stock Payment Status
+import ListStockPaymentStatus from './components/admin/stock/paymentStatus/List';
+import AddStockPaymentStatus from './components/admin/stock/paymentStatus/Add';
+import EditStockPaymentStatus from './components/admin/stock/paymentStatus/Edit';
+
+// Pages Stock Payment Method
+import ListStockPaymentMethod from './components/admin/stock/paymentMethod/List';
+import AddStockPaymentMethod from './components/admin/stock/paymentMethod/Add';
+import EditStockPaymentMethod from './components/admin/stock/paymentMethod/Edit';
+
 // Pages Product For Catalogue
 import ProductCatalogue from './components/admin/group-import/catalogues/ProductForCatalogue';
 
@@ -602,6 +617,54 @@ export default new Router({
           path: '/admin/stock/delivery/:id/edit',
           name: 'editStockDelivery',
           component: EditStockDelivery,
+        },
+        // -> Orders
+        {
+          path: '/admin/stock/orders',
+          name: 'listStockOrder',
+          component: ListStockOrder,
+        },
+        {
+          path: '/admin/stock/order/add',
+          name: 'addStockOrder',
+          component: AddStockOrder,
+        },
+        {
+          path: '/admin/stock/order/:id/edit',
+          name: 'editStockOrder',
+          component: EditStockOrder,
+        },
+        // -> Payment Status
+        {
+          path: '/admin/stock/payments-status',
+          name: 'listStockPaymentStatus',
+          component: ListStockPaymentStatus,
+        },
+        {
+          path: '/admin/stock/payment-status/add',
+          name: 'addStockPaymentStatus',
+          component: AddStockPaymentStatus,
+        },
+        {
+          path: '/admin/stock/payment-status/:id/edit',
+          name: 'editStockPaymentStatus',
+          component: EditStockPaymentStatus,
+        },
+        // -> Payment Method
+        {
+          path: '/admin/stock/orders',
+          name: 'listStockPaymentMethod',
+          component: ListStockPaymentMethod,
+        },
+        {
+          path: '/admin/stock/order/add',
+          name: 'addStockPaymentMethod',
+          component: AddStockPaymentMethod,
+        },
+        {
+          path: '/admin/stock/order/:id/edit',
+          name: 'editStockPaymentMethod',
+          component: EditStockPaymentMethod,
         },
       ],
     },
