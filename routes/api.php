@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\v1\PaymentConceptController;
 use App\Http\Controllers\Api\v1\AdviserController;
 use App\Http\Controllers\Api\v1\RoleController;
 use App\Http\Controllers\Api\v1\OrderShippingStatusController;
+use App\Http\Controllers\Api\v1\SalePaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -213,5 +214,10 @@ Route::group(['prefix' => 'v1'], function () {
 
         // Method Payment 
         Route::apiResource('sale-payment-status', 'Api\v1\SalePaymentStatusController');
+
+        // Payments
+        Route::post('sale-orders/{sale_order}/payment', [SalePaymentController::class, 'store']);
+        Route::put('sale-orders/{sale_order}/payment', [SalePaymentController::class, 'update']);
+        Route::delete('sale-payments/{sale_payment}', [SalePaymentController::class, 'destroy']);
     });
 });
