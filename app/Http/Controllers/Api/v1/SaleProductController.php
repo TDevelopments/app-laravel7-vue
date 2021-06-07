@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Models\SaleProduct;
 use App\Models\SalePicture;
+use App\Models\SaleProductStatus;
 use App\Models\SaleStockRecord;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaleProductRequest;
@@ -13,20 +14,23 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class SaleProductController extends Controller
 {
     protected $saleProduct;
+    protected $saleProductStatus;
 
     /**
      * Constructor
      *
      * @param \App\Models\SaleProduct $saleProduct
      */
-    public function __construct(SaleProduct $saleProduct)
+    public function __construct(SaleProduct $saleProduct, SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin');
         $this->saleProduct = $saleProduct;
+        $this->saleProductStatus = $saleProductStatus;
     }
 
     /**
@@ -39,6 +43,16 @@ class SaleProductController extends Controller
         if ($request->query("list")) {
             $value = $request->query("list");
             $result = $this->saleProduct->select('id', 'ProductName')->get();
+            return response([
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
+        if ($request->query("availableStock")) {
+            $value = $request->query("availableStock");
+            $saleProductStatus = $this->saleProductStatus->firstWhere(['StatusName' => 'Disponible']);
+            $result = $this->saleProduct->whereHas('SaleStockRecords', function (Builder $query) use ($saleProductStatus) {
+                $query->where('sale_product_status_id', $saleProductStatus->id);
+            })->get();
             return response([
                 'data' => $result
             ], Response::HTTP_OK);

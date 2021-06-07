@@ -17,6 +17,7 @@ use App\Models\SalePicture;
 use App\Models\StateOrder;
 use App\Models\Catalogue;
 use App\Models\OrderShippingStatus;
+use App\Models\SaleBusinessLocation;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResourceAdmin;
 use App\Http\Resources\OrderResource;
@@ -39,12 +40,13 @@ class OrderController extends Controller
     protected $saleProduct;
     protected $saleStockRecord;
     protected $saleProductStatus;
+    protected $saleBusinessLocation;
 
     public function __construct(
         Order $order, Catalogue $catalogue, Product $product, OrderDetail $orderDetail, 
         ProductRange $productRange, Range $range, StateOrder $stateOrder, SaleCustomer $saleCustomer, 
         SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, 
-        OrderShippingStatus $shippingStatus)
+        OrderShippingStatus $shippingStatus, SaleBusinessLocation $saleBusinessLocation)
     {
         $this->middleware('api.admin')->except(['store']);
         $this->order = $order;
@@ -59,6 +61,7 @@ class OrderController extends Controller
         $this->saleStockRecord = $saleStockRecord;
         $this->saleProductStatus = $saleProductStatus;
         $this->shippingStatus = $shippingStatus;
+        $this->saleBusinessLocation = $saleBusinessLocation;
     }
 
     /**
@@ -110,6 +113,7 @@ class OrderController extends Controller
             'customer_id' => ['integer', 'exists:App\Models\SaleCustomer,id'],
             'sale_product_status' => ['boolean'],
             'catalogue_id' => ['required', 'exists:App\Models\Catalogue,id'],
+            'sale_business_location_id' => ['exists:App\Models\SaleBusinessLocation,id'],
             'products' => ['array'],
             'products.*.product_id' => ['required', 'integer', 'exists:App\Models\Product,id'],
             'products.*.quantity' => ['required', 'integer'],
@@ -139,6 +143,7 @@ class OrderController extends Controller
         $orderShippingStatus = $this->shippingStatus->firstOrCreate(['name' => 'Pendiente']);
         $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
         $saleProductStatusAvailable = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Disponible']);
+        $saleBusinessLocation = $this->saleBusinessLocation->get()->first();
         if ($userIdentity) {
             if (empty($request->customer_id))
                 $requestCustomer = $saleCustomer->id;
@@ -148,9 +153,14 @@ class OrderController extends Controller
                 $requestProductStatus = $saleProductStatus->id;
             else
                 $requestProductStatus = $saleProductStatusAvailable->id;
+            if (empty($request->sale_business_location_id))
+                $requestBusinessLocation = $saleBusinessLocation->id;
+            else
+                $requestBusinessLocation = $request->sale_business_location_id;
         } else {
             $requestCustomer = $saleCustomer->id;
             $requestProductStatus = $saleProductStatus->id;
+            $requestBusinessLocation = $saleBusinessLocation->id;
         }
         $order = $this->order->create([
             'user_id' => $request->user()->id,
@@ -220,7 +230,7 @@ class OrderController extends Controller
                             'order_detail_id' => $orderDetail->id,
                             'sale_product_id' => $saleProduct->id,
                             'sale_product_status_id' => $requestProductStatus,
-                            'sale_business_location_id' => 1,
+                            'sale_business_location_id' => $requestBusinessLocation,
                             'sale_customer_id' => $order->sale_customer_id,
                             'Quantity' => $row['quantity']]);
                     }
@@ -260,25 +270,43 @@ class OrderController extends Controller
                         }
                     }
                 }
-                $orderDetail = $this->orderDetail->create(
-                    [
-                        'product_range_id' => $productRangeReference->id,
-                        'order_id' => $order->id,
-                        'quantity' => $row['quantity'],
-                        'price' => $rangeReference->price,
-                        'model' => $productRangeReference->model,
-                        'sku' => $productRangeReference->sku,
-                        'total' => $rangeReference->price * $row['quantity'],
-                        'meta' => $row['meta'],
-                        // 'sale_stock_record_id' => $saleStockRecord->id
+                $orderDetail = $this->orderDetail->create([
+                    'product_range_id' => $productRangeReference->id,
+                    'order_id' => $order->id,
+                    'quantity' => $row['quantity'],
+                    'price' => $rangeReference->price,
+                    'model' => $productRangeReference->model,
+                    'sku' => $productRangeReference->sku,
+                    'total' => $rangeReference->price * $row['quantity'],
+                    'meta' => $row['meta'],
+                    // 'sale_stock_record_id' => $saleStockRecord->id
+                ]);
+                $sumQuantityMeta = 0;
+                foreach ($row['meta'] as $var) {
+                    $sumQuantityMeta = $sumQuantityMeta + $var['quantity'];
+                }
+                if ($sumQuantityMeta == $row['quantity']) {
+                    foreach ($row['meta'] as $variable) {
+                        $saleStockRecord = $this->saleStockRecord->create([
+                            'order_detail_id' => $orderDetail->id,
+                            'sale_product_id' => $saleProduct->id,
+                            'sale_product_status_id' => $requestProductStatus,
+                            'sale_business_location_id' => $requestBusinessLocation,
+                            'sale_customer_id' => $order->sale_customer_id,
+                            'Quantity' => $variable['quantity'],
+                            'Color' => $variable['color'],
+                        ]);
+                    }
+                } else {
+                    $saleStockRecord = $this->saleStockRecord->create([
+                        'order_detail_id' => $orderDetail->id,
+                        'sale_product_id' => $saleProduct->id,
+                        'sale_product_status_id' => $requestProductStatus,
+                        'sale_business_location_id' => $requestBusinessLocation,
+                        'sale_customer_id' => $order->sale_customer_id,
+                        'Quantity' => $row['quantity']
                     ]);
-                $saleStockRecord = $this->saleStockRecord->create([
-                    'order_detail_id' => $orderDetail->id,
-                    'sale_product_id' => $saleProduct->id,
-                    'sale_product_status_id' => $requestProductStatus,
-                    'sale_business_location_id' => 1,
-                    'sale_customer_id' => $order->sale_customer_id,
-                    'Quantity' => $row['quantity']]);
+                }
                 /* $productRangeReference->increment('count', $row['quantity']); */
             }
         }
@@ -309,6 +337,7 @@ class OrderController extends Controller
             'state_order_id' => ['required', 'integer', 'exists:App\Models\StateOrder,id'],
             'sale_product_status' => ['boolean'],
             'order_shipping_status_id' => ['required', 'integer', 'exists:App\Models\OrderShippingStatus,id'],
+            'sale_business_location_id' => ['exists:App\Models\SaleBusinessLocation,id'],
         ]);
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);

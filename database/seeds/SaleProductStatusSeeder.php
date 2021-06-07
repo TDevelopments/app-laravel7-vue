@@ -21,7 +21,7 @@ class SaleProductStatusSeeder extends Seeder
         $business->save();
 
         $business = new SaleProductStatus();
-        $business->StatusName = 'En Venta';
+        $business->StatusName = 'Disponible';
         $business->save();
     }
 }

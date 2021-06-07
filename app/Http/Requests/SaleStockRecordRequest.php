@@ -29,6 +29,8 @@ class SaleStockRecordRequest extends FormRequest
             'sale_business_location_id' => ['required', 'integer', 'exists:App\Models\SaleBusinessLocation,id'],
             'sale_customer_id' => ['integer', 'exists:App\Models\SaleCustomer,id'],
             'Quantity' => ['required', 'integer'],
+            'Size' => ['string'],
+            'Color' => ['string'],
         ];
     }
 }

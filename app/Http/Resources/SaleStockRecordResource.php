@@ -19,6 +19,8 @@ class SaleStockRecordResource extends JsonResource
             'OrderDetailId' => $this->order_detail_id,
             'Product' => $this->SaleProduct,
             'Quantity' => $this->Quantity,
+            'Size' => $this->Size,
+            'Color' => $this->Color,
             'ProductStatus' => $this->SaleProductStatus,
             'BusinessLocation' => $this->SaleBusinessLocation,
             'Customer' => $this->SaleCustomer,

@@ -18,6 +18,8 @@ class SaleStockRecord extends Model
         'sale_product_status_id',
         'sale_business_location_id',
         'sale_customer_id',
+        'Size',
+        'Color',
     ];
 
     public function SaleProduct()

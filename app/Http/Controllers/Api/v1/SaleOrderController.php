@@ -19,6 +19,7 @@ use App\Http\Resources\SaleOrderResourceAdmin;
 use App\Http\Resources\SaleOrderResourceUser;
 use App\Http\Requests\SaleOrderRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 
 class SaleOrderController extends Controller
@@ -100,7 +101,15 @@ class SaleOrderController extends Controller
                'Email' => $request->user()->email,
                'Dni' => $request->user()->dni
             ]);
-        $saleStateOrder = $this->saleStateOrder->firstOrCreate(['name' => 'Pendiente']);
+        $saleStateOrder = $this->saleStateOrder->firstOrCreate(['Name' => 'Pendiente']);
+        if ($userIdentity) {
+            if (empty($request->StateOrderId))
+                $requestStateOrder = $saleStateOrder->id;
+            else
+                $requestStateOrder = $request->StateOrderId;
+        } else {
+            $requestStateOrder = $saleStateOrder->id;
+        }
         $productStatus = $this->saleProductStatus->firstWhere('StatusName', 'Disponible');
         if ($request->Products) {
             foreach ($request->Products as $product) {
@@ -111,7 +120,7 @@ class SaleOrderController extends Controller
             }
             $saleOrder = $this->saleOrder->create([
                 'sale_customer_id' => $saleCustomer->id,
-                'sale_state_order_id' => $saleStateOrder->id,
+                'sale_state_order_id' => $requestStateOrder,
                 'user_id' => $request->user()->id,
                 'OrderDate' => Carbon::now(),
             ]);
@@ -134,7 +143,7 @@ class SaleOrderController extends Controller
                 }
             }
         }
-        if ($request->Payment && $saleOrder->SaleOrderDetails->isNotEmpty()) {
+        if ($request->Payment && $saleOrder->SaleOrderDetails->isNotEmpty() && $userIdentity) {
             $salePaymentMethod = $this->salePaymentMethod->find($request->Payment['PaymentMethodId']);
             $salePaymentStatus = $this->salePaymentStatus->find($request->Payment['PaymentStatusId']);
             $salePayment = $this->salePayment->create([
@@ -170,7 +179,16 @@ class SaleOrderController extends Controller
      */
     public function update(Request $request, SaleOrder $saleOrder)
     {
-        $saleOrder->update($request->toArray());
+        $validator = Validator::make($request->all(), [
+            'SaleStateOrderId' => ['required', 'integer', 'exists:App\Models\SaleStateOrder,id'],
+        ]);
+        if ($validator->fails()) {
+            return response(['error' => $validator->errors(), 'Validation Error'], 422);
+        }
+        $saleOrder->update([
+            'sale_state_order_id' => $request->SaleStateOrderId,
+        ]);
+        return new SaleOrderResourceAdmin($saleOrder);
     }
 
     /**

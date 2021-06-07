@@ -37,6 +37,7 @@ $factory->define(ProductRange::class, function (Faker $faker) {
         'model'         => $this->faker->bothify('??-####'),
         'sku'           => $this->faker->bothify('SKU-??####'),
         'stock'         => $this->faker->randomNumber(3, true),
+        'colors'        => ['red', 'blue'],
         'brand'         => $this->faker->word(),
         'catalogue_id'  => $this->faker->numberBetween(1, 2),
         'category_id'   => rand(1, 4),
