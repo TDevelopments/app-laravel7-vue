@@ -13,6 +13,7 @@ use App\Models\SaleProduct;
 use App\Models\SaleStockRecord;
 use App\Models\SaleProductStatus;
 use App\Models\SalePicture;
+use App\Models\SaleBusinessLocation;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderDetailResource;
 use Illuminate\Http\Request;
@@ -30,9 +31,10 @@ class OrderDetailController extends Controller
     protected $saleProduct;
     protected $saleStockRecord;
     protected $saleProductStatus;
+    protected $saleBusinessLocation;
 
     public function __construct(OrderDetail $orderDetail, Product $product, 
-      ProductRange $productRange, Range $range, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus)
+      ProductRange $productRange, Range $range, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, SaleBusinessLocation $saleBusinessLocation)
     {
         $this->middleware('api.admin');
         $this->orderDetail = $orderDetail;
@@ -43,6 +45,7 @@ class OrderDetailController extends Controller
         $this->saleProduct = $saleProduct;
         $this->saleStockRecord = $saleStockRecord;
         $this->saleProductStatus = $saleProductStatus;
+        $this->saleBusinessLocation = $saleBusinessLocation;
     }
 
     /**
@@ -83,6 +86,7 @@ class OrderDetailController extends Controller
         $data = $request->products;
         $data2 = $request->product_ranges;
         $products = array();
+        $saleBusinessLocation = $this->saleBusinessLocation->get()->first();
         if (empty($order->sale_customer_id)) 
         {
             $saleCustomer = $this->saleCustomer->firstOrCreate(['user_id' => $order->user_id],
@@ -164,7 +168,7 @@ class OrderDetailController extends Controller
                                 'order_detail_id' => $orderDetail->id,
                                 'sale_product_id' => $saleProduct->id,
                                 'sale_product_status_id' => $requestProductStatus,
-                                'sale_business_location_id' => 1,
+                                'sale_business_location_id' => $saleBusinessLocation->id,
                                 'sale_customer_id' => $order->sale_customer_id,
                                 'Quantity' => $row['quantity']]);
                             // $orderDetail->update(['sale_stock_record_id' => $saleStockRecord->id]);
@@ -248,10 +252,36 @@ class OrderDetailController extends Controller
                             'order_detail_id' => $orderDetail->id,
                             'sale_product_id' => $saleProduct->id,
                             'sale_product_status_id' => $requestProductStatus,
-                            'sale_business_location_id' => 1,
+                            'sale_business_location_id' => $saleBusinessLocation->id,
                             'sale_customer_id' => $order->sale_customer_id,
                             'Quantity' => $row['quantity']]);
                         // $orderDetail->update(['sale_stock_record_id' => $saleStockRecord->id]);
+                        /* $sumQuantityMeta = 0; */
+                        /* foreach ($row['meta'] as $var) { */
+                        /*     $sumQuantityMeta = $sumQuantityMeta + $var['quantity']; */
+                        /* } */
+                        /* if ($sumQuantityMeta == $row['quantity']) { */
+                        /*     foreach ($row['meta'] as $variable) { */
+                        /*         $saleStockRecord = $this->saleStockRecord->create([ */
+                        /*             'order_detail_id' => $orderDetail->id, */
+                        /*             'sale_product_id' => $saleProduct->id, */
+                        /*             'sale_product_status_id' => $requestProductStatus, */
+                        /*             'sale_business_location_id' => $saleBusinessLocation->id, */
+                        /*             'sale_customer_id' => $order->sale_customer_id, */
+                        /*             'Quantity' => $variable['quantity'], */
+                        /*             'Color' => $variable['color'], */
+                        /*         ]); */
+                        /*     } */
+                        /* } else { */
+                        /*     $saleStockRecord = $this->saleStockRecord->create([ */
+                        /*         'order_detail_id' => $orderDetail->id, */
+                        /*         'sale_product_id' => $saleProduct->id, */
+                        /*         'sale_product_status_id' => $requestProductStatus, */
+                        /*         'sale_business_location_id' => $saleBusinessLocation->id, */
+                        /*         'sale_customer_id' => $order->sale_customer_id, */
+                        /*         'Quantity' => $row['quantity'] */
+                        /*     ]); */
+                        /* } */
                     }
                     else
                     {

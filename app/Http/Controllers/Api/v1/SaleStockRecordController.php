@@ -110,7 +110,7 @@ class SaleStockRecordController extends Controller
     public function update(SaleStockRecordRequest $request, SaleStockRecord $saleStockRecord)
     {
         $saleStockRecord->update($request->all());
-        $saleStockRecord->update(['order_detail_id' => NULL]);
+        /* $saleStockRecord->update(['order_detail_id' => NULL]); */
         return response([
             'data' => new SaleStockRecordResource($saleStockRecord)
         ],Response::HTTP_CREATED);

@@ -281,32 +281,39 @@ class OrderController extends Controller
                     'meta' => $row['meta'],
                     // 'sale_stock_record_id' => $saleStockRecord->id
                 ]);
-                $sumQuantityMeta = 0;
-                foreach ($row['meta'] as $var) {
-                    $sumQuantityMeta = $sumQuantityMeta + $var['quantity'];
-                }
-                if ($sumQuantityMeta == $row['quantity']) {
-                    foreach ($row['meta'] as $variable) {
-                        $saleStockRecord = $this->saleStockRecord->create([
-                            'order_detail_id' => $orderDetail->id,
-                            'sale_product_id' => $saleProduct->id,
-                            'sale_product_status_id' => $requestProductStatus,
-                            'sale_business_location_id' => $requestBusinessLocation,
-                            'sale_customer_id' => $order->sale_customer_id,
-                            'Quantity' => $variable['quantity'],
-                            'Color' => $variable['color'],
-                        ]);
-                    }
-                } else {
-                    $saleStockRecord = $this->saleStockRecord->create([
-                        'order_detail_id' => $orderDetail->id,
-                        'sale_product_id' => $saleProduct->id,
-                        'sale_product_status_id' => $requestProductStatus,
-                        'sale_business_location_id' => $requestBusinessLocation,
-                        'sale_customer_id' => $order->sale_customer_id,
-                        'Quantity' => $row['quantity']
-                    ]);
-                }
+                $saleStockRecord = $this->saleStockRecord->create([
+                    'order_detail_id' => $orderDetail->id,
+                    'sale_product_id' => $saleProduct->id,
+                    'sale_product_status_id' => $requestProductStatus,
+                    'sale_business_location_id' => $requestBusinessLocation,
+                    'sale_customer_id' => $order->sale_customer_id,
+                    'Quantity' => $row['quantity']]);
+                /* $sumQuantityMeta = 0; */
+                /* foreach ($row['meta'] as $var) { */
+                /*     $sumQuantityMeta = $sumQuantityMeta + $var['quantity']; */
+                /* } */
+                /* if ($sumQuantityMeta == $row['quantity']) { */
+                /*     foreach ($row['meta'] as $variable) { */
+                /*         $saleStockRecord = $this->saleStockRecord->create([ */
+                /*             'order_detail_id' => $orderDetail->id, */
+                /*             'sale_product_id' => $saleProduct->id, */
+                /*             'sale_product_status_id' => $requestProductStatus, */
+                /*             'sale_business_location_id' => $requestBusinessLocation, */
+                /*             'sale_customer_id' => $order->sale_customer_id, */
+                /*             'Quantity' => $variable['quantity'], */
+                /*             'Color' => $variable['color'], */
+                /*         ]); */
+                /*     } */
+                /* } else { */
+                /*     $saleStockRecord = $this->saleStockRecord->create([ */
+                /*         'order_detail_id' => $orderDetail->id, */
+                /*         'sale_product_id' => $saleProduct->id, */
+                /*         'sale_product_status_id' => $requestProductStatus, */
+                /*         'sale_business_location_id' => $requestBusinessLocation, */
+                /*         'sale_customer_id' => $order->sale_customer_id, */
+                /*         'Quantity' => $row['quantity'] */
+                /*     ]); */
+                /* } */
                 /* $productRangeReference->increment('count', $row['quantity']); */
             }
         }
