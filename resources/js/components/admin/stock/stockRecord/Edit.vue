@@ -194,7 +194,7 @@ export default {
         }
       }
       axios
-        .post('/api/v1/sale-stock-records', data)
+        .put(`/api/v1/sale-stock-records/${this.$route.params.id}`, data)
         .then(response => {
           console.log(response);
           this.$router.replace({
