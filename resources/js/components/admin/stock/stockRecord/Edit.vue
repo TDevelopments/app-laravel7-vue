@@ -60,7 +60,7 @@
           no-data-text="No hay se encontraron datos"
         ></v-select>
       </v-col>
-      <v-col cols="12" md="3" sm="6" v-if="stock.sale_customer_id != null">
+      <v-col cols="12" md="3" sm="6" v-if="stateStock == true">
         Cliente
         <v-select
           hide-details
@@ -119,7 +119,7 @@
 <script>
 export default {
   data: () => ({
-    stock: [],
+    stock: {},
     products: [],
     customers: [],
     status: [],
@@ -128,6 +128,7 @@ export default {
     sale_product_status_id: null,
     sale_business_location_id: null,
     sale_customer_id: null,
+    stateStock: true,
   }),
   methods: {
     getStock() {
@@ -139,7 +140,7 @@ export default {
             response.data.data.Product == null ? null : response.data.data.Product.id;
           this.stock.sale_customer_id =
             response.data.data.Customer == null ? null : response.data.data.Customer.id;
-          this.stock.sale_product_status_id = response.data.data.ProductStatus = null
+          this.stock.sale_product_status_id = response.data.data.ProductStatus == null
             ? null
             : response.data.data.ProductStatus.id;
           this.stock.sale_business_location_id =
@@ -147,6 +148,10 @@ export default {
               ? null
               : response.data.data.BusinessLocation.id;
           console.log(response);
+          if (response.data.data.Customer != null){
+            console.log(this.stateStock);
+            this.stateStock = false;
+          }
         })
         .catch(error => {});
     },
@@ -203,6 +208,26 @@ export default {
         })
         .catch(error => {});
     },
+  },
+  watch: {
+    'stock.sale_product_status_id': function(val) {
+      console.log('aqui');
+      this.status.forEach(element => {
+        let cont = 0;
+        if (element.id == val && element.StatusName == 'Reservado' && cont == 0) {
+          this.stateStock = true;
+          cont++;
+          console.log(this.stateStock);
+        }
+        if (element.id == val && element.StatusName != 'Reservado' && cont == 0) {
+          this.stateStock = false;
+          console.log(this.stateStock);
+        }
+      });
+    },
+    stock: function(val){
+      console.log('hola');
+    }
   },
   mounted() {
     this.getProducts();

@@ -32,7 +32,7 @@
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn elevation="0" small color="primary">
+              <v-btn elevation="0" small color="primary" @click="toCatalogue">
                 Ver Más
                 <v-icon class="ml-2" small>mdi-send</v-icon>
               </v-btn>
@@ -56,7 +56,7 @@
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn elevation="0" small color="#28B779" dark>
+              <v-btn elevation="0" small color="#28B779" dark @click="toProduct">
                 Ver Más
                 <v-icon class="ml-2" small>mdi-send</v-icon>
               </v-btn>
@@ -80,7 +80,7 @@
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn elevation="0" small color="#832B98" dark>
+              <v-btn elevation="0" small color="#832B98" dark @click="toCategorie">
                 Ver Más
                 <v-icon class="ml-2" small>mdi-send</v-icon>
               </v-btn>
@@ -104,7 +104,7 @@
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn elevation="0" small color="#FFB849" dark>
+              <v-btn elevation="0" small color="#FFB849" dark @click="toUser">
                 Ver Más
                 <v-icon class="ml-2" small>mdi-send</v-icon>
               </v-btn>
@@ -126,21 +126,21 @@ export default {
     loading: true,
     items: [
       {
-        text: "Dashboard",
+        text: 'Dashboard',
         disabled: false,
-        href: "breadcrumbs_dashboard"
+        href: 'breadcrumbs_dashboard',
       },
       {
-        text: "Link 1",
+        text: 'Link 1',
         disabled: false,
-        href: "breadcrumbs_link_1"
+        href: 'breadcrumbs_link_1',
       },
       {
-        text: "Link 2",
+        text: 'Link 2',
         disabled: true,
-        href: "breadcrumbs_link_2"
-      }
-    ]
+        href: 'breadcrumbs_link_2',
+      },
+    ],
   }),
   mounted() {
     this.getCatalogues();
@@ -151,7 +151,7 @@ export default {
   methods: {
     getCatalogues() {
       axios
-        .get("/api/v1/catalogues")
+        .get('/api/v1/catalogues')
         .then(response => {
           console.log(response);
           this.xCatalogues = response.data.meta.total;
@@ -163,7 +163,7 @@ export default {
     },
     getProducts() {
       axios
-        .get("/api/v1/products")
+        .get('/api/v1/products')
         .then(response => {
           console.log(response);
           this.xProducts = response.data.meta.total;
@@ -175,7 +175,7 @@ export default {
     },
     getCategories() {
       axios
-        .get("/api/v1/categories")
+        .get('/api/v1/categories')
         .then(response => {
           console.log(response);
           this.xCategories = response.data.meta.total;
@@ -187,7 +187,7 @@ export default {
     },
     getUsers() {
       axios
-        .get("/api/v1/users")
+        .get('/api/v1/users')
         .then(response => {
           console.log(response);
           this.xUsers = response.data.meta.total;
@@ -197,7 +197,19 @@ export default {
           //console.log(error)
           // reject(error);
         });
-    }
-  }
+    },
+    toCatalogue() {
+      this.$router.push({ name: 'listCatalogue' });
+    },
+    toCategorie() {
+      this.$router.push({ name: 'listCategory' });
+    },
+    toUser() {
+      this.$router.push({ name: 'listUser' });
+    },
+    toProduct() {
+      this.$router.push({ name: 'listProduct' });
+    },
+  },
 };
 </script>

@@ -156,6 +156,8 @@
                           type="text"
                           class="w mx-2 text-center b-input"
                           v-model="c.quantity"
+                          @change="changeQuantity(product.meta, product.quantity, ind, index)"
+                          :disabled="product.cont"
                         />
                       </div>
                     </div>
@@ -216,7 +218,7 @@ export default {
   components: {
     ZoomOnHover: ZoomOnHover,
   },
-  props: ['product', 'catalogue', 'value', 'type'],
+  props: ['product', 'catalogue', 'value', 'type', 'ind'],
   data: () => ({
     quantity: 1,
     loading: false,
@@ -242,6 +244,22 @@ export default {
       this.$router.push({
         name: 'cartGroupImport',
       });
+    },
+    changeQuantity(meta, quantity, index, indexMeta) {
+      console.log('aqui');
+      let suma = 0;
+      meta.forEach(element => {
+        suma = suma + parseInt(element.quantity);
+      });
+      if (suma == quantity) {
+        this.product.cont = true;
+      } else if (suma > quantity) {
+        alert('Lo sentimos, aumente mas cantidad.');
+        this.product.meta[indexMeta].quantity = 0;
+      } else {
+        this.product.cont = false;
+      }
+      console.log(suma);
     },
   },
   filters: {
