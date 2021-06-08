@@ -1,22 +1,29 @@
 <template>
   <div class="my-3 mx-5">
     <v-row>
-      <h3>Añadir Producto</h3>
+      <h3>Añadir Stock</h3>
     </v-row>
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
-        Cantidad
-        <v-text-field class="border" flat hide-details solo dense v-model="Quantity"></v-text-field>
+        Cantidad (*)
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="stock.Quantity"
+        ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Producto
+        Producto (*)
         <v-select
           hide-details
           flat
           class="border"
           solo
           dense
-          v-model="sale_product_id"
+          v-model="stock.sale_product_id"
           :items="products"
           item-text="ProductName"
           item-value="id"
@@ -24,14 +31,14 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Estado
+        Estado (*)
         <v-select
           hide-details
           flat
           class="border"
           solo
           dense
-          v-model="sale_product_status_id"
+          v-model="stock.sale_product_status_id"
           :items="status"
           item-text="StatusName"
           item-value="id"
@@ -39,14 +46,14 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
-        Almacen
+        Almacen (*)
         <v-select
           hide-details
           flat
           class="border"
           solo
           dense
-          v-model="sale_business_location_id"
+          v-model="stock.sale_business_location_id"
           :items="locations"
           item-text="Name"
           item-value="id"
@@ -54,19 +61,43 @@
         ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6" v-if="stateStock">
-        Cliente
+        Cliente (*)
         <v-select
           hide-details
           flat
           class="border"
           solo
           dense
-          v-model="sale_customer_id"
+          v-model="stock.sale_customer_id"
           :items="customers"
           item-text="FullName"
-          item-value="Id"
+          item-value="id"
           no-data-text="No hay se encontraron datos"
         ></v-select>
+      </v-col>
+    </v-row>
+    <v-row class="border mb-3">
+      <v-col cols="12" md="3" sm="6">
+        Color
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="stock.Color"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" md="3" sm="6">
+        Talla
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="stock.Size"
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row class="my-3">
@@ -90,6 +121,7 @@ export default {
   data: () => ({
     products: [],
     customers: [],
+    stock: {},
     status: [],
     locations: [],
     Quantity: null,
@@ -98,6 +130,8 @@ export default {
     sale_business_location_id: null,
     sale_customer_id: null,
     stateStock: false,
+    Color: '',
+    Size: '',
   }),
   methods: {
     getProducts() {
@@ -144,12 +178,12 @@ export default {
         sale_business_location_id: this.sale_business_location_id,
         sale_customer_id: this.sale_customer_id,
       };
-      if (this.sale_customer_id == null) {
-        delete data.sale_customer_id;
+      if (this.stock.sale_customer_id == null || this.stock.sale_customer_id == '') {
+        delete this.stock.sale_customer_id;
       }
       console.log(data);
       axios
-        .post('/api/v1/sale-stock-records', data)
+        .post('/api/v1/sale-stock-records', this.stock)
         .then(response => {
           console.log(response);
           this.$router.replace({
@@ -160,7 +194,7 @@ export default {
     },
   },
   watch: {
-    sale_product_status_id: function(val) {
+    'stock.sale_product_status_id': function(val) {
       this.status.forEach(element => {
         let cont = 0;
         if (element.id == val && element.StatusName == 'Reservado' && cont == 0) {

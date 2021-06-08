@@ -142,6 +142,11 @@ import ListStockPaymentMethod from './components/admin/stock/paymentMethod/List'
 import AddStockPaymentMethod from './components/admin/stock/paymentMethod/Add';
 import EditStockPaymentMethod from './components/admin/stock/paymentMethod/Edit';
 
+// Pages Stock State Order
+import ListStockState from './components/admin/stock/state/List';
+import AddStockState from './components/admin/stock/state/Add';
+import EditStockState from './components/admin/stock/state/Edit';
+
 // Pages Product For Catalogue
 import ProductCatalogue from './components/admin/group-import/catalogues/ProductForCatalogue';
 
@@ -665,6 +670,22 @@ export default new Router({
           path: '/admin/stock/order/:id/edit',
           name: 'editStockPaymentMethod',
           component: EditStockPaymentMethod,
+        },
+        // -> Payment Method
+        {
+          path: '/admin/stock/states',
+          name: 'listStockState',
+          component: ListStockState,
+        },
+        {
+          path: '/admin/stock/state/add',
+          name: 'addStockState',
+          component: AddStockState,
+        },
+        {
+          path: '/admin/stock/state/:id/edit',
+          name: 'editStockState',
+          component: EditStockState,
         },
       ],
     },

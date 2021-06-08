@@ -70,9 +70,10 @@
         </v-col>
       </v-row>
     </div>
-    <v-card-title>
+    <v-card-title class="pr-0 pl-0">
       Ordenes de Cliente
       <v-spacer></v-spacer>
+      <v-btn @click="createItem" small>Nuevo</v-btn>
     </v-card-title>
     <v-data-table
       :headers="headers"
@@ -183,12 +184,17 @@ export default {
         })
         .catch(error => {});
     },
+    createItem() {
+      this.$router.push({
+        name: 'addStockOrder',
+      });
+    },
     editItem(item) {
       console.log(item.id);
       this.$router.push({
-        name: 'editOrder',
+        name: 'editStockOrder',
         params: {
-          id: item.id,
+          id: item.OrderId,
         },
       });
     },

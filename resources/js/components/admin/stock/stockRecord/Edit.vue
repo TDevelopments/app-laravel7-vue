@@ -23,7 +23,7 @@
           class="border"
           solo
           dense
-          v-model="sale_product_id"
+          v-model="stock.sale_product_id"
           :items="products"
           item-text="ProductName"
           item-value="id"
@@ -38,7 +38,7 @@
           class="border"
           solo
           dense
-          v-model="sale_product_status_id"
+          v-model="stock.sale_product_status_id"
           :items="status"
           item-text="StatusName"
           item-value="id"
@@ -53,14 +53,14 @@
           class="border"
           solo
           dense
-          v-model="sale_business_location_id"
+          v-model="stock.sale_business_location_id"
           :items="locations"
           item-text="Name"
           item-value="id"
           no-data-text="No hay se encontraron datos"
         ></v-select>
       </v-col>
-      <v-col cols="12" md="3" sm="6">
+      <v-col cols="12" md="3" sm="6" v-if="stock.sale_customer_id != null">
         Cliente
         <v-select
           hide-details
@@ -68,12 +68,36 @@
           class="border"
           solo
           dense
-          v-model="sale_customer_id"
+          v-model="stock.sale_customer_id"
           :items="customers"
           item-text="FullName"
-          item-value="Id"
+          item-value="id"
           no-data-text="No hay se encontraron datos"
         ></v-select>
+      </v-col>
+    </v-row>
+    <v-row class="border mb-3">
+      <v-col cols="12" md="3" sm="6">
+        Color
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="stock.Color"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" md="3" sm="6">
+        Talla
+        <v-text-field
+          class="border"
+          flat
+          hide-details
+          solo
+          dense
+          v-model="stock.Size"
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row class="my-3">
@@ -111,10 +135,17 @@ export default {
         .get(`/api/v1/sale-stock-records/${this.$route.params.id}`)
         .then(response => {
           this.stock = response.data.data;
-          this.sale_product_id = response.data.data.Product.id;
-          this.sale_customer_id = response.data.data.Customer.id;
-          this.sale_product_status_id = response.data.data.ProductStatus.id;
-          this.sale_business_location_id = response.data.data.BusinessLocation.id;
+          this.stock.sale_product_id =
+            response.data.data.Product == null ? null : response.data.data.Product.id;
+          this.stock.sale_customer_id =
+            response.data.data.Customer == null ? null : response.data.data.Customer.id;
+          this.stock.sale_product_status_id = response.data.data.ProductStatus = null
+            ? null
+            : response.data.data.ProductStatus.id;
+          this.stock.sale_business_location_id =
+            response.data.data.BusinessLocation == null
+              ? null
+              : response.data.data.BusinessLocation.id;
           console.log(response);
         })
         .catch(error => {});
@@ -156,14 +187,14 @@ export default {
         .catch(error => {});
     },
     updateStockRecord() {
+      let data = {};
+      for (const property in this.stock) {
+        if (this.stock[property] != null) {
+          data.[property] = this.stock[property];
+        }
+      }
       axios
-        .post('/api/v1/sale-stock-records', {
-          ...this.stock,
-          sale_customer_id: this.sale_customer_id,
-          sale_product_status_id: this.sale_product_status_id,
-          sale_business_location_id: this.sale_business_location_id,
-          sale_product_id: this.sale_product_id,
-        })
+        .post('/api/v1/sale-stock-records', data)
         .then(response => {
           console.log(response);
           this.$router.replace({

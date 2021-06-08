@@ -193,7 +193,7 @@ export default {
   }),
   methods: {
     getProducts() {
-      axios.get('/api/v1/sale-products').then(response => {
+      axios.get('/api/v1/sale-products?availableStock=true').then(response => {
         this.products = response.data.data;
         this.products.forEach(element => {
           Vue.set(element, 'Quantity', 0);
@@ -214,15 +214,24 @@ export default {
         console.log(response);
       });
     },
-
+    isObjEmpty(obj) {
+      for (var prop in obj) {
+        if (obj[prop] == '') return true;
+        if (obj.hasOwnProperty(prop)) return false;
+      }
+      return true;
+    },
     generateOrder() {
+      let dat = {};
+      if (!this.isObjEmpty(this.payment)) {
+        dat.Payment = this.payment;
+      }
+      dat.Products = this.selected;
+      console.log(dat);
       axios({
         url: '/api/v1/sale-orders',
         method: 'POST',
-        data: {
-          Products: this.selected,
-          Payment: this.payment,
-        },
+        data: dat,
       })
         .then(resp => {
           this.$router.replace({ name: 'listStockOrder' });
