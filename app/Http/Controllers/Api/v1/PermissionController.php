@@ -30,15 +30,15 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->query("list")) {
+        /* if ($request->query("list")) { */
             $value = $request->query("list");
             $result = $this->permission->get();
             return response([
                 'data' => $result
             ], Response::HTTP_OK);
-        }
-        $roles = $this->role->paginate();
-        return response($roles, Response::HTTP_OK);
+        /* } */
+        /* $roles = $this->role->paginate(); */
+        /* return response($roles, Response::HTTP_OK); */
     }
 
     /**

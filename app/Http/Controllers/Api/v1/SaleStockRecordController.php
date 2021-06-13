@@ -83,6 +83,36 @@ class SaleStockRecordController extends Controller
      */
     public function store(SaleStockRecordRequest $request)
     {
+        if ($request->StockRecords) {
+            foreach ($request->StockRecords as $stockRecord) {
+                if (empty($stockRecord['Size']))
+                    $stockRecord['Size'] = null;
+                if (empty($stockRecord['Color']))
+                    $stockRecord['Color'] = null;
+                if (empty($stockRecord['StockRecordId'])) {
+                    $saleStockRecords[] = $this->saleStockRecord->create([
+                        'sale_product_id' => $stockRecord['ProductId'],
+                        'sale_business_location_id' => $stockRecord['BusinessLocationId'],
+                        'sale_product_status_id' => $stockRecord['ProductStatusId'],
+                        'sale_customer_id' => $stockRecord['CustomerId'],
+                        'Quantity' => $stockRecord['Quantity'],
+                        'Size' => $stockRecord['Size'],
+                        'Color' => $stockRecord['Color'],
+                    ]);
+                } else {
+                    $stockRecordReference = $this->saleStockRecord->find($stockRecord['StockRecordId']);
+                    $stockRecordReference->sale_business_location_id = $stockRecord['BusinessLocationId'];
+                    $stockRecordReference->sale_product_status_id = $stockRecord['ProductStatusId'];
+                    $stockRecordReference->sale_customer_id = $stockRecord['CustomerId'];
+                    $stockRecordReference->Quantity = $stockRecord['Quantity'];
+                    $stockRecordReference->Size = $stockRecord['Size'];
+                    $stockRecordReference->Color = $stockRecord['Color'];
+                    $stockRecordReference->save();
+                    $saleStockRecords[] = $stockRecordReference;
+                }
+            }
+            return SaleStockRecordResource::collection($saleStockRecords);
+        }
         $saleStockRecord = $this->saleStockRecord->create($request->toArray());
         return response([
             'data' => new SaleStockRecordResource($saleStockRecord)
