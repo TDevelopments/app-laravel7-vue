@@ -31,6 +31,15 @@ class SaleStockRecordRequest extends FormRequest
             'Quantity' => ['required', 'integer'],
             'Size' => ['string'],
             'Color' => ['string'],
+            'StockRecords' => ['array'],
+            'StockRecords.*.StockRecordId' => ['integer', 'exists:App\Models\SaleStockRecord,id'],
+            'StockRecords.*.ProductId' => ['required', 'integer', 'exists:App\Models\SaleProduct,id'],
+            'StockRecords.*.BusinessLocationId' => ['required', 'integer', 'exists:App\Models\SaleBusinessLocation,id'],
+            'StockRecords.*.ProductStatusId' => ['required', 'integer', 'exists:App\Models\SaleProductStatus,id'],
+            'StockRecords.*.CustomerId' => ['required', 'integer', 'exists:App\Models\SaleCustomer,id'],
+            'StockRecords.*.Quantity' => ['required', 'integer'],
+            'StockRecords.*.Size' => ['string'],
+            'StockRecords.*.Color' => ['string'],
         ];
     }
 }

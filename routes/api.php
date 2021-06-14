@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\v1\AdviserController;
 use App\Http\Controllers\Api\v1\RoleController;
 use App\Http\Controllers\Api\v1\OrderShippingStatusController;
 use App\Http\Controllers\Api\v1\SalePaymentController;
+use App\Http\Controllers\Api\v1\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -154,7 +155,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::delete('orders/{order}', [OrderController::class, 'destroy']);
 
         // Roles 
-        Route::get('roles', [RoleController::class, 'index']);
+        /* Route::get('roles', [RoleController::class, 'index']); */
 
         // Payments
         Route::post('orders/{order}/payments', [PaymentController::class, 'store']);
@@ -204,7 +205,10 @@ Route::group(['prefix' => 'v1'], function () {
         Route::apiResource('sale-deliveries', 'Api\v1\SaleDeliveryController');
     
         // StateOrder 
-        Route::apiResource('sale-state-orders', 'Api\v1\SaleStateOrderController');
+        /* Route::apiResource('sale-state-orders', 'Api\v1\SaleStateOrderController'); */
+        Route::middleware(['permission:sale-state-order'])->group(function () {
+            Route::apiResource('sale-state-orders', 'Api\v1\SaleStateOrderController');
+        });
 
         // Order 
         Route::apiResource('sale-orders', 'Api\v1\SaleOrderController');
@@ -219,5 +223,14 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('sale-orders/{sale_order}/payment', [SalePaymentController::class, 'store']);
         Route::put('sale-orders/{sale_order}/payment', [SalePaymentController::class, 'update']);
         Route::delete('sale-payments/{sale_payment}', [SalePaymentController::class, 'destroy']);
+
+        // Role
+        Route::apiResource('roles', 'Api\v1\RoleController');
+
+        // Permission
+        Route::get('permissions', [PermissionController::class, 'index']);
+        Route::post('roles/{role}/permissions', [PermissionController::class, 'store']);
+        Route::put('roles/{role}/permissions', [PermissionController::class, 'update']);
+        Route::delete('roles/{role}', [PermissionController::class, 'destroy']);
     });
 });

@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoleController extends Controller
+class PermissionController extends Controller
 {
     
-    protected $role;
+    protected $permission;
 
     /**
      * Constructor
      *
      * @param \App\Models\Role $role.
      */
-    public function __construct(Role $role)
+    public function __construct(Permission $permission)
     {
         $this->middleware('api.admin');
-        $this->role = $role;
+        $this->permission = $permission;
     }
 
     /**
@@ -30,16 +30,15 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        /* return response()->json(["data" => $this->role->all()]); */
-        if ($request->query("list")) {
+        /* if ($request->query("list")) { */
             $value = $request->query("list");
-            $result = $this->role->get();
+            $result = $this->permission->get();
             return response([
                 'data' => $result
             ], Response::HTTP_OK);
-        }
-        $roles = $this->role->paginate();
-        return response($roles, Response::HTTP_OK);
+        /* } */
+        /* $roles = $this->role->paginate(); */
+        /* return response($roles, Response::HTTP_OK); */
     }
 
     /**
@@ -48,12 +47,10 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Role $role)
     {
-        $role = $this->role->updateOrCreate([ 'name' => $request->name ]);
-        return response([
-            'data' => $role
-        ], Response::HTTP_CREATED);
+        $role->givePermissionTo($request->permissions->toArray());
+        return response($role, Response::HTTP_OK);
     }
 
     /**
@@ -62,11 +59,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Role $role)
+    public function show($id)
     {
-        return response([
-            'data' => $role
-        ], Response::HTTP_OK);
+        //
     }
 
     /**
@@ -78,10 +73,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $role->update($request->all());
-        return response([
-            'data' => $role
-        ], Response::HTTP_CREATED);
+        $role->revokePermissionTo($request->permissions->toArray());
     }
 
     /**
@@ -90,9 +82,8 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
-        $role->delete();
-        return response(null, Response::HTTP_NO_CONTENT);
+        //
     }
 }

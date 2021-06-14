@@ -52,6 +52,8 @@ class SaleProductRequest extends FormRequest
             'stock.*.sale_business_location_id' => ['required', 'integer', 'exists:App\Models\SaleBusinessLocation,id'],
             'stock.*.sale_customer_id' => ['integer', 'exists:App\Models\SaleCustomer,id'],
             'stock.*.Quantity' => ['required', 'integer'],
+            'stock.*.Color' => ['string'],
+            'stock.*.Size' => ['string'],
         ];
     }
 }
