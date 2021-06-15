@@ -25,8 +25,14 @@ class CatalogueController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("name")) {
+            $value = $request->query("name");
+            $catalagues = $this->catalogue->where('name', 'like', "%$value%")
+                                      ->orderBy('name')->paginate()->withQueryString();
+            return CatalogueResource::collection($catalagues);
+        }
         return CatalogueResource::collection($this->catalogue->orderBy('created_at', 'desc')->paginate());
     }
 
