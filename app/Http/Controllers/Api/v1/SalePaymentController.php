@@ -24,6 +24,9 @@ class SalePaymentController extends Controller
     public function __construct(SaleOrder $saleOrder, SalePayment $salePayment, SalePaymentMethod $salePaymentMethod, SalePaymentStatus $salePaymentStatus)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - crear pago de orden', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - actualizar pago de orden', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar pago de orden', ['only' => ['destroy']]);
         $this->salePayment = $salePayment;
         $this->saleOrder = $saleOrder;
         $this->salePaymentMethod = $salePaymentMethod;

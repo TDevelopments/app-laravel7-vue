@@ -14,6 +14,11 @@ class MeasureController extends Controller
     public function __construct(Measure $measure)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - listar unidades', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear unidad', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar unidad', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar unidad', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar unidad', ['only' => ['destroy']]);
         $this->measure = $measure;
     }
 

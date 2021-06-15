@@ -18,6 +18,11 @@ class SaleDeliveryController extends Controller
     public function __construct(SaleDelivery $saleDelivery, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar entregas', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear entrega', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar entrega', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar entrega', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar entrega', ['only' => ['destroy']]);
         $this->saleDelivery = $saleDelivery;
         $this->saleStockRecord = $saleStockRecord;
         $this->saleProductStatus = $saleProductStatus;

@@ -14,6 +14,11 @@ class PaymentConceptController extends Controller
     public function __construct(PaymentConcept $concept)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - listar conceptos de pago', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear concepto de pago', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar concepto de pago', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar concepto de pago', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar concepto de pago', ['only' => ['destroy']]);
         $this->concept = $concept;
     }
 

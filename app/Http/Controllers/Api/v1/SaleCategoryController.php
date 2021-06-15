@@ -21,6 +21,11 @@ class SaleCategoryController extends Controller
     public function __construct(SaleCategory $saleCategory)
     {
         $this->middleware('api.admin')->except(['index', 'show']);
+        $this->middleware('permission:Ventas - listar categorias', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear categoria', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar categoria', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar categoria', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar categoria', ['only' => ['destroy']]);
         $this->saleCategory = $saleCategory;
     }
     /**

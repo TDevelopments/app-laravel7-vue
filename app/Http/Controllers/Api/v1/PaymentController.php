@@ -19,6 +19,8 @@ class PaymentController extends Controller
     public function __construct(Order $order, Payment $payment)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - crear y actualizar pagos orden', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - eliminar pagos orden', ['only' => ['store']]);
         $this->payment = $payment;
         $this->order = $order;
     }

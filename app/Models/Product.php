@@ -17,6 +17,7 @@ class Product extends Model
         'colors' => 'array',
         'description' => 'array',
         'images' => 'array',
+        'on_sale' => 'boolean',
     ];
 
     protected $fillable = [

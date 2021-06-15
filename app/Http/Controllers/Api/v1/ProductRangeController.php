@@ -21,6 +21,11 @@ class ProductRangeController extends Controller
     public function __construct(ProductRange $product_range, Range $range)
     {
         $this->middleware('api.admin')->except(['index', 'show']);
+        $this->middleware('permission:Importaciones - listar productos con rango', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear producto con rango', ['only' => ['store', 'createMassive']]);
+        $this->middleware('permission:Importaciones - mostrar producto con rango', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar producto con rango', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar producto con rango', ['only' => ['destroy']]);
         $this->product_range = $product_range;
         $this->range = $range;
     }
@@ -32,6 +37,20 @@ class ProductRangeController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->query("catalogue_id") || $request->query("category_id")) {
+            $value1 = $request->query("category_id");
+            $value2 = $request->query("catalogue_id");
+            $query = $this->product_range->where('on_sale', false);
+            if($request->query("catalogue_id"))
+            {
+                $query->where('catalogue_id', $value1);
+            }
+            if($request->query("category_id"))
+            {
+                $query->where("category_id", $value2);
+            }
+            return ProductRangeResource::collection($query->orderBy('model')->paginate()->withQueryString());
+        }
         if ($request->query("model") && $request->query("sku")) {
             $value = $request->query("model");
             $value2 = $request->query("sku");

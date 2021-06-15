@@ -16,6 +16,11 @@ class SalePaymentMethodController extends Controller
     public function __construct(SalePaymentMethod $salePaymentMethod)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar metodos de pago', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear metodo de pago', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar metodo de pago', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar metodo de pago', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar metodo de pago', ['only' => ['destroy']]);
         $this->salePaymentMethod = $salePaymentMethod;
     }
 

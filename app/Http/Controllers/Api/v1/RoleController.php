@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\v1;
 
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Resources\RoleResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
@@ -20,6 +22,11 @@ class RoleController extends Controller
     public function __construct(Role $role)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:listar roles', ['only' => ['index']]);
+        $this->middleware('permission:crear rol', ['only' => ['store']]);
+        $this->middleware('permission:mostrar rol', ['only' => ['show']]);
+        $this->middleware('permission:editar rol', ['only' => ['update']]);
+        $this->middleware('permission:eliminar rol', ['only' => ['destroy']]);
         $this->role = $role;
     }
 
@@ -31,6 +38,8 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         /* return response()->json(["data" => $this->role->all()]); */
+        /* $admin = Role::firstWhere('name', 'admin'); */
+        /* return $admin->permissions; */
         if ($request->query("list")) {
             $value = $request->query("list");
             $result = $this->role->get();
@@ -65,7 +74,7 @@ class RoleController extends Controller
     public function show(Role $role)
     {
         return response([
-            'data' => $role
+            'data' => new RoleResource($role)
         ], Response::HTTP_OK);
     }
 

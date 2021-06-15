@@ -37,6 +37,8 @@ class OrderDetailController extends Controller
       ProductRange $productRange, Range $range, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, SaleBusinessLocation $saleBusinessLocation)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - crear y actualizar detalles de orden', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - eliminar detalles de orden', ['only' => ['store']]);
         $this->orderDetail = $orderDetail;
         $this->product = $product;
         $this->productRange = $productRange;

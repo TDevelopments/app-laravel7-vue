@@ -49,6 +49,11 @@ class OrderController extends Controller
         OrderShippingStatus $shippingStatus, SaleBusinessLocation $saleBusinessLocation)
     {
         $this->middleware('api.admin')->except(['store']);
+        $this->middleware('permission:Importaciones - listar ordenes', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear orden', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar orden', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar orden', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar orden', ['only' => ['destroy']]);
         $this->order = $order;
         $this->catalogue = $catalogue;
         $this->product = $product;

@@ -18,6 +18,8 @@ class ArrivalController extends Controller
     public function __construct(Arrival $arrival)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - crear y actualizar llegadas catalogo', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - eliminar llegada catalogo', ['only' => ['store']]);
         $this->arrival = $arrival;
     }
 

@@ -14,6 +14,11 @@ class StateOrderController extends Controller
     public function __construct(StateOrder $stateOrder)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - listar estados de orden', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear estado de orden', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar estado de orden', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar estado de orden', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar estado de orden', ['only' => ['destroy']]);
         $this->stateOrder = $stateOrder;
     }
 

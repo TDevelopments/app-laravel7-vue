@@ -20,6 +20,11 @@ class SaleProductStatusController extends Controller
     public function __construct(SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar estados de producto', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear estado de producto', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar estado de producto', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar estado de producto', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar estado de producto', ['only' => ['destroy']]);
         $this->saleProductStatus = $saleProductStatus;
     }
 

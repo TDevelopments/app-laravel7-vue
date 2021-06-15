@@ -22,6 +22,11 @@ class SaleCustomerController extends Controller
     public function __construct(SaleCustomer $saleCustomer)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:listar clientes', ['only' => ['index']]);
+        $this->middleware('permission:crear cliente', ['only' => ['store']]);
+        $this->middleware('permission:mostrar cliente', ['only' => ['show']]);
+        $this->middleware('permission:editar cliente', ['only' => ['update']]);
+        $this->middleware('permission:eliminar cliente', ['only' => ['destroy']]);
         $this->saleCustomer = $saleCustomer;
     }
 

@@ -23,6 +23,11 @@ class SaleStockRecordController extends Controller
     public function __construct(SaleStockRecord $saleStockRecord, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar registro de stock', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear registro stock', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar registro stock', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar registro stock', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar registro stock', ['only' => ['destroy']]);
         $this->saleStockRecord = $saleStockRecord;
         $this->saleCustomer = $saleCustomer;
         $this->saleProduct = $saleProduct;

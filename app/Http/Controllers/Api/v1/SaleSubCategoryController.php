@@ -20,6 +20,11 @@ class SaleSubCategoryController extends Controller
     public function __construct(SaleSubCategory $saleSubCategory)
     {
         $this->middleware('api.admin')->except(['store']);
+        $this->middleware('permission:Ventas - listar sub-categorias', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear sub-categoria', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar sub-categoria', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar sub-categoria', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar sub-categoria', ['only' => ['destroy']]);
         $this->saleSubCategory = $saleSubCategory;
     }
 

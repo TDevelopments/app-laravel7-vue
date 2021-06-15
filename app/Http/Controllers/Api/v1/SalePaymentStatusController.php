@@ -16,6 +16,11 @@ class SalePaymentStatusController extends Controller
     public function __construct(SalePaymentStatus $salePaymentStatus)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar estados de pago', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear estado de pago', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar estado de pago', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar estado de pago', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar estado de pago', ['only' => ['destroy']]);
         $this->salePaymentStatus = $salePaymentStatus;
     }
 

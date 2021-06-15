@@ -20,6 +20,11 @@ class SaleProductUnitController extends Controller
     public function __construct(SaleProductUnit $saleProductUnit)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar unidades de producto', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear unidad de producto', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar unidad de producto', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar unidad de producto', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar unidad de producto', ['only' => ['destroy']]);
         $this->saleProductUnit = $saleProductUnit;
     }
 

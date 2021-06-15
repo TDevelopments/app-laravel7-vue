@@ -39,6 +39,11 @@ class SaleOrderController extends Controller
     public function __construct(SaleOrder $saleOrder, SaleCustomer $saleCustomer, SaleStateOrder $saleStateOrder, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, SalePaymentMethod $salePaymentMethod, SalePaymentStatus $salePaymentStatus, SalePayment $salePayment, SaleOrderDetail $saleOrderDetail)
     {
         $this->middleware('api.admin')->except(['store']);
+        $this->middleware('permission:Ventas - listar ordenes', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear orden', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar orden', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar orden', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar orden', ['only' => ['destroy']]);
         $this->saleOrder = $saleOrder;
         $this->saleCustomer = $saleCustomer;
         $this->saleStateOrder = $saleStateOrder;

@@ -20,6 +20,11 @@ class SaleBrandController extends Controller
     public function __construct(SaleBrand $saleBrand)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar marcas', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear marca', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar marca', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar marca', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar marca', ['only' => ['destroy']]);
         $this->saleBrand = $saleBrand;
     }
     /**

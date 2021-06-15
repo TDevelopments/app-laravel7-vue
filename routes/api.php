@@ -111,7 +111,7 @@ Route::group(['middleware' => ['cors', 'json.response'], 'prefix' => 'v1'], func
         Route::put('state-orders/{state_order}', [StateOrderController::class, 'update']);
         Route::delete('state-orders/{state_order}', [StateOrderController::class, 'destroy']);
 
-        // StateOrder
+        // Shipping Status Order
         Route::apiResource('order-shipping-status', 'Api\v1\OrderShippingStatusController');
         
         // PaymentConcept
@@ -207,10 +207,10 @@ Route::group(['middleware' => ['cors', 'json.response'], 'prefix' => 'v1'], func
         Route::apiResource('sale-deliveries', 'Api\v1\SaleDeliveryController');
     
         // StateOrder 
-        /* Route::apiResource('sale-state-orders', 'Api\v1\SaleStateOrderController'); */
-        Route::middleware(['permission:sale-state-order'])->group(function () {
-            Route::apiResource('sale-state-orders', 'Api\v1\SaleStateOrderController');
-        });
+        Route::apiResource('sale-state-orders', 'Api\v1\SaleStateOrderController');
+        /* Route::middleware(['permission:sale-state-order'])->group(function () { */
+        /*     Route::apiResource('sale-state-orders', 'Api\v1\SaleStateOrderController'); */
+        /* }); */
 
         // Order 
         Route::apiResource('sale-orders', 'Api\v1\SaleOrderController');
@@ -218,7 +218,7 @@ Route::group(['middleware' => ['cors', 'json.response'], 'prefix' => 'v1'], func
         // Method Payment 
         Route::apiResource('sale-payment-methods', 'Api\v1\SalePaymentMethodController');
 
-        // Method Payment 
+        // Status Payment 
         Route::apiResource('sale-payment-status', 'Api\v1\SalePaymentStatusController');
 
         // Payments
@@ -233,6 +233,5 @@ Route::group(['middleware' => ['cors', 'json.response'], 'prefix' => 'v1'], func
         Route::get('permissions', [PermissionController::class, 'index']);
         Route::post('roles/{role}/permissions', [PermissionController::class, 'store']);
         Route::put('roles/{role}/permissions', [PermissionController::class, 'update']);
-        Route::delete('roles/{role}', [PermissionController::class, 'destroy']);
     });
 });

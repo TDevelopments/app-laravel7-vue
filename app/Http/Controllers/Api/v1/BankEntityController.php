@@ -14,6 +14,10 @@ class BankEntityController extends Controller
     public function __construct(BankEntity $bank)
     {
         $this->middleware('api.admin')->except(['index']);
+        $this->middleware('permission:Importaciones - crear entidad bancaria', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar entidad bancaria', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar entidad bancaria', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar entidad bancaria', ['only' => ['destroy']]);
         $this->bank = $bank;
     }
 

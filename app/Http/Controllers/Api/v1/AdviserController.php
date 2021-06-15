@@ -15,6 +15,10 @@ class AdviserController extends Controller
     public function __construct(Adviser $adviser)
     {
         $this->middleware('api.admin')->except(['index']);
+        $this->middleware('permission:Importaciones - crear asesor', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar asesor', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar asesor', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar asesor', ['only' => ['destroy']]);
         $this->adviser = $adviser;
     }
 

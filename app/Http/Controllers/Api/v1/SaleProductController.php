@@ -30,6 +30,11 @@ class SaleProductController extends Controller
     public function __construct(SaleProduct $saleProduct, SaleProductStatus $saleProductStatus)
     {
         $this->middleware('api.admin')->except(['availables']);
+        $this->middleware('permission:Ventas - listar productos', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear producto', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar producto', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar producto', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar producto', ['only' => ['destroy']]);
         $this->saleProduct = $saleProduct;
         $this->saleProductStatus = $saleProductStatus;
     }

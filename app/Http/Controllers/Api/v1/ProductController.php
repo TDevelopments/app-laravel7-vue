@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Catalogue;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
@@ -21,6 +23,11 @@ class ProductController extends Controller
     public function __construct(Product $product)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - listar productos', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear producto', ['only' => ['store', 'createMassive']]);
+        $this->middleware('permission:Importaciones - mostrar producto', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar producto', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar producto', ['only' => ['destroy']]);
         $this->product = $product;
     }
 
@@ -31,7 +38,25 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        
+        if ($request->query("catalogue_id") || $request->query("category_id") || $request->query("measure")) {
+            $value1 = $request->query("category_id");
+            $value2 = $request->query("catalogue_id");
+            $value3 = $request->query("measure");
+            $query = $this->product->where('on_sale', false);
+            if($request->query("catalogue_id"))
+            {
+                $query->where('catalogue_id', $value1);
+            }
+            if($request->query("category_id"))
+            {
+                $query->where("category_id", $value2);
+            }
+            if($request->query("measure"))
+            {
+                $query->where('type_group', "%$value3%");
+            }
+            return ProductResource::collection($query->orderBy('model')->paginate()->withQueryString());
+        }
         if ($request->query("model") && $request->query("sku")) {
             $value = $request->query("model");
             $value2 = $request->query("sku");

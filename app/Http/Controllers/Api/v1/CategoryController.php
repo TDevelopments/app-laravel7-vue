@@ -14,7 +14,12 @@ class CategoryController extends Controller
 
     public function __construct(Category $category)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - listar categorias', ['only' => ['index', 'list']]);
+        $this->middleware('permission:Importaciones - crear categoria', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar categoria', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar categoria', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar categoria', ['only' => ['destroy']]);
         $this->category = $category;
     }
 

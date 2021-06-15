@@ -20,6 +20,11 @@ class SaleProductTypeController extends Controller
     public function __construct(SaleProductType $saleProductType)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar tipos de producto', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear tipo de producto', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar tipo de producto', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar tipo de producto', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar tipo de producto', ['only' => ['destroy']]);
         $this->saleProductType = $saleProductType;
     }
 

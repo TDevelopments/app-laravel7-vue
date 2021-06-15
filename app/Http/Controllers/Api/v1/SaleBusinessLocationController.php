@@ -21,6 +21,11 @@ class SaleBusinessLocationController extends Controller
     public function __construct(SaleBusinessLocation $saleBusinessLocation)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Ventas - listar ubicaciones empresa', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear ubicacion empresa', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar ubicacion empresa', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar ubicacion empresa', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar ubicacion empresa', ['only' => ['destroy']]);
         $this->saleBusinessLocation = $saleBusinessLocation;
     }
 

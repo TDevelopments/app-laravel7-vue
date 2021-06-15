@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\OrderShippingStatus;
 use App\Http\Requests\OrderShippingStatusRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrderShippingStatusController extends Controller
 {
@@ -14,6 +15,11 @@ class OrderShippingStatusController extends Controller
     public function __construct(OrderShippingStatus $shippingStatus)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:Importaciones - listar estados de envio', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear estado de envio', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar estado de envio', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar estado de envio', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar estado de envio', ['only' => ['destroy']]);
         $this->shippingStatus = $shippingStatus;
     }
 
@@ -22,8 +28,15 @@ class OrderShippingStatusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->query("list")) {
+            $value = $request->query("list");
+            $result = $this->shippingStatus->get();
+            return response([
+                'data' => $result
+            ], Response::HTTP_OK);
+        }
         return response()->json($this->shippingStatus->paginate(), 200);
     }
 

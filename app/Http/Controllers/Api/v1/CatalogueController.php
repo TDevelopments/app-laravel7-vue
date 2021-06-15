@@ -17,6 +17,11 @@ class CatalogueController extends Controller
     public function __construct(Catalogue $catalogue)
     {
         $this->middleware('api.admin')->except(['availables']);
+        $this->middleware('permission:Importaciones - listar catalogos', ['only' => ['index', 'list']]);
+        $this->middleware('permission:Importaciones - crear catalogo', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar catalogo', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar catalogo', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar catalogo', ['only' => ['destroy']]);
         $this->catalogue = $catalogue;
     }
 

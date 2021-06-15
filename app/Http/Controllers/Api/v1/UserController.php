@@ -26,6 +26,11 @@ class UserController extends Controller
     public function __construct(User $user, Role $role)
     {
         $this->middleware('api.admin');
+        $this->middleware('permission:listar usuarios', ['only' => ['index']]);
+        $this->middleware('permission:crear usuario', ['only' => ['store']]);
+        $this->middleware('permission:mostrar usuario', ['only' => ['show']]);
+        $this->middleware('permission:editar usuario', ['only' => ['update']]);
+        $this->middleware('permission:eliminar usuario', ['only' => ['destroy']]);
         $this->user = $user;
         $this->role = $role;
     }
