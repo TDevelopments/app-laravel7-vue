@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SaleBrandRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleBrandController extends Controller
 {
@@ -19,7 +21,7 @@ class SaleBrandController extends Controller
      */
     public function __construct(SaleBrand $saleBrand)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Ventas - listar marcas', ['only' => ['index']]);
         $this->middleware('permission:Ventas - crear marca', ['only' => ['store']]);
         $this->middleware('permission:Ventas - mostrar marca', ['only' => ['show']]);
@@ -56,6 +58,13 @@ class SaleBrandController extends Controller
     public function store(SaleBrandRequest $request)
     {
         $saleBrand = $this->saleBrand->updateOrCreate($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando marca',
+            'model_type' => 'App\Models\SaleBrand',
+            'model_id' => $saleBrand->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => $saleBrand
         ], Response::HTTP_CREATED);
@@ -83,6 +92,13 @@ class SaleBrandController extends Controller
      */
     public function update(SaleBrandRequest $request, SaleBrand $saleBrand)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando marca',
+            'model_type' => 'App\Models\SaleBrand',
+            'model_id' => $saleBrand->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleBrand->update($request->all());
         return response([
             'data' => $saleBrand
@@ -95,8 +111,15 @@ class SaleBrandController extends Controller
      * @param  \App\SaleBrand  $saleBrand
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleBrand $saleBrand)
+    public function destroy(SaleBrand $saleBrand, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando marca',
+            'model_type' => 'App\Models\SaleBrand',
+            'model_id' => $saleBrand->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleBrand->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }

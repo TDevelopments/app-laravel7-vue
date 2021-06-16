@@ -23,7 +23,9 @@ class SaleOrderDetailController extends Controller
 
     public function __construct(SaleOrderDetail $saleOrderDetail, SaleOrder $saleOrder, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Ventas - crear y actualizar detalles de orden', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - eliminar detalles de orden', ['only' => ['destroy']]);
         $this->saleOrderDetail = $saleOrderDetail;
         $this->saleOrder = $saleOrder;
         $this->saleProduct = $saleProduct;

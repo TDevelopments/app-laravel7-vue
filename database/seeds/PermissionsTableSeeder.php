@@ -185,6 +185,9 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Ventas - mostrar orden']);
         Permission::create(['name' => 'Ventas - editar orden']);
         Permission::create(['name' => 'Ventas - eliminar orden']);
+
+        Permission::create(['name' => 'Ventas - crear y actualizar detalles de orden']);
+        Permission::create(['name' => 'Ventas - eliminar detalles de orden']);
         
         Permission::create(['name' => 'Ventas - listar metodos de pago']);
         Permission::create(['name' => 'Ventas - crear metodo de pago']);
@@ -211,6 +214,8 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'listar permisos']);
         Permission::create(['name' => 'agregar permiso rol']);
         Permission::create(['name' => 'revocar permiso rol']);
+
+        Permission::create(['name' => 'historial']);
 
         $admin = Role::findByName('admin');
         $admin->givePermissionTo([
@@ -247,6 +252,7 @@ class PermissionsTableSeeder extends Seeder
             'listar permisos',
             'Importaciones - crear orden',
             'Ventas - crear orden',
+            'historial',
         ]);
         
         $user = Role::firstWhere('name', 'user');

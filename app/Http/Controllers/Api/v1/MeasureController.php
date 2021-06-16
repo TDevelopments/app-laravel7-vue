@@ -6,6 +6,8 @@ use App\Models\Measure;
 use Illuminate\Http\Request;
 use App\Http\Requests\MeasureRequest;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class MeasureController extends Controller
 {
@@ -13,7 +15,7 @@ class MeasureController extends Controller
 
     public function __construct(Measure $measure)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Importaciones - listar unidades', ['only' => ['index']]);
         $this->middleware('permission:Importaciones - crear unidad', ['only' => ['store']]);
         $this->middleware('permission:Importaciones - mostrar unidad', ['only' => ['show']]);
@@ -41,6 +43,13 @@ class MeasureController extends Controller
     public function store(MeasureRequest $request)
     {
         $measure = $this->measure->create($request->toArray());
+        History::create([
+            'action' => 'Creando unidad producto',
+            'model_type' => 'App\Models\Measure',
+            'model_id' => $measure->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response()->json($measure, 201);
     }
 
@@ -64,6 +73,13 @@ class MeasureController extends Controller
      */
     public function update(MeasureRequest $request, Measure $measure)
     {
+        History::create([
+            'action' => 'Actualizando unidad producto',
+            'model_type' => 'App\Models\Measure',
+            'model_id' => $measure->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $measure->update($request->toArray());
         return response()->json($measure, 200);
     }
@@ -74,8 +90,15 @@ class MeasureController extends Controller
      * @param  \App\Measure  $measure
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Measure $measure)
+    public function destroy(Measure $measure, Request $request)
     {
+        History::create([
+            'action' => 'Elimnando unidad producto',
+            'model_type' => 'App\Models\Measure',
+            'model_id' => $measure->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $measure->delete();
         return response()->json(null, 204);
     }

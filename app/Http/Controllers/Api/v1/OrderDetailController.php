@@ -36,9 +36,9 @@ class OrderDetailController extends Controller
     public function __construct(OrderDetail $orderDetail, Product $product, 
       ProductRange $productRange, Range $range, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, SaleBusinessLocation $saleBusinessLocation)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Importaciones - crear y actualizar detalles de orden', ['only' => ['store']]);
-        $this->middleware('permission:Importaciones - eliminar detalles de orden', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - eliminar detalles de orden', ['only' => ['destroy']]);
         $this->orderDetail = $orderDetail;
         $this->product = $product;
         $this->productRange = $productRange;

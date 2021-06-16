@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\OrderShippingStatus;
 use App\Http\Requests\OrderShippingStatusRequest;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\History;
+use Carbon\Carbon;
 
 class OrderShippingStatusController extends Controller
 {
@@ -14,7 +16,7 @@ class OrderShippingStatusController extends Controller
 
     public function __construct(OrderShippingStatus $shippingStatus)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Importaciones - listar estados de envio', ['only' => ['index']]);
         $this->middleware('permission:Importaciones - crear estado de envio', ['only' => ['store']]);
         $this->middleware('permission:Importaciones - mostrar estado de envio', ['only' => ['show']]);
@@ -49,6 +51,13 @@ class OrderShippingStatusController extends Controller
     public function store(OrderShippingStatusRequest $request)
     {
         $shippingStatus = $this->shippingStatus->create($request->toArray());
+        History::create([
+            'action' => 'Creando estado de envio orden',
+            'model_type' => 'App\Models\OrderShippingStatus',
+            'model_id' => $shippingStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response()->json($shippingStatus, 201);
     }
 
@@ -72,6 +81,13 @@ class OrderShippingStatusController extends Controller
      */
     public function update(OrderShippingStatusRequest $request, OrderShippingStatus $orderShippingStatus)
     {
+        History::create([
+            'action' => 'Actualizando estado de envio orden',
+            'model_type' => 'App\Models\OrderShippingStatus',
+            'model_id' => $orderShippingStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $orderShippingStatus->update($request->toArray());
         return response()->json($orderShippingStatus, 200);
     }
@@ -82,8 +98,15 @@ class OrderShippingStatusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OrderShippingStatus $orderShippingStatus)
+    public function destroy(OrderShippingStatus $orderShippingStatus, Request $request)
     {
+        History::create([
+            'action' => 'Elimnando estado de envio orden',
+            'model_type' => 'App\Models\OrderShippingStatus',
+            'model_id' => $orderShippingStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $orderShippingStatus->delete();
         return response()->json(null, 204);
     }

@@ -9,6 +9,8 @@ use App\Http\Requests\UpdateSaleCustomerRequest;
 use App\Http\Resources\SaleCustomerResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleCustomerController extends Controller
 {
@@ -21,7 +23,7 @@ class SaleCustomerController extends Controller
      */
     public function __construct(SaleCustomer $saleCustomer)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:listar clientes', ['only' => ['index']]);
         $this->middleware('permission:crear cliente', ['only' => ['store']]);
         $this->middleware('permission:mostrar cliente', ['only' => ['show']]);
@@ -70,6 +72,13 @@ class SaleCustomerController extends Controller
     public function store(SaleCustomerRequest $request)
     {
         $saleCustomer = $this->saleCustomer->create($request->toArray());
+        History::create([
+            'action' => 'Creando cliente',
+            'model_type' => 'App\Models\SaleCustomer',
+            'model_id' => $saleCustomer->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => new SaleCustomerResource($saleCustomer)
         ],Response::HTTP_CREATED);
@@ -95,6 +104,13 @@ class SaleCustomerController extends Controller
      */
     public function update(UpdateSaleCustomerRequest $request, SaleCustomer $saleCustomer)
     {
+        History::create([
+            'action' => 'Actualizando cliente',
+            'model_type' => 'App\Models\SaleCustomer',
+            'model_id' => $saleCustomer->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleCustomer->update($request->all());
         return response([
             'data' => new SaleCustomerResource($saleCustomer)
@@ -107,8 +123,15 @@ class SaleCustomerController extends Controller
      * @param  \App\SaleCustomer  $saleCustomer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleCustomer $saleCustomer)
+    public function destroy(SaleCustomer $saleCustomer, Request $request)
     {
+        History::create([
+            'action' => 'Eliminando cliente',
+            'model_type' => 'App\Models\SaleCustomer',
+            'model_id' => $saleCustomer->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleCustomer->delete();
         return response(null,Response::HTTP_NO_CONTENT);
     }

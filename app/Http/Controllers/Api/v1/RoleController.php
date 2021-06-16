@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\RoleResource;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\History;
+use Carbon\Carbon;
 
 class RoleController extends Controller
 {
@@ -21,7 +23,7 @@ class RoleController extends Controller
      */
     public function __construct(Role $role)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:listar roles', ['only' => ['index']]);
         $this->middleware('permission:crear rol', ['only' => ['store']]);
         $this->middleware('permission:mostrar rol', ['only' => ['show']]);
@@ -60,6 +62,13 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $role = $this->role->updateOrCreate([ 'name' => $request->name ]);
+        History::create([
+            'action' => 'Creando rol',
+            'model_type' => 'Spatie\Permission\Models\Role',
+            'model_id' => $role->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => $role
         ], Response::HTTP_CREATED);
@@ -87,6 +96,13 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        History::create([
+            'action' => 'Actualizando rol',
+            'model_type' => 'Spatie\Permission\Models\Role',
+            'model_id' => $role->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $role->update($request->all());
         return response([
             'data' => $role
@@ -99,8 +115,15 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy(Role $role, Request $request)
     {
+        History::create([
+            'action' => 'Eliminando rol',
+            'model_type' => 'Spatie\Permission\Models\Role',
+            'model_id' => $role->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $role->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }

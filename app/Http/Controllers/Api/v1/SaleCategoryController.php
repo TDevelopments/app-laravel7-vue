@@ -8,6 +8,8 @@ use App\Http\Requests\SaleCategoryRequest;
 use App\Http\Resources\SaleCategoryResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleCategoryController extends Controller
 {
@@ -20,7 +22,7 @@ class SaleCategoryController extends Controller
      */
     public function __construct(SaleCategory $saleCategory)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        /* $this->middleware('api.admin')->except(['index', 'show']); */
         $this->middleware('permission:Ventas - listar categorias', ['only' => ['index']]);
         $this->middleware('permission:Ventas - crear categoria', ['only' => ['store']]);
         $this->middleware('permission:Ventas - mostrar categoria', ['only' => ['show']]);
@@ -57,6 +59,13 @@ class SaleCategoryController extends Controller
     public function store(SaleCategoryRequest $request)
     {
         $saleCategory = $this->saleCategory->updateOrCreate($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando categoria',
+            'model_type' => 'App\Models\SaleCategory',
+            'model_id' => $saleCategory->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => new SaleCategoryResource($saleCategory)
         ],Response::HTTP_CREATED);
@@ -84,6 +93,13 @@ class SaleCategoryController extends Controller
     public function update(SaleCategoryRequest $request, SaleCategory $saleCategory)
     {
         $saleCategory->update($request->all());
+        History::create([
+            'action' => 'Ventas - Actualizando categoria',
+            'model_type' => 'App\Models\SaleCategory',
+            'model_id' => $saleCategory->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => new SaleCategoryResource($saleCategory)
         ],Response::HTTP_OK);
@@ -97,6 +113,13 @@ class SaleCategoryController extends Controller
      */
     public function destroy(SaleCategory $saleCategory)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando categoria',
+            'model_type' => 'App\Models\SaleCategory',
+            'model_id' => $saleCategory->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleCategory->delete();
         return response(null,Response::HTTP_NO_CONTENT);
     }

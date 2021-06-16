@@ -12,6 +12,8 @@ use App\Http\Resources\SaleStockRecordResource;
 use App\Http\Resources\SaleStockRecordCollection;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleStockRecordController extends Controller
 {
@@ -22,7 +24,7 @@ class SaleStockRecordController extends Controller
 
     public function __construct(SaleStockRecord $saleStockRecord, SaleCustomer $saleCustomer, SaleProduct $saleProduct, SaleProductStatus $saleProductStatus)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Ventas - listar registro de stock', ['only' => ['index']]);
         $this->middleware('permission:Ventas - crear registro stock', ['only' => ['store']]);
         $this->middleware('permission:Ventas - mostrar registro stock', ['only' => ['show']]);
@@ -95,7 +97,7 @@ class SaleStockRecordController extends Controller
                 if (empty($stockRecord['Color']))
                     $stockRecord['Color'] = null;
                 if (empty($stockRecord['StockRecordId'])) {
-                    $saleStockRecords[] = $this->saleStockRecord->create([
+                    $referenceStockRecord = $this->saleStockRecord->create([
                         'sale_product_id' => $stockRecord['ProductId'],
                         'sale_business_location_id' => $stockRecord['BusinessLocationId'],
                         'sale_product_status_id' => $stockRecord['ProductStatusId'],
@@ -104,6 +106,14 @@ class SaleStockRecordController extends Controller
                         'Size' => $stockRecord['Size'],
                         'Color' => $stockRecord['Color'],
                     ]);
+                    History::create([
+                        'action' => 'Ventas - Creando registro stock',
+                        'model_type' => 'App\Models\SaleStockRecord',
+                        'model_id' => $referenceStockRecord->id,
+                        'user_id' => $request->user()->id,
+                        'creation_date' => Carbon::now()
+                    ]);
+                    $saleStockRecord[] = $referenceStockRecord;
                 } else {
                     $stockRecordReference = $this->saleStockRecord->find($stockRecord['StockRecordId']);
                     $stockRecordReference->sale_business_location_id = $stockRecord['BusinessLocationId'];
@@ -113,6 +123,13 @@ class SaleStockRecordController extends Controller
                     $stockRecordReference->Size = $stockRecord['Size'];
                     $stockRecordReference->Color = $stockRecord['Color'];
                     $stockRecordReference->save();
+                    History::create([
+                        'action' => 'Ventas - Actualizando registro stock',
+                        'model_type' => 'App\Models\SaleStockRecord',
+                        'model_id' => $stockRecordReference->id,
+                        'user_id' => $request->user()->id,
+                        'creation_date' => Carbon::now()
+                    ]);
                     $saleStockRecords[] = $stockRecordReference;
                 }
             }
@@ -144,6 +161,13 @@ class SaleStockRecordController extends Controller
      */
     public function update(SaleStockRecordRequest $request, SaleStockRecord $saleStockRecord)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando registro stock',
+            'model_type' => 'App\Models\SaleStockRecord',
+            'model_id' => $saleStockRecord->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleStockRecord->update($request->all());
         /* $saleStockRecord->update(['order_detail_id' => NULL]); */
         return response([
@@ -157,8 +181,15 @@ class SaleStockRecordController extends Controller
      * @param  \App\SaleStockRecord  $saleStockRecord
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleStockRecord $saleStockRecord)
+    public function destroy(SaleStockRecord $saleStockRecord, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando registro stock',
+            'model_type' => 'App\Models\SaleStockRecord',
+            'model_id' => $saleStockRecord->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleStockRecord->delete();
         return response(null,Response::HTTP_NO_CONTENT);
     }

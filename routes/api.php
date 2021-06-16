@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\v1\OrderShippingStatusController;
 use App\Http\Controllers\Api\v1\SalePaymentController;
 use App\Http\Controllers\Api\v1\PermissionController;
 use App\Http\Controllers\Api\v1\SaleProductController;
+use App\Http\Controllers\Api\v1\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -233,5 +234,8 @@ Route::group(['middleware' => ['cors', 'json.response'], 'prefix' => 'v1'], func
         Route::get('permissions', [PermissionController::class, 'index']);
         Route::post('roles/{role}/permissions', [PermissionController::class, 'store']);
         Route::put('roles/{role}/permissions', [PermissionController::class, 'update']);
+
+        // History
+        Route::get('history', [HistoryController::class, 'index']);
     });
 });

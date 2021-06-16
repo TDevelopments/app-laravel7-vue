@@ -14,6 +14,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\History;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -22,7 +24,7 @@ class ProductController extends Controller
 
     public function __construct(Product $product)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Importaciones - listar productos', ['only' => ['index']]);
         $this->middleware('permission:Importaciones - crear producto', ['only' => ['store', 'createMassive']]);
         $this->middleware('permission:Importaciones - mostrar producto', ['only' => ['show']]);
@@ -117,6 +119,13 @@ class ProductController extends Controller
             $request->merge(['sku' => $this->randomId()]);
         }
         $product = $this->product->create($request->all());
+        History::create([
+            'action' => 'Creando Producto',
+            'model_type' => 'App\Models\Product',
+            'model_id' => $product->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return new ProductResource($product);
     }
 
@@ -147,6 +156,13 @@ class ProductController extends Controller
         // if ($validator->fails()) {
         //     return response(['error' => $validator->errors(), 'Validation Error'], 422);
         // }
+        History::create([
+            'action' => 'Actualizando Producto',
+            'model_type' => 'App\Models\Product',
+            'model_id' => $product->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $product->update($request->all());
         return new ProductResource($product);
     }
@@ -157,8 +173,15 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product, Request $request)
     {
+        History::create([
+            'action' => 'Eliminando Producto',
+            'model_type' => 'App\Models\Product',
+            'model_id' => $product->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $product->delete();
         return response()->json(null, 204);
     }
@@ -197,6 +220,13 @@ class ProductController extends Controller
                 $row['sku'] = $this->randomId();
             }
             $productState = $this->product->create($row);
+            History::create([
+                'action' => 'Creando Producto',
+                'model_type' => 'App\Models\Product',
+                'model_id' => $productState->id,
+                'user_id' => $request->user()->id,
+                'creation_date' => Carbon::now()
+            ]);
             $products[] = $productState;
         }
         return ProductResource::collection($products);

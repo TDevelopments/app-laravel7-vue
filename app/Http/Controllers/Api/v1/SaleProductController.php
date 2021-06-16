@@ -16,6 +16,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleProductController extends Controller
 {
@@ -29,7 +31,7 @@ class SaleProductController extends Controller
      */
     public function __construct(SaleProduct $saleProduct, SaleProductStatus $saleProductStatus)
     {
-        $this->middleware('api.admin')->except(['availables']);
+        /* $this->middleware('api.admin')->except(['availables']); */
         $this->middleware('permission:Ventas - listar productos', ['only' => ['index']]);
         $this->middleware('permission:Ventas - crear producto', ['only' => ['store']]);
         $this->middleware('permission:Ventas - mostrar producto', ['only' => ['show']]);
@@ -86,6 +88,13 @@ class SaleProductController extends Controller
         $this->handle($request);
         $request->merge(['Sku' => $this->randomId()]);
         $saleProduct = $this->saleProduct->create($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando producto',
+            'model_type' => 'App\Models\SaleProduct',
+            'model_id' => $saleProduct->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         if ($request->has('Image')) {
             foreach($request->file('Image') as $file)
             {
@@ -137,6 +146,13 @@ class SaleProductController extends Controller
     {
         $this->handle($request);
         $saleProduct->update($request->all());
+        History::create([
+            'action' => 'Ventas - Actualizando producto',
+            'model_type' => 'App\Models\SaleProduct',
+            'model_id' => $saleProduct->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         if ($request->has('Image')) {
             foreach($request->file('Image') as $file)
             {
@@ -160,8 +176,15 @@ class SaleProductController extends Controller
      * @param  \App\SaleProduct  $saleProduct
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleProduct $saleProduct)
+    public function destroy(SaleProduct $saleProduct, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando producto',
+            'model_type' => 'App\Models\SaleProduct',
+            'model_id' => $saleProduct->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleProduct->delete();
         return response(null,Response::HTTP_NO_CONTENT);
     }

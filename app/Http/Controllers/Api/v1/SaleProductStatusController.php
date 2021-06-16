@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SaleProductStatusRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleProductStatusController extends Controller
 {
@@ -19,7 +21,7 @@ class SaleProductStatusController extends Controller
      */
     public function __construct(SaleProductStatus $saleProductStatus)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Ventas - listar estados de producto', ['only' => ['index']]);
         $this->middleware('permission:Ventas - crear estado de producto', ['only' => ['store']]);
         $this->middleware('permission:Ventas - mostrar estado de producto', ['only' => ['show']]);
@@ -57,6 +59,13 @@ class SaleProductStatusController extends Controller
     public function store(SaleProductStatusRequest $request)
     {
         $saleProductStatus = $this->saleProductStatus->updateOrCreate($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando estado de producto',
+            'model_type' => 'App\Models\SaleProductStatus',
+            'model_id' => $saleProductStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => $saleProductStatus
         ], Response::HTTP_CREATED);
@@ -84,6 +93,13 @@ class SaleProductStatusController extends Controller
      */
     public function update(SaleProductStatusRequest $request, SaleProductStatus $saleProductStatus)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando estado de producto',
+            'model_type' => 'App\Models\SaleProductStatus',
+            'model_id' => $saleProductStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleProductStatus->update($request->all());
         return response([
             'data' => $saleProductStatus
@@ -96,8 +112,15 @@ class SaleProductStatusController extends Controller
      * @param  \App\SaleProductStatus  $saleProductStatus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleProductStatus $saleProductStatus)
+    public function destroy(SaleProductStatus $saleProductStatus, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando estado de producto',
+            'model_type' => 'App\Models\SaleProductStatus',
+            'model_id' => $saleProductStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleProductStatus->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }

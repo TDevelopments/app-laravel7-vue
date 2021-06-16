@@ -7,6 +7,8 @@ use App\Http\Requests\AdviserRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\AdviserResource;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class AdviserController extends Controller
 {
@@ -14,7 +16,7 @@ class AdviserController extends Controller
 
     public function __construct(Adviser $adviser)
     {
-        $this->middleware('api.admin')->except(['index']);
+        /* $this->middleware('api.admin')->except(['index']); */
         $this->middleware('permission:Importaciones - crear asesor', ['only' => ['store']]);
         $this->middleware('permission:Importaciones - mostrar asesor', ['only' => ['show']]);
         $this->middleware('permission:Importaciones - editar asesor', ['only' => ['update']]);
@@ -41,6 +43,13 @@ class AdviserController extends Controller
     public function store(AdviserRequest $request)
     {
         $adviser = $this->adviser->create($request->toArray());
+        History::create([
+            'action' => 'Creando asesor',
+            'model_type' => 'App\Models\Adviser',
+            'model_id' => $adviser->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return new AdviserResource($adviser);
     }
 
@@ -64,6 +73,13 @@ class AdviserController extends Controller
      */
     public function update(AdviserRequest $request, Adviser $adviser)
     {
+        History::create([
+            'action' => 'Actualizando asesor',
+            'model_type' => 'App\Models\Adviser',
+            'model_id' => $adviser->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $adviser->update($request->toArray());
         return new AdviserResource($adviser);
     }
@@ -74,8 +90,15 @@ class AdviserController extends Controller
      * @param  \App\Adviser  $adviser
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Adviser $adviser)
+    public function destroy(Adviser $adviser, Request $request)
     {
+        History::create([
+            'action' => 'Elimnando asesor',
+            'model_type' => 'App\Models\Adviser',
+            'model_id' => $adviser->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $adviser->delete();
         return response()->json(null, 204);
     }

@@ -6,6 +6,8 @@ use App\Models\PaymentConcept;
 use Illuminate\Http\Request;
 use App\Http\Requests\PaymentConceptRequest;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class PaymentConceptController extends Controller
 {
@@ -13,7 +15,7 @@ class PaymentConceptController extends Controller
 
     public function __construct(PaymentConcept $concept)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Importaciones - listar conceptos de pago', ['only' => ['index']]);
         $this->middleware('permission:Importaciones - crear concepto de pago', ['only' => ['store']]);
         $this->middleware('permission:Importaciones - mostrar concepto de pago', ['only' => ['show']]);
@@ -41,6 +43,13 @@ class PaymentConceptController extends Controller
     public function store(PaymentConceptRequest $request)
     {
         $concept = $this->concept->create($request->toArray());
+        History::create([
+            'action' => 'Creando concepto de pago',
+            'model_type' => 'App\Models\PaymentConcept',
+            'model_id' => $concept->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response()->json($concept, 201);
     }
 
@@ -64,6 +73,13 @@ class PaymentConceptController extends Controller
      */
     public function update(PaymentConceptRequest $request, PaymentConcept $paymentConcept)
     {
+        History::create([
+            'action' => 'Actualizando concepto de pago',
+            'model_type' => 'App\Models\PaymentConcept',
+            'model_id' => $paymentConcept->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $paymentConcept->update($request->toArray());
         return response()->json($paymentConcept, 200);
     }
@@ -74,8 +90,15 @@ class PaymentConceptController extends Controller
      * @param  \App\PaymentConcept  $concept
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PaymentConcept $paymentConcept)
+    public function destroy(PaymentConcept $paymentConcept, Request $request)
     {
+        History::create([
+            'action' => 'Elimnando concepto de pago',
+            'model_type' => 'App\Models\PaymentConcept',
+            'model_id' => $paymentConcept->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $paymentConcept->delete();
         return response()->json(null, 204);
     }

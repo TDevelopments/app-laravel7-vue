@@ -8,6 +8,8 @@ use App\Models\Catalogue;
 use App\Http\Requests\CatalogueRequest;
 use App\Http\Resources\CatalogueResource;
 use App\Http\Resources\CatalogueAdminResource;
+use App\Models\History;
+use Carbon\Carbon;
 
 class CatalogueController extends Controller
 {
@@ -16,7 +18,7 @@ class CatalogueController extends Controller
 
     public function __construct(Catalogue $catalogue)
     {
-        $this->middleware('api.admin')->except(['availables']);
+        /* $this->middleware('api.admin')->except(['availables']); */
         $this->middleware('permission:Importaciones - listar catalogos', ['only' => ['index', 'list']]);
         $this->middleware('permission:Importaciones - crear catalogo', ['only' => ['store']]);
         $this->middleware('permission:Importaciones - mostrar catalogo', ['only' => ['show']]);
@@ -50,6 +52,13 @@ class CatalogueController extends Controller
     public function store(CatalogueRequest $request)
     {
         $catalogue = $this->catalogue->create($request->all());
+        History::create([
+            'action' => 'Creando Catalogo',
+            'model_type' => 'App\Models\Catalogue',
+            'model_id' => $catalogue->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return new CatalogueResource($catalogue);
     }
 
@@ -73,6 +82,13 @@ class CatalogueController extends Controller
      */
     public function update(CatalogueRequest $request,Catalogue $catalogue)
     {
+        History::create([
+            'action' => 'Actualizando Catalogo',
+            'model_type' => 'App\Models\Catalogue',
+            'model_id' => $catalogue->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $catalogue->update($request->all());
         return new CatalogueResource($catalogue);
     }
@@ -83,8 +99,15 @@ class CatalogueController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Catalogue $catalogue)
+    public function destroy(Catalogue $catalogue, Request $request)
     {
+        History::create([
+            'action' => 'Eliminando Catalogo',
+            'model_type' => 'App\Models\Catalogue',
+            'model_id' => $catalogue->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $catalogue->delete();
         return response()->json(null, 204);
     }

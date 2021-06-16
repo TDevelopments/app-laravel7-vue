@@ -21,6 +21,7 @@ use App\Http\Requests\SaleOrderRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Models\History;
 
 class SaleOrderController extends Controller
 {
@@ -38,7 +39,7 @@ class SaleOrderController extends Controller
 
     public function __construct(SaleOrder $saleOrder, SaleCustomer $saleCustomer, SaleStateOrder $saleStateOrder, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, SalePaymentMethod $salePaymentMethod, SalePaymentStatus $salePaymentStatus, SalePayment $salePayment, SaleOrderDetail $saleOrderDetail)
     {
-        $this->middleware('api.admin')->except(['store']);
+        /* $this->middleware('api.admin')->except(['store']); */
         $this->middleware('permission:Ventas - listar ordenes', ['only' => ['index']]);
         $this->middleware('permission:Ventas - crear orden', ['only' => ['store']]);
         $this->middleware('permission:Ventas - mostrar orden', ['only' => ['show']]);
@@ -129,6 +130,13 @@ class SaleOrderController extends Controller
                 'user_id' => $request->user()->id,
                 'OrderDate' => Carbon::now(),
             ]);
+            History::create([
+                'action' => 'Ventas - Creando orden',
+                'model_type' => 'App\Models\SaleOrder',
+                'model_id' => $saleOrder->id,
+                'user_id' => $request->user()->id,
+                'creation_date' => Carbon::now()
+            ]);
             foreach ($request->Products as $product) {
                 $saleProductReference = $this->saleProduct->find($product['ProductId']);
                 $quantityStock = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
@@ -184,6 +192,13 @@ class SaleOrderController extends Controller
      */
     public function update(Request $request, SaleOrder $saleOrder)
     {
+        History::create([
+            'action' => 'Ventas - Actualiznado orden',
+            'model_type' => 'App\Models\SaleOrder',
+            'model_id' => $saleOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $validator = Validator::make($request->all(), [
             'SaleStateOrderId' => ['required', 'integer', 'exists:App\Models\SaleStateOrder,id'],
         ]);
@@ -202,8 +217,15 @@ class SaleOrderController extends Controller
      * @param  \App\SaleOrder  $saleOrder
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleOrder $saleOrder)
+    public function destroy(SaleOrder $saleOrder, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando orden',
+            'model_type' => 'App\Models\SaleOrder',
+            'model_id' => $saleOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleOrder->update(['Delete' => true]);
         return response(null,Response::HTTP_NO_CONTENT);
     }

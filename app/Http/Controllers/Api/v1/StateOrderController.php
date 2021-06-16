@@ -6,6 +6,8 @@ use App\Models\StateOrder;
 use Illuminate\Http\Request;
 use App\Http\Requests\StateOrderRequest;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class StateOrderController extends Controller
 {
@@ -13,7 +15,7 @@ class StateOrderController extends Controller
 
     public function __construct(StateOrder $stateOrder)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
         $this->middleware('permission:Importaciones - listar estados de orden', ['only' => ['index']]);
         $this->middleware('permission:Importaciones - crear estado de orden', ['only' => ['store']]);
         $this->middleware('permission:Importaciones - mostrar estado de orden', ['only' => ['show']]);
@@ -41,6 +43,13 @@ class StateOrderController extends Controller
     public function store(StateOrderRequest $request)
     {
         $stateOrder = $this->stateOrder->create($request->toArray());
+        History::create([
+            'action' => 'Creando estado de Orden',
+            'model_type' => 'App\Models\StateOrder',
+            'model_id' => $stateOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response()->json($stateOrder, 201);
     }
 
@@ -64,6 +73,13 @@ class StateOrderController extends Controller
      */
     public function update(StateOrderRequest $request, StateOrder $stateOrder)
     {
+        History::create([
+            'action' => 'Actualizando estado de Orden',
+            'model_type' => 'App\Models\StateOrder',
+            'model_id' => $stateOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $stateOrder->update($request->toArray());
         return response()->json($stateOrder, 200);
     }
@@ -74,8 +90,15 @@ class StateOrderController extends Controller
      * @param  \App\stateOrder  $stateOrder
      * @return \Illuminate\Http\Response
      */
-    public function destroy(StateOrder $stateOrder)
+    public function destroy(StateOrder $stateOrder, Request $request)
     {
+        History::create([
+            'action' => 'Elimnando estado de Orden',
+            'model_type' => 'App\Models\StateOrder',
+            'model_id' => $stateOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $stateOrder->delete();
         return response()->json(null, 204);
     }
