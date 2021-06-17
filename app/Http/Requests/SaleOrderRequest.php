@@ -27,6 +27,8 @@ class SaleOrderRequest extends FormRequest
             'Products' => ['required', 'array'],
             'Products.*.ProductId' => ['required', 'integer', 'exists:App\Models\SaleProduct,id'],
             'Products.*.Quantity' => ['required', 'integer'],
+            'Products.*.Size' => ['integer'],
+            'Products.*.Color' => ['string'],
             'Payment' => ['array'],
             'Payment.TotalPaid' => ['numeric'],
             'Payment.SellNote' => ['string'],

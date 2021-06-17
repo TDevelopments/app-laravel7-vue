@@ -21,6 +21,7 @@ use App\Http\Requests\SaleOrderRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Models\History;
 
 class SaleOrderController extends Controller
 {
@@ -38,7 +39,12 @@ class SaleOrderController extends Controller
 
     public function __construct(SaleOrder $saleOrder, SaleCustomer $saleCustomer, SaleStateOrder $saleStateOrder, SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, SalePaymentMethod $salePaymentMethod, SalePaymentStatus $salePaymentStatus, SalePayment $salePayment, SaleOrderDetail $saleOrderDetail)
     {
-        $this->middleware('api.admin')->except(['store']);
+        /* $this->middleware('api.admin')->except(['store']); */
+        $this->middleware('permission:Ventas - listar ordenes', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear orden', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar orden', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar orden', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar orden', ['only' => ['destroy']]);
         $this->saleOrder = $saleOrder;
         $this->saleCustomer = $saleCustomer;
         $this->saleStateOrder = $saleStateOrder;
@@ -107,8 +113,13 @@ class SaleOrderController extends Controller
                 $requestStateOrder = $saleStateOrder->id;
             else
                 $requestStateOrder = $request->StateOrderId;
+            if (empty($request->CustomerId))
+                $requestCustomer = $saleCustomer->id;
+            else
+                $requestCustomer = $request->CustomerId;
         } else {
             $requestStateOrder = $saleStateOrder->id;
+            $requestCustomer = $saleCustomer->id;
         }
         $productStatus = $this->saleProductStatus->firstWhere('StatusName', 'Disponible');
         if ($request->Products) {
@@ -119,15 +130,27 @@ class SaleOrderController extends Controller
                 }
             }
             $saleOrder = $this->saleOrder->create([
-                'sale_customer_id' => $saleCustomer->id,
+                'sale_customer_id' => $requestCustomer,
                 'sale_state_order_id' => $requestStateOrder,
                 'user_id' => $request->user()->id,
                 'OrderDate' => Carbon::now(),
             ]);
+            History::create([
+                'action' => 'Ventas - Creando orden',
+                'model_type' => 'App\Models\SaleOrder',
+                'model_id' => $saleOrder->id,
+                'user_id' => $request->user()->id,
+                'creation_date' => Carbon::now()
+            ]);
             foreach ($request->Products as $product) {
                 $saleProductReference = $this->saleProduct->find($product['ProductId']);
-                $quantityStock = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
-                        ->where('sale_product_id', $saleProductReference->id)->sum('Quantity');
+                /* $quantityStock = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id); */
+                $query = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id);
+                if (!empty($product['Size']))
+                    $query->where("Size", $product['Size']);
+                if (!empty($product['Color']))
+                    $query->where("Color", $product['Color']);
+                $quantityStock = $query->where('sale_product_id', $saleProductReference->id)->sum('Quantity');
                 $quantityRequest = (int)$product['Quantity'];
                 if ($quantityRequest <= $quantityStock && $quantityRequest > 0) {
                     $saleOrderDetail = $this->saleOrderDetail->create([
@@ -155,6 +178,25 @@ class SaleOrderController extends Controller
                 'SellNote' => $request->Payment['SellNote'],
                 'user_id' => $request->user()->id
             ]);
+            foreach ($saleOrder->SaleOrderDetails as $refOrderDetail) {
+                $saleStockRecords = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
+                        ->where('sale_product_id', $refOrderDetail->sale_product_id)->get();
+                $quantity = (int)$refOrderDetail['Quantity'];
+                foreach( $saleStockRecords as $stockRecord )
+                {
+                    $quantityRecord = (int)$stockRecord['Quantity'];
+                    if ($quantity <= $quantityRecord)
+                    {
+                        $stockRecord->decrement('Quantity', $quantity);
+                        break;
+                    }
+                    else
+                    {
+                        $quantity = $quantity - $quantityRecord;
+                        $stockRecord->decrement('Quantity', $quantityRecord);
+                    }
+                }
+            }
         }
         return new SaleOrderResourceAdmin($saleOrder);
     }
@@ -179,6 +221,13 @@ class SaleOrderController extends Controller
      */
     public function update(Request $request, SaleOrder $saleOrder)
     {
+        History::create([
+            'action' => 'Ventas - Actualiznado orden',
+            'model_type' => 'App\Models\SaleOrder',
+            'model_id' => $saleOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $validator = Validator::make($request->all(), [
             'SaleStateOrderId' => ['required', 'integer', 'exists:App\Models\SaleStateOrder,id'],
         ]);
@@ -197,8 +246,15 @@ class SaleOrderController extends Controller
      * @param  \App\SaleOrder  $saleOrder
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleOrder $saleOrder)
+    public function destroy(SaleOrder $saleOrder, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando orden',
+            'model_type' => 'App\Models\SaleOrder',
+            'model_id' => $saleOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleOrder->update(['Delete' => true]);
         return response(null,Response::HTTP_NO_CONTENT);
     }

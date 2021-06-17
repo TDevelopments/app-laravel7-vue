@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
+use App\Models\History;
+use Carbon\Carbon;
 
 class CategoryController extends Controller
 {
@@ -14,7 +16,12 @@ class CategoryController extends Controller
 
     public function __construct(Category $category)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Importaciones - listar categorias', ['only' => ['index', 'list']]);
+        $this->middleware('permission:Importaciones - crear categoria', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar categoria', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar categoria', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar categoria', ['only' => ['destroy']]);
         $this->category = $category;
     }
 
@@ -37,6 +44,13 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $category = $this->category->create($request->all());
+        History::create([
+            'action' => 'Creando Categoria',
+            'model_type' => 'App\Models\Category',
+            'model_id' => $category->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return new CategoryResource($category);
     }
 
@@ -60,6 +74,13 @@ class CategoryController extends Controller
      */
     public function update(CategoryRequest $request, Category $category)
     {
+        History::create([
+            'action' => 'Actualizando Categoria',
+            'model_type' => 'App\Models\Category',
+            'model_id' => $category->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $category->update($request->all());
         return new CategoryResource($category);
     }
@@ -70,8 +91,15 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, Request $request)
     {
+        History::create([
+            'action' => 'Eliminando Categoria',
+            'model_type' => 'App\Models\Category',
+            'model_id' => $category->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $category->delete();
         return response()->json(null, 204);
     }

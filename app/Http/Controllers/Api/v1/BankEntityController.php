@@ -6,6 +6,8 @@ use App\Models\BankEntity;
 use Illuminate\Http\Request;
 use App\Http\Requests\BankEntityRequest;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class BankEntityController extends Controller
 {
@@ -13,7 +15,11 @@ class BankEntityController extends Controller
 
     public function __construct(BankEntity $bank)
     {
-        $this->middleware('api.admin')->except(['index']);
+        /* $this->middleware('api.admin')->except(['index']); */
+        $this->middleware('permission:Importaciones - crear entidad bancaria', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar entidad bancaria', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar entidad bancaria', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar entidad bancaria', ['only' => ['destroy']]);
         $this->bank = $bank;
     }
 
@@ -36,6 +42,13 @@ class BankEntityController extends Controller
     public function store(BankEntityRequest $request)
     {
         $bank = $this->bank->create($request->toArray());
+        History::create([
+            'action' => 'Creando entidad bancaria',
+            'model_type' => 'App\Models\BankEntity',
+            'model_id' => $bank->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response()->json($bank, 201);
     }
 
@@ -60,6 +73,13 @@ class BankEntityController extends Controller
     public function update(BankEntityRequest $request, BankEntity $bank)
     {
         $bank->update($request->toArray());
+        History::create([
+            'action' => 'Actualizando entidad bancaria',
+            'model_type' => 'App\Models\BankEntity',
+            'model_id' => $bank->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response()->json($bank, 200);
     }
 
@@ -69,8 +89,15 @@ class BankEntityController extends Controller
      * @param  \App\bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BankEntity $bank)
+    public function destroy(BankEntity $bank, Request $request)
     {
+        History::create([
+            'action' => 'Eliminando entidad bancaria',
+            'model_type' => 'App\Models\BankEntity',
+            'model_id' => $bank->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $bank->delete();
         return response()->json(null, 204);
     }

@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\OrderRequest;
 use Illuminate\Support\Str;
 use File;
+use App\Models\History;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -48,7 +50,12 @@ class OrderController extends Controller
         SaleProduct $saleProduct, SaleStockRecord $saleStockRecord, SaleProductStatus $saleProductStatus, 
         OrderShippingStatus $shippingStatus, SaleBusinessLocation $saleBusinessLocation)
     {
-        $this->middleware('api.admin')->except(['store']);
+        /* $this->middleware('api.admin')->except(['store']); */
+        $this->middleware('permission:Importaciones - listar ordenes', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear orden', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - mostrar orden', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar orden', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar orden', ['only' => ['destroy']]);
         $this->order = $order;
         $this->catalogue = $catalogue;
         $this->product = $product;
@@ -172,6 +179,13 @@ class OrderController extends Controller
             'sale_product_status_id' => $requestProductStatus,
             // 'state_order_id' => $request->state_order_id,
             // 'status' => 'pending',
+        ]);
+        History::create([
+            'action' => 'Creando orden',
+            'model_type' => 'App\Models\Order',
+            'model_id' => $order->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
         ]);
         $catalogueReference = $this->catalogue->find($request->catalogue_id);
         $data = $request->products;
@@ -349,6 +363,13 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response(['error' => $validator->errors(), 'Validation Error'], 422);
         }
+        History::create([
+            'action' => 'Actualizando orden',
+            'model_type' => 'App\Models\Order',
+            'model_id' => $order->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleProductStatus = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Reservado']);
         $saleProductStatusAvailable = $this->saleProductStatus->firstOrCreate(['StatusName' => 'Disponible']);
         if (empty($order->sale_product_status_id)) {
@@ -382,7 +403,7 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy(Order $order, Request $request)
     {
       /* $ordersDetails = $this->orderDetail->where('order_id', $order->id)->get(); */
       /* foreach($ordersDetails as $orderDetail) */
@@ -392,8 +413,15 @@ class OrderController extends Controller
       /*     else */
       /*         $this->product->find($orderDetail->product_id)->decrement('count', (int)$orderDetail->quantity); */
       /* } */
-      $order->delete();
-      return response()->json(null, 204);
+        History::create([
+            'action' => 'Eliminando orden',
+            'model_type' => 'App\Models\Order',
+            'model_id' => $order->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
+        $order->delete();
+        return response()->json(null, 204);
     }
 
     public function randomId() {

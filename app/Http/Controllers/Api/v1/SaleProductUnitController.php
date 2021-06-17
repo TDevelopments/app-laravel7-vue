@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SaleProductUnitRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleProductUnitController extends Controller
 {
@@ -19,7 +21,12 @@ class SaleProductUnitController extends Controller
      */
     public function __construct(SaleProductUnit $saleProductUnit)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Ventas - listar unidades de producto', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear unidad de producto', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar unidad de producto', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar unidad de producto', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar unidad de producto', ['only' => ['destroy']]);
         $this->saleProductUnit = $saleProductUnit;
     }
 
@@ -52,6 +59,13 @@ class SaleProductUnitController extends Controller
     public function store(SaleProductUnitRequest $request)
     {
         $saleProductUnit = $this->saleProductUnit->updateOrCreate($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando unidad de producto',
+            'model_type' => 'App\Models\SaleProductUnit',
+            'model_id' => $saleProductUnit->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => $saleProductUnit
         ], Response::HTTP_CREATED);
@@ -79,6 +93,13 @@ class SaleProductUnitController extends Controller
      */
     public function update(SaleProductUnitRequest $request, SaleProductUnit $saleUnit)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando unidad de producto',
+            'model_type' => 'App\Models\SaleProductUnit',
+            'model_id' => $saleUnit->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleUnit->update($request->all());
         return response([
             'data' => $saleUnit
@@ -91,8 +112,15 @@ class SaleProductUnitController extends Controller
      * @param  \App\SaleProductUnit  $saleProductUnit
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleProductUnit $saleUnit)
+    public function destroy(SaleProductUnit $saleUnit, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando unidad de producto',
+            'model_type' => 'App\Models\SaleProductUnit',
+            'model_id' => $saleUnit->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleUnit->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }

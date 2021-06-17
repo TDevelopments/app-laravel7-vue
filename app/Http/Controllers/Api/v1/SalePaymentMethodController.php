@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SalePaymentMethodRequest;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SalePaymentMethodController extends Controller
 {
@@ -15,7 +17,12 @@ class SalePaymentMethodController extends Controller
 
     public function __construct(SalePaymentMethod $salePaymentMethod)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Ventas - listar metodos de pago', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear metodo de pago', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar metodo de pago', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar metodo de pago', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar metodo de pago', ['only' => ['destroy']]);
         $this->salePaymentMethod = $salePaymentMethod;
     }
 
@@ -48,6 +55,13 @@ class SalePaymentMethodController extends Controller
     public function store(SalePaymentMethodRequest $request)
     {
         $salePaymentMethod = $this->salePaymentMethod->updateOrCreate($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando metodo de Pago',
+            'model_type' => 'App\Models\SalePaymentMethod',
+            'model_id' => $salePaymentMethod->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => $salePaymentMethod
         ], Response::HTTP_CREATED);
@@ -75,6 +89,13 @@ class SalePaymentMethodController extends Controller
      */
     public function update(SalePaymentMethodRequest $request, SalePaymentMethod $salePaymentMethod)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando metodo de Pago',
+            'model_type' => 'App\Models\SalePaymentMethod',
+            'model_id' => $salePaymentMethod->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $salePaymentMethod->update($request->all());
         return response([
             'data' => $salePaymentMethod
@@ -87,8 +108,15 @@ class SalePaymentMethodController extends Controller
      * @param  \App\SalePaymentMethod  $salePaymentMethod
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SalePaymentMethod $salePaymentMethod)
+    public function destroy(SalePaymentMethod $salePaymentMethod, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando metodo de Pago',
+            'model_type' => 'App\Models\SalePaymentMethod',
+            'model_id' => $salePaymentMethod->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $salePaymentMethod->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }

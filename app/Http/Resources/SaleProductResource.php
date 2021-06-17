@@ -24,6 +24,12 @@ class SaleProductResource extends JsonResource
             'AvailableStock' => $this->SaleStockRecords->groupBy('sale_product_status_id')->map(function ($row) {
                 return $row->sum('Quantity');
             }),
+            'Colors' => $this->SaleStockRecords->groupBy('Color')->map(function ($row) {
+                return $row->Sum('Quantity');
+            }),
+            'Sizes' => $this->SaleStockRecords->groupBy('Size')->map(function ($row) {
+                return $row->Sum('Quantity');
+            }),
             /* 'AvailableStockName' => SaleStockRecordResource::collection($this->SaleStockRecords)->groupBy('sale_product_status_id')->map(function ($row) { */
             /*     return $row->sum('Quantity'); */
             /* }), */

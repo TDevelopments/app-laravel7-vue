@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\SalePaymentRequest;
 use App\Http\Resources\SaleOrderResourceAdmin;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SalePaymentController extends Controller
 {
@@ -23,7 +25,10 @@ class SalePaymentController extends Controller
     
     public function __construct(SaleOrder $saleOrder, SalePayment $salePayment, SalePaymentMethod $salePaymentMethod, SalePaymentStatus $salePaymentStatus)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Ventas - crear pago de orden', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - actualizar pago de orden', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar pago de orden', ['only' => ['destroy']]);
         $this->salePayment = $salePayment;
         $this->saleOrder = $saleOrder;
         $this->salePaymentMethod = $salePaymentMethod;
@@ -59,6 +64,13 @@ class SalePaymentController extends Controller
             'SellNote' => $request->SellNote,
             'user_id' => $request->user()->id
         ]);
+        History::create([
+            'action' => 'Ventas - Creando pago de order',
+            'model_type' => 'App\Models\SalePayment',
+            'model_id' => $salePayment->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return new SaleOrderResourceAdmin($saleOrder);
     }
 
@@ -92,6 +104,13 @@ class SalePaymentController extends Controller
             'SellNote' => $request->SellNote,
             'user_id' => $request->user()->id
         ]);
+        History::create([
+            'action' => 'Ventas - Actualizando pago de order',
+            'model_type' => 'App\Models\SalePayment',
+            'model_id' => $saleOrder->salePayment->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return new SaleOrderResourceAdmin($saleOrder);
     }
 
@@ -101,8 +120,15 @@ class SalePaymentController extends Controller
      * @param  \App\SalePayment  $salePayment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SalePayment $salePayment)
+    public function destroy(SalePayment $salePayment, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando pago de order',
+            'model_type' => 'App\Models\SalePayment',
+            'model_id' => $salePayment->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $salePayment->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }

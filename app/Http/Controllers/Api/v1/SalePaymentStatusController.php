@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SalePaymentStatusRequest;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SalePaymentStatusController extends Controller
 {
@@ -15,7 +17,12 @@ class SalePaymentStatusController extends Controller
 
     public function __construct(SalePaymentStatus $salePaymentStatus)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Ventas - listar estados de pago', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear estado de pago', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar estado de pago', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar estado de pago', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar estado de pago', ['only' => ['destroy']]);
         $this->salePaymentStatus = $salePaymentStatus;
     }
 
@@ -48,6 +55,13 @@ class SalePaymentStatusController extends Controller
     public function store(SalePaymentStatusRequest $request)
     {
         $salePaymentStatus = $this->salePaymentStatus->updateOrCreate($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando estado de pago',
+            'model_type' => 'App\Models\SalePaymentStatus',
+            'model_id' => $salePaymentStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => $salePaymentStatus
         ], Response::HTTP_CREATED);
@@ -75,6 +89,13 @@ class SalePaymentStatusController extends Controller
      */
     public function update(SalePaymentStatusRequest $request, SalePaymentStatus $salePaymentStatus)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando estado de pago',
+            'model_type' => 'App\Models\SalePaymentStatus',
+            'model_id' => $salePaymentStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $salePaymentStatus->update($request->all());
         return response([
             'data' => $salePaymentStatus
@@ -87,8 +108,15 @@ class SalePaymentStatusController extends Controller
      * @param  \App\SalePaymentStatus  $salePaymentStatus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SalePaymentStatus $salePaymentStatus)
+    public function destroy(SalePaymentStatus $salePaymentStatus, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando estado de pago',
+            'model_type' => 'App\Models\SalePaymentStatus',
+            'model_id' => $salePaymentStatus->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $salePaymentStatus->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }

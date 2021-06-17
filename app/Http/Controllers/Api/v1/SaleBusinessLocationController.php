@@ -8,6 +8,8 @@ use App\Http\Requests\BusinessLocationRequest;
 use App\Http\Resources\BusinessLocationResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleBusinessLocationController extends Controller
 {
@@ -20,7 +22,12 @@ class SaleBusinessLocationController extends Controller
      */
     public function __construct(SaleBusinessLocation $saleBusinessLocation)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Ventas - listar ubicaciones empresa', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear ubicacion empresa', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar ubicacion empresa', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar ubicacion empresa', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar ubicacion empresa', ['only' => ['destroy']]);
         $this->saleBusinessLocation = $saleBusinessLocation;
     }
 
@@ -53,6 +60,13 @@ class SaleBusinessLocationController extends Controller
     public function store(BusinessLocationRequest $request)
     {
         $saleBusinessLocation = $this->saleBusinessLocation->create($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando ubicacion empresa',
+            'model_type' => 'App\Models\SaleBusinessLocation',
+            'model_id' => $saleBusinessLocation->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => new BusinessLocationResource($saleBusinessLocation)
         ],Response::HTTP_CREATED);
@@ -78,6 +92,13 @@ class SaleBusinessLocationController extends Controller
      */
     public function update(BusinessLocationRequest $request, SaleBusinessLocation $businessLocation)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando ubicacion empresa',
+            'model_type' => 'App\Models\SaleBusinessLocation',
+            'model_id' => $businessLocation->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $businessLocation->update($request->all());
         return response([
             'data' => new BusinessLocationResource($businessLocation)
@@ -90,8 +111,15 @@ class SaleBusinessLocationController extends Controller
      * @param  \App\SabeBusinessLocation  $sabeBusinessLocation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleBusinessLocation $businessLocation)
+    public function destroy(SaleBusinessLocation $businessLocation, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando ubicacion empresa',
+            'model_type' => 'App\Models\SaleBusinessLocation',
+            'model_id' => $businessLocation->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $businessLocation->delete();
         return response(null,Response::HTTP_NO_CONTENT);
     }

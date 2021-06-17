@@ -12,6 +12,8 @@ use App\Http\Requests\StoreProductRangeRequest;
 use App\Http\Resources\ProductRangeResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\History;
+use Carbon\Carbon;
 
 class ProductRangeController extends Controller
 {
@@ -20,7 +22,12 @@ class ProductRangeController extends Controller
 
     public function __construct(ProductRange $product_range, Range $range)
     {
-        $this->middleware('api.admin')->except(['index', 'show']);
+        /* $this->middleware('api.admin')->except(['index', 'show']); */
+        $this->middleware('permission:Importaciones - listar productos con rango', ['only' => ['index']]);
+        $this->middleware('permission:Importaciones - crear producto con rango', ['only' => ['store', 'createMassive']]);
+        $this->middleware('permission:Importaciones - mostrar producto con rango', ['only' => ['show']]);
+        $this->middleware('permission:Importaciones - editar producto con rango', ['only' => ['update']]);
+        $this->middleware('permission:Importaciones - eliminar producto con rango', ['only' => ['destroy']]);
         $this->product_range = $product_range;
         $this->range = $range;
     }
@@ -32,6 +39,20 @@ class ProductRangeController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->query("catalogue_id") || $request->query("category_id")) {
+            $value1 = $request->query("category_id");
+            $value2 = $request->query("catalogue_id");
+            $query = $this->product_range->where('on_sale', false);
+            if($request->query("catalogue_id"))
+            {
+                $query->where('catalogue_id', $value1);
+            }
+            if($request->query("category_id"))
+            {
+                $query->where("category_id", $value2);
+            }
+            return ProductRangeResource::collection($query->orderBy('model')->paginate()->withQueryString());
+        }
         if ($request->query("model") && $request->query("sku")) {
             $value = $request->query("model");
             $value2 = $request->query("sku");
@@ -66,6 +87,13 @@ class ProductRangeController extends Controller
             $request->merge(['sku' => $this->randomId()]);
         }
         $product_range = $this->product_range->create($request->all());
+        History::create([
+            'action' => 'Creando Producto con rango',
+            'model_type' => 'App\Models\ProductRange',
+            'model_id' => $product_range->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $dataranges = $request->ranges;
         if($dataranges)
         {
@@ -109,6 +137,13 @@ class ProductRangeController extends Controller
         // if ($validator->fails()) {
         //     return response(['error' => $validator->errors(), 'Validation Error'], 422);
         // }
+        History::create([
+            'action' => 'Actualizando Producto con rango',
+            'model_type' => 'App\Models\ProductRange',
+            'model_id' => $productRange->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $productRange->update($request->all());
         return new ProductRangeResource($productRange);
     }
@@ -119,8 +154,15 @@ class ProductRangeController extends Controller
      * @param  \App\Models\ProductRange  $productRange
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductRange $productRange)
+    public function destroy(ProductRange $productRange, Request $request)
     {
+        History::create([
+            'action' => 'Eliminando Producto con rango',
+            'model_type' => 'App\Models\ProductRange',
+            'model_id' => $productRange->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $productRange->delete();
         return response()->json(null, 204);
     }
@@ -157,6 +199,13 @@ class ProductRangeController extends Controller
                $row['sku'] = $this->randomId();
             }
             $prange = $this->product_range->create($row);
+            History::create([
+                'action' => 'Creando Producto con rango',
+                'model_type' => 'App\Models\ProductRange',
+                'model_id' => $prange->id,
+                'user_id' => $request->user()->id,
+                'creation_date' => Carbon::now()
+            ]);
             // return $row['ranges'];
             $products[] = $prange;
             foreach ($row['ranges'] as $value) {

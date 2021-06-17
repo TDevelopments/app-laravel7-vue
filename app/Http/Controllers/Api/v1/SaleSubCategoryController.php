@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SaleSubCategoryRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleSubCategoryController extends Controller
 {
@@ -19,7 +21,12 @@ class SaleSubCategoryController extends Controller
      */
     public function __construct(SaleSubCategory $saleSubCategory)
     {
-        $this->middleware('api.admin')->except(['store']);
+        /* $this->middleware('api.admin')->except(['store']); */
+        $this->middleware('permission:Ventas - listar sub-categorias', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear sub-categoria', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar sub-categoria', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar sub-categoria', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar sub-categoria', ['only' => ['destroy']]);
         $this->saleSubCategory = $saleSubCategory;
     }
 
@@ -52,6 +59,13 @@ class SaleSubCategoryController extends Controller
     public function store(SaleSubCategoryRequest $request)
     {
         $saleSubCategory = $this->saleSubCategory->updateOrCreate($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando sub-categoria',
+            'model_type' => 'App\Models\SaleSubCategory',
+            'model_id' => $saleSubCategory->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => $saleSubCategory
         ], Response::HTTP_CREATED);
@@ -79,6 +93,13 @@ class SaleSubCategoryController extends Controller
      */
     public function update(SaleSubCategoryRequest $request, SaleSubCategory $saleSubCategory)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando sub-categoria',
+            'model_type' => 'App\Models\SaleSubCategory',
+            'model_id' => $saleSubCategory->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleSubCategory->update($request->all());
         return response([
             'data' => $saleSubCategory
@@ -91,8 +112,15 @@ class SaleSubCategoryController extends Controller
      * @param  \App\SaleSubCategory  $saleSubCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleSubCategory $saleSubCategory)
+    public function destroy(SaleSubCategory $saleSubCategory, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando sub-categoria',
+            'model_type' => 'App\Models\SaleSubCategory',
+            'model_id' => $saleSubCategory->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleSubCategory->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }

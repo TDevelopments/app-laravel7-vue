@@ -17,7 +17,9 @@ class RangeController extends Controller
     
     public function __construct(Range $range)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Importaciones - crear y actualizar rangos producto', ['only' => ['store']]);
+        $this->middleware('permission:Importaciones - eliminar rango producto', ['only' => ['destroy']]);
         $this->range = $range;
     }
 

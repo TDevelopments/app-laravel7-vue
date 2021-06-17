@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
+use App\Models\History;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUserRequestAdmin;
 use App\Http\Requests\StoreUserRequestAdmin;
@@ -25,7 +27,12 @@ class UserController extends Controller
 
     public function __construct(User $user, Role $role)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:listar usuarios', ['only' => ['index']]);
+        $this->middleware('permission:crear usuario', ['only' => ['store']]);
+        $this->middleware('permission:mostrar usuario', ['only' => ['show']]);
+        $this->middleware('permission:editar usuario', ['only' => ['update']]);
+        $this->middleware('permission:eliminar usuario', ['only' => ['destroy']]);
         $this->user = $user;
         $this->role = $role;
     }
@@ -60,6 +67,13 @@ class UserController extends Controller
         $request['password']=Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
         $user = $this->user->create($request->toArray());
+        History::create([
+            'action' => 'Creando Usuario',
+            'model_type' => 'App\Models\User',
+            'model_id' => $user->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         if ($request['roles'])
         {
             $roles = $request['roles'];
@@ -93,6 +107,13 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequestAdmin $request, User $user)
     {
+        History::create([
+            'action' => 'Actualizando Usuario',
+            'model_type' => 'App\Models\User',
+            'model_id' => $user->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         if($request['password'])
         {
             $request['password']=Hash::make($request['password']);
@@ -123,8 +144,15 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(User $user, Request $request)
     {
+        History::create([
+            'action' => 'Eliminando Usuario',
+            'model_type' => 'App\Models\User',
+            'model_id' => $user->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $user->delete();
         return response()->json(null, 204);
     }

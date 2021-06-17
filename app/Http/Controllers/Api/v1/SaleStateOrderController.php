@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SaleStateOrderRequest;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\History;
+use Carbon\Carbon;
 
 class SaleStateOrderController extends Controller
 {
@@ -15,7 +17,12 @@ class SaleStateOrderController extends Controller
 
     public function __construct(SaleStateOrder $saleStateOrder)
     {
-        $this->middleware('api.admin');
+        /* $this->middleware('api.admin'); */
+        $this->middleware('permission:Ventas - listar estados de orden', ['only' => ['index']]);
+        $this->middleware('permission:Ventas - crear estado de orden', ['only' => ['store']]);
+        $this->middleware('permission:Ventas - mostrar estado de orden', ['only' => ['show']]);
+        $this->middleware('permission:Ventas - editar estado de orden', ['only' => ['update']]);
+        $this->middleware('permission:Ventas - eliminar estado de orden', ['only' => ['destroy']]);
         $this->saleStateOrder = $saleStateOrder;
     }
 
@@ -48,6 +55,13 @@ class SaleStateOrderController extends Controller
     public function store(SaleStateOrderRequest $request)
     {
         $saleStateOrder = $this->saleStateOrder->updateOrCreate($request->toArray());
+        History::create([
+            'action' => 'Ventas - Creando estado de orden',
+            'model_type' => 'App\Models\SaleStateOrder',
+            'model_id' => $saleStateOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         return response([
             'data' => $saleStateOrder
         ], Response::HTTP_CREATED);
@@ -75,6 +89,13 @@ class SaleStateOrderController extends Controller
      */
     public function update(SaleStateOrderRequest $request, SaleStateOrder $saleStateOrder)
     {
+        History::create([
+            'action' => 'Ventas - Actualizando estado de orden',
+            'model_type' => 'App\Models\SaleStateOrder',
+            'model_id' => $saleStateOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleStateOrder->update($request->all());
         return response([
             'data' => $saleStateOrder
@@ -87,8 +108,15 @@ class SaleStateOrderController extends Controller
      * @param  \App\SaleStateOrder  $saleStateOrder
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SaleStateOrder $saleStateOrder)
+    public function destroy(SaleStateOrder $saleStateOrder, Request $request)
     {
+        History::create([
+            'action' => 'Ventas - Eliminando estado de orden',
+            'model_type' => 'App\Models\SaleStateOrder',
+            'model_id' => $saleStateOrder->id,
+            'user_id' => $request->user()->id,
+            'creation_date' => Carbon::now()
+        ]);
         $saleStateOrder->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }
