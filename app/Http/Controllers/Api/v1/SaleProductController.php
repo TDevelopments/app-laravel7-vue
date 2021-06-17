@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SaleProductRequest;
 use App\Http\Requests\UpdateSaleProductRequest;
 use App\Http\Resources\SaleProductResource;
+use App\Http\Resources\SaleProductResourceUser;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -28,7 +29,7 @@ class SaleProductController extends Controller
      */
     public function __construct(SaleProduct $saleProduct, SaleProductStatus $saleProductStatus)
     {
-        $this->middleware('api.admin');
+        $this->middleware('api.admin')->except(['availables']);
         $this->saleProduct = $saleProduct;
         $this->saleProductStatus = $saleProductStatus;
     }
@@ -158,6 +159,18 @@ class SaleProductController extends Controller
     {
         $saleProduct->delete();
         return response(null,Response::HTTP_NO_CONTENT);
+    }
+
+    public function availables(Request $request)
+    {
+        $saleProductStatus = $this->saleProductStatus->firstWhere(['StatusName' => 'Disponible']);
+        $availables = $this->saleProduct->where('ProductAvailable', true)
+            ->where('UnitPrice', '>', 0)
+            ->where('SellingPrice', '>', 0)
+            ->whereHas('SaleStockRecords', function (Builder $query) use ($saleProductStatus) {
+                $query->where('sale_product_status_id', $saleProductStatus->id);
+            })->paginate();
+        return SaleProductResourceUser::collection($availables);
     }
 
     public function randomId() {

@@ -86,7 +86,7 @@ class AuthController extends Controller
                 ];
                 return response($response, 200);
             } else {
-                $response = ["message" => "Password mismatch"];
+                $response = ["message" => "Contraseña incorrecta."];
                 return response($response, 422);
             }
         } else {
