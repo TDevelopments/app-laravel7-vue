@@ -17,6 +17,7 @@
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
   <!-- Vue JS -->
   <script src="{{ mix('js/app.js') }}" defer></script>
+  <script src="https://use.fontawesome.com/11c5744cb8.js"></script>
 
 </head>
 

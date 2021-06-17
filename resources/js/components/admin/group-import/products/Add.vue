@@ -36,15 +36,6 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
-                  SKU
-                  <v-text-field
-                    solo
-                    v-model="product.sku"
-                    required
-                    placeholder="Example"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
                   Incremento
                   <v-text-field
                     solo
@@ -310,7 +301,6 @@
             <thead class="bg-primary text-white">
               <tr>
                 <th scope="col">Model</th>
-                <th scope="col">SKU</th>
                 <th scope="col">Stock</th>
                 <th scope="col">Marca</th>
                 <th scope="col">Precio Unitario</th>
@@ -319,7 +309,6 @@
                 <th scope="col">Colores</th>
                 <th scope="col">Detalles</th>
                 <th scope="col">Imagen</th>
-                <th scope="col">Video</th>
                 <th scope="col">
                   <v-btn small icon dark color="black" @click="addVariation">
                     <v-icon small>mdi-plus </v-icon>
@@ -330,9 +319,6 @@
             <tr v-for="(itemV, indexV) in variaciones" :key="indexV">
               <td>
                 <v-text-field v-model="itemV.model" solo dense required></v-text-field>
-              </td>
-              <td>
-                <v-text-field v-model="itemV.sku" solo dense required></v-text-field>
               </td>
               <td>
                 <v-text-field v-model="itemV.stock" solo dense required></v-text-field>
@@ -457,20 +443,6 @@
                 </v-file-input>
               </td>
               <td>
-                <v-file-input
-                  v-model="itemV.video"
-                  label="Video"
-                  multiple
-                  solo
-                  counter
-                  dense
-                  prepend-icon="mdi-video"
-                  @change="previewImages"
-                  @click:clear="clear"
-                >
-                </v-file-input>
-              </td>
-              <td>
                 <v-btn small icon dark color="red" @click="deleteVariation(indexV)">
                   <v-icon small>mdi-minus </v-icon>
                 </v-btn>
@@ -501,7 +473,6 @@ export default {
       model: '',
       slug: '',
       stock: '',
-      sku: '',
       brand: '',
       price_unit: '',
       price_group: '',
@@ -660,7 +631,6 @@ export default {
             '/api/v1/products',
             {
               model: this.product.model,
-              sku: this.product.sku,
               stock: this.product.stock,
               brand: this.product.brand,
               price_unit: this.product.price_unit,
@@ -775,7 +745,6 @@ export default {
       ) {
         this.variaciones.push({
           model: '',
-          sku: '',
           stock: '',
           brand: '',
           price_unit: '',

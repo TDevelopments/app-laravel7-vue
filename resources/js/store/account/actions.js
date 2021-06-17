@@ -18,6 +18,8 @@ export function login({ commit }, user) {
         resolve(resp);
       })
       .catch(err => {
+        console.log(err.response);
+        alert(err.response.data.message);
         commit('auth_error');
         localStorage.removeItem('token');
         reject(err);

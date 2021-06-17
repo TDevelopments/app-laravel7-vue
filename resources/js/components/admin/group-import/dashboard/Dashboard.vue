@@ -1,6 +1,6 @@
 <template>
   <div class="px-2">
-    <v-card elevation="1">
+    <!-- <v-card elevation="1">
       <v-breadcrumbs :items="items" class="py-2 pl-3">
         <template v-slot:item="{ item }">
           <v-breadcrumbs-item :href="item.href" :disabled="item.disabled">
@@ -8,7 +8,7 @@
           </v-breadcrumbs-item>
         </template>
       </v-breadcrumbs>
-    </v-card>
+    </v-card> -->
     <div class="pt-5">
       <div class="mb-7">
         <h1 class="font-weight-thin">Dashboard</h1>
