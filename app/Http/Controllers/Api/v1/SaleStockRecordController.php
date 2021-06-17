@@ -49,11 +49,13 @@ class SaleStockRecordController extends Controller
             $consult = $this->saleStockRecord->where('sale_product_status_id', $saleProductStatus->id)->where('sale_customer_id', $value)->paginate()->withQueryString();
             return SaleStockRecordResource::collection($consult);
         }
-        if ($request->query("BusinessId") || $request->query("StatusId") || $request->query("ProductName") || $request->query("CustomerName")) {
+        if ($request->query("BusinessId") || $request->query("StatusId") || $request->query("ProductName") || $request->query("CustomerName") || $request->query("ColorCode") || $request->query("Size")) {
             $value1 = $request->query("BusinessId");
             $value2 = $request->query("StatusId");
             $value3 = $request->query("ProductName");
             $value4 = $request->query("CustomerName");
+            $value5 = $request->query("ColorCode");
+            $value6 = $request->query("Size");
             $query = $this->saleStockRecord->where('Quantity', '>', 0);
             if($request->query("BusinessId"))
             {
@@ -75,6 +77,14 @@ class SaleStockRecordController extends Controller
                 $customerReference = $this->saleCustomer->where('FullName', 'like', "%$value4%")->first();
                 if (!empty($customerReference))
                     $query->where("sale_customer_id", $customerReference->id);
+            }
+            if($request->query("ColorCode"))
+            {
+                $query->where("Color", $value5);
+            }
+            if($request->query("Size"))
+            {
+                $query->where("Size", $value6);
             }
             return new SaleStockRecordCollection($query->orderBy('created_at', 'desc')->paginate()->withQueryString());
         }

@@ -113,8 +113,13 @@ class SaleOrderController extends Controller
                 $requestStateOrder = $saleStateOrder->id;
             else
                 $requestStateOrder = $request->StateOrderId;
+            if (empty($request->CustomerId))
+                $requestCustomer = $saleCustomer->id;
+            else
+                $requestCustomer = $request->CustomerId;
         } else {
             $requestStateOrder = $saleStateOrder->id;
+            $requestCustomer = $saleCustomer->id;
         }
         $productStatus = $this->saleProductStatus->firstWhere('StatusName', 'Disponible');
         if ($request->Products) {
@@ -125,7 +130,7 @@ class SaleOrderController extends Controller
                 }
             }
             $saleOrder = $this->saleOrder->create([
-                'sale_customer_id' => $saleCustomer->id,
+                'sale_customer_id' => $requestCustomer,
                 'sale_state_order_id' => $requestStateOrder,
                 'user_id' => $request->user()->id,
                 'OrderDate' => Carbon::now(),
@@ -139,8 +144,13 @@ class SaleOrderController extends Controller
             ]);
             foreach ($request->Products as $product) {
                 $saleProductReference = $this->saleProduct->find($product['ProductId']);
-                $quantityStock = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
-                        ->where('sale_product_id', $saleProductReference->id)->sum('Quantity');
+                /* $quantityStock = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id); */
+                $query = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id);
+                if (!empty($product['Size']))
+                    $query->where("Size", $product['Size']);
+                if (!empty($product['Color']))
+                    $query->where("Color", $product['Color']);
+                $quantityStock = $query->where('sale_product_id', $saleProductReference->id)->sum('Quantity');
                 $quantityRequest = (int)$product['Quantity'];
                 if ($quantityRequest <= $quantityStock && $quantityRequest > 0) {
                     $saleOrderDetail = $this->saleOrderDetail->create([
@@ -168,6 +178,25 @@ class SaleOrderController extends Controller
                 'SellNote' => $request->Payment['SellNote'],
                 'user_id' => $request->user()->id
             ]);
+            foreach ($saleOrder->SaleOrderDetails as $refOrderDetail) {
+                $saleStockRecords = $this->saleStockRecord->where('sale_product_status_id', $productStatus->id)
+                        ->where('sale_product_id', $refOrderDetail->sale_product_id)->get();
+                $quantity = (int)$refOrderDetail['Quantity'];
+                foreach( $saleStockRecords as $stockRecord )
+                {
+                    $quantityRecord = (int)$stockRecord['Quantity'];
+                    if ($quantity <= $quantityRecord)
+                    {
+                        $stockRecord->decrement('Quantity', $quantity);
+                        break;
+                    }
+                    else
+                    {
+                        $quantity = $quantity - $quantityRecord;
+                        $stockRecord->decrement('Quantity', $quantityRecord);
+                    }
+                }
+            }
         }
         return new SaleOrderResourceAdmin($saleOrder);
     }

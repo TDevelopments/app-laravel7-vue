@@ -93,7 +93,7 @@ class MeasureController extends Controller
     public function destroy(Measure $measure, Request $request)
     {
         History::create([
-            'action' => 'Elimnando unidad producto',
+            'action' => 'Eliminando unidad producto',
             'model_type' => 'App\Models\Measure',
             'model_id' => $measure->id,
             'user_id' => $request->user()->id,

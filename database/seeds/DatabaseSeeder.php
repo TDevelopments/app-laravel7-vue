@@ -59,5 +59,11 @@ class DatabaseSeeder extends Seeder
         factory(\App\Models\Product::class,20)->create();
         factory(\App\Models\ProductRange::class,20)->create();
         factory(\App\Models\Range::class,20)->create();
+
+        $this->call([
+            SalesModuleSeeder::class,
+            PermissionsTableSeeder::class,
+            ColorSeeder::class,
+        ]);
     }
 }

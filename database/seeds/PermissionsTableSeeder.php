@@ -216,6 +216,12 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'revocar permiso rol']);
 
         Permission::create(['name' => 'historial']);
+        
+        Permission::create(['name' => 'listar colores']);
+        Permission::create(['name' => 'crear color']);
+        Permission::create(['name' => 'mostrar color']);
+        Permission::create(['name' => 'editar color']);
+        Permission::create(['name' => 'eliminar color']);
 
         $admin = Role::findByName('admin');
         $admin->givePermissionTo([
@@ -253,6 +259,7 @@ class PermissionsTableSeeder extends Seeder
             'Importaciones - crear orden',
             'Ventas - crear orden',
             'historial',
+            'listar colores',
         ]);
         
         $user = Role::firstWhere('name', 'user');

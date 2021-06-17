@@ -93,7 +93,7 @@ class StateOrderController extends Controller
     public function destroy(StateOrder $stateOrder, Request $request)
     {
         History::create([
-            'action' => 'Elimnando estado de Orden',
+            'action' => 'Eliminando estado de Orden',
             'model_type' => 'App\Models\StateOrder',
             'model_id' => $stateOrder->id,
             'user_id' => $request->user()->id,

@@ -93,7 +93,7 @@ class AdviserController extends Controller
     public function destroy(Adviser $adviser, Request $request)
     {
         History::create([
-            'action' => 'Elimnando asesor',
+            'action' => 'Eliminando asesor',
             'model_type' => 'App\Models\Adviser',
             'model_id' => $adviser->id,
             'user_id' => $request->user()->id,

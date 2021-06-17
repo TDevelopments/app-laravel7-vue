@@ -147,7 +147,7 @@ class UserController extends Controller
     public function destroy(User $user, Request $request)
     {
         History::create([
-            'action' => 'Elimnando Usuario',
+            'action' => 'Eliminando Usuario',
             'model_type' => 'App\Models\User',
             'model_id' => $user->id,
             'user_id' => $request->user()->id,

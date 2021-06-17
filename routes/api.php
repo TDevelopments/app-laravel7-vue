@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\v1\SalePaymentController;
 use App\Http\Controllers\Api\v1\PermissionController;
 use App\Http\Controllers\Api\v1\SaleProductController;
 use App\Http\Controllers\Api\v1\HistoryController;
+use App\Http\Controllers\Api\v1\SaleOrderDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -215,6 +216,10 @@ Route::group(['middleware' => ['cors', 'json.response'], 'prefix' => 'v1'], func
 
         // Order 
         Route::apiResource('sale-orders', 'Api\v1\SaleOrderController');
+        
+        // Order Details
+        Route::post('sale-orders/{sale_order}/order-details', [SaleOrderDetailController::class, 'store']);
+        Route::delete('sale-order-details', [SaleOrderDetailController::class, 'destroy']);
 
         // Method Payment 
         Route::apiResource('sale-payment-methods', 'Api\v1\SalePaymentMethodController');
@@ -237,5 +242,8 @@ Route::group(['middleware' => ['cors', 'json.response'], 'prefix' => 'v1'], func
 
         // History
         Route::get('history', [HistoryController::class, 'index']);
+    
+        // Colors 
+        Route::apiResource('colors', 'Api\v1\ColorController');
     });
 });

@@ -101,7 +101,7 @@ class OrderShippingStatusController extends Controller
     public function destroy(OrderShippingStatus $orderShippingStatus, Request $request)
     {
         History::create([
-            'action' => 'Elimnando estado de envio orden',
+            'action' => 'Eliminando estado de envio orden',
             'model_type' => 'App\Models\OrderShippingStatus',
             'model_id' => $orderShippingStatus->id,
             'user_id' => $request->user()->id,

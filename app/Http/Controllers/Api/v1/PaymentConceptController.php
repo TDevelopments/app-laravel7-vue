@@ -93,7 +93,7 @@ class PaymentConceptController extends Controller
     public function destroy(PaymentConcept $paymentConcept, Request $request)
     {
         History::create([
-            'action' => 'Elimnando concepto de pago',
+            'action' => 'Eliminando concepto de pago',
             'model_type' => 'App\Models\PaymentConcept',
             'model_id' => $paymentConcept->id,
             'user_id' => $request->user()->id,

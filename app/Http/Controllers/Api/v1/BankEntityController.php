@@ -92,7 +92,7 @@ class BankEntityController extends Controller
     public function destroy(BankEntity $bank, Request $request)
     {
         History::create([
-            'action' => 'Elimnando entidad bancaria',
+            'action' => 'Eliminando entidad bancaria',
             'model_type' => 'App\Models\BankEntity',
             'model_id' => $bank->id,
             'user_id' => $request->user()->id,
