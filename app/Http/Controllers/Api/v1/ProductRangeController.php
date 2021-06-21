@@ -39,9 +39,11 @@ class ProductRangeController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->query("catalogue_id") || $request->query("category_id")) {
+        if ($request->query("catalogue_id") || $request->query("category_id") || $request->query("model") || $request->query("sku")) {
             $value1 = $request->query("category_id");
             $value2 = $request->query("catalogue_id");
+            $value3 = $request->query("model");
+            $value4 = $request->query("sku");
             $query = $this->product_range->where('on_sale', false);
             if($request->query("catalogue_id"))
             {
@@ -51,15 +53,12 @@ class ProductRangeController extends Controller
             {
                 $query->where("category_id", $value2);
             }
+            if($request->query("model") && $request->query("sku"))
+            {
+                $query->where('model', 'like', "%$value3%")
+                        ->orWhere('sku', 'like', "%$value4%");
+            }
             return ProductRangeResource::collection($query->orderBy('model')->paginate()->withQueryString());
-        }
-        if ($request->query("model") && $request->query("sku")) {
-            $value = $request->query("model");
-            $value2 = $request->query("sku");
-            $products = $this->product_range->where('model', 'like', "%$value%")
-                                      ->orWhere('sku', 'like', "%$value2%")
-                                      ->orderBy('model')->paginate()->withQueryString();
-            return ProductRangeResource::collection($products);
         }
         return ProductRangeResource::collection($this->product_range->paginate());
     }
