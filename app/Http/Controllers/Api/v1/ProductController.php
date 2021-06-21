@@ -40,10 +40,12 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->query("catalogue_id") || $request->query("category_id") || $request->query("measure")) {
+        if ($request->query("catalogue_id") || $request->query("category_id") || $request->query("measure") || $request->query("model") || $request->query("sku")) {
             $value1 = $request->query("category_id");
             $value2 = $request->query("catalogue_id");
             $value3 = $request->query("measure");
+            $value4 = $request->query("model");
+            $value5 = $request->query("sku");
             $query = $this->product->where('on_sale', false);
             if($request->query("catalogue_id"))
             {
@@ -57,17 +59,13 @@ class ProductController extends Controller
             {
                 $query->where('type_group', "%$value3%");
             }
+            if($request->query("model") && $request->query("sku"))
+            {
+                $query->where('model', 'like', "%$value4%")
+                        ->orWhere('sku', 'like', "%$value5%");
+            }
             return ProductResource::collection($query->orderBy('model')->paginate()->withQueryString());
         }
-        if ($request->query("model") && $request->query("sku")) {
-            $value = $request->query("model");
-            $value2 = $request->query("sku");
-            $products = $this->product->where('model', 'like', "%$value%")
-                                      ->orWhere('sku', 'like', "%$value2%")
-                                      ->orderBy('model')->paginate()->withQueryString();
-            return ProductResource::collection($products);
-        }
-
         // if ($request->query("model")) {
         //     $value = $request->query("model");
         //     $products = $this->product->where('model', 'like', "%$value%")
