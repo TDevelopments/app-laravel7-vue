@@ -61,7 +61,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $role = $this->role->updateOrCreate([ 'name' => $request->name ]);
+        $role = $this->role->updateOrCreate([ 'name' => $request->name, 'guard_name' => 'web' ]);
         History::create([
             'action' => 'Creando rol',
             'model_type' => 'Spatie\Permission\Models\Role',
