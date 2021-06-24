@@ -26,7 +26,8 @@ class UpdateProductRequest extends FormRequest
         return [
             'name' => ['string'],
             'sku' => ['string', 'unique:products,sku,'.$this->product->id],
-            'model' => ['required', 'string', 'unique:products,model,'.$this->product->id],
+            /* 'model' => ['required', 'string', 'unique:products,model,'.$this->product->id], */
+            'model' => ['required', 'string'],
             'description' => ['array'],
             'description.*' => ['string'],
             'gender' => ['string', 'in:masculine,female,none'],

@@ -60,7 +60,7 @@ class ProductRangeController extends Controller
             }
             return ProductRangeResource::collection($query->orderBy('model')->paginate()->withQueryString());
         }
-        return ProductRangeResource::collection($this->product_range->paginate());
+        return ProductRangeResource::collection($this->product_range->orderBy('model')->paginate());
     }
 
     /**
@@ -172,7 +172,8 @@ class ProductRangeController extends Controller
             'products' => ['array'],
             'products.*.name' => ['string'],
             'products.*.sku' => ['unique:product_ranges'],
-            'products.*.model' => ['required', 'unique:product_ranges'],
+            /* 'products.*.model' => ['required', 'unique:product_ranges'], */
+            'products.*.model' => ['required'],
             'products.*.description' => ['array'],
             'products.*.description.*' => ['string'],
             'products.*.images' => ['array'],

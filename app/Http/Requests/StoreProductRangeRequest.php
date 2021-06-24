@@ -26,7 +26,8 @@ class StoreProductRangeRequest extends FormRequest
         return [
             'name' => ['string'],
             'sku' => ['unique:product_ranges'],
-            'model' => ['required', 'string', 'unique:product_ranges'],
+            /* 'model' => ['required', 'string', 'unique:product_ranges'], */
+            'model' => ['required', 'string'],
             'description' => ['array'],
             'description.*' => ['string'],
             'images' => ['array'],

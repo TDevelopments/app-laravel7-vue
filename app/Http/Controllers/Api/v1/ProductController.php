@@ -190,7 +190,8 @@ class ProductController extends Controller
             'products' => ['array'],
             'products.*.name' => ['string'],
             'products.*.sku' => ['unique:products'],
-            'products.*.model' => ['required', 'unique:products'],
+            /* 'products.*.model' => ['required', 'unique:products'], */
+            'products.*.model' => ['required'],
             'products.*.magnifying' => ['integer'],
             'products.*.description' => ['array'],
             'products.*.description.*' => ['string'],

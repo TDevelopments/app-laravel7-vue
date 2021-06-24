@@ -26,7 +26,8 @@ class UpdateProductRangeRequest extends FormRequest
         return [
             'name' => ['string'],
             'sku' => ['string', 'unique:product_ranges,sku,'.$this->product_range->id],
-            'model' => ['required', 'string', 'unique:product_ranges,model,'.$this->product_range->id],
+            /* 'model' => ['required', 'string', 'unique:product_ranges,model,'.$this->product_range->id], */
+            'model' => ['required', 'string'],
             'description' => ['array'],
             'description.*' => ['string'],
             'images' => ['array'],

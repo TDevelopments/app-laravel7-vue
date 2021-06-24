@@ -25,14 +25,14 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'lastname' => ['required','string'],
+            /* 'lastname' => ['required','string'], */
             'email' => ['nullable', 'email', 'unique:users,email,'.$this->user()->id],
             'password' => ['nullable', 'min:8', 'confirmed', 'string'],
             'address' => ['required','string'],
-            'ruc' => ['integer','unique:users,email,'.$this->user()->dni],
-            'dni' => ['required', 'integer'],
+            'ruc' => ['integer','unique:users,ruc,'.$this->user()->ruc],
+            'dni' => ['required', 'integer','unique:users,dni,'.$this->user()->dni],
             'phone' => ['required','integer'],
-            'gender' => ['string', 'in:masculine,female'],
+            'gender' => ['string', 'in:masculine,female,unisex,none'],
             'city' => ['required', 'string']
         ];
     }
