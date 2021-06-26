@@ -79,14 +79,18 @@
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
         Color
-        <v-text-field
-          class="border"
-          flat
-          hide-details
-          solo
-          dense
+        <v-select
           v-model="stock.Color"
-        ></v-text-field>
+          :items="colorsSelect"
+          label="Select"
+          item-text="name"
+          item-value="code"
+          solo
+          flat
+          dense
+          class="border"
+          hide-details
+        ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Talla
@@ -132,6 +136,7 @@ export default {
     stateStock: false,
     Color: '',
     Size: '',
+    colorsSelect: [],
   }),
   methods: {
     getProducts() {
@@ -169,6 +174,18 @@ export default {
           console.log(response);
         })
         .catch(error => {});
+    },
+    getColors() {
+      axios
+        .get('/api/v1/colors')
+        .then(response => {
+          console.log(response.data);
+          this.colorsSelect = response.data.data;
+        })
+        .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
     },
     addStockRecord() {
       let data = {
@@ -214,6 +231,7 @@ export default {
     this.getProductStatus();
     this.getLocations();
     this.getCustomers();
+    this.getColors();
   },
 };
 </script>

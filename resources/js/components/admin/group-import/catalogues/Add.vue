@@ -16,13 +16,13 @@
             <v-col cols="12">
               <v-row>
                 <v-col cols="12" sm="6" md="4" lg="3">
-                  Nombre de Catálogo
+                  Nombre de Catálogo (*)
                   <v-text-field v-model="name" required solo placeholder="Example"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col cols="12" sm="6" md="4" lg="3">
-                  TIpo de Moneda
+                  TIpo de Moneda (*)
                   <v-select
                     v-model="coin"
                     :items="coins"
@@ -34,7 +34,7 @@
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="4" lg="3">
-                  Inversión Minima
+                  Inversión Minima (*)
                   <v-text-field
                     v-model="minimum_investment"
                     required
@@ -48,7 +48,7 @@
               </v-row>
               <v-row>
                 <v-col cols="12" sm="6" md="4" lg="3">
-                  Monto de Separación
+                  Monto de Separación (*)
                   <v-text-field
                     v-model="quota_price"
                     :prefix="iconCoin"
@@ -69,7 +69,7 @@
                     min-width="auto"
                   >
                     <template v-slot:activator="{ on, attrs }">
-                      Fecha Pago Monto de Separación
+                      Fecha Pago Monto de Separación (*)
                       <v-text-field
                         v-model="quota_date"
                         label="Quota Date"
@@ -86,7 +86,7 @@
               </v-row>
               <v-row>
                 <v-col cols="12" sm="6" md="4" lg="3">
-                  % Primer Pago
+                  % Primer Pago (*)
                   <v-text-field
                     v-model="first_payment"
                     type="number"
@@ -107,7 +107,7 @@
                     min-width="auto"
                   >
                     <template v-slot:activator="{ on, attrs }">
-                      Fecha Primer Pago
+                      Fecha Primer Pago (*)
                       <v-text-field
                         v-model="date_first_payment"
                         prepend-inner-icon="mdi-calendar"
@@ -126,7 +126,7 @@
               </v-row>
               <v-row>
                 <v-col cols="12" sm="6" md="4" lg="3">
-                  % Segundo Pago
+                  % Segundo Pago (*)
                   <v-text-field
                     v-model="second_payment"
                     prefix="%"
@@ -145,7 +145,7 @@
                     min-width="auto"
                   >
                     <template v-slot:activator="{ on, attrs }">
-                      Fecha Segundo Pago
+                      Fecha Segundo Pago (*)
                       <v-text-field
                         v-model="date_second_payment"
                         prepend-inner-icon="mdi-calendar"
@@ -164,7 +164,7 @@
               </v-row>
             </v-col>
             <v-col cols="12">
-              Condiciones de Cátalogo
+              Condiciones de Cátalogo (*)
               <editor
                 ref="conditions"
                 :initialValue="conditions"
@@ -175,7 +175,7 @@
               />
             </v-col>
             <v-col cols="12" sm="12" md="12" lg="12">
-              Información Adicional de Cátalogo
+              Información Adicional de Cátalogo (*)
               <editor
                 ref="additional_information"
                 :initialValue="additional_information"
@@ -218,7 +218,7 @@
                 <v-col cols="12" sm="11" md="11">
                   <v-row>
                     <v-col cols="12" md="6">
-                      Ciudad
+                      Ciudad (*)
                       <v-select
                         v-model="input.city"
                         menu-props="auto"
@@ -238,7 +238,7 @@
                         min-width="auto"
                       >
                         <template v-slot:activator="{ on, attrs }">
-                          Fechas de Llegada
+                          Fechas de Llegada (*)
                           <v-text-field
                             v-model="input.arrival_date"
                             prepend-inner-icon="mdi-calendar"
@@ -423,7 +423,9 @@ export default {
         .then(response => {
           this.addArrivals(response.data.data.id);
         })
-        .catch(error => {});
+        .catch(error => {
+          alert('Algo ocurrio, te falto ingresar algunos datos.');
+        });
     },
     addArrivals(id) {
       axios

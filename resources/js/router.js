@@ -152,6 +152,11 @@ import ListRoles from './components/admin/roles/List';
 import AddRoles from './components/admin/roles/Add';
 import EditRoles from './components/admin/roles/Edit';
 
+// Colors
+import ListColors from './components/admin/colors/List';
+import AddColors from './components/admin/colors/Add';
+import EditColors from './components/admin/colors/Edit';
+
 // Pages Product For Catalogue
 import ProductCatalogue from './components/admin/group-import/catalogues/ProductForCatalogue';
 
@@ -708,6 +713,23 @@ export default new Router({
           path: '/admin/rol/:id/edit',
           name: 'editRoles',
           component: EditRoles,
+        },
+
+        // Colors
+        {
+          path: '/admin/colors',
+          name: 'listColors',
+          component: ListColors,
+        },
+        {
+          path: '/admin/color/add',
+          name: 'addColors',
+          component: AddColors,
+        },
+        {
+          path: '/admin/color/:id/edit',
+          name: 'editColors',
+          component: EditColors,
         },
       ],
     },

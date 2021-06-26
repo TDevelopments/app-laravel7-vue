@@ -79,14 +79,18 @@
     <v-row class="border mb-3">
       <v-col cols="12" md="3" sm="6">
         Color
-        <v-text-field
-          class="border"
-          flat
-          hide-details
-          solo
-          dense
+        <v-select
           v-model="stock.Color"
-        ></v-text-field>
+          :items="colorsSelect"
+          label="Select"
+          item-text="name"
+          item-value="code"
+          solo
+          flat
+          dense
+          class="border"
+          hide-details
+        ></v-select>
       </v-col>
       <v-col cols="12" md="3" sm="6">
         Talla
@@ -129,6 +133,7 @@ export default {
     sale_business_location_id: null,
     sale_customer_id: null,
     stateStock: true,
+    colorsSelect: [],
   }),
   methods: {
     getStock() {
@@ -136,22 +141,24 @@ export default {
         .get(`/api/v1/sale-stock-records/${this.$route.params.id}`)
         .then(response => {
           this.stock = response.data.data;
-          this.stock.sale_product_id =
-            response.data.data.Product == null ? null : response.data.data.Product.id;
-          this.stock.sale_customer_id =
-            response.data.data.Customer == null ? null : response.data.data.Customer.id;
-          this.stock.sale_product_status_id = response.data.data.ProductStatus == null
-            ? null
-            : response.data.data.ProductStatus.id;
-          this.stock.sale_business_location_id =
-            response.data.data.BusinessLocation == null
-              ? null
-              : response.data.data.BusinessLocation.id;
+          if (response.data.data.Product != null) {
+            Vue.set(this.stock, 'sale_product_id', response.data.data.Product.id);
+          };
+          if (response.data.data.Customer != null) {
+            Vue.set(this.stock, 'sale_customer_id', response.data.data.Customer.id);
+          }
+          if (response.data.data.ProductStatus != null) {
+            Vue.set(this.stock, 'sale_product_status_id', response.data.data.ProductStatus.id);
+          }
+          if (response.data.data.BusinessLocation != null) {
+            Vue.set(this.stock, 'sale_business_location_id', response.data.data.BusinessLocation.id);
+          }
           console.log(response);
           if (response.data.data.Customer != null){
             console.log(this.stateStock);
             this.stateStock = false;
           }
+          console.log('stock',this.stock);
         })
         .catch(error => {});
     },
@@ -208,6 +215,18 @@ export default {
         })
         .catch(error => {});
     },
+    getColors() {
+      axios
+        .get('/api/v1/colors')
+        .then(response => {
+          console.log(response.data);
+          this.colorsSelect = response.data.data;
+        })
+        .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
+    },
   },
   watch: {
     'stock.sale_product_status_id': function(val) {
@@ -235,6 +254,7 @@ export default {
     this.getLocations();
     this.getCustomers();
     this.getStock();
+    this.getColors();
   },
 };
 </script>

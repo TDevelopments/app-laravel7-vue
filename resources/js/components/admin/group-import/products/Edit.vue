@@ -7,19 +7,15 @@
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-row>
-                <v-col cols="12" sm="6" md="3">
-                  Modelo
+                <v-col cols="12" sm="4" md="4">
+                  Modelo (*)
                   <v-text-field solo v-model="product.model" required></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="3">
+                <v-col cols="12" sm="4" md="4">
                   Marca
                   <v-text-field solo v-model="product.brand" required></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="3">
-                  SKU
-                  <v-text-field solo v-model="product.sku" required readonly></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="3">
+                <v-col cols="12" sm="4" md="4">
                   Incremento
                   <v-text-field
                     solo
@@ -29,23 +25,23 @@
                     placeholder="0"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Stock Meta
+                <v-col cols="12" sm="3" md="3" lg="3">
+                  Stock Meta (*)
                   <v-text-field v-model="product.stock" type="number" solo></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Cantidad minima por cliente
+                <v-col cols="12" sm="3" md="3" lg="3">
+                  Cantidad minima por cliente (*)
                   <v-text-field v-model="product.quantity_group" type="number" solo></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Precio por unidad
+                <v-col cols="12" sm="3" md="3" lg="3">
+                  Precio por unidad (*)
                   <v-text-field v-model="product.price_unit" type="number" solo></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Precio por conjunto
+                <v-col cols="12" sm="3" md="3" lg="3">
+                  Precio por conjunto (*)
                   <v-text-field v-model="productQG" type="number" solo readonly></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
+                <v-col cols="12" sm="3" md="3" lg="3">
                   Género
                   <v-select
                     v-model="product.gender"
@@ -58,8 +54,8 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Tipo de grupo
+                <v-col cols="12" sm="3" md="3" lg="3">
+                  Tipo de grupo (*)
                   <v-select
                     v-model="product.type_group"
                     Types
@@ -70,10 +66,10 @@
                     hide-details
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Categoria
+                <v-col cols="12" sm="3" md="3" lg="3">
+                  Categoria (*)
                   <v-select
-                    v-model="product.category"
+                    v-model="product.category_id"
                     item-text="name"
                     item-value="id"
                     :items="categories"
@@ -82,10 +78,10 @@
                     hide-details
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Catalogo
+                <v-col cols="12" sm="3" md="3" lg="3">
+                  Catalogo (*)
                   <v-select
-                    v-model="product.catalogue"
+                    v-model="product.catalogue_id"
                     item-text="name"
                     item-value="id"
                     :items="catalogues"
@@ -101,7 +97,19 @@
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6">
         <h3>Colores de producto</h3>
-        <v-card class="text-center">
+        <v-select
+          v-model="colors"
+          :items="colorsSelect"
+          label="Select"
+          item-text="name"
+          item-value="code"
+          multiple
+          chips
+          solo
+          dense
+          persistent-hint
+        ></v-select>
+        <!-- <v-card class="text-center">
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
@@ -131,7 +139,7 @@
               </v-col>
             </v-row>
           </v-card-text>
-        </v-card>
+        </v-card> -->
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6">
         <h3>Detalles del producto</h3>
@@ -203,7 +211,7 @@
           </v-col>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6">
+      <!-- <v-col cols="12" sm="12" md="6" lg="6">
         <h3>Subir video</h3>
         <v-card class="mt-5">
           <v-card-text>
@@ -248,7 +256,7 @@
             </v-col>
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col> -->
     </v-row>
     <v-row class="mx-3">
       <v-spacer> </v-spacer>
@@ -268,20 +276,7 @@
 export default {
   data: () => ({
     // Object Product
-    product: {
-      model: '',
-      slug: '',
-      sku: '',
-      stock: '',
-      brand: '',
-      price_unit: '',
-      price_group: '',
-      quantity_group: '',
-      type_group: '',
-      category: '',
-      catalogue: '',
-      images: [],
-    },
+    product: {},
     // Object Catalogue
     catalogues: [],
     // Object Categorie
@@ -297,6 +292,7 @@ export default {
     // Url of Images
     urls: [],
     // Data of Color Picker
+    colorsSelect:[],
     colors: [],
     type: 'hex',
     hex: '#FF00FF',
@@ -354,6 +350,7 @@ export default {
     this.getCatalogues();
     this.getCategories();
     this.getMeasures();
+    this.getColors();
   },
   methods: {
     // Validation
@@ -409,6 +406,19 @@ export default {
         });
     },
 
+    getColors() {
+      axios
+        .get('/api/v1/colors')
+        .then(response => {
+          console.log(response.data);
+          this.colorsSelect = response.data.data
+        })
+        .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
+    },
+
     // Peticion Get Product
     getProduct() {
       axios
@@ -421,17 +431,19 @@ export default {
         .then(response => {
           console.log(response);
           this.product = response.data.data;
-          this.product.catalogue = response.data.data.catalogue.id;
-          this.product.category = response.data.data.category.id;
-          response.data.data.description.forEach(element => {
-            this.description.push(element);
-          });
-          response.data.data.colors.forEach(element => {
-            this.colors.push(element);
-          });
-          response.data.data.images.forEach(element => {
-            this.images.push(element);
-          });
+          this.product.catalogue_id = response.data.data.catalogue.id;
+          this.product.category_id = response.data.data.category.id;
+          if (response.data.data.description != null) {
+            this.description = response.data.data.description;
+          }
+          if (response.data.data.colors != null) {
+           this.colors = response.data.data.colors;
+          }
+          if (response.data.data.images != null) {
+            response.data.data.images.forEach((element) => {
+              this.images.push(element);
+            });
+          }
         })
         .catch(error => {
           console.log(error);
@@ -472,25 +484,18 @@ export default {
     editProduct() {
       console.log(this.product);
       console.log('antes', this.product.images);
-      let data = {
-        model: this.product.model,
-        stock: this.product.stock,
-        sku: this.product.sku,
-        brand: this.product.brand,
-        price_unit: this.product.price_unit,
-        price_group: this.product.price_group,
-        quantity_group: this.product.quantity_group,
-        type_group: this.product.type_group,
-        category_id: this.product.category,
-        catalogue_id: this.product.catalogue,
-        description: this.description == null || this.description == [] ? [] : this.description,
-        colors: this.colors,
-        images:
-          this.product.images == null || this.product.images.length == 0 ? [] : this.product.images,
-        magnifying: this.product.magnifying,
-        gender: this.product.gender,
-      };
-
+      let data = {};
+      for (const property in this.product) {
+        if (this.product[property] != null) {
+          data.[property] = this.product[property];
+        }
+      }
+      if (this.colors != null || this.colors.length != 0) {
+        data.colors = this.colors;
+      }
+      if (this.description != null || this.description.length != 0) {
+        data.description = this.description;
+      }
       axios
         .put(`/api/v1/products/${this.$route.params.id}`, data)
         .then(response => {
@@ -499,7 +504,7 @@ export default {
         })
         .catch(error => {
           console.log(error);
-          // reject(error);
+          alert('Ocurrio un error inesperado, revise que los datos insertados son correctos')
         });
     },
 

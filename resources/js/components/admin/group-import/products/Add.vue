@@ -17,8 +17,8 @@
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-row>
-                <v-col cols="12" sm="3" md="0" v-if="!varBoolean">
-                  Modelo
+                <v-col cols="12" sm="4" md="4" v-if="!varBoolean">
+                  Modelo (*)
                   <v-text-field
                     solo
                     v-model="product.model"
@@ -26,7 +26,7 @@
                     placeholder="Example"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
+                <v-col cols="12" sm="4" md="4" v-if="!varBoolean">
                   Marca
                   <v-text-field
                     solo
@@ -35,7 +35,7 @@
                     placeholder="Example"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="3" md="3" v-if="!varBoolean">
+                <v-col cols="12" sm="4" md="4" v-if="!varBoolean">
                   Incremento
                   <v-text-field
                     solo
@@ -45,8 +45,8 @@
                     placeholder="0"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3" v-if="!varBoolean">
-                  Stock Meta
+                <v-col cols="12" sm="3" md="3" lg="3" v-if="!varBoolean">
+                  Stock Meta (*)
                   <v-text-field
                     v-model="product.stock"
                     type="number"
@@ -54,8 +54,8 @@
                     placeholder="0"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3" v-if="!varBoolean">
-                  Cantidad minima por cliente
+                <v-col cols="12" sm="3" md="3" lg="3" v-if="!varBoolean">
+                  Cantidad minima por cliente (*)
                   <v-text-field
                     v-model="product.quantity_group"
                     type="number"
@@ -63,8 +63,8 @@
                     placeholder="0"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3" v-if="!varBoolean">
-                  Precio por unidad
+                <v-col cols="12" sm="3" md="3" lg="3" v-if="!varBoolean">
+                  Precio por unidad (*)
                   <v-text-field
                     v-model="product.price_unit"
                     type="number"
@@ -72,8 +72,8 @@
                     placeholder="0"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3" v-if="!varBoolean">
-                  Precio por conjunto
+                <v-col cols="12" sm="3" md="3" lg="3" v-if="!varBoolean">
+                  Precio por conjunto (*)
                   <v-text-field
                     v-model="productQG"
                     type="number"
@@ -95,8 +95,8 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Tipo de grupo
+                <v-col cols="12" sm="4" md="4" lg="3">
+                  Tipo de grupo (*)
                   <v-select
                     v-model="product.type_group"
                     Types
@@ -108,10 +108,10 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Categoria
+                <v-col cols="12" sm="4" md="4" lg="3">
+                  Categoria (*)
                   <v-select
-                    v-model="product.category"
+                    v-model="product.category_id"
                     item-text="name"
                     item-value="id"
                     :items="categories"
@@ -121,10 +121,10 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3">
-                  Catalogo
+                <v-col cols="12" sm="4" md="4" lg="3">
+                  Catalogo (*)
                   <v-select
-                    v-model="product.catalogue"
+                    v-model="product.catalogue_id"
                     item-text="name"
                     item-value="id"
                     :items="catalogues"
@@ -141,7 +141,19 @@
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6" v-if="!varBoolean">
         <h3>Colores de producto</h3>
-        <v-card class="text-center">
+        <v-select
+          v-model="colors"
+          :items="colorsSelect"
+          label="Select"
+          item-text="name"
+          item-value="code"
+          multiple
+          chips
+          solo
+          dense
+          persistent-hint
+        ></v-select>
+        <!-- <v-card class="text-center">
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
@@ -171,7 +183,7 @@
               </v-col>
             </v-row>
           </v-card-text>
-        </v-card>
+        </v-card> -->
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6" v-if="!varBoolean">
         <h3>Detalles del producto</h3>
@@ -242,7 +254,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="12" md="6" lg="6" v-if="!varBoolean">
+      <!-- <v-col cols="12" sm="12" md="6" lg="6" v-if="!varBoolean">
         <h3>Subir video</h3>
         <v-card class="mt-5">
           <v-card-text>
@@ -287,7 +299,7 @@
             </v-col>
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col> -->
     </v-row>
     <v-col v-if="varBoolean" class="ma-2">
       <v-row>
@@ -469,18 +481,7 @@
 export default {
   data: () => ({
     // Object Product
-    product: {
-      model: '',
-      slug: '',
-      stock: '',
-      brand: '',
-      price_unit: '',
-      price_group: '',
-      quantity_group: '',
-      type_group: '',
-      category: '',
-      catalogue: '',
-    },
+    product: {},
     // Object Catalogue
     catalogues: [],
     // Object Categorie
@@ -503,6 +504,7 @@ export default {
     hex: '#FF00FF',
     // Validation
     valid: true,
+    colorsSelect:[],
     varBoolean: false,
     variaciones: [],
     varSelection: ['color', 'T/T'],
@@ -556,6 +558,7 @@ export default {
     this.getCatalogues();
     this.getCategories();
     this.getMeasures();
+    this.getColors();
   },
 
   methods: {
@@ -612,6 +615,19 @@ export default {
         });
     },
 
+    getColors() {
+      axios
+        .get('/api/v1/colors')
+        .then(response => {
+          console.log(response.data);
+          this.colorsSelect = response.data.data
+        })
+        .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
+    },
+
     // Peticion Add Catalogue
     addProduct() {
       if (this.varBoolean) {
@@ -626,32 +642,26 @@ export default {
             // reject(error);
           });
       } else {
+        let data = {};
+        for (const property in this.product) {
+          if (this.product[property] != null || this.product[property] != '') {
+            data.[property] = this.product[property];
+          }
+        }
+        if (this.image != null || this.image.length != 0) {
+          data.images = this.image;
+        }
+        if (this.description != null || this.description.length != 0) {
+          data.description  = this.description;
+        }
+        if (this.colors != null || this.colors.length != 0) {
+          data.colors = this.colors;
+        }
+        if (this.gender != null || this.gender != 0) {
+          data.gender = this.gender;
+        }
         axios
-          .post(
-            '/api/v1/products',
-            {
-              model: this.product.model,
-              stock: this.product.stock,
-              brand: this.product.brand,
-              price_unit: this.product.price_unit,
-              price_group: this.product.price_group,
-              quantity_group: this.product.quantity_group,
-              type_group: this.product.type_group,
-              category_id: this.product.category,
-              catalogue_id: this.product.catalogue,
-              images: this.image,
-              description:
-                this.description == null || this.description == [] ? [] : this.description,
-              colors: this.colors,
-              magnifying: this.product.magnifying,
-              gender: this.gender,
-            },
-            {
-              headers: {
-                Accept: 'application/json',
-              },
-            }
-          )
+          .post('/api/v1/products', data)
           .then(response => {
             console.log(response);
             this.$router.replace({ name: 'listProduct' });
@@ -739,8 +749,8 @@ export default {
     // Add New Component Variation
     addVariation() {
       if (
-        this.product.catalogue != '' &&
-        this.product.category != '' &&
+        this.product.catalogue_id != '' &&
+        this.product.category_id != '' &&
         this.product.type_group != ''
       ) {
         this.variaciones.push({
@@ -751,8 +761,8 @@ export default {
           price_group: '',
           quantity_group: '',
           type_group: this.product.type_group,
-          category_id: this.product.category,
-          catalogue_id: this.product.catalogue,
+          category_id_id: this.product.category_id,
+          catalogue_id_id: this.product.catalogue_id,
           images: [],
           images_upload: [],
           description: [],
