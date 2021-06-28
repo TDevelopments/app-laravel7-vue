@@ -28,15 +28,6 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4" lg="4">
-                      SKU
-                      <v-text-field
-                        v-model="productRange.sku"
-                        solo
-                        required
-                        placeholder="Example"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4" lg="4">
                       Stock Meta
                       <v-text-field
                         v-model="productRange.stock"
@@ -48,7 +39,7 @@
                     <v-col cols="12" sm="4" md="4">
                       Categoria
                       <v-select
-                        v-model="productRange.category"
+                        v-model="productRange.category_id"
                         item-text="name"
                         item-value="id"
                         :items="categories"
@@ -61,7 +52,7 @@
                     <v-col cols="12" sm="4" md="4">
                       Catalogo
                       <v-select
-                        v-model="productRange.catalogue"
+                        v-model="productRange.catalogue_id"
                         item-text="name"
                         item-value="id"
                         :items="catalogues"
@@ -80,15 +71,23 @@
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6">
         <h3>Colores de Producto</h3>
-        <v-card class="text-center">
+        <v-select
+          v-model="colors"
+          :items="colorsSelect"
+          label="Select"
+          item-text="name"
+          item-value="code"
+          multiple
+          chips
+          solo
+          dense
+          persistent-hint
+        ></v-select>
+        <!-- <v-card class="text-center">
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
-                <v-color-picker
-                  hide-inputs
-                  v-model="color"
-                  class="mx-auto"
-                ></v-color-picker>
+                <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
               </v-col>
               <v-col cols="12" md="6">
                 <v-btn class="mb-5 my-auto mt-2" @click="addPColor">
@@ -102,17 +101,13 @@
                 </v-col>
                 <v-row class="pr-3">
                   <v-col v-for="(item, index) in colors" :key="index" cols="1">
-                    <v-avatar
-                      :color="item"
-                      size="15"
-                      @click="deleteColor(index)"
-                    ></v-avatar>
+                    <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
                   </v-col>
                 </v-row>
               </v-col>
             </v-row>
           </v-card-text>
-        </v-card>
+        </v-card> -->
       </v-col>
 
       <v-col cols="12" sm="12" md="6" lg="6">
@@ -151,21 +146,9 @@
         <v-card class="mt-5">
           <v-item-group v-model="selectedDelete" multiple>
             <v-row>
-              <v-col
-                v-for="(item, i) in images"
-                :key="i"
-                cols="12"
-                sm="3"
-                md="3"
-              >
+              <v-col v-for="(item, i) in images" :key="i" cols="12" sm="3" md="3">
                 <v-item v-slot="{ active, toggle }" class="mx-3">
-                  <v-img
-                    :src="item.path"
-                    height="150"
-                    class="text-right"
-                    @click="toggle"
-                    contain
-                  >
+                  <v-img :src="item.path" height="150" class="text-right" @click="toggle" contain>
                     <v-btn icon>
                       <v-icon color="red" @click="deleteImage(i, item)">
                         mdi-delete
@@ -219,22 +202,10 @@
             </thead>
             <tr v-for="(input, index) in inputs" :key="index">
               <td>
-                <v-text-field
-                  v-model="input.min"
-                  solo
-                  required
-                  dense
-                  type="number"
-                ></v-text-field>
+                <v-text-field v-model="input.min" solo required dense type="number"></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model="input.max"
-                  solo
-                  required
-                  dense
-                  type="number"
-                ></v-text-field>
+                <v-text-field v-model="input.max" solo required dense type="number"></v-text-field>
               </td>
               <td>
                 <v-text-field
@@ -247,12 +218,7 @@
                 ></v-text-field>
               </td>
               <td class="text-right">
-                <v-btn
-                  color="error"
-                  small
-                  @click="deleteRow(index, input.id)"
-                  icon
-                >
+                <v-btn color="error" small @click="deleteRow(index, input.id)" icon>
                   <v-icon small>mdi-minus</v-icon>
                 </v-btn>
               </td>
@@ -263,22 +229,11 @@
     </v-window>
     <v-row>
       <v-spacer> </v-spacer>
-      <v-btn
-        :disabled="!valid"
-        color="red"
-        dark
-        class="mr-3 my-5"
-        @click="returnList"
-      >
+      <v-btn :disabled="!valid" color="red" dark class="mr-3 my-5" @click="returnList">
         <v-icon left> mdi-delete </v-icon>
         Cancelar
       </v-btn>
-      <v-btn
-        :disabled="!valid"
-        color="success"
-        class="mr-3 my-5"
-        @click="validation"
-      >
+      <v-btn :disabled="!valid" color="success" class="mr-3 my-5" @click="validation">
         <v-icon left> mdi-content-save </v-icon>
         Guardar
       </v-btn>
@@ -290,14 +245,7 @@ import axios from "axios";
 export default {
   data: () => ({
     productRange: {
-      model: "",
-      slug: "",
-      sku: "",
-      stock: "",
-      brand: "",
-      category: "",
-      catalogue: "",
-      images: "",
+      images: []
     },
     // Object Catalogue
     catalogues: [],
@@ -320,11 +268,13 @@ export default {
     images: [],
     valid: true,
     idDelete: [],
+    colorsSelect: [],
   }),
   mounted() {
     this.getProductRange();
     this.getCategories();
     this.getCatalogues();
+    this.getColors();
   },
   methods: {
     validation() {
@@ -335,6 +285,18 @@ export default {
       }
     },
 
+    getColors() {
+      axios
+        .get('/api/v1/colors')
+        .then(response => {
+          console.log(response.data);
+          this.colorsSelect = response.data.data
+        })
+        .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
+    },
     getCategories() {
       axios
         .get("/api/v1/categories")
@@ -364,35 +326,38 @@ export default {
 
     getProductRange() {
       axios
-        .get(`/api/v1/product-ranges/${this.$route.params.id}`, {
-          headers: {
-            Accept: "application/json",
-          },
-        })
+        .get(`/api/v1/product-ranges/${this.$route.params.id}`)
         .then((response) => {
           console.log(response);
           this.productRange = response.data.data;
           this.inputs = response.data.data.ranges;
-          this.productRange.catalogue = response.data.data.catalogue.id;
-          this.productRange.category = response.data.data.category.id;
-          response.data.data.description.forEach((element) => {
-            this.description.push(element);
-          });
-          response.data.data.colors.forEach((element) => {
-            this.colors.push(element);
-          });
-          response.data.data.images.forEach((element) => {
-            this.images.push(element);
-          });
+          this.productRange.catalogue_id = response.data.data.catalogue.id;
+          this.productRange.category_id = response.data.data.category.id;
+          if (response.data.data.description != null) {
+            this.description = response.data.data.description;
+          }
+          if (response.data.data.colors != null) {
+           this.colors = response.data.data.colors;
+          }
+          if (response.data.data.images != null) {
+            response.data.data.images.forEach((element) => {
+              this.images.push(element);
+            });
+          }
+
         })
         .catch((error) => {
           console.log(error);
-          // reject(error);
+          alert('Ocurrio un error insperado')
+          this.$router.replace({ name: "listProduct" });
         });
     },
 
     // Post Images
     addImages() {
+      if (this.productRange.images == null) {
+        this.productRange.images = [];
+      }
       // Declaring Forma Data
       const data = new FormData();
       this.files.forEach((elements, index) => {
@@ -415,32 +380,33 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          // reject(error);
+          alert('La imagen que intentar subir no es compatible o es muy pesada.')
         });
     },
 
     editProductRange() {
+      let data = {};
+      for (const property in this.productRange) {
+        if (this.productRange[property] != null) {
+          data.[property] = this.productRange[property];
+        }
+      }
+
+      if (this.description != null) {
+        data.description = this.description;
+      }
+
+      if (this.colors != null) {
+        data.colors = this.colors;
+      }
+
+      if (this.productRange.images == null) {
+        delete this.productRange.images
+      }
+
       axios
         .put(
-          `/api/v1/product-ranges/${this.$route.params.id}`,
-          {
-            model: this.productRange.model,
-            slug: this.productRange.slug,
-            sku: this.productRange.sku,
-            stock: this.productRange.stock,
-            brand: this.productRange.brand,
-            category_id: this.productRange.category,
-            catalogue_id: this.productRange.catalogue,
-            description: this.description,
-            colors: this.colors,
-            images: this.productRange.images,
-          },
-          {
-            headers: {
-              Accept: "application/json",
-            },
-          }
-        )
+          `/api/v1/product-ranges/${this.$route.params.id}`, data)
         .then((response) => {
           console.log(response);
           if (this.idDelete.length != 0) {
@@ -457,15 +423,7 @@ export default {
     },
     addRange(id) {
       axios
-        .post(
-          `/api/v1/product-ranges/${id}/ranges`,
-          { items: this.inputs },
-          {
-            headers: {
-              Accept: "application/json",
-            },
-          }
-        )
+        .post(`/api/v1/product-ranges/${id}/ranges`,{ items: this.inputs })
         .then((response) => {
           console.log(response);
           this.$router.replace({ name: "listProduct" });

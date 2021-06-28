@@ -147,6 +147,16 @@ import ListStockState from './components/admin/stock/state/List';
 import AddStockState from './components/admin/stock/state/Add';
 import EditStockState from './components/admin/stock/state/Edit';
 
+// Pages Roles
+import ListRoles from './components/admin/roles/List';
+import AddRoles from './components/admin/roles/Add';
+import EditRoles from './components/admin/roles/Edit';
+
+// Colors
+import ListColors from './components/admin/colors/List';
+import AddColors from './components/admin/colors/Add';
+import EditColors from './components/admin/colors/Edit';
+
 // Pages Product For Catalogue
 import ProductCatalogue from './components/admin/group-import/catalogues/ProductForCatalogue';
 
@@ -687,6 +697,40 @@ export default new Router({
           name: 'editStockState',
           component: EditStockState,
         },
+
+        // Roles
+        {
+          path: '/admin/roles',
+          name: 'listRoles',
+          component: ListRoles,
+        },
+        {
+          path: '/admin/rol/add',
+          name: 'addRoles',
+          component: AddRoles,
+        },
+        {
+          path: '/admin/rol/:id/edit',
+          name: 'editRoles',
+          component: EditRoles,
+        },
+
+        // Colors
+        {
+          path: '/admin/colors',
+          name: 'listColors',
+          component: ListColors,
+        },
+        {
+          path: '/admin/color/add',
+          name: 'addColors',
+          component: AddColors,
+        },
+        {
+          path: '/admin/color/:id/edit',
+          name: 'editColors',
+          component: EditColors,
+        },
       ],
     },
     {
@@ -695,7 +739,7 @@ export default new Router({
       component: PrintOrder,
     },
     {
-      path: '/print/catalogue',
+      path: '/print/catalogue/:id',
       name: 'PDFCatalogue',
       component: PDFCatalogue,
     },

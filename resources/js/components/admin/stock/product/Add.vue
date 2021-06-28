@@ -171,20 +171,18 @@
       <v-col cols="12" md="3" v-if="availableColors">
         <div>Colores de producto</div>
 
-        <v-col cols="12" class="pb-0 pt-2">
-          <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
-        </v-col>
-        <v-col cols="12" class="pb-2 pt-0">
-          <v-btn class="mb-5 my-auto mt-2" @click="addPColor" small>
-            Añadir Color
-          </v-btn>
-          <div>Colores</div>
-          <v-row class="pr-3 pa-1">
-            <v-col v-for="(item, index) in colors" :key="index" cols="1">
-              <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
-            </v-col>
-          </v-row>
-        </v-col>
+        <v-select
+          v-model="colors"
+          :items="colorsSelect"
+          label="Select"
+          item-text="name"
+          item-value="code"
+          multiple
+          chips
+          solo
+          dense
+          persistent-hint
+        ></v-select>
       </v-col>
       <v-col cols="12" md="3" v-if="availableSize">
         <div class="d-flex mb-2">
@@ -263,6 +261,7 @@ export default {
     gender: [],
     size: [],
     colors: [],
+    colorsSelect: [],
     type: 'hex',
     hex: '#FF00FF',
     categories: [],
@@ -355,6 +354,19 @@ export default {
     deleteColor(index) {
       this.colors.splice(index, 1);
     },
+    getColors() {
+      axios
+        .get('/api/v1/colors')
+        .then(response => {
+          console.log(response.data);
+          this.colorsSelect = response.data.data;
+        })
+        .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
+    },
+
     getCategories() {
       axios
         .get('/api/v1/sale-categories?list=true')
@@ -413,6 +425,7 @@ export default {
     this.getBrands();
     this.getUnit();
     this.getTypeProduct();
+    this.getColors();
   },
 };
 </script>

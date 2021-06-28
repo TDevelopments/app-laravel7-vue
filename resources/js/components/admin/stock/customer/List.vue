@@ -16,12 +16,13 @@
             ref="nomCli"
           ></v-text-field>
         </v-col>
-        <v-col class="text-center align-center justify-center px-0 d-flex">
+        <v-col class="align-center justify-end px-0 pr-2 d-flex">
           <v-btn small @click="search" class="mx-1" color="#0D52D6" dark> Buscar </v-btn>
           <v-btn small @click="clear" class="mx-1"> Limpiar </v-btn>
         </v-col>
       </v-row>
     </div>
+    <v-divider></v-divider>
     <div class="d-flex my-3">
       <h3>Clientes</h3>
       <v-spacer></v-spacer>

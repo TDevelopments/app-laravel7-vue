@@ -266,7 +266,11 @@
                     <td class="style-table-td">
                       {{ props.item.model }}
                       <br />
-                      <v-btn small class="mt-2 mx-2" @click="prueba(props.item, 'normal')">
+                      <v-btn
+                        small
+                        class="mt-2 mx-2"
+                        @click="prueba(props.item, 'normal', props.index)"
+                      >
                         Ver Mas
                       </v-btn>
                     </td>
@@ -363,7 +367,7 @@
                       {{ props.item.price_group | currency }}
                     </td>
                     <td class="px-0 py-5">
-                      <v-btn small class="my-5" @click="prueba(props.item, 'normal')"
+                      <v-btn small class="my-5" @click="prueba(props.item, 'normal', props.index)"
                         >Ver Mas</v-btn
                       >
                       <br />
@@ -408,6 +412,8 @@
                   <tr class="style-table-th">
                     <td>
                       <v-checkbox
+                        :readonly="!props.item.cont"
+                        @click="verify(props.item.cont)"
                         :input-value="props.isSelected"
                         @change="props.select($event)"
                         hide-details
@@ -442,7 +448,11 @@
                     <td class="style-table-td">
                       {{ props.item.model }}
                       <br />
-                      <v-btn small class="mt-2 mx-2" @click="prueba(props.item, 'range')">
+                      <v-btn
+                        small
+                        class="mt-2 mx-2"
+                        @click="prueba(props.item, 'range', props.index)"
+                      >
                         Ver Mas
                       </v-btn>
                     </td>
@@ -468,11 +478,7 @@
 
                         <input type="text" class="w text-center" v-model="props.item.quantity" />
 
-                        <v-icon
-                          class="back"
-                          dark
-                          small
-                          @click="plusFunctionR(props.index, props.item.meta, props.item.quantity)"
+                        <v-icon class="back" dark small @click="plusFunctionR(props.index)"
                           >mdi-plus</v-icon
                         >
                       </div>
@@ -527,6 +533,8 @@
                       <v-row class="px-2">
                         <div>
                           <v-checkbox
+                            :readonly="!props.item.cont"
+                            @click="verify(props.item.cont)"
                             :input-value="props.isSelected"
                             @change="props.select($event)"
                             hide-details
@@ -566,7 +574,9 @@
                       </div>
                     </td>
                     <td class="px-0 py-5">
-                      <v-btn small class="my-5" @click="prueba(props.item, 'range')">Ver Mas</v-btn>
+                      <v-btn small class="my-5" @click="prueba(props.item, 'range', props.index)"
+                        >Ver Mas</v-btn
+                      >
                       <br />
                       <div class="form-inline justify-content-center">
                         <v-btn
@@ -1008,6 +1018,7 @@
         v-if="showScheduleForm"
         :catalogue="catalogue"
         :type="elementType"
+        :ind="index"
       />
     </v-col>
     <v-dialog v-model="dialogSuccess" persistent max-width="290">
@@ -1042,6 +1053,7 @@ export default {
     viewer: Viewer,
   },
   data: () => ({
+    index: '',
     dialogSuccess: false,
     dialog: false,
     baseURL: '',
@@ -1190,7 +1202,7 @@ export default {
       set(v) {
         let cat = this.catalogue;
         // cat.products = v;
-        this.addCart({ cat, products: v });
+        this.addCart({ cat, products: v, product_ranges: this.selectedRange });
         return (this.proCa = v);
       },
     },
@@ -1207,7 +1219,7 @@ export default {
       set(v) {
         let cat = this.catalogue;
         // cat.products = v;
-        this.addCart({ cat, product_ranges: v });
+        this.addCart({ cat, product_ranges: v, products: this.selected });
         return (this.proCa = v);
       },
     },
@@ -1237,11 +1249,25 @@ export default {
         this.catalogue.products[index].quantity =
           this.catalogue.products[index].quantity - this.catalogue.products[index].magnifying;
       }
+      this.selected.forEach(element => {
+        if (element.id == this.catalogue.products[index].id) {
+          element.quantity = this.catalogue.products[index].quantity;
+        }
+      });
+      let cat = this.catalogue;
+      this.addCart({ cat, products: this.selected, product_ranges: this.selectedRange });
     },
     plusFunctionO(index) {
-      console.log(this.catalogue.products[index]);
       this.catalogue.products[index].quantity =
         this.catalogue.products[index].quantity + this.catalogue.products[index].magnifying;
+      console.log(this.selected);
+      this.selected.forEach(element => {
+        if (element.id == this.catalogue.products[index].id) {
+          element.quantity = this.catalogue.products[index].quantity;
+        }
+      });
+      let cat = this.catalogue;
+      this.addCart({ cat, products: this.selected, product_ranges: this.selectedRange });
     },
 
     minusFunctionR(item, index) {
@@ -1276,6 +1302,14 @@ export default {
         this.catalogue.productRanges[index].quantity,
         index
       );
+      this.selectedRange.forEach(element => {
+        if (element.id == this.catalogue.productRanges[index].id) {
+          element.quantity = this.catalogue.productRanges[index].quantity;
+          element.meta = this.catalogue.productRanges[index].meta;
+        }
+      });
+      let cat = this.catalogue;
+      this.addCart({ cat, products: this.selected, product_ranges: this.selectedRange });
     },
 
     plusFunctionR(index) {
@@ -1308,16 +1342,26 @@ export default {
         this.catalogue.productRanges[index].quantity,
         index
       );
+      this.selectedRange.forEach(element => {
+        if (element.id == this.catalogue.productRanges[index].id) {
+          element.quantity = this.catalogue.productRanges[index].quantity;
+          element.meta = this.catalogue.productRanges[index].meta;
+          element.total = this.catalogue.productRanges[index].total;
+        }
+      });
+      let cat = this.catalogue;
+      this.addCart({ cat, products: this.selected, product_ranges: this.selectedRange });
     },
 
     reserve() {
       this.loading = true;
       setTimeout(() => (this.loading = false), 2000);
     },
-    prueba(value, type) {
+    prueba(value, type, index) {
       this.itemSelected = value;
       this.elementType = type;
       this.showScheduleForm = true;
+      this.index = index;
       console.log(this.itemSelected);
     },
     mas() {
@@ -1356,7 +1400,7 @@ export default {
         this.catalogue.productRanges[index].meta.forEach(element => {
           element.quantity = 0;
         });
-        this.catalogue.productRanges[index].cont = true;
+        this.catalogue.productRanges[index].cont = false;
       } else {
         this.catalogue.productRanges[index].cont = false;
       }
@@ -1373,14 +1417,62 @@ export default {
       } else if (suma > quantity) {
         alert('Lo sentimos, aumente mas cantidad.');
         this.catalogue.productRanges[index].meta[indexMeta].quantity = 0;
+        this.catalogue.productRanges[index].cont = true;
       } else {
         this.catalogue.productRanges[index].cont = false;
       }
       console.log(suma);
+      this.selectedRange.forEach(element => {
+        if (element.id == this.catalogue.productRanges[index].id) {
+          element.meta = this.catalogue.productRanges[index].meta;
+        }
+      });
+      let cat = this.catalogue;
+      this.addCart({ cat, products: this.selected, product_ranges: this.selectedRange });
+    },
+    verify(bol) {
+      console.log('hola');
+      if (!bol) {
+        alert('Ingrese los colores');
+      }
+    },
+    async getProp() {
+      await this.getCatalogue(this.$route.params.id);
+      let pn = this.catalogue.products;
+      let pr = this.catalogue.productRanges;
+      let cpn = [];
+      let cpr = [];
+      this.cart.forEach(catalo => {
+        if (catalo.id === this.catalogue.id) {
+          cpn = catalo.products;
+          cpr = catalo.product_ranges;
+        }
+      });
+      console.log('carrito', this.cart);
+      console.log('cpn', cpn);
+      if (pn != null || cpn != null) {
+        pn.forEach(element => {
+          cpn.forEach(ele => {
+            if (ele.id == element.id) {
+              element.quantity = ele.quantity;
+            }
+          });
+        });
+      }
+      if (pr != null || cpr != null) {
+        pr.forEach(element => {
+          cpr.forEach(ele => {
+            if (ele.id == element.id) {
+              element.quantity = ele.quantity;
+              element.meta = ele.meta;
+            }
+          });
+        });
+      }
     },
   },
   mounted() {
-    this.getCatalogue(this.$route.params.id);
+    this.getProp();
     console.log(this.catalogue);
     this.getBanks();
     this.getAdvisers();

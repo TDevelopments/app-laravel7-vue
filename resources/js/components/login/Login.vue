@@ -13,6 +13,7 @@
                     :rules="[rules.required]"
                     label="DNI"
                     required
+                    type="number"
                   ></v-text-field>
 
                   <v-text-field
@@ -51,10 +52,9 @@
           <div class="content">
             <h3>Nuevo por aqui?</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis
-              consequuntur quos, dolorem quam voluptatum voluptates labore.
-              Dolores magni sint, ex totam, quas vitae unde sit tenetur esse nam
-              sapiente amet!
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis consequuntur quos,
+              dolorem quam voluptatum voluptates labore. Dolores magni sint, ex totam, quas vitae
+              unde sit tenetur esse nam sapiente amet!
             </p>
             <v-btn color="white" class="mr-4" outlined rounded dark @click="register">
               Sign up
@@ -67,29 +67,29 @@
   </v-app>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data: () => ({
     w_with: window.innerWidth * 0.6,
     w_height: window.innerHeight,
     valid: true,
-    dni: "",
+    dni: '',
     select: null,
     show1: false,
     show2: true,
     show3: false,
     show4: false,
-    password: "",
+    password: '',
     rules: {
-      required: value => !!value || "Required.",
-      min: v => v.length >= 8 || "Min 8 characters",
-      emailMatch: () => `The email and password you entered don't match`
-    }
+      required: value => !!value || 'Required.',
+      min: v => v.length >= 8 || 'Min 8 characters',
+      emailMatch: () => `The email and password you entered don't match`,
+    },
   }),
 
   methods: {
-    ...mapActions("account", ["login"]),
+    ...mapActions('account', ['login']),
     validate() {
       this.$refs.form.validate();
     },
@@ -100,20 +100,20 @@ export default {
       this.$refs.form.resetValidation();
     },
     register() {
-      this.$router.push({ name: "register" });
-    }
-  }
+      this.$router.push({ name: 'register' });
+    },
+  },
 };
 </script>
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 h1 {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   text-align: center;
   font-size: 2.5rem;
   font-weight: 500;
@@ -129,7 +129,7 @@ h1 {
   overflow: hidden;
 }
 .containers:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 2500px;
   height: 2500px;

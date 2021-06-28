@@ -7,11 +7,7 @@
       </div>
       <v-spacer></v-spacer>
       <div>
-        <v-switch
-          v-model="varBoolean"
-          @click="valueInitial"
-          label="Añadir Variaciones"
-        />
+        <v-switch v-model="varBoolean" @click="valueInitial" label="Añadir Variaciones" />
       </div>
     </v-row>
     <v-row>
@@ -23,7 +19,7 @@
                 <v-col>
                   <v-row>
                     <v-col cols="12" sm="6" md="4" lg="4">
-                      Modelo
+                      Modelo (*)
                       <v-text-field
                         solo
                         v-model="productRange.model"
@@ -41,16 +37,7 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4" lg="4">
-                      SKU
-                      <v-text-field
-                        v-model="productRange.sku"
-                        solo
-                        required
-                        placeholder="Example"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4" lg="4">
-                      Stock Meta
+                      Stock Meta (*)
                       <v-text-field
                         v-model="productRange.stock"
                         type="number"
@@ -59,9 +46,9 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4" md="4">
-                      Categoria
+                      Categoria (*)
                       <v-select
-                        v-model="productRange.category"
+                        v-model="productRange.category_id"
                         item-text="name"
                         item-value="id"
                         :items="categories"
@@ -72,9 +59,9 @@
                       ></v-select>
                     </v-col>
                     <v-col cols="12" sm="4" md="4">
-                      Catalogo
+                      Catalogo (*)
                       <v-select
-                        v-model="productRange.catalogue"
+                        v-model="productRange.catalogue_id"
                         item-text="name"
                         item-value="id"
                         :items="catalogues"
@@ -93,15 +80,23 @@
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6" v-if="!varBoolean">
         <h3>Colores de Producto</h3>
-        <v-card class="text-center">
+        <v-select
+          v-model="colors"
+          :items="colorsSelect"
+          label="Select"
+          item-text="name"
+          item-value="code"
+          multiple
+          chips
+          solo
+          dense
+          persistent-hint
+        ></v-select>
+        <!-- <v-card class="text-center">
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
-                <v-color-picker
-                  hide-inputs
-                  v-model="color"
-                  class="mx-auto"
-                ></v-color-picker>
+                <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
               </v-col>
               <v-col cols="12" md="6">
                 <v-btn class="mb-5 my-auto mt-2" @click="addPColor">
@@ -115,24 +110,15 @@
                 </v-col>
                 <v-row class="pr-3">
                   <v-col v-for="(item, index) in colors" :key="index" cols="1">
-                    <v-avatar
-                      :color="item"
-                      size="15"
-                      @click="deleteColor(index)"
-                    ></v-avatar>
+                    <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
                   </v-col>
                 </v-row>
               </v-col>
             </v-row>
           </v-card-text>
-        </v-card>
+        </v-card> -->
       </v-col>
-      <v-col
-        cols="12"
-        sm="12"
-        :md="!varBoolean ? '6' : '12'"
-        :lg="!varBoolean ? '6' : '12'"
-      >
+      <v-col cols="12" sm="12" :md="!varBoolean ? '6' : '12'" :lg="!varBoolean ? '6' : '12'">
         <h3>Detalles del Producto</h3>
         <v-card>
           <v-card-text>
@@ -163,19 +149,13 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col v-if="!varBoolean">
+      <v-col v-if="!varBoolean" cols="6">
         <h3>Subir Imagenes</h3>
         <v-card class="mt-5">
           <v-card-text>
             <v-item-group v-model="selected" multiple>
               <v-row>
-                <v-col
-                  v-for="(item, i) in images"
-                  :key="i"
-                  cols="12"
-                  md="3"
-                  sm="3"
-                >
+                <v-col v-for="(item, i) in images" :key="i" cols="12" md="3" sm="3">
                   <v-item v-slot="{ active, toggle }">
                     <v-img
                       :src="item.src"
@@ -221,9 +201,9 @@
         <div class="table-responsive-lg">
           <table class="table">
             <thead class="bg-primary text-white">
-              <th scope="col">Rango Minimo</th>
-              <th scope="col">Rango Maximo</th>
-              <th scope="col">Precio</th>
+              <th scope="col">Rango Minimo (*)</th>
+              <th scope="col">Rango Maximo (*)</th>
+              <th scope="col">Precio (*)</th>
               <th scope="col" class="text-right">
                 <v-btn color="black" small @click="add" icon>
                   <v-icon small>mdi-plus</v-icon>
@@ -232,22 +212,10 @@
             </thead>
             <tr v-for="(input, index) in inputs" :key="index">
               <td>
-                <v-text-field
-                  v-model="input.min"
-                  solo
-                  required
-                  dense
-                  type="number"
-                ></v-text-field>
+                <v-text-field v-model="input.min" solo required dense type="number"></v-text-field>
               </td>
               <td>
-                <v-text-field
-                  v-model="input.max"
-                  solo
-                  required
-                  dense
-                  type="number"
-                ></v-text-field>
+                <v-text-field v-model="input.max" solo required dense type="number"></v-text-field>
               </td>
               <td>
                 <v-text-field
@@ -268,13 +236,12 @@
         </div>
       </v-window-item>
     </v-window>
-
-    <v-col class="ma-2">
-      <v-row>
-        <h4 class="mt-5">Variaciones</h4>
-      </v-row>
-    </v-col>
     <v-window class="elevation-1 mb-3" vertical v-if="varBoolean">
+      <v-col class="ma-2">
+        <v-row>
+          <h4 class="mt-5">Variaciones</h4>
+        </v-row>
+      </v-col>
       <v-window-item>
         <div class="table-responsive-lg">
           <table class="table">
@@ -298,13 +265,7 @@
                         <th scope="col">Imagen</th>
                         <th scope="col">Video</th>
                         <th scope="col">
-                          <v-btn
-                            small
-                            icon
-                            dark
-                            color="black"
-                            @click="addVariation"
-                          >
+                          <v-btn small icon dark color="black" @click="addVariation">
                             <v-icon small>mdi-plus </v-icon>
                           </v-btn>
                         </th>
@@ -312,26 +273,12 @@
                     </thead>
                     <tr v-for="(itemV, indexV) in variaciones" :key="indexV">
                       <td>
-                        <v-text-field
-                          v-model="itemV.model"
-                          solo
-                          dense
-                          required
-                        ></v-text-field>
+                        <v-text-field v-model="itemV.model" solo dense required></v-text-field>
                       </td>
                       <td>
-                        <v-dialog
-                          transition="dialog-bottom-transition"
-                          max-width="600"
-                        >
+                        <v-dialog transition="dialog-bottom-transition" max-width="600">
                           <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                              small
-                              color="primary"
-                              v-bind="attrs"
-                              v-on="on"
-                              class="mt-1"
-                            >
+                            <v-btn small color="primary" v-bind="attrs" v-on="on" class="mt-1">
                               + Colores
                             </v-btn>
                           </template>
@@ -379,9 +326,7 @@
                                         <v-avatar
                                           :color="item"
                                           size="15"
-                                          @click="
-                                            deleteColorMultiple(indexV, index)
-                                          "
+                                          @click="deleteColorMultiple(indexV, index)"
                                         ></v-avatar>
                                       </v-col>
                                     </v-row>
@@ -389,9 +334,7 @@
                                 </v-row>
                               </v-card-text>
                               <v-card-actions class="justify-end">
-                                <v-btn text @click="dialog.value = false"
-                                  >Close</v-btn
-                                >
+                                <v-btn text @click="dialog.value = false">Close</v-btn>
                               </v-card-actions>
                             </v-card>
                           </template>
@@ -428,13 +371,7 @@
                         </v-file-input>
                       </td>
                       <td>
-                        <v-btn
-                          small
-                          icon
-                          dark
-                          color="red"
-                          @click="deleteVariation(indexV)"
-                        >
+                        <v-btn small icon dark color="red" @click="deleteVariation(indexV)">
                           <v-icon small>mdi-minus </v-icon>
                         </v-btn>
                       </td>
@@ -454,12 +391,7 @@
         <v-icon left> mdi-delete </v-icon>
         Cancelar
       </v-btn>
-      <v-btn
-        :disabled="!valid"
-        color="success"
-        class="mr-3 my-5"
-        @click="validation"
-      >
+      <v-btn :disabled="!valid" color="success" class="mr-3 my-5" @click="validation">
         <v-icon left> mdi-content-save </v-icon>
         Guardar
       </v-btn>
@@ -467,20 +399,20 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   data: () => ({
     // Object Product Range
     productRange: {
-      model: "",
-      slug: "",
-      sku: "",
-      stock: "",
-      brand: "",
-      category: "",
-      catalogue: "",
-      ranges: "",
+      model: '',
+      slug: '',
+      sku: '',
+      stock: '',
+      brand: '',
+      category: '',
+      catalogue: '',
+      ranges: '',
     },
     // Catalogues
     catalogues: [],
@@ -495,9 +427,10 @@ export default {
     images: [],
     imageResponse: [],
     // Colors
-    type: "hex",
-    hex: "#FF00FF",
-    colors: ["Rojo", "Negro", "Amarillo"],
+    type: 'hex',
+    hex: '#FF00FF',
+    colors: [],
+    colorsSelect: [],
     // Ranges
     inputs: [
       {
@@ -510,8 +443,8 @@ export default {
     valid: true,
     // Variaciones
     variaciones: [],
-    varSelection: ["color", "Tamaño/Talla"],
-    selection: "color",
+    varSelection: ['color', 'Tamaño/Talla'],
+    selection: 'color',
     varBoolean: false,
     cont: 0,
   }),
@@ -540,90 +473,105 @@ export default {
       axios
         .post(`/api/v1/uploads`, data, {
           headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
           },
         })
-        .then((response) => {
+        .then(response => {
           this.imageResponse = response.data;
           this.addProductRange();
           console.log(response);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     // Post Product Range
     addProductRange() {
       if (this.varBoolean) {
         axios
-          .post("/api/v1/product-ranges-massive", {
+          .post('/api/v1/product-ranges-massive', {
             products: this.variaciones,
           })
-          .then((response) => {
+          .then(response => {
             console.log(response);
-            this.$router.replace({ name: "listProduct" });
+            this.$router.replace({ name: 'listProduct' });
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
             // reject(error);
           });
       } else {
+        let data = {};
+        for (const property in this.productRange) {
+          if (this.productRange[property] != null && this.productRange[property] != '') {
+            data.[property] = this.productRange[property];
+          }
+        }
+        console.log(data);
+        if (this.imageResponse != null && this.imageResponse.length != 0) {
+         data.images = this.imageResponse;
+        }
+        if (this.description != null && this.description.length != 0) {
+         data.description = this.description;
+        }
+        if (this.colors != null && this.colors.length != 0) {
+         data.colors = this.colors;
+        }
+        if (this.inputs != null && this.inputs.length != 0) {
+         data.ranges = this.inputs;
+        }
+
         axios
-          .post(
-            "/api/v1/product-ranges",
-            {
-              model: this.productRange.model,
-              stock: this.productRange.stock,
-              brand: this.productRange.brand,
-              category_id: this.productRange.category,
-              catalogue_id: this.productRange.catalogue,
-              images: this.imageResponse,
-              description: this.description,
-              colors: this.colors,
-              ranges: this.inputs,
-            },
-            {
-              headers: {
-                Accept: "application/json",
-              },
-            }
-          )
-          .then((response) => {
+          .post('/api/v1/product-ranges', data)
+          .then(response => {
             console.log(response);
-            this.$router.replace({ name: "listProduct" });
+            this.$router.replace({ name: 'listProduct' });
           })
-          .catch((error) => {});
+          .catch(error => {});
       }
     },
 
     // Get Categories
     getCategories() {
       axios
-        .get("/api/v1/categories")
-        .then((response) => {
+        .get('/api/v1/categories')
+        .then(response => {
           this.loading = false;
           this.categories = response.data.data;
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     // Get Catalogues
     getCatalogues() {
       axios
-        .get("/api/v1/catalogues")
-        .then((response) => {
+        .get('/api/v1/catalogues')
+        .then(response => {
           this.loading = false;
           this.catalogues = response.data.data;
         })
-        .catch((error) => {});
+        .catch(error => {});
+    },
+
+    getColors() {
+      axios
+        .get('/api/v1/colors')
+        .then(response => {
+          console.log(response.data);
+          this.colorsSelect = response.data.data
+        })
+        .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
     },
 
     // Add New Component Range
     add() {
       this.inputs.push({
-        min: "",
-        max: "",
-        price: "",
+        min: '',
+        max: '',
+        price: '',
       });
     },
 
@@ -635,12 +583,12 @@ export default {
     // Add New Component Variation
     addVariation() {
       if (
-        this.productRange.stock != "" &&
-        this.productRange.brand != "" &&
-        this.productRange.category != "" &&
-        this.productRange.catalogue != "" &&
-        this.description != "" &&
-        this.inputs != ""
+        this.productRange.stock != '' &&
+        this.productRange.brand != '' &&
+        this.productRange.category != '' &&
+        this.productRange.catalogue != '' &&
+        this.description != '' &&
+        this.inputs != ''
       ) {
         this.variaciones.push({
           model: this.productRange.model + this.cont,
@@ -655,7 +603,7 @@ export default {
           ranges: this.inputs,
         });
       } else {
-        alert("Tienes que llenar los datos Generales Primero");
+        alert('Tienes que llenar los datos Generales Primero');
       }
       this.cont++;
     },
@@ -668,9 +616,9 @@ export default {
     // Preview Images Product
     previewImages() {
       if (this.files.length == 0) {
-        console.log("Esta vacio");
+        console.log('Esta vacio');
       } else {
-        this.files.forEach((element) => {
+        this.files.forEach(element => {
           this.images.push({
             src: URL.createObjectURL(element),
             checkbox: false,
@@ -713,7 +661,7 @@ export default {
 
     // Return List
     returnList() {
-      this.$router.replace({ name: "listProduct" });
+      this.$router.replace({ name: 'listProduct' });
     },
 
     valueInitial() {},
@@ -727,16 +675,16 @@ export default {
         axios
           .post(`/api/v1/uploads`, data, {
             headers: {
-              Accept: "application/json",
-              "Content-Type": "multipart/form-data",
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
             },
           })
-          .then((response) => {
+          .then(response => {
             this.variaciones[id].images = response.data;
             console.log(id, this.variaciones[id].images);
             console.log(this.variaciones);
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
             // reject(error);
           });
@@ -746,6 +694,7 @@ export default {
   mounted() {
     this.getCatalogues();
     this.getCategories();
+    this.getColors();
   },
   computed: {
     // Get Hex Color
@@ -758,7 +707,7 @@ export default {
       },
     },
     showColor() {
-      if (typeof this.color === "string") return this.color;
+      if (typeof this.color === 'string') return this.color;
 
       return JSON.stringify(
         Object.keys(this.color).reduce((color, key) => {
@@ -783,4 +732,3 @@ export default {
   width: 150px;
 }
 </style>
-

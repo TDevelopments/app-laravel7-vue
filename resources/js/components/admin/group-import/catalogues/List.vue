@@ -1,5 +1,27 @@
 <template>
   <div>
+    <div>
+      <h3>Filtros</h3>
+      <v-row>
+        <v-col>
+          Búsqueda (Nombre)
+          <v-text-field
+            class="border"
+            flat
+            hide-details
+            solo
+            dense
+            append-icon="mdi-magnify"
+            v-model="searchCatalogue"
+            ref="nomCli"
+          ></v-text-field>
+        </v-col>
+        <v-col class="align-center justify-end px-0 pr-2 d-flex">
+          <v-btn small @click="search" class="mx-1" color="#0D52D6" dark> Buscar </v-btn>
+          <v-btn small @click="clear" class="mx-1"> Limpiar </v-btn>
+        </v-col>
+      </v-row>
+    </div>
     <v-data-table
       :headers="headers"
       :items="catalogues"
@@ -16,7 +38,7 @@
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
 
-          <v-btn color="#1B1B1B" dark @click="newCatalogue">
+          <v-btn color="#1B1B1B" dark @click="newCatalogue" small>
             Nuevo Catálogo
           </v-btn>
 
@@ -24,12 +46,10 @@
             <v-card>
               <v-card-title class="headline"> Eliminar Catálogo </v-card-title>
 
+              <v-card-text> ¿Estas seguro de eliminar este <strong>catálogo</strong>? </v-card-text>
               <v-card-text>
-                ¿Estas seguro de eliminar este <strong>catálogo</strong>?
-              </v-card-text>
-              <v-card-text>
-                Si lo eliminas, se borraran todos los productos que esten
-                relacionados a este catálogo.
+                Si lo eliminas, se borraran todos los productos que esten relacionados a este
+                catálogo.
               </v-card-text>
 
               <v-card-actions>
@@ -69,7 +89,7 @@
         {{ item.date_second_payment | date }}
       </template>
       <template v-slot:[`item.is_available`]="{ item }">
-        {{ item.is_available == 1 ? "Si" : "No" }}
+        {{ item.is_available == 1 ? 'Si' : 'No' }}
       </template>
       <template v-slot:[`item.arrivals`]="{ item }">
         <p v-for="(ar, index) in item.arrivals" :key="index">
@@ -78,6 +98,11 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-row>
+          <v-col class="px-0">
+            <v-icon small @click="printItem(item)" color="#FF0000">
+              mdi-printer
+            </v-icon>
+          </v-col>
           <v-col class="px-0">
             <ProductForCatalogue :idCatalogue="item.id" />
           </v-col>
@@ -95,95 +120,99 @@
       </template>
     </v-data-table>
     <div class="text-center pt-2">
-      <v-pagination
-        v-model="page"
-        :length="pagination"
-        @input="next"
-      ></v-pagination>
+      <v-pagination v-model="page" :length="pagination" @input="next"></v-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import moment from "moment";
-import ProductForCatalogue from "./ProductForCatalogue";
+import moment from 'moment';
+import ProductForCatalogue from './ProductForCatalogue';
 
 export default {
   components: {
     ProductForCatalogue,
   },
   data: () => ({
+    searchCatalogue: '',
+    searchName :  '',
     dialogComponent: false,
     dialogDelete: false,
     loading: false,
     headers: [
       {
-        text: "Nombre de Catálogo",
-        value: "name",
-        align: "center",
+        text: 'ID',
+        value: 'id',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Inversión Mínima",
-        value: "minimum_investment",
-        align: "center",
+        text: 'Nombre de Catálogo',
+        value: 'name',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Monto de Separación",
-        value: "quota_price",
-        align: "center",
+        text: 'Inversión Mínima',
+        value: 'minimum_investment',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Fecha Pago Monto de Separación",
-        value: "quota_date",
-        align: "center",
+        text: 'Monto de Separación',
+        value: 'quota_price',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "% Primer Pago",
-        value: "first_payment",
-        align: "center",
+        text: 'Fecha Pago Monto de Separación',
+        value: 'quota_date',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Fecha Primer Pago",
-        value: "date_first_payment",
-        align: "center",
+        text: '% Primer Pago',
+        value: 'first_payment',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "% Segundo Pago",
-        value: "second_payment",
-        align: "center",
+        text: 'Fecha Primer Pago',
+        value: 'date_first_payment',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Fecha Segundo Pago",
-        value: "date_second_payment",
-        align: "center",
+        text: '% Segundo Pago',
+        value: 'second_payment',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Tipo de Moneda",
-        value: "coin",
-        align: "center",
+        text: 'Fecha Segundo Pago',
+        value: 'date_second_payment',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Fecha de Llegada",
-        value: "arrivals",
-        align: "center",
+        text: 'Tipo de Moneda',
+        value: 'coin',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Disponible",
-        value: "is_available",
-        align: "center",
+        text: 'Fecha de Llegada',
+        value: 'arrivals',
+        align: 'center',
         sortable: false,
       },
-      { text: "Acciones", value: "actions", sortable: false, align: "center" },
+      {
+        text: 'Disponible',
+        value: 'is_available',
+        align: 'center',
+        sortable: false,
+      },
+      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
     catalogues: [],
     idDelete: null,
@@ -191,29 +220,36 @@ export default {
     pageCount: 0,
     itemsPerPage: 15,
     pagination: null,
-    baseURL: "",
+    baseURL: '',
   }),
   methods: {
     getList() {
       axios
-        .get("/api/v1/catalogues")
-        .then((response) => {
+        .get('/api/v1/catalogues')
+        .then(response => {
           this.loading = false;
           this.catalogues = response.data.data;
           this.pagination = response.data.meta.last_page;
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     editItem(item) {
       this.$router.push({
-        name: "editCatalogue",
+        name: 'editCatalogue',
         params: {
           id: item.id,
         },
       });
     },
-
+    printItem(item) {
+      this.$router.push({
+        name: 'PDFCatalogue',
+        params: {
+          id: item.id,
+        },
+      });
+    },
     deleteItem(item) {
       this.dialogDelete = true;
       this.idDelete = item.id;
@@ -222,11 +258,11 @@ export default {
     deleteItemConfirm() {
       axios
         .delete(`/api/v1/catalogues/${this.idDelete}`)
-        .then((response) => {
+        .then(response => {
           this.closeDelete();
           this.getList();
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     closeDelete() {
@@ -234,7 +270,7 @@ export default {
     },
     newCatalogue() {
       this.$router.push({
-        name: "addCatalogue",
+        name: 'addCatalogue',
       });
     },
     viewProduct() {
@@ -242,31 +278,54 @@ export default {
     },
     next(page) {
       axios
-        .get(`/api/v1/catalogues?page=${page}`)
-        .then((response) => {
+        .get(`/api/v1/catalogues?name=${this.searchCatalogue}&page=${page}`)
+        .then(response => {
           this.loading = false;
           this.catalogues = response.data.data;
           this.pagination = response.data.meta.last_page;
-          console.log(response);
         })
-        .catch((error) => {});
+        .catch(error => {});
+    },
+    search() {
+      if (this.page != 1) {
+        this.page = 1;
+      }
+      if (this.searchCatalogue == null) {
+        this.searchCatalogue = '';
+      }
+      axios
+        .get(`/api/v1/catalogues?name=${this.searchCatalogue}&page=${this.page}`)
+        .then(response => {
+          this.loading = false;
+          this.catalogues = response.data.data;
+          this.pagination = response.data.meta.last_page;
+        })
+        .catch(error => {});
+    },
+    clear() {
+      this.searchCatalogue = '';
+      this.getList();
     },
   },
   mounted() {
     this.getList();
-    this.baseURL = process.env.MIX_NODE_URL;
   },
   filters: {
-    currency: function (value) {
+    currency: function(value) {
       return parseFloat(value).toFixed(2);
-      moment(element.arrival_date).format("YYYY-MM-DD");
+      moment(element.arrival_date).format('YYYY-MM-DD');
     },
-    date: function (value) {
-      return moment(value).format("YYYY-MM-DD");
+    date: function(value) {
+      return moment(value).format('YYYY-MM-DD');
     },
-    porcent: function (value) {
-      return parseFloat(value) * 100 + " %";
+    porcent: function(value) {
+      return parseFloat(value) * 100 + ' %';
     },
   },
 };
 </script>
+<style scoped>
+.border {
+  border: 1px solid #d2d6de;
+}
+</style>

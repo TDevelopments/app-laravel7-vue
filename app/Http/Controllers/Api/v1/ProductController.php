@@ -49,15 +49,15 @@ class ProductController extends Controller
             $query = $this->product->where('on_sale', false);
             if($request->query("catalogue_id"))
             {
-                $query->where('catalogue_id', $value1);
+                $query->where('catalogue_id', $value2);
             }
             if($request->query("category_id"))
             {
-                $query->where("category_id", $value2);
+                $query->where("category_id", $value1);
             }
             if($request->query("measure"))
             {
-                $query->where('type_group', "%$value3%");
+                $query->where('type_group', $value3);
             }
             if($request->query("model") && $request->query("sku"))
             {
