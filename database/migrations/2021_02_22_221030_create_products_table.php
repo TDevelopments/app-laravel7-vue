@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->json('description')->nullable();
             $table->integer('magnifying')->default(1);
             $table->json('images')->nullable();
-            $table->string('model')->unique();
+            $table->string('model');
             $table->string('slug')->unique();
             $table->json('colors')->nullable();
             $table->integer('stock');

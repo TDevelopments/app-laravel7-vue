@@ -19,7 +19,7 @@ class CreateProductRangesTable extends Migration
             $table->string('sku')->unique();
             $table->json('description')->nullable();
             $table->json('images')->nullable();
-            $table->string('model')->unique();
+            $table->string('model');
             $table->string('slug')->unique();
             $table->json('colors')->nullable();
             $table->integer('stock');

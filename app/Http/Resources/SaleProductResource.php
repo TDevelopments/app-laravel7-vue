@@ -30,9 +30,9 @@ class SaleProductResource extends JsonResource
             'Sizes' => $this->SaleStockRecords->groupBy('Size')->map(function ($row) {
                 return $row->Sum('Quantity');
             }),
-            /* 'AvailableStockName' => SaleStockRecordResource::collection($this->SaleStockRecords)->groupBy('sale_product_status_id')->map(function ($row) { */
-            /*     return $row->sum('Quantity'); */
-            /* }), */
+            // 'AvailableStockName' => SaleStockRecordResource::collection($this->SaleStockRecords)->groupBy('sale_product_status_id')->map(function ($row) {
+            //     return $row->sum('Quantity');
+            // }),
             'ProductName' => $this->ProductName,
             'ProductDescription' => $this->ProductDescription,
             'QuantityPerUnit' => $this->QuantityPerUnit,

@@ -32,7 +32,7 @@ class StoreUserRequestAdmin extends FormRequest
             'ruc' => ['integer' ,'unique:users,ruc'],
             'dni' => ['required', 'integer', 'unique:users,dni'],
             'phone' => ['required','integer'],
-            'gender' => ['string', 'in:masculine,female'],
+            'gender' => ['string', 'in:masculine,female,none'],
             'city' => ['string'],
             'roles' => ['required', 'array'],
             'roles.*' => ['required', 'string'],

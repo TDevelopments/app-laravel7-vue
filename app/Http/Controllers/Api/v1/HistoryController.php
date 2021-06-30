@@ -35,11 +35,11 @@ class HistoryController extends Controller
         if ($request->query("date1") && $request->query("date2")) {
             $from = $request->query("date1");
             $to = $request->query("date2");
-            $histories = $this->history->whereBetween('creation_date', [$from, $to])->paginate()->withQueryString();
+            $histories = $this->history->whereBetween('creation_date', [$from, $to])->orderBy('created_at', 'ASC')->paginate()->withQueryString();
             return HistoryResource::collection($histories);
         
         }
-        $histories = $this->history->paginate();
+        $histories = $this->history->orderBy('created_at', 'ASC')->paginate();
         return HistoryResource::collection($histories);
     }
 
