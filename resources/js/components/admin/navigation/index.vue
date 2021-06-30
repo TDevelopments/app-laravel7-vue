@@ -144,6 +144,12 @@
           <v-list-item link :to="{ name: 'listAdviser' }">
             <v-list-item-title>Asesores</v-list-item-title>
           </v-list-item>
+          <v-list-item link :to="{ name: 'history' }">
+            <v-list-item-title>Historial</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{ name: 'listRoles' }">
+            <v-list-item-title>Roles</v-list-item-title>
+          </v-list-item>
         </v-list-group>
       </v-list>
 
@@ -337,6 +343,10 @@
             </v-list-item>
             <v-list-item link :to="{ name: 'addStockState' }">
               <v-list-item-title>Crear Estado de Orden</v-list-item-title>
+            </v-list-item>
+          </v-list-group>
+          <v-list-item link :to="{ name: 'history' }">
+              <v-list-item-title>Historial</v-list-item-title>
             </v-list-item>
           </v-list-group>
         </v-list-item-group>

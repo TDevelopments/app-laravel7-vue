@@ -13,10 +13,10 @@
                   Nombre (*)
                   <v-text-field v-model="user.name" solo required></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6">
+                <!-- <v-col cols="12" sm="6" md="6">
                   Apellidos (*)
                   <v-text-field v-model="user.lastname" solo required></v-text-field>
-                </v-col>
+                </v-col> -->
                 <v-col cols="12" sm="6" md="6">
                   Email (*)
                   <v-text-field v-model="user.email" solo></v-text-field>
