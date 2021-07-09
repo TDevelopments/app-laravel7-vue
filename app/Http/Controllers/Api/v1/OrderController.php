@@ -91,7 +91,8 @@ class OrderController extends Controller
             }
             if($request->query("stateOrder"))
             {
-                $query->where('state_order_id', "$value3");
+                $stateOrder = $this->stateOrder->firstWhere("name", $value3);
+                $query->where('state_order_id', $stateOrder->id);
             }
             if($request->query("catalogueId"))
             {
@@ -99,9 +100,9 @@ class OrderController extends Controller
             }
             if($request->query("username"))
             {
-                $userReference = User::firstWhere("name", "like", "%$value2%");
-                if (!empty($productReference))
-                    $query->where("user_id", $userReference->id);
+                $userReference = $this->saleCustomer->firstWhere("Fullname", "like", "%$value2%");
+                if (!empty($userReference))
+                    $query->where("sale_customer_id", $userReference->id);
             }
             return OrderResourceAdmin::collection($query->orderBy('created_at', 'desc')->paginate()->withQueryString());
         }
