@@ -82,7 +82,7 @@
                     placeholder="0"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6" lg="3" v-if="!varBoolean">
+                <v-col cols="12" sm="3" md="3" lg="3" v-if="!varBoolean">
                   Género
                   <v-select
                     v-model="gender"
@@ -95,7 +95,7 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="4" md="4" lg="3">
+                <v-col cols="12" sm="3" md="3" lg="3">
                   Tipo de grupo (*)
                   <v-select
                     v-model="product.type_group"
@@ -108,7 +108,7 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="4" md="4" lg="3">
+                <v-col cols="12" sm="3" md="3" lg="3">
                   Categoria (*)
                   <v-select
                     v-model="product.category_id"
@@ -121,7 +121,7 @@
                     placeholder="Selecciona"
                   ></v-select>
                 </v-col>
-                <v-col cols="12" sm="4" md="4" lg="3">
+                <v-col cols="12" sm="3" md="3" lg="3">
                   Catalogo (*)
                   <v-select
                     v-model="product.catalogue_id"
@@ -153,37 +153,6 @@
           dense
           persistent-hint
         ></v-select>
-        <!-- <v-card class="text-center">
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-row>
-                  <v-col>
-                    <v-btn class="mb-5 my-auto mt-2" @click="addPColor">
-                      Añadir Producto
-                    </v-btn>
-                  </v-col>
-                  <v-col>
-                    <v-sheet dark class="pa-1">
-                      <p class="mt-2 text-white">{{ showColor }}</p>
-                    </v-sheet>
-                  </v-col>
-                </v-row>
-                <v-col>
-                  <h5>Colores</h5>
-                </v-col>
-                <v-row class="pr-3">
-                  <v-col v-for="(item, index) in colors" :key="index" cols="1">
-                    <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card> -->
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6" v-if="!varBoolean">
         <h3>Detalles del producto</h3>
@@ -224,8 +193,8 @@
                       contain
                     >
                       <v-btn icon>
-                        <v-icon>
-                          {{ active ? 'mdi-heart' : 'mdi-heart-outline' }}
+                        <v-icon color="red">
+                          mdi-delete
                         </v-icon>
                       </v-btn>
                     </v-img>
@@ -475,10 +444,19 @@
         Guardar
       </v-btn>
     </v-row>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </div>
 </template>
 <script>
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError';
+
 export default {
+  components: {
+    ModalSave,
+    ModalError,
+  },
   data: () => ({
     // Object Product
     product: {},
@@ -527,6 +505,9 @@ export default {
         send: 'female',
       },
     ],
+    dialogSave: false,
+    dialogError: false,
+    message: '',
   }),
   computed: {
     productQG: function() {
@@ -564,6 +545,7 @@ export default {
   methods: {
     // Validation
     validate() {
+      this.dialogSave = true
       if (this.varBoolean) {
         this.addProduct();
       } else {
@@ -573,7 +555,6 @@ export default {
           this.addProduct();
         }
       }
-      console.log(this.variaciones);
     },
     // Peticion Get Categories
     getCategories() {
@@ -590,13 +571,10 @@ export default {
       axios
         .get('/api/v1/catalogues')
         .then(response => {
-          console.log(response);
           this.catalogues = response.data.data;
-          console.log(this.catalogues);
         })
         .catch(error => {
-          //console.log(error)
-          // reject(error);
+
         });
     },
 
@@ -604,14 +582,12 @@ export default {
       axios
         .get('/api/v1/measures')
         .then(response => {
-          console.log(response.data);
           response.data.forEach(element => {
             this.measures.push(element.name);
           });
         })
         .catch(error => {
-          //console.log(error)
-          // reject(error);
+
         });
     },
 
@@ -619,12 +595,10 @@ export default {
       axios
         .get('/api/v1/colors')
         .then(response => {
-          console.log(response.data);
           this.colorsSelect = response.data.data
         })
         .catch(error => {
-          //console.log(error)
-          // reject(error);
+
         });
     },
 
@@ -634,12 +608,14 @@ export default {
         axios
           .post('/api/v1/products-massive', { products: this.variaciones })
           .then(response => {
-            console.log(response);
+            this.dialogSave = false;
             this.$router.replace({ name: 'listProduct' });
           })
           .catch(error => {
-            console.log(error);
-            // reject(error);
+            this.dialogSave = false;
+            this.message =
+              'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+            this.dialogError = true;
           });
       } else {
         let data = {};
@@ -663,12 +639,13 @@ export default {
         axios
           .post('/api/v1/products', data)
           .then(response => {
-            console.log(response);
             this.$router.replace({ name: 'listProduct' });
           })
           .catch(error => {
-            console.log(error);
-            // reject(error);
+            this.dialogSave = false;
+            this.message =
+              'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+            this.dialogError = true;
           });
       }
     },
@@ -677,8 +654,6 @@ export default {
     addImages() {
       const data = new FormData();
       this.files.forEach((elements, index) => {
-        console.log(index);
-        console.log(elements);
         data.append(`image_uploads[${index}]`, elements);
       });
       axios
@@ -690,12 +665,13 @@ export default {
         })
         .then(response => {
           this.image = response.data;
-          console.log('aqui', response.data);
           this.addProduct();
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar la imagen, verifica que la imagen no pese mas de 10 Mb.';
+          this.dialogError = true;
         });
     },
 
@@ -793,12 +769,9 @@ export default {
           })
           .then(response => {
             this.variaciones[id].images = response.data;
-            console.log(id, this.variaciones[id].images);
-            console.log(this.variaciones);
           })
           .catch(error => {
-            console.log(error);
-            // reject(error);
+
           });
       }
     },

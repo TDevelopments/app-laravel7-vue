@@ -1,5 +1,8 @@
 <template>
-  <div class="px-2">
+  <div v-if="spinnerLoading">
+    <Spinner />
+  </div>
+  <div v-else class="px-2">
     <!-- <v-card elevation="1">
       <v-breadcrumbs :items="items" class="py-2 pl-3">
         <template v-slot:item="{ item }">
@@ -116,7 +119,11 @@
   </div>
 </template>
 <script>
+import Spinner from '../component/SpinnerLoading';
 export default {
+  components: {
+    Spinner,
+  },
   data: () => ({
     show: false,
     xCatalogues: 0,
@@ -124,6 +131,7 @@ export default {
     xCategories: 0,
     xUsers: 0,
     loading: true,
+    spinnerLoading: true,
     items: [
       {
         text: 'Dashboard',
@@ -144,9 +152,6 @@ export default {
   }),
   mounted() {
     this.getCatalogues();
-    this.getProducts();
-    this.getCategories();
-    this.getUsers();
   },
   methods: {
     getCatalogues() {
@@ -155,6 +160,7 @@ export default {
         .then(response => {
           console.log(response);
           this.xCatalogues = response.data.meta.total;
+          this.getProducts();
         })
         .catch(error => {
           //console.log(error)
@@ -163,10 +169,24 @@ export default {
     },
     getProducts() {
       axios
+        .get('/api/v1/product-ranges')
+        .then(response => {
+          console.log(response);
+          this.xProducts = this.xProducts + response.data.meta.total;
+          this.getCategories();
+        })
+        .catch(error => {
+          //console.log(error)
+          // reject(error);
+        });
+    },
+    getProductsRange() {
+      axios
         .get('/api/v1/products')
         .then(response => {
           console.log(response);
           this.xProducts = response.data.meta.total;
+          this.getCategories();
         })
         .catch(error => {
           //console.log(error)
@@ -179,6 +199,7 @@ export default {
         .then(response => {
           console.log(response);
           this.xCategories = response.data.meta.total;
+          this.getUsers();
         })
         .catch(error => {
           //console.log(error)
@@ -192,6 +213,7 @@ export default {
           console.log(response);
           this.xUsers = response.data.meta.total;
           this.loading = false;
+          this.spinnerLoading = false;
         })
         .catch(error => {
           //console.log(error)

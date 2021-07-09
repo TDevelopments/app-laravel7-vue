@@ -1,5 +1,8 @@
 <template>
-  <v-app>
+  <v-app v-if="spinnerLoading">
+    <Spinner />
+  </v-app>
+  <v-app v-else>
     <v-app-bar app color="#253035" dark clipped-left>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>BizzPeru</v-toolbar-title>
@@ -345,10 +348,6 @@
               <v-list-item-title>Crear Estado de Orden</v-list-item-title>
             </v-list-item>
           </v-list-group>
-          <v-list-item link :to="{ name: 'history' }">
-              <v-list-item-title>Historial</v-list-item-title>
-            </v-list-item>
-          </v-list-group>
         </v-list-item-group>
       </v-list>
 
@@ -373,13 +372,16 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import Spinner from './component/SpinnerLoading';
 
 export default {
+  components: { Spinner },
   data: () => ({
     wheight: window.innerHeight,
     drawer: null,
     permanent: null,
     module: '',
+    spinnerLoading: false,
   }),
   computed: {
     ...mapGetters('account', ['user']),

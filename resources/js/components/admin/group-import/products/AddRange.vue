@@ -92,31 +92,6 @@
           dense
           persistent-hint
         ></v-select>
-        <!-- <v-card class="text-center">
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-btn class="mb-5 my-auto mt-2" @click="addPColor">
-                  Añadir Color
-                </v-btn>
-                <v-sheet dark class="pa-1">
-                  <p class="mt-2 text-white">{{ showColor }}</p>
-                </v-sheet>
-                <v-col>
-                  <h5>Colores</h5>
-                </v-col>
-                <v-row class="pr-3">
-                  <v-col v-for="(item, index) in colors" :key="index" cols="1">
-                    <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card> -->
       </v-col>
       <v-col cols="12" sm="12" :md="!varBoolean ? '6' : '12'" :lg="!varBoolean ? '6' : '12'">
         <h3>Detalles del Producto</h3>
@@ -396,12 +371,20 @@
         Guardar
       </v-btn>
     </v-row>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </div>
 </template>
 <script>
 import axios from 'axios';
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError';
 
 export default {
+  components: {
+    ModalSave,
+    ModalError,
+  },
   data: () => ({
     // Object Product Range
     productRange: {
@@ -447,10 +430,14 @@ export default {
     selection: 'color',
     varBoolean: false,
     cont: 0,
+    dialogSave: false,
+    dialogError: false,
+    message: '',
   }),
   methods: {
     // Validation of Request Images
     validation() {
+      this.dialogSave = true
       if (this.varBoolean) {
         this.addProductRange();
       } else {
@@ -480,9 +467,13 @@ export default {
         .then(response => {
           this.imageResponse = response.data;
           this.addProductRange();
-          console.log(response);
         })
-        .catch(error => {});
+        .catch(error => {
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar la imagen, verifica que la imagen no pese mas de 10 Mb.';
+          this.dialogError = true;
+        });
     },
 
     // Post Product Range
@@ -493,12 +484,13 @@ export default {
             products: this.variaciones,
           })
           .then(response => {
-            console.log(response);
             this.$router.replace({ name: 'listProduct' });
           })
           .catch(error => {
-            console.log(error);
-            // reject(error);
+            this.dialogSave = false;
+            this.message =
+              'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+            this.dialogError = true;
           });
       } else {
         let data = {};
@@ -507,7 +499,6 @@ export default {
             data.[property] = this.productRange[property];
           }
         }
-        console.log(data);
         if (this.imageResponse != null && this.imageResponse.length != 0) {
          data.images = this.imageResponse;
         }
@@ -524,10 +515,14 @@ export default {
         axios
           .post('/api/v1/product-ranges', data)
           .then(response => {
-            console.log(response);
             this.$router.replace({ name: 'listProduct' });
           })
-          .catch(error => {});
+          .catch(error => {
+            this.dialogSave = false;
+            this.message =
+              'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+            this.dialogError = true;
+          });
       }
     },
 
@@ -557,12 +552,10 @@ export default {
       axios
         .get('/api/v1/colors')
         .then(response => {
-          console.log(response.data);
           this.colorsSelect = response.data.data
         })
         .catch(error => {
-          //console.log(error)
-          // reject(error);
+
         });
     },
 
@@ -616,7 +609,6 @@ export default {
     // Preview Images Product
     previewImages() {
       if (this.files.length == 0) {
-        console.log('Esta vacio');
       } else {
         this.files.forEach(element => {
           this.images.push({
@@ -681,12 +673,12 @@ export default {
           })
           .then(response => {
             this.variaciones[id].images = response.data;
-            console.log(id, this.variaciones[id].images);
-            console.log(this.variaciones);
           })
           .catch(error => {
-            console.log(error);
-            // reject(error);
+            this.dialogSave = false;
+            this.message =
+              'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+            this.dialogError = true;
           });
       }
     },

@@ -1,5 +1,8 @@
-v<template>
-  <div class="px-3 py-3">
+<template>
+  <div v-if="spinnerLoading">
+    <Spinner />
+  </div>
+  <div v-else class="px-3 py-3">
     <v-row class="mx-1">
       <div class="my-2">
         <h3>Editar Catálogo</h3>
@@ -295,9 +298,27 @@ v<template>
         </v-window-item>
       </v-window>
     </v-col>
-    <v-btn :disabled="!valid" color="#0D52D6" dark class="mr-4" @click="validate">
+    <!-- <v-btn color="#0D52D6" dark class="mr-4" @click="validate">
       Guardar
-    </v-btn>
+    </v-btn> -->
+    <!-- <v-btn color="#0D52D6" dark class="mr-4" >
+      Guardar
+    </v-btn> -->
+    <div class="text-right">
+      <v-btn dark class="mr-2">Cancelar</v-btn>
+      <v-btn
+        :disabled="dialogSave"
+        :loading="dialogSave"
+        dark
+        color="#0D52D6"
+        class="mr-4"
+        @click="validate"
+      >
+        Guardar
+      </v-btn>
+    </div>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </div>
 </template>
 
@@ -307,11 +328,18 @@ import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 import { Editor, Viewer } from '@toast-ui/vue-editor';
 import moment from 'moment';
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError';
+import Spinner from '../component/SpinnerLoading';
+import { citiesPeru } from './constants';
 
 export default {
   components: {
     editor: Editor,
     viewer: Viewer,
+    ModalSave,
+    ModalError,
+    Spinner,
   },
   data: () => ({
     e1: null,
@@ -325,48 +353,10 @@ export default {
     menu4: false,
     window: null,
     valid: true,
-    catalogue: {
-      name: '',
-      minimum_investment: '',
-      quota_price: '',
-      quota_date: '',
-      first_payment: '',
-      date_first_payment: '',
-      second_payment: '',
-      date_second_payment: '',
-      coin: '',
-      conditions: '',
-      additional_information: '',
-      image: [],
-    },
+    catalogue: {},
     select: null,
     url: null,
-    cities: [
-      'Amazonas',
-      'Ancash',
-      'Apurímac',
-      'Arequipa',
-      'Ayacucho',
-      'Cajamarca',
-      'Cusco',
-      'Huancavelica',
-      'Huánuco',
-      'Ica',
-      'Junín',
-      'La Libertad',
-      'Lambayeque',
-      'Lima',
-      'Loreto',
-      'Madre de Dios',
-      'Moquegua',
-      'Pasco',
-      'Piura',
-      'Puno',
-      'San Martín',
-      'Tacna',
-      'Tumbes',
-      'Ucayali',
-    ],
+    cities: citiesPeru,
     idDelete: [],
     coins: ['soles', 'dolares'],
     iconCoin: '',
@@ -375,6 +365,10 @@ export default {
       hideModeSwitch: true,
     },
     loading: false,
+    dialogSave: false,
+    dialogError: false,
+    spinnerLoading: true,
+    message: '',
   }),
   mounted() {
     this.getCatalogue();
@@ -382,7 +376,6 @@ export default {
   },
   computed: {
     productQG: function() {
-      // `this` points to the vm instance
       this.product.price_group = this.product.price_unit * this.product.quantity_group;
       return this.product.price_group;
     },
@@ -411,6 +404,7 @@ export default {
       return html;
     },
     validate() {
+      this.dialogSave = true;
       if (this.imagesCatalogue.length != 0) {
         this.addImages();
       } else {
@@ -421,7 +415,6 @@ export default {
       axios
         .get(`/api/v1/catalogues/${this.$route.params.id}`)
         .then(response => {
-          console.log(response);
           this.catalogue = response.data.data;
           (this.catalogue.quota_date = moment(response.data.data.quota_date).format('YYYY-MM-DD')),
             (this.catalogue.date_first_payment = moment(
@@ -439,16 +432,14 @@ export default {
                 arrival_date: moment(element.arrival_date).format('YYYY-MM-DD'),
               });
             });
-          console.log('asd', this.catalogue);
           this.loading = true;
+          this.spinnerLoading = false;
         })
         .catch(error => {});
     },
     addImages() {
       const data = new FormData();
       this.imagesCatalogue.forEach((elements, index) => {
-        console.log(index);
-        console.log(elements);
         data.append(`image_uploads[${index}]`, elements);
       });
       axios
@@ -460,31 +451,28 @@ export default {
         })
         .then(response => {
           this.catalogue.image = response.data[0];
-          console.log('aqui', response.data[0]);
           this.udpdateCatalogue();
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar la imagen, verifica que la imagen no pese mas de 10 Mb.';
+          this.dialogError = true;
         });
     },
 
     addArrivals(id) {
       axios
-        .post(
-          `/api/v1/catalogues/${id}/arrivals`,
-          { items: this.arrivalsDates },
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          }
-        )
+        .post(`/api/v1/catalogues/${id}/arrivals`, { items: this.arrivalsDates })
         .then(response => {
+          this.dialogSave = false;
           this.$router.replace({ name: 'listCatalogue' });
         })
-        .catch(error => {});
+        .catch(error => {
+          this.dialogSave = false;
+          this.message = 'Ocurrio un error al guardar los lugares de llegada, vuelva a intentarlo';
+          this.dialogError = true;
+        });
     },
     deleteArrivals() {
       axios
@@ -497,7 +485,11 @@ export default {
           },
         })
         .then(response => {})
-        .catch(error => {});
+        .catch(error => {
+          this.dialogSave = false;
+          this.message = 'Ocurrio un error al eliminar los lugares de llegada.';
+          this.dialogError = true;
+        });
     },
     add() {
       this.arrivalsDates.push({
@@ -534,7 +526,12 @@ export default {
             this.addArrivals(response.data.data.id);
           }
         })
-        .catch(error => {});
+        .catch(error => {
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
+        });
     },
     deleteRow(index, id) {
       this.arrivalsDates.splice(index, 1);

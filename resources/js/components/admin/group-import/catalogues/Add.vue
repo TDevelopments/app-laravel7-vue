@@ -270,8 +270,9 @@
       </v-window>
     </v-col>
 
-    <!-- <viewer :initialValue="viewerText" height="500px" /> -->
     <v-btn :disabled="!valid" color="#0D52D6" class="mr-4" @click="validate" dark> Guardar </v-btn>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </div>
 </template>
 
@@ -280,14 +281,19 @@ import 'codemirror/lib/codemirror.css'; // Editor's Dependency Style
 import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
 import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 import { Editor, Viewer } from '@toast-ui/vue-editor';
+import { citiesPeru } from './constants';
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError.vue';
+
 export default {
   components: {
     editor: Editor,
     viewer: Viewer,
+    ModalSave,
+    ModalError,
   },
   data: () => ({
     editorText: '',
-    viewerText: `<h1>Probando</h1> <p><strong>COMPROBANDO</strong></p> <table> <thead> <tr> <th>Tablas</th> <th>Preguntas</th> </tr> </thead> <tbody> <tr> <td>order</td> <td>No se si esto funciona</td> </tr> </tbody> </table> <p><strong>Lorem Ipsum</strong><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">&nbsp;es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.</span></p> <ul> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Hay muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió alteraciones en alguna manera, ya sea porque se le agregó humor, o palabras aleatorias que no parecen ni un poco creíbles.</span></li> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Si vas a utilizar un pasaje de Lorem Ipsum, necesitás estar seguro de que no hay nada avergonzante escondido en el medio del texto.</span></li> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Todos los generadores de Lorem Ipsum que se encuentran en Internet tienden a repetir trozos predefinidos cuando sea necesario, haciendo a este el único generador verdadero (válido) en la Internet.</span></li> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Usa un diccionario de mas de 200 palabras provenientes del latín, combinadas con estructuras muy útiles de sentencias, para generar texto de Lorem Ipsum que parezca razonable.</span></li> <li><span class="colour" style="color: rgb(0, 0, 0);" data-tomark-pass="">Este Lorem Ipsum generado siempre estará libre de repeticiones, humor agregado o palabras no características del lenguaje, etc.</span></li> </ul>`,
     editorOptions: {
       hideModeSwitch: true,
     },
@@ -319,33 +325,11 @@ export default {
     coins: ['soles', 'dolares'],
     select: null,
     url: null,
-    cities: [
-      'Amazonas',
-      'Ancash',
-      'Apurímac',
-      'Arequipa',
-      'Ayacucho',
-      'Cajamarca',
-      'Cusco',
-      'Huancavelica',
-      'Huánuco',
-      'Ica',
-      'Junín',
-      'La Libertad',
-      'Lambayeque',
-      'Lima',
-      'Loreto',
-      'Madre de Dios',
-      'Moquegua',
-      'Pasco',
-      'Piura',
-      'Puno',
-      'San Martín',
-      'Tacna',
-      'Tumbes',
-      'Ucayali',
-    ],
+    cities: citiesPeru,
     iconCoin: 'S/ .',
+    dialogSave: false,
+    dialogError: false,
+    message: '',
   }),
   watch: {
     first_payment: function(val) {
@@ -371,6 +355,7 @@ export default {
       return html;
     },
     validate() {
+      this.dialogSave = true;
       if (this.imagesCatalogue.length != 0) {
         this.addImages();
       } else {
@@ -380,8 +365,6 @@ export default {
     addImages() {
       const data = new FormData();
       this.imagesCatalogue.forEach((elements, index) => {
-        console.log(index);
-        console.log(elements);
         data.append(`image_uploads[${index}]`, elements);
       });
       axios
@@ -393,12 +376,13 @@ export default {
         })
         .then(response => {
           this.image = response.data[0];
-          console.log('aqui', response.data[0]);
           this.addCatalogue();
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar la imagen, verifica que la imagen no pese mas de 10 Mb.';
+          this.dialogError = true;
         });
     },
     addCatalogue() {
@@ -417,32 +401,30 @@ export default {
         additional_information: this.getHtmlAdditional(),
         image: this.image,
       };
-      console.log(data);
       axios
         .post('/api/v1/catalogues', data)
         .then(response => {
           this.addArrivals(response.data.data.id);
         })
         .catch(error => {
-          alert('Algo ocurrio, te falto ingresar algunos datos.');
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
     addArrivals(id) {
       axios
-        .post(
-          `/api/v1/catalogues/${id}/arrivals`,
-          { items: this.inputs },
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          }
-        )
+        .post(`/api/v1/catalogues/${id}/arrivals`, { items: this.inputs })
         .then(response => {
+          this.dialogSave = false;
           this.$router.push({ name: 'listCatalogue' });
         })
-        .catch(error => {});
+        .catch(error => {
+          this.dialogSave = false;
+          this.message = 'Ocurrio un error al guardar los lugares de llegada, vuelva a intentarlo';
+          this.dialogError = true;
+        });
     },
     add() {
       this.inputs.push({
