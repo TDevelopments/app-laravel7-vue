@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="spinnerLoading">
+    <Spinner />
+  </div>
+  <div v-else>
     <v-data-table
       :headers="headers"
       :items="users"
@@ -16,7 +19,7 @@
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
 
-          <v-btn color="#1B1B1B" dark @click="newProduct">
+          <v-btn color="#1B1B1B" dark @click="newProduct" small>
             Nuevo Usuario
           </v-btn>
 
@@ -46,6 +49,16 @@
       <template v-slot:[`item.arrivals`]="{ item }">
         <p v-for="ar in item.arrivals" :key="ar.id">{{ ar.city }} -> {{ ar.arrival_date }}</p>
       </template>
+      <template v-slot:[`item.roles`]="{ item }">
+        <div v-if="item.roles != null && item.roles.length != 0">
+          <div v-for="(i, index) in item.roles" :key="index" class="text-capitalize">
+            {{ i.name }}
+          </div>
+        </div>
+        <div v-else>
+          Este usuario no tiene roles
+        </div>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small @click="editItem(item)" color="#D6B331">
           mdi-pencil
@@ -62,43 +75,17 @@
 </template>
 
 <script>
+import { headerUser } from './constanst';
+import Spinner from '../component/SpinnerLoading';
+
 export default {
+  components: {
+    Spinner,
+  },
   data: () => ({
     dialogDelete: false,
     loading: false,
-    headers: [
-      {
-        text: 'Nombre',
-        value: 'name',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Email',
-        value: 'email',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'DNI',
-        value: 'dni',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Celular',
-        value: 'phone',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Cuidad',
-        value: 'city',
-        align: 'center',
-        sortable: false,
-      },
-      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
-    ],
+    headers: headerUser,
     users: [],
     idDelete: null,
     page: 1,
@@ -106,6 +93,7 @@ export default {
     itemsPerPage: 15,
     pagination: null,
     baseURL: '',
+    spinnerLoading: true,
   }),
   computed: {},
   mounted() {
@@ -116,10 +104,11 @@ export default {
       axios
         .get('/api/v1/users')
         .then(response => {
-          console.log(response);
           this.loading = false;
           this.users = response.data.data;
           this.pagination = response.data.meta.last_page;
+          this.page = 1;
+          this.spinnerLoading = false;
         })
         .catch(error => {});
     },
@@ -132,7 +121,6 @@ export default {
       axios
         .delete(`/api/v1/users/${this.idDelete}`)
         .then(response => {
-          console.log(response);
           this.getList();
           this.closeDelete();
         })
@@ -165,7 +153,6 @@ export default {
         .then(response => {
           this.users = response.data.data;
           this.pagination = response.data.meta.last_page;
-          console.log(response);
         })
         .catch(error => {});
     },

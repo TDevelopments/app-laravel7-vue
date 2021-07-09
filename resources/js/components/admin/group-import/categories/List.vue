@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="spinnerLoading">
+    <Spinner />
+  </div>
+  <div v-else>
     <v-data-table
       :headers="headers"
       :items="categories"
@@ -15,7 +18,7 @@
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
 
-          <v-btn color="#1B1B1B" dark @click="newCategory">
+          <v-btn color="#1B1B1B" dark @click="newCategory" small>
             Nueva Categoria
           </v-btn>
 
@@ -51,28 +54,29 @@
       </template>
     </v-data-table>
     <div class="text-center pt-2">
-      <v-pagination
-        v-model="page"
-        :length="pagination"
-        @input="next"
-      ></v-pagination>
+      <v-pagination v-model="page" :length="pagination" @input="next"></v-pagination>
     </div>
   </div>
 </template>
 
 <script>
+import Spinner from '../component/SpinnerLoading';
+
 export default {
+  components: {
+    Spinner,
+  },
   data: () => ({
     dialogDelete: false,
     loading: false,
     headers: [
       {
-        text: "Nombre Categoria",
-        value: "name",
-        align: "center",
+        text: 'Nombre Categoria',
+        value: 'name',
+        align: 'center',
         sortable: false,
       },
-      { text: "Acciones", value: "actions", sortable: false, align: "center" },
+      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
     categories: [],
     idDelete: null,
@@ -80,22 +84,24 @@ export default {
     pageCount: 0,
     itemsPerPage: 15,
     pagination: null,
+    spinnerLoading: true,
   }),
   methods: {
     getList() {
       axios
-        .get("/api/v1/categories")
-        .then((response) => {
+        .get('/api/v1/categories')
+        .then(response => {
           this.loading = false;
           this.categories = response.data.data;
           this.pagination = response.data.meta.last_page;
+          this.spinnerLoading = false;
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     editItem(item) {
       this.$router.push({
-        name: "editCategory",
+        name: 'editCategory',
         params: {
           id: item.id,
         },
@@ -110,11 +116,11 @@ export default {
     deleteItemConfirm() {
       axios
         .delete(`/api/v1/categories/${this.idDelete}`)
-        .then((response) => {
+        .then(response => {
           this.getList();
           this.closeDelete();
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
 
     closeDelete() {
@@ -122,19 +128,18 @@ export default {
     },
     newCategory() {
       this.$router.push({
-        name: "addCategory",
+        name: 'addCategory',
       });
     },
     next(page) {
       axios
         .get(`/api/v1/categories?page=${page}`)
-        .then((response) => {
+        .then(response => {
           this.loading = false;
           this.catalogues = response.data.data;
           this.pagination = response.data.meta.last_page;
-          console.log(response);
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
   },
   mounted() {

@@ -1,12 +1,6 @@
 <template>
-  <v-dialog v-model="show" width="700">
-    <v-zoomer
-      ref="zoomer"
-      style="width: 700px; height: 700px;"
-      :max-scale="10"
-      :zooming-elastic="false"
-      :zoomed.sync="zoomed"
-    >
+  <v-dialog v-model="show">
+    <v-zoomer ref="zoomer" :max-scale="10" :zooming-elastic="false" :zoomed.sync="zoomed">
       <v-hover v-slot="{ hover }">
         <v-img
           contain

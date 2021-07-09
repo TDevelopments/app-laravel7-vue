@@ -1,5 +1,8 @@
 <template>
-  <v-card flat>
+  <div v-if="spinnerLoading">
+    <Spinner />
+  </div>
+  <v-card v-else flat>
     <v-card-text>
       <h3>Edición de Orden</h3>
       <v-btn @click="print">Orden de Compra</v-btn>
@@ -159,8 +162,8 @@
       </div>
       <v-divider></v-divider>
       <div v-for="(paymentG, index) in payments" :key="index">
-        <v-row>
-          <v-col cols="1" class="d-flex text-center justify-center align-center">
+        <v-row class="my-2">
+          <v-col cols="2" class="d-flex text-center justify-center align-center">
             <v-img
               v-if="paymentG.image == null || !paymentG.image || paymentG.image.length == 0"
               src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
@@ -182,7 +185,7 @@
           </v-col>
           <v-col class="d-flex justify-center align-center">
             <v-row>
-              <v-col cols="12" md="2" class="py-0">
+              <v-col cols="12" md="3" class="py-0">
                 Imagen
                 <v-file-input
                   accept="image/png, image/jpeg"
@@ -195,7 +198,7 @@
                   @change="addImages(paymentG.image_upload, index)"
                 ></v-file-input>
               </v-col>
-              <v-col cols="12" md="2" class="py-0">
+              <v-col cols="12" md="3" class="py-0">
                 Concepto
                 <v-select
                   v-model="paymentG.payment_concept_id"
@@ -209,7 +212,7 @@
                   solo
                 ></v-select>
               </v-col>
-              <v-col cols="12" md="2" class="py-0">
+              <v-col cols="12" md="3" class="py-0">
                 <v-menu
                   v-model="paymentG.calendar"
                   :close-on-content-click="false"
@@ -236,23 +239,17 @@
                   ></v-date-picker>
                 </v-menu>
               </v-col>
-              <v-col cols="12" md="1" class="py-0">
+              <v-col cols="12" md="3" class="py-0">
                 Monto
                 <v-text-field v-model="paymentG.mount" dense placeholder="0.00" solo type="number">
                 </v-text-field>
               </v-col>
-              <v-col cols="12" md="1" class="py-0">
+              <v-col cols="12" md="3" class="py-0">
                 Nro.Ope
-                <v-text-field
-                  v-model="paymentG.nro_operation"
-                  dense
-                  placeholder="0.00"
-                  solo
-                  type="number"
-                >
+                <v-text-field v-model="paymentG.nro_operation" dense placeholder="0.00" solo>
                 </v-text-field>
               </v-col>
-              <v-col cols="12" md="2" class="py-0">
+              <v-col cols="12" md="3" class="py-0">
                 Tipo moneda
                 <v-select
                   v-model="paymentG.type_coin"
@@ -265,7 +262,7 @@
                   placeholder="Selecciona"
                 ></v-select>
               </v-col>
-              <v-col cols="12" md="2" class="py-0">
+              <v-col cols="12" md="3" class="py-0">
                 Precio Dolar
                 <v-text-field
                   v-model="paymentG.dollar_price"
@@ -276,7 +273,7 @@
                 >
                 </v-text-field>
               </v-col>
-              <v-col cols="12" md="2" class="py-0">
+              <v-col cols="12" md="3" class="py-0">
                 Banco
                 <v-select
                   v-model="paymentG.bank_entity_id"
@@ -305,58 +302,29 @@
         <v-btn @click="validateProduct" class="mx-2" color="#0D52D6" dark>Guardar Productos</v-btn>
       </v-row>
     </v-col>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </v-card>
 </template>
 <script>
 import axios from 'axios';
 import moment from 'moment';
 import ImagePaymen from './ImagePayment';
+import { headerProduct } from './constants';
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError';
+import Spinner from '../component/SpinnerLoading';
 
 export default {
   components: {
     ImagePaymen,
+    ModalSave,
+    ModalError,
+    Spinner,
   },
   data: () => ({
     dialogImage: false,
-    headers: [
-      {
-        text: 'Imagen',
-        value: 'image',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Model',
-        value: 'model',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Cantidad de Producto',
-        value: 'quantity',
-        align: 'center',
-        sortable: false,
-        width: 10,
-      },
-      {
-        text: 'Precio del Producto Total',
-        value: 'total',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Colores',
-        value: 'colors',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Acciones',
-        value: 'actions',
-        align: 'center',
-        sortable: false,
-      },
-    ],
+    headers: headerProduct,
     order: [],
     valid: true,
     product: [],
@@ -377,16 +345,20 @@ export default {
     totalPayments: null,
     totalOrderPayment: null,
     stateSend: [],
+    dialogSave: false,
+    dialogError: false,
+    spinnerLoading: true,
+    message: '',
   }),
   computed: {
     totalOrder() {
       let a = this.order.total_order;
-
       return parseFloat(a).toFixed(2);
     },
   },
   methods: {
     validate() {
+      this.dialogSave = true;
       this.addPayment();
     },
     getStateSend() {
@@ -416,8 +388,10 @@ export default {
           console.log('aqui', response.data[0]);
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar la imagen, verifica que la imagen no pese mas de 10 Mb.';
+          this.dialogError = true;
         });
     },
 
@@ -428,8 +402,10 @@ export default {
           console.log(response);
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
 
@@ -444,8 +420,10 @@ export default {
             this.updateOrders();
           })
           .catch(error => {
-            console.log(error);
-            // reject(error);
+            this.dialogSave = false;
+            this.message =
+              'Ocurrio un error al guardar los datos de pagos, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+            this.dialogError = true;
           });
       } else {
         axios
@@ -455,8 +433,10 @@ export default {
             this.getOrders();
           })
           .catch(error => {
-            console.log(error);
-            // reject(error);
+            this.dialogSave = false;
+            this.message =
+              'Ocurrio un error al guardar los datos de pagos, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+            this.dialogError = true;
           });
       }
     },
@@ -506,6 +486,8 @@ export default {
             dollar_price: 0.0,
           });
           console.log('payment', this.product);
+          this.spinnerLoading = false;
+          this.dialogSave = false;
         })
         .catch(error => {
           console.log(error);
@@ -521,11 +503,14 @@ export default {
         })
         .then(response => {
           console.log(response);
-          this.getOrders();
+          this.$router.replace({ name: 'listOrder' });
+          // this.getOrders();
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
 
@@ -568,12 +553,13 @@ export default {
       axios
         .post(`/api/v1/orders/${this.$route.params.id}/order-details`, data)
         .then(response => {
-          console.log(response);
           this.getOrders();
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos de productos, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
 
@@ -595,6 +581,7 @@ export default {
     },
 
     validateProduct() {
+      this.dialogSave = true;
       if (this.idDelete.length != 0) {
         this.deleteItems();
       } else {

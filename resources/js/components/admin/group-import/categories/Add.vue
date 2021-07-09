@@ -24,33 +24,46 @@
     <v-btn color="success" class="mr-4 mt-3" @click="addCategory">
       Guardar
     </v-btn>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </v-col>
 </template>
 
 <script>
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError.vue';
 export default {
+  components: {
+    ModalSave,
+    ModalError,
+  },
   data: () => ({
     valid: true,
     category: {
-      name: "",
+      name: '',
     },
+    dialogSave: false,
+    dialogError: false,
+    message: '',
   }),
   methods: {
-    validate() {
-      console.log(this.arrivalsDates);
-    },
     addCategory() {
+      this.dialogSave = true;
       axios
-        .post("/api/v1/categories", this.category, {
+        .post('/api/v1/categories', this.category, {
           headers: {
-            Accept: "application/json",
+            Accept: 'application/json',
           },
         })
-        .then((response) => {
-          this.$router.replace({ name: "listCategory" });
+        .then(response => {
+          this.dialogSave = false;
+          this.$router.replace({ name: 'listCategory' });
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(error => {
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
   },

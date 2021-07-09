@@ -13,29 +13,28 @@
                   Nombre (*)
                   <v-text-field v-model="user.name" solo required></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="6">
+                <!-- <v-col cols="12" sm="6" md="6">
                   Apellidos (*)
                   <v-text-field v-model="user.lastname" solo required></v-text-field>
-                </v-col>
+                </v-col> -->
                 <v-col cols="12" sm="6" md="6">
                   Email (*)
                   <v-text-field v-model="user.email" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  Rol de Usuario
-                  <v-combobox
+                  Rol de Usuario (*)
+                  <v-select
                     v-model="user.roles"
                     :items="rol_user"
                     item-text="name"
-                    item-value="send"
-                    hide-selected
+                    item-value="name"
+                    label="Select"
                     multiple
-                    persistent-hint
-                    small-chips
+                    chips
                     solo
-                    prepend-inner-icon="mdi-shield-account"
+                    persistent-hint
                   >
-                  </v-combobox>
+                  </v-select>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
                   Contraseña (*)
@@ -46,7 +45,7 @@
                   <v-text-field v-model="user.password_confirmation" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
-                  Dirección (*)
+                  Dirección
                   <v-text-field v-model="user.address" solo></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
@@ -79,66 +78,63 @@
         </v-btn>
       </div>
     </v-row>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </v-col>
 </template>
 <script>
 import axios from 'axios';
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError.vue';
+import { citiesPeru } from './constanst';
 export default {
+  components: {
+    ModalSave,
+    ModalError,
+  },
   data: () => ({
-    gender: [
-      {
-        name: 'Masculino',
-        send: 'masculine',
-      },
-      {
-        name: 'Femenino',
-        send: 'female',
-      },
-    ],
-    rol_user: ['admin', 'user'],
+    rol_user: [],
     valid: true,
     user: {},
-    cities: [
-      'Amazonas',
-      'Ancash',
-      'Apurímac',
-      'Arequipa',
-      'Ayacucho',
-      'Cajamarca',
-      'Cusco',
-      'Huancavelica',
-      'Huánuco',
-      'Ica',
-      'Junín',
-      'La Libertad',
-      'Lambayeque',
-      'Lima',
-      'Loreto',
-      'Madre de Dios',
-      'Moquegua',
-      'Pasco',
-      'Piura',
-      'Puno',
-      'San Martín',
-      'Tacna',
-      'Tumbes',
-      'Ucayali',
-    ],
+    cities: citiesPeru,
+    dialogSave: false,
+    dialogError: false,
+    message: '',
   }),
-  mounted() {},
+  mounted() {
+    this.getRoles();
+  },
   methods: {
     validate() {
+      this.dialogSave = true;
       this.addUser();
     },
-    addUser() {
+    getRoles() {
       axios
-        .post('/api/v1/users', this.user)
+        .get('/api/v1/roles')
         .then(response => {
+          this.rol_user = response.data.data;
+        })
+        .catch(error => {});
+    },
+    addUser() {
+      let data = {};
+      for (const property in this.user) {
+        if (this.user[property] != null && this.user[property] != '' ) {
+          data.[property] = this.user[property];
+        }
+      }
+      axios
+        .post('/api/v1/users', data)
+        .then(response => {
+          this.dialogSave = false;
           this.$router.replace({ name: 'listUser' });
-          console.log(response);
         })
         .catch(error => {
-          console.log(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
     reset() {

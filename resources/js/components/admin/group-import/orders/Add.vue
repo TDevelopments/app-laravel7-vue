@@ -224,11 +224,20 @@
         </template>
       </v-data-table>
     </v-col>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </div>
 </template>
 
 <script>
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError';
+import { headerNormalAdd, headerRangeAdd } from './constants';
 export default {
+  components: {
+    ModalSave,
+    ModalError,
+  },
   data: () => ({
     catalogues: [],
     customers: [],
@@ -240,80 +249,12 @@ export default {
     currentTab: '',
     selected: [],
     selectedRange: [],
-    headers: [
-      { text: 'Imagen', value: 'images', align: 'center', sortable: false },
-      {
-        text: 'Modelo',
-        value: 'model',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Marca',
-        value: 'brand',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Precio unitario (A)',
-        value: 'price_unit',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Cantidad Mínima de Pedido (B)',
-        value: 'quantity_group',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Precio Total (AxB)',
-        value: 'price_group',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Cantidad de Pedido',
-        value: 'quantity_order',
-        align: 'center',
-        sortable: false,
-        width: 135,
-      },
-    ],
-    headersItem: [
-      { text: 'Imagen', value: 'images', align: 'center', sortable: false },
-      {
-        text: 'Modelo',
-        value: 'model',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Precio por cantidad de Pedido',
-        value: 'ranges',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Cantidad de Pedido',
-        value: 'quantity_order',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Colores',
-        value: 'colors',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Precio del Pedido',
-        value: 'total',
-        align: 'center',
-        sortable: false,
-      },
-    ],
+    headers: headerNormalAdd,
+    headersItem: headerRangeAdd,
     status: false,
+    dialogSave: false,
+    dialogError: false,
+    message: '',
   }),
   methods: {
     getCatalogues() {
@@ -369,6 +310,7 @@ export default {
     },
 
     generateOrder() {
+      this.dialogSave = true;
       if (this.selected.length != 0) {
         console.log('me estas jodiendo');
         this.selected.forEach(product => {
@@ -393,9 +335,15 @@ export default {
         },
       })
         .then(resp => {
+          this.dialogSave = false;
           this.$router.replace({ name: 'listOrder' });
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
+        });
     },
     minusFunction(item, index) {
       if (item.quantity <= item.quantity_group) {

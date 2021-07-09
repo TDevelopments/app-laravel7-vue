@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="spinnerLoading">
+    <Spinner />
+  </div>
+  <div v-else>
     <v-tabs fixed-tabs background-color="#546E7A" v-model="currentTab" dark>
       <v-tab @click="tab0" href="#tab-0"> Producto por conjunto </v-tab>
       <v-tab @click="tab1" href="#tab-1"> Producto por rango </v-tab>
@@ -95,16 +98,27 @@
                   Nuevo producto
                 </v-btn>
 
-                <v-dialog v-model="dialogDelete" max-width="500px">
+                <v-dialog v-model="dialogDelete" max-width="290">
                   <v-card>
-                    <v-card-title class="headline"
-                      >Are you sure you want to delete this item?</v-card-title
-                    >
+                    <v-card-title class="headline">
+                      Eliminar Producto
+                    </v-card-title>
+
+                    <v-card-text>
+                      ¿Estas seguro de eliminar este
+                      <strong>producto</strong>?
+                    </v-card-text>
+
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                      <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                      <v-spacer></v-spacer>
+
+                      <v-btn color="green darken-1" text @click="closeDelete">
+                        Cancelar
+                      </v-btn>
+
+                      <v-btn color="green darken-1" text @click="deleteItemConfirm()">
+                        Aceptar
+                      </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -156,7 +170,7 @@
                 hide-details
                 solo
                 dense
-                v-model="searchNameRange"
+                v-model="searchName"
                 ref="nomCli"
               ></v-text-field>
             </v-col>
@@ -168,7 +182,7 @@
                 class="border"
                 solo
                 dense
-                v-model="searchCatalogueRange"
+                v-model="searchCatalogue"
                 :items="catalogues"
                 item-text="name"
                 item-value="id"
@@ -183,7 +197,7 @@
                 class="border"
                 solo
                 dense
-                v-model="searchCategoryRange"
+                v-model="searchCategory"
                 :items="categories"
                 item-text="name"
                 item-value="id"
@@ -223,7 +237,7 @@
                 <v-dialog v-model="dialogDelete" max-width="290">
                   <v-card>
                     <v-card-title class="headline">
-                      Eliminar Catálogo
+                      Eliminar Producto
                     </v-card-title>
 
                     <v-card-text>
@@ -246,24 +260,29 @@
                 </v-dialog>
               </v-toolbar>
             </template>
-            <template v-slot:expanded-item="{ item }">
-              <v-card>
-                <p v-for="(rg, i) in item.ranges" :key="i">
+            <template v-slot:expanded-item="{ headers, item }">
+              <td :colspan="headers.length" class="expand">
+                <div v-for="(rg, i) in item.ranges" :key="i">
                   {{ rg.min }} -> {{ rg.max }} -> {{ rg.price }}
-                </p>
-              </v-card>
+                </div>
+              </td>
             </template>
             <template v-slot:[`item.images`]="{ item }">
               <v-img
                 max-height="50"
                 max-width="100"
-                :src="
-                  item.images.length != 0
-                    ? item.images[0].path
-                    : 'https://cdn.vuetifyjs.com/images/parallax/material.jpg'
-                "
-                v-if="item.images"
+                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                v-if="item.images == null || item.images.length == 0"
                 class="mt-1 mb-1 mx-auto"
+                contain
+              ></v-img>
+              <v-img
+                max-height="50"
+                max-width="100"
+                v-else
+                :src="item.images[0].path"
+                class="mt-1 mb-1 mx-auto"
+                contain
               ></v-img>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
@@ -282,12 +301,23 @@
         </div>
       </v-tab-item>
     </v-tabs-items>
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </div>
 </template>
 
 <script>
+import Spinner from '../component/SpinnerLoading';
+import ModalError from '../component/ModalError';
+import { headerNormal, headerRange } from './constants';
+
 export default {
+  components: {
+    Spinner,
+    ModalError,
+  },
   data: () => ({
+    dialogError: false,
+    spinnerLoading: true,
     value: null,
     bol: ['true', 'false'],
     filterGeneral: '',
@@ -296,101 +326,9 @@ export default {
     loading: false,
     currentTab: 'tab-1',
     products: [],
-    headers: [
-      { text: 'Imagen', value: 'images', align: 'center', sortable: false },
-      {
-        text: 'Modelo',
-        value: 'model',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Stock Meta',
-        value: 'stock',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Marca',
-        value: 'brand',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Precio unitario',
-        value: 'price_unit',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Cantidad por Producto',
-        value: 'quantity_group',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Precio por Grupo (P)',
-        value: 'price_group',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Typo de Grupo',
-        value: 'type_group',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Categoria',
-        value: 'category.name',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Catálogo',
-        value: 'catalogue.name',
-        align: 'center',
-        sortable: false,
-      },
-      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
-    ],
+    headers: headerNormal,
     productForRange: [],
-    headersProductForRange: [
-      { text: 'Imagen', value: 'images', align: 'center', sortable: false },
-      {
-        text: 'Modelo',
-        value: 'model',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Stock Meta',
-        value: 'stock',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Marca',
-        value: 'brand',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Categoria',
-        value: 'category.name',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Catalogo',
-        value: 'catalogue.name',
-        align: 'center',
-        sortable: false,
-      },
-      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
-      { text: '', value: 'data-table-expand', sortable: false },
-    ],
-
+    headersProductForRange: headerRange,
     expanded: [],
     singleExpand: false,
     idDeleteProduct: null,
@@ -421,6 +359,7 @@ export default {
             this.loading = false;
             this.products = response.data.data;
             this.pagination0 = response.data.meta.last_page;
+            this.getListForRange();
           })
           .catch(error => {});
       } else {
@@ -430,37 +369,30 @@ export default {
             this.loading = false;
             this.products = response.data.data;
             this.pagination0 = response.data.meta.last_page;
-            console.log(response);
+            this.getListForRange();
           })
           .catch(error => {});
       }
     },
 
     getListFilterGeneral() {
-      console.log(this.filterGeneral, 'tmr');
-
       axios
         .get(`/api/v1/products?model=${this.filterGeneral}&sku=${this.filterGeneral}`)
         .then(response => {
           this.loading = false;
           this.products = response.data.data;
           this.pagination0 = 1;
-          console.log(response.data.data);
         })
         .catch(error => {});
     },
 
     getListFilterMeta() {
-      console.log(this.filterMeta, 'tmr');
-
       axios
         .get(`/api/v1/products?meta=${this.filterMeta}`)
         .then(response => {
           this.loading = false;
           this.products = response.data.data;
           this.pagination0 = response.data.meta.last_page;
-
-          console.log(response.data.data);
         })
         .catch(error => {});
     },
@@ -473,8 +405,7 @@ export default {
             this.loading = false;
             this.productForRange = response.data.data;
             this.pagination = response.data.meta.last_page;
-            console.log(this.pagination);
-            console.log(response);
+            this.spinnerLoading = false;
           })
           .catch(error => {});
       } else {
@@ -484,36 +415,38 @@ export default {
             this.loading = false;
             this.productForRange = response.data.data;
             this.pagination = response.data.meta.last_page;
-            console.log(response);
+            this.spinnerLoading = false;
           })
           .catch(error => {});
       }
     },
 
     deleteItem(item) {
-      if (this.currentTab == 0) {
-        this.idDeleteProduct = item.id;
+      let storage = localStorage.getItem('tab');
+      if (storage == 'tab-1') {
+        this.idDeleteProductRange = item.id;
         this.dialogDelete = true;
       } else {
-        this.idDeleteProductRange = item.id;
+        this.idDeleteProduct = item.id;
         this.dialogDelete = true;
       }
     },
 
     deleteItemConfirm() {
-      if (this.currentTab == 0) {
+      let storage = localStorage.getItem('tab');
+      if (storage == 'tab-1') {
         axios
-          .delete(`/api/v1/products/${this.idDeleteProduct}`)
+          .delete(`/api/v1/product-ranges/${this.idDeleteProductRange}`)
           .then(response => {
-            this.getList();
+            this.getListForRange();
             this.closeDelete();
           })
           .catch(error => {});
       } else {
         axios
-          .delete(`/api/v1/product-ranges/${this.idDeleteProductRange}`)
+          .delete(`/api/v1/products/${this.idDeleteProduct}`)
           .then(response => {
-            this.getListForRange();
+            this.getList();
             this.closeDelete();
           })
           .catch(error => {});
@@ -543,13 +476,14 @@ export default {
       }
     },
     newProduct() {
-      if (this.currentTab == 0) {
+      let storage = localStorage.getItem('tab');
+      if (storage == 'tab-1') {
         this.$router.push({
-          name: 'addProduct',
+          name: 'addProductRange',
         });
       } else {
         this.$router.push({
-          name: 'addProductRange',
+          name: 'addProduct',
         });
       }
     },
@@ -574,13 +508,12 @@ export default {
       }
       axios
         .get(
-          `/api/v1/product-ranges?page=${page}&category_id=${this.searchCategory}&catalogue_id=${this.searchCatalogue}&measure=${this.searchType}&model=${this.searchName}`
+          `/api/v1/product-ranges?page=${page}&category_id=${this.searchCategory}&catalogue_id=${this.searchCatalogue}&model=${this.searchName}`
         )
         .then(response => {
           this.loading = false;
           this.productForRange = response.data.data;
           this.pagination = response.data.meta.last_page;
-          console.log(response);
         })
         .catch(error => {});
     },
@@ -605,7 +538,6 @@ export default {
           this.loading = false;
           this.products = response.data.data;
           this.pagination0 = response.data.meta.last_page;
-          console.log(response);
         })
         .catch(error => {});
     },
@@ -615,7 +547,6 @@ export default {
         .get(`/api/v1/list-catalogues`)
         .then(response => {
           this.catalogues = response.data.data;
-          console.log(response);
         })
         .catch(error => {});
     },
@@ -624,7 +555,6 @@ export default {
         .get(`/api/v1/list-categories`)
         .then(response => {
           this.categories = response.data.data;
-          console.log(response);
         })
         .catch(error => {});
     },
@@ -633,7 +563,6 @@ export default {
         .get(`/api/v1/measures`)
         .then(response => {
           this.types = response.data;
-          console.log(response);
         })
         .catch(error => {});
     },
@@ -659,7 +588,6 @@ export default {
           `/api/v1/products?model=${this.searchName}&sku=${this.searchName}&category_id=${this.searchCategory}&catalogue_id=${this.searchCatalogue}&measure=${this.searchType}&page=${this.page0}`
         )
         .then(response => {
-          console.log(response);
           this.products = response.data.data;
           this.pagination0 = response.data.meta.last_page;
         })
@@ -673,8 +601,8 @@ export default {
       this.searchType = '';
     },
     searchRange() {
-      if (this.page0 != 1) {
-        this.page0 = 1;
+      if (this.page != 1) {
+        this.page = 1;
       }
       if (this.searchName == null) {
         this.searchName = '';
@@ -691,35 +619,34 @@ export default {
 
       axios
         .get(
-          `/api/v1/products?model=${this.searchName}&sku=${this.searchName}&category_id=${this.searchCategory}&catalogue_id=${this.searchCatalogue}&measure=${this.searchType}&page=${this.page0}`
+          `/api/v1/product-ranges?model=${this.searchName}&sku=${this.searchName}&category_id=${this.searchCategory}&catalogue_id=${this.searchCatalogue}&page=${this.page0}`
         )
         .then(response => {
-          console.log(response);
-          this.products = response.data.data;
-          this.pagination0 = response.data.meta.last_page;
+          this.productForRange = response.data.data;
+          this.pagination = response.data.meta.last_page;
         })
         .catch(error => {});
     },
     clearRange() {
-      this.getList();
+      this.getListForRange();
       this.searchName = '';
       this.searchCategory = '';
       this.searchCatalogue = '';
-      this.searchType = '';
     },
   },
   mounted() {
     this.getList();
-    this.getListForRange();
     this.getCatalogues();
     this.getCategories();
     this.getTypes();
     this.currentTab = localStorage.getItem('tab');
-    console.log(this.currentTab);
   },
 };
 </script>
 <style scoped>
+.expand {
+  background-color: white;
+}
 .border {
   border: 1px solid #d2d6de;
   background-color: white;

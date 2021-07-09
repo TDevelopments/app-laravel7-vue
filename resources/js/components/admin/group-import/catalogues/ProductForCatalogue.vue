@@ -1,20 +1,9 @@
 <template>
   <v-row justify="center">
-    <v-dialog
-      v-model="dialog"
-      fullscreen
-      hide-overlay
-      transition="dialog-bottom-transition"
-    >
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <template v-slot:activator="{ on, attrs }">
         <v-col class="px-0">
-          <v-icon
-            small
-            v-bind="attrs"
-            v-on="on"
-            color="#810E81"
-            @click="getCatalogue"
-          >
+          <v-icon small v-bind="attrs" v-on="on" color="#810E81" @click="getCatalogue">
             mdi-eye
           </v-icon>
         </v-col>
@@ -56,20 +45,12 @@
                     <v-dialog v-model="dialogDelete" max-width="500px">
                       <v-card>
                         <v-card-title class="headline"
-                          >Are you sure you want to delete this
-                          item?</v-card-title
+                          >Are you sure you want to delete this item?</v-card-title
                         >
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn color="blue darken-1" text @click="closeDelete"
-                            >Cancel</v-btn
-                          >
-                          <v-btn
-                            color="blue darken-1"
-                            text
-                            @click="deleteItemConfirm"
-                            >OK</v-btn
-                          >
+                          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                          <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
                           <v-spacer></v-spacer>
                         </v-card-actions>
                       </v-card>
@@ -90,12 +71,7 @@
                   ></v-img>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                  <v-icon
-                    small
-                    class="mr-2"
-                    @click="editItem(item)"
-                    color="#D6B331"
-                  >
+                  <v-icon small class="mr-2" @click="editItem(item)" color="#D6B331">
                     mdi-pencil
                   </v-icon>
                   <v-icon small @click="deleteItem(item)" color="#FF0000">
@@ -131,23 +107,12 @@
                       <v-dialog v-model="dialogDelete" max-width="500px">
                         <v-card>
                           <v-card-title class="headline"
-                            >Are you sure you want to delete this
-                            item?</v-card-title
+                            >Are you sure you want to delete this item?</v-card-title
                           >
                           <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn
-                              color="blue darken-1"
-                              text
-                              @click="closeDelete"
-                              >Cancel</v-btn
-                            >
-                            <v-btn
-                              color="blue darken-1"
-                              text
-                              @click="deleteItemConfirm"
-                              >OK</v-btn
-                            >
+                            <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                            <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
                             <v-spacer></v-spacer>
                           </v-card-actions>
                         </v-card>
@@ -175,12 +140,7 @@
                     ></v-img>
                   </template>
                   <template v-slot:item.actions="{ item }">
-                    <v-icon
-                      small
-                      class="mr-2"
-                      @click="editItem(item)"
-                      color="#D6B331"
-                    >
+                    <v-icon small class="mr-2" @click="editItem(item)" color="#D6B331">
                       mdi-pencil
                     </v-icon>
                     <v-icon small @click="deleteItem(item)" color="black">
@@ -199,7 +159,7 @@
 
 <script>
 export default {
-  name: "ProductForCatalogue",
+  name: 'ProductForCatalogue',
   props: {
     idCatalogue: Number,
     validation: Boolean,
@@ -214,149 +174,147 @@ export default {
     currentTab: 0,
     products: [],
     headersProductForRange: [
-      { text: "Image", value: "images", align: "center", sortable: false },
+      { text: 'Image', value: 'images', align: 'center', sortable: false },
       {
-        text: "Product Model",
-        value: "model",
-        align: "center",
+        text: 'Product Model',
+        value: 'model',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Stock",
-        value: "stock",
-        align: "center",
+        text: 'Stock',
+        value: 'stock',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Brand",
-        value: "brand",
-        align: "center",
+        text: 'Brand',
+        value: 'brand',
+        align: 'center',
         sortable: false,
       },
-      { text: "Actions", value: "actions", sortable: false, align: "center" },
-      { text: "", value: "data-table-expand", sortable: false },
+      { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
+      { text: '', value: 'data-table-expand', sortable: false },
     ],
     editedIndex: -1,
     productItem: {
-      id: "",
-      model: "",
-      slug: "",
-      stock: "",
-      brand: "",
-      price_unit: "",
-      price_group: "",
-      quantity_group: "",
-      type_group: "",
-      category: "",
-      catalogue: "",
+      id: '',
+      model: '',
+      slug: '',
+      stock: '',
+      brand: '',
+      price_unit: '',
+      price_group: '',
+      quantity_group: '',
+      type_group: '',
+      category: '',
+      catalogue: '',
     },
     productDefault: {
-      id: "",
-      model: "",
-      slug: "",
-      stock: "",
-      brand: "",
-      price_unit: "",
-      price_group: "",
-      quantity_group: "",
-      type_group: "",
-      category: "",
-      catalogue: "",
+      id: '',
+      model: '',
+      slug: '',
+      stock: '',
+      brand: '',
+      price_unit: '',
+      price_group: '',
+      quantity_group: '',
+      type_group: '',
+      category: '',
+      catalogue: '',
     },
     productForRange: [],
     headers: [
-      { text: "Image", value: "images", align: "center", sortable: false },
+      { text: 'Image', value: 'images', align: 'center', sortable: false },
       {
-        text: "Modelo",
-        value: "model",
-        align: "center",
+        text: 'Modelo',
+        value: 'model',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Stock",
-        value: "stock",
-        align: "center",
+        text: 'Stock',
+        value: 'stock',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Marca",
-        value: "brand",
-        align: "center",
+        text: 'Marca',
+        value: 'brand',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Precio unitario",
-        value: "price_unit",
-        align: "center",
+        text: 'Precio unitario',
+        value: 'price_unit',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Cantidad por Producto",
-        value: "quantity_group",
-        align: "center",
+        text: 'Cantidad por Producto',
+        value: 'quantity_group',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Precio por Grupo (P)",
-        value: "price_group",
-        align: "center",
+        text: 'Precio por Grupo (P)',
+        value: 'price_group',
+        align: 'center',
         sortable: false,
       },
       {
-        text: "Typo de Grupo",
-        value: "type_group",
-        align: "center",
+        text: 'Typo de Grupo',
+        value: 'type_group',
+        align: 'center',
         sortable: false,
       },
-      { text: "Actions", value: "actions", sortable: false, align: "center" },
+      { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
     ],
     editedRangeIndex: -1,
     productForRangeItem: {
-      id: "",
-      model: "",
-      slug: "",
-      stock: "",
-      brand: "",
-      price_unit: "",
-      price_group: "",
-      quantity_group: "",
-      type_group: "",
-      category: "",
-      catalogue: "",
+      id: '',
+      model: '',
+      slug: '',
+      stock: '',
+      brand: '',
+      price_unit: '',
+      price_group: '',
+      quantity_group: '',
+      type_group: '',
+      category: '',
+      catalogue: '',
     },
     productForRangeDefault: {
-      id: "",
-      model: "",
-      slug: "",
-      stock: "",
-      brand: "",
-      price_unit: "",
-      price_group: "",
-      quantity_group: "",
-      type_group: "",
-      category: "",
-      catalogue: "",
+      id: '',
+      model: '',
+      slug: '',
+      stock: '',
+      brand: '',
+      price_unit: '',
+      price_group: '',
+      quantity_group: '',
+      type_group: '',
+      category: '',
+      catalogue: '',
     },
-    itemCatalogue: "",
+    itemCatalogue: '',
     expanded: [],
     singleExpand: false,
   }),
-  computed: {},
-  mounted() {
-  },
+  mounted() {},
   methods: {
     getCatalogue() {
       axios
         .get(`/api/v1/catalogues/${this.idCatalogue}`, {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') },
         })
-        .then((response) => {
-          console.log("data", response.data.data);
+        .then(response => {
+          console.log('data', response.data.data);
           this.itemCatalogue = response.data.data;
           this.products = response.data.data.products;
           this.productForRange = response.data.data.productRanges;
         })
-        .catch((error) => {});
+        .catch(error => {});
     },
     deleteItem(item) {
       if (this.currentTab == 0) {
@@ -375,12 +333,12 @@ export default {
         console.log(this.productItem.id);
         axios
           .delete(`api/v1/products/${this.productItem.id}`)
-          .then((response) => {
+          .then(response => {
             console.log(response);
             this.products.splice(this.editedIndex, 1);
             this.closeDelete();
           })
-          .catch((error) => {
+          .catch(error => {
             //console.log(error)
             // reject(error);
           });
@@ -388,12 +346,12 @@ export default {
         console.log(this.productForRangeItem.id);
         axios
           .delete(`api/v1/product-ranges/${this.productForRangeItem.id}`)
-          .then((response) => {
+          .then(response => {
             console.log(response);
             this.productForRange.splice(this.editedRangeIndex, 1);
             this.closeDelete();
           })
-          .catch((error) => {
+          .catch(error => {
             //console.log(error)
             // reject(error);
           });
@@ -410,10 +368,7 @@ export default {
       } else {
         this.dialog = false;
         this.$nextTick(() => {
-          this.productForRangeItem = Object.assign(
-            {},
-            this.productForRangeDefault
-          );
+          this.productForRangeItem = Object.assign({}, this.productForRangeDefault);
           this.editedRangeIndex = -1;
         });
       }
@@ -429,10 +384,7 @@ export default {
       } else {
         this.dialogDelete = false;
         this.$nextTick(() => {
-          this.productForRangeItem = Object.assign(
-            {},
-            this.productForRangeDefault
-          );
+          this.productForRangeItem = Object.assign({}, this.productForRangeDefault);
           this.editedRangeIndex = -1;
         });
       }
@@ -441,7 +393,7 @@ export default {
       if (this.currentTab == 0) {
         console.log(item.id);
         this.$router.push({
-          name: "editProduct",
+          name: 'editProduct',
           params: {
             id: item.id,
           },
@@ -449,7 +401,7 @@ export default {
       } else {
         console.log(item.id);
         this.$router.push({
-          name: "editProductRange",
+          name: 'editProductRange',
           params: {
             id: item.id,
           },
@@ -459,15 +411,14 @@ export default {
     newProduct() {
       if (this.currentTab == 0) {
         this.$router.push({
-          name: "addProduct",
+          name: 'addProduct',
         });
       } else {
         this.$router.push({
-          name: "addProductRange",
+          name: 'addProductRange',
         });
       }
     },
   },
 };
 </script>
-<style lang="sass" scoped></style>

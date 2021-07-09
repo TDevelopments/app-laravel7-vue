@@ -174,12 +174,46 @@ import UserSetting from './components/user';
 // Order User
 import OrderUser from './components/group-imports/ListOrders';
 
+// History
+import History from './components/admin/history/List';
+
+import SellHome from './components/sell-products';
+import SellProduct from './components/sell-products/Product';
+import SellUser from './components/sell-products/UserProfile';
+import SellDetails from './components/sell-products/Detail';
+
 export default new Router({
   routes: [
     {
       path: '/',
       name: 'welcome',
       component: Welcome,
+    },
+    {
+      path: '/ventas',
+      name: 'sellHome',
+      redirect: '/ventas/productos',
+      component: SellHome,
+      children: [
+        {
+          path: '/ventas/productos',
+          name: 'sellProduct',
+          component: SellProduct,
+        },
+        {
+          path: '/ventas/cuenta',
+          name: 'SellUser',
+          component: SellUser,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: '/ventas/detail/:id/',
+          name: 'sellDetail',
+          component: SellDetails,
+        },
+      ],
     },
     {
       path: '/importaciones',
@@ -730,6 +764,12 @@ export default new Router({
           path: '/admin/color/:id/edit',
           name: 'editColors',
           component: EditColors,
+        },
+        //History
+        {
+          path: '/admin/history',
+          name: 'history',
+          component: History,
         },
       ],
     },

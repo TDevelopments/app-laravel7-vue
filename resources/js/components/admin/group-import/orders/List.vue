@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="spinnerLoading">
+    <Spinner />
+  </div>
+  <div v-else>
     <div>
       <h3>Filtros</h3>
       <v-row>
@@ -85,7 +88,7 @@
     >
       <template v-slot:[`item.status`]="{ item }">
         <v-chip color="red" dark small>
-          {{ item.state_order | stateOrder }}
+          {{ stateOrder(item.state_order) }}
         </v-chip>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
@@ -125,49 +128,15 @@
 </template>
 <script>
 import axios from 'axios';
-
+import Spinner from '../component/SpinnerLoading';
+import { headerOrder } from './constants';
 export default {
+  components: {
+    Spinner,
+  },
   data: () => ({
     orders: [],
-    headers: [
-      {
-        text: 'Nro Orden',
-        value: 'id',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Creado por',
-        value: 'user.name',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Cliente',
-        value: 'customer.FullName',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Catalogo',
-        value: 'catalogue.name',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Estado',
-        value: 'status',
-        align: 'center',
-        sortable: false,
-      },
-      {
-        text: 'Total de Orden',
-        value: 'total_order',
-        align: 'center',
-        sortable: false,
-      },
-      { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
-    ],
+    headers: headerOrder,
     idDelete: '',
     dialogDelete: false,
     page: 1,
@@ -181,6 +150,7 @@ export default {
     states: [],
     idCatalogue: '',
     catalogues: [],
+    spinnerLoading: true,
   }),
   methods: {
     getOrders() {
@@ -192,6 +162,7 @@ export default {
           console.log(response);
           this.orders = response.data.data;
           this.pagination = response.data.meta.last_page;
+          this.spinnerLoading = false;
         })
         .catch(error => {});
     },
@@ -258,6 +229,16 @@ export default {
       this.idCatalogue = '';
       this.getOrders();
     },
+    stateOrder(id) {
+      let i = id * 1;
+      let name = '';
+      this.states.forEach(e => {
+        if (e.id == i) {
+          name = e.name;
+        }
+      });
+      return name;
+    },
   },
   mounted() {
     this.getOrders();
@@ -274,11 +255,6 @@ export default {
     },
     porcent: function(value) {
       return parseFloat(value) * 100 + ' %';
-    },
-    stateOrder: function(value) {
-      let resp = '';
-
-      return value;
     },
   },
 };

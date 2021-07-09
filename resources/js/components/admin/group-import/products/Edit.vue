@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="spinnerDialog">
+    <Spinner />
+  </div>
+  <div v-else>
     <v-row class="mx-2 my-2">
       <v-col cols="12">
         <h3>Editar producto</h3>
@@ -109,37 +112,6 @@
           dense
           persistent-hint
         ></v-select>
-        <!-- <v-card class="text-center">
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-row>
-                  <v-col>
-                    <v-btn class="mb-5 my-auto mt-2" @click="addPColor">
-                      Añadir Producto
-                    </v-btn>
-                  </v-col>
-                  <v-col>
-                    <v-sheet dark class="pa-1">
-                      <p class="mt-2 text-white">{{ showColor }}</p>
-                    </v-sheet>
-                  </v-col>
-                </v-row>
-                <v-col>
-                  <h5>Colores</h5>
-                </v-col>
-                <v-row class="pr-3">
-                  <v-col v-for="(item, index) in colors" :key="index" cols="1">
-                    <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card> -->
       </v-col>
       <v-col cols="12" sm="12" md="6" lg="6">
         <h3>Detalles del producto</h3>
@@ -269,11 +241,22 @@
         Guardar
       </v-btn>
     </v-row>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </div>
 </template>
 
 <script>
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError';
+import Spinner from '../component/SpinnerLoading'
+
 export default {
+  components: {
+    ModalSave,
+    ModalError,
+    Spinner,
+  },
   data: () => ({
     // Object Product
     product: {},
@@ -318,6 +301,10 @@ export default {
         send: 'female',
       },
     ],
+    dialogSave: false,
+    dialogError: false,
+    spinnerDialog: true,
+    message: '',
   }),
   computed: {
     productQG: function() {
@@ -355,6 +342,7 @@ export default {
   methods: {
     // Validation
     validate() {
+      this.dialogSave = true;
       if (this.files.length != 0) {
         this.addImages();
       } else {
@@ -367,10 +355,9 @@ export default {
       axios
         .get('/api/v1/categories')
         .then(response => {
-          console.log(response);
+
           this.loading = false;
           this.categories = response.data.data;
-          console.log(this.categories);
         })
         .catch(error => {});
     },
@@ -380,14 +367,11 @@ export default {
       axios
         .get('/api/v1/catalogues')
         .then(response => {
-          console.log(response);
           this.loading = false;
           this.catalogues = response.data.data;
-          console.log(this.catalogues);
         })
         .catch(error => {
-          //console.log(error)
-          // reject(error);
+
         });
     },
 
@@ -395,14 +379,12 @@ export default {
       axios
         .get('/api/v1/measures')
         .then(response => {
-          console.log(response.data);
           response.data.forEach(element => {
             this.measures.push(element.name);
           });
         })
         .catch(error => {
-          //console.log(error)
-          // reject(error);
+
         });
     },
 
@@ -410,26 +392,18 @@ export default {
       axios
         .get('/api/v1/colors')
         .then(response => {
-          console.log(response.data);
           this.colorsSelect = response.data.data
         })
         .catch(error => {
-          //console.log(error)
-          // reject(error);
+
         });
     },
 
     // Peticion Get Product
     getProduct() {
       axios
-        .get(`/api/v1/products/${this.$route.params.id}`, {
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
+        .get(`/api/v1/products/${this.$route.params.id}`)
         .then(response => {
-          console.log(response);
           this.product = response.data.data;
           this.product.catalogue_id = response.data.data.catalogue.id;
           this.product.category_id = response.data.data.category.id;
@@ -444,10 +418,13 @@ export default {
               this.images.push(element);
             });
           }
+          this.spinnerDialog = false;
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+            this.dialogSave = false;
+            this.message =
+              'No se pudo obtener los datos, intentelo de nuevo.';
+            this.dialogError = true;
         });
     },
 
@@ -469,21 +446,20 @@ export default {
         .then(response => {
           response.data.forEach(elements => {
             this.product.images.push(elements);
-            console.log(elements);
           });
-          console.log('imagenes', this.product.images);
           this.editProduct();
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar la imagen, verifica que la imagen no pese mas de 10 Mb.';
+          this.dialogError = true;
         });
     },
 
     // Peticion Update Product
     editProduct() {
-      console.log(this.product);
-      console.log('antes', this.product.images);
+
       let data = {};
       for (const property in this.product) {
         if (this.product[property] != null) {
@@ -499,12 +475,14 @@ export default {
       axios
         .put(`/api/v1/products/${this.$route.params.id}`, data)
         .then(response => {
-          console.log('Response', response);
+          this.dialogSave = false;
           this.$router.replace({ name: 'listProduct' });
         })
         .catch(error => {
-          console.log(error);
-          alert('Ocurrio un error inesperado, revise que los datos insertados son correctos')
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
 
@@ -517,7 +495,6 @@ export default {
     // Preview Images
     previewImages() {
       if (this.files.length == 0) {
-        console.log('esta vacio');
       } else {
         this.files.forEach((element, index) => {
           this.images.push({
@@ -526,7 +503,6 @@ export default {
             id: index,
           });
         });
-        console.log(this.urls);
       }
     },
 

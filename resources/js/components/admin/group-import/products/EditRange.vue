@@ -1,5 +1,8 @@
 <template>
-  <div class="px-3 py-3">
+  <div v-if="spinnerDialog">
+    <Spinner />
+  </div>
+  <div v-else class="px-3 py-3">
     <v-row class="mx-3">
       <v-col cols="12">
         <h3>Editar Producto (Rango)</h3>
@@ -10,7 +13,7 @@
                 <v-col>
                   <v-row>
                     <v-col cols="12" sm="6" md="4" lg="4">
-                      Modelo
+                      Modelo (*)
                       <v-text-field
                         solo
                         v-model="productRange.model"
@@ -28,7 +31,7 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4" lg="4">
-                      Stock Meta
+                      Stock Meta (*)
                       <v-text-field
                         v-model="productRange.stock"
                         type="number"
@@ -37,7 +40,7 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="4" md="4">
-                      Categoria
+                      Categoria (*)
                       <v-select
                         v-model="productRange.category_id"
                         item-text="name"
@@ -50,7 +53,7 @@
                       ></v-select>
                     </v-col>
                     <v-col cols="12" sm="4" md="4">
-                      Catalogo
+                      Catalogo (*)
                       <v-select
                         v-model="productRange.catalogue_id"
                         item-text="name"
@@ -83,31 +86,6 @@
           dense
           persistent-hint
         ></v-select>
-        <!-- <v-card class="text-center">
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" md="6">
-                <v-color-picker hide-inputs v-model="color" class="mx-auto"></v-color-picker>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-btn class="mb-5 my-auto mt-2" @click="addPColor">
-                  Añadir Color
-                </v-btn>
-                <v-sheet dark class="pa-1">
-                  <p class="mt-2 text-white">{{ showColor }}</p>
-                </v-sheet>
-                <v-col>
-                  <h5>Colores</h5>
-                </v-col>
-                <v-row class="pr-3">
-                  <v-col v-for="(item, index) in colors" :key="index" cols="1">
-                    <v-avatar :color="item" size="15" @click="deleteColor(index)"></v-avatar>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card> -->
       </v-col>
 
       <v-col cols="12" sm="12" md="6" lg="6">
@@ -238,11 +216,23 @@
         Guardar
       </v-btn>
     </v-row>
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
+  </div>
   </div>
 </template>
 <script>
 import axios from "axios";
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError';
+import Spinner from '../component/SpinnerLoading'
+
 export default {
+  components: {
+    ModalSave,
+    ModalError,
+    Spinner,
+  },
   data: () => ({
     productRange: {
       images: []
@@ -269,6 +259,10 @@ export default {
     valid: true,
     idDelete: [],
     colorsSelect: [],
+    dialogSave: false,
+    dialogError: false,
+    message: '',
+    spinnerDialog: true,
   }),
   mounted() {
     this.getProductRange();
@@ -278,6 +272,7 @@ export default {
   },
   methods: {
     validation() {
+      this.dialogSave = true;
       if (this.files.length) {
         this.addImages();
       } else {
@@ -289,22 +284,17 @@ export default {
       axios
         .get('/api/v1/colors')
         .then(response => {
-          console.log(response.data);
           this.colorsSelect = response.data.data
         })
         .catch(error => {
-          //console.log(error)
-          // reject(error);
         });
     },
     getCategories() {
       axios
         .get("/api/v1/categories")
         .then((response) => {
-          console.log(response);
           this.loading = false;
           this.categories = response.data.data;
-          console.log(this.categories);
         })
         .catch((error) => {});
     },
@@ -313,14 +303,10 @@ export default {
       axios
         .get("/api/v1/catalogues")
         .then((response) => {
-          console.log(response);
           this.loading = false;
           this.catalogues = response.data.data;
-          console.log(this.catalogues);
         })
         .catch((error) => {
-          //console.log(error)
-          // reject(error);
         });
     },
 
@@ -328,7 +314,6 @@ export default {
       axios
         .get(`/api/v1/product-ranges/${this.$route.params.id}`)
         .then((response) => {
-          console.log(response);
           this.productRange = response.data.data;
           this.inputs = response.data.data.ranges;
           this.productRange.catalogue_id = response.data.data.catalogue.id;
@@ -344,12 +329,13 @@ export default {
               this.images.push(element);
             });
           }
-
+          this.spinnerDialog = false;
         })
         .catch((error) => {
-          console.log(error);
-          alert('Ocurrio un error insperado')
-          this.$router.replace({ name: "listProduct" });
+          this.dialogSave = false;
+          this.message =
+            'No se pudo obtner los datos, intentelo de nuevo.';
+          this.dialogError = true;
         });
     },
 
@@ -374,13 +360,14 @@ export default {
         .then((response) => {
           response.data.forEach((elements) => {
             this.productRange.images.push(elements);
-            console.log(elements);
           });
           this.editProductRange();
         })
         .catch((error) => {
-          console.log(error);
-          alert('La imagen que intentar subir no es compatible o es muy pesada.')
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar la imagen, verifica que la imagen no pese mas de 10 Mb.';
+          this.dialogError = true;
         });
     },
 
@@ -408,7 +395,6 @@ export default {
         .put(
           `/api/v1/product-ranges/${this.$route.params.id}`, data)
         .then((response) => {
-          console.log(response);
           if (this.idDelete.length != 0) {
             this.deleteRanges();
             this.addRange(response.data.data.id);
@@ -417,20 +403,24 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
     addRange(id) {
       axios
         .post(`/api/v1/product-ranges/${id}/ranges`,{ items: this.inputs })
         .then((response) => {
-          console.log(response);
+          this.dialogSave = false;
           this.$router.replace({ name: "listProduct" });
         })
         .catch((error) => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los rangos, vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
     deleteRanges() {
@@ -444,7 +434,12 @@ export default {
           },
         })
         .then((response) => {})
-        .catch((error) => {});
+        .catch((error) => {
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al eliminar el rango.';
+          this.dialogError = true;
+        });
     },
     add() {
       this.inputs.push({
@@ -455,7 +450,6 @@ export default {
     },
     previewImages() {
       if (this.files.length == 0) {
-        console.log("esta vacio");
       } else {
         this.files.forEach((element, index) => {
           this.images.push({
@@ -469,7 +463,6 @@ export default {
     deleteRow(index, id) {
       this.inputs.splice(index, 1);
       this.idDelete.push(id);
-      console.log(this.inputs);
     },
     clear() {
       this.files = [];

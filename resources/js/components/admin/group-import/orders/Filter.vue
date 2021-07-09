@@ -56,7 +56,10 @@
     <br />
     <br />
     <br /> -->
-    <div class="table-responsive">
+    <div v-if="spinnerLoading">
+      <Spinner />
+    </div>
+    <div v-else class="table-responsive">
       <table class="table table-bordered mb-0">
         <thead>
           <tr>
@@ -138,13 +141,23 @@
       <vue-excel-column field="payment" label="Name" />
       <vue-excel-column field="total_order" label="Contact" />
     </vue-excel-editor> -->
+    <ModalSave v-model="dialogSave" v-if="dialogSave" />
+    <ModalError v-model="dialogError" v-if="dialogError" :body="message" />
   </v-card>
 </template>
 
 <script>
 import axios from 'axios';
+import Spinner from '../component/SpinnerLoading';
+import ModalSave from '../component/ModalSave';
+import ModalError from '../component/ModalError';
 
 export default {
+  components: {
+    Spinner,
+    ModalSave,
+    ModalError,
+  },
   data: () => ({
     orders: [],
     idDelete: '',
@@ -158,6 +171,10 @@ export default {
     products: [],
     object: [],
     objectOrder: [],
+    spinnerLoading: true,
+    dialogSave: false,
+    dialogError: false,
+    message: '',
   }),
   watch: {
     catSelect: function() {
@@ -165,15 +182,12 @@ export default {
     },
   },
   methods: {
-    search() {
-      console.log('Hola');
-    },
+    search() {},
     getCatalogues() {
       axios
         .get('/api/v1/list-catalogues')
         .then(response => {
           this.catalogues = response.data.data;
-          console.log(response);
         })
         .catch(error => {});
     },
@@ -182,7 +196,6 @@ export default {
       axios
         .get(`/api/v1/catalogues/${this.catSelect}`)
         .then(response => {
-          console.log(response.data.data);
           if (response.data.data.products != null || response.data.data.products.length != 0) {
             response.data.data.products.forEach(element => {
               this.products.push({ ...element, type: 'normal' });
@@ -196,10 +209,13 @@ export default {
               this.products.push({ ...element, type: 'range' });
             });
           }
-          console.log('prod', this.products);
           this.getOrders();
         })
-        .catch(error => {});
+        .catch(error => {
+          this.dialogSave = false;
+          this.message = 'Ocurrio un error al obtener los datos.';
+          this.dialogError = true;
+        });
     },
     getOrders() {
       axios
@@ -211,9 +227,7 @@ export default {
             this.object.push(0);
           }
           this.orders = response.data.data;
-          console.log('data', response);
           this.orders.forEach(order => {
-            console.log('order', order);
             let obp = [];
             this.products.forEach((element, index) => {
               let m = [];
@@ -257,7 +271,6 @@ export default {
               });
               this.object[index] = this.object[index] + toPro;
             });
-            console.log('obp', obp);
             this.objectOrder.push({
               customer: order.customer,
               user: order.user,
@@ -266,12 +279,15 @@ export default {
               id: order.id,
               catalogue: order.catalogue,
             });
-            console.log('objeto', this.objectOrder);
           });
-          console.log('Hola', this.object);
-          console.log(response.data.data);
+          this.spinnerLoading = false;
+          this.dialogSave = false;
         })
-        .catch(error => {});
+        .catch(error => {
+          this.dialogSave = false;
+          this.message = 'Ocurrio un error al obtener los datos.';
+          this.dialogError = true;
+        });
     },
     // createObject() {
     //   this.orders.forEach(order => {
@@ -282,7 +298,6 @@ export default {
     //   });
     // },
     editItem(item) {
-      console.log(item.id);
       this.$router.push({
         name: 'editOrder',
         params: {
@@ -294,14 +309,13 @@ export default {
       axios
         .get(`/api/v1/orders?page=${page}`)
         .then(response => {
-          console.log(response);
           this.orders = response.data.data;
           this.pagination = response.data.meta.last_page;
         })
         .catch(error => {});
     },
     save(item) {
-      console.log('item', item);
+      this.dialogSave = true;
       let dataNormal = [];
       let dataRange = [];
       let data = { product_ranges: [], products: [] };
@@ -314,34 +328,28 @@ export default {
 
       item.product.forEach(element => {
         if (element.type == 'range') {
-          console.log('rango');
           dataRange.push(element);
         }
       });
 
-      console.log('dR', dataRange);
-      console.log('dM', dataNormal);
-
       if (dataNormal.length != 0) {
-        console.log('normal');
         data.products = dataNormal;
       }
 
       if (dataRange.length != 0) {
-        console.log('rango');
         data.product_ranges = dataRange;
       }
-      console.log('data', data);
 
       axios
         .post(`/api/v1/orders/${item.id}/order-details`, data)
         .then(response => {
-          console.log(response);
           this.getOrders();
         })
         .catch(error => {
-          console.log(error);
-          // reject(error);
+          this.dialogSave = false;
+          this.message =
+            'Ocurrio un error al guardar los datos generales, verifique que todos los datos necesarioes esten completos y vuelva a intentarlo';
+          this.dialogError = true;
         });
     },
   },
