@@ -41,7 +41,7 @@ export function register({ commit }, user) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         commit('auth_success', { token, user });
         resolve(resp);
-        console.log(resp);
+        router.push({ name: 'welcome' });
       })
       .catch(err => {
         commit('auth_error', err);

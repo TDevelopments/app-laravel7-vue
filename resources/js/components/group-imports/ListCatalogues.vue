@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-container class="mx-auto">
+    <div class="header-title">
+      <h3 class="m-0">CATÁLOGOS DISPONIBLES</h3>
+    </div>
+    <div class="content-product">
       <v-row class="mt-5">
         <v-col
           v-for="(item, index) in catalogues"
@@ -155,7 +158,7 @@
           </v-card>
         </v-col>
       </v-row>
-    </v-container>
+    </div>
   </div>
 </template>
 <script>
@@ -195,8 +198,47 @@ export default {
   },
 };
 </script>
-<style scoped>
-* {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+<style scope>
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap');
+
+.header-title {
+  padding: 3% 10%;
+  background-color: #f5f5f5;
+  letter-spacing: 2px;
+}
+
+.header-title h3 {
+  letter-spacing: 2px;
+}
+.content-product {
+  padding: 2% 10%;
+}
+.coin {
+  font-weight: bold;
+  color: #d22e2e;
+  font-size: 18px;
+}
+
+.show-btns {
+  color: rgba(255, 255, 255, 1) !important;
+  background-color: #d22e2e;
+}
+@media (max-width: 960px) {
+  .p-page-new {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+@media (max-width: 600px) {
+  .p-page-new {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+@media (max-width: 360px) {
+  .p-page-new {
+    padding-right: 0;
+    padding-left: 0;
+  }
 }
 </style>

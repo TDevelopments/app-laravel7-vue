@@ -237,12 +237,12 @@ export default new Router({
           component: ProductDetail,
         },
         {
-          path: '/importaciones/cart',
+          path: '/importaciones/carrito',
           name: 'cartGroupImport',
           component: CartGroupImport,
         },
         {
-          path: '/user-account',
+          path: '/importaciones/cuenta',
           name: 'UserSettingIG',
           component: UserSetting,
           meta: {
@@ -250,7 +250,7 @@ export default new Router({
           },
         },
         {
-          path: '/order-user',
+          path: '/importaciones/ordenes',
           name: 'orderUser',
           component: OrderUser,
           meta: {

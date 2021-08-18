@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container>
+    <v-container class="ptop">
       <v-row class="mt-5 justify-space-around align-center">
         <v-col cols="12" sm="12" md="5" lg="5">
           <v-card class="mx-auto rounded-xl" max-width="450" elevation="12" @click="showCatalogues">
@@ -16,7 +16,7 @@
               directas de fabrica.
             </v-card-text>
             <v-card-actions>
-              <v-btn color="blue" @click="showCatalogues" class="mx-auto" dark rounded>
+              <v-btn color="blue" @click="showCatalogues" class="mx-auto px-5" dark rounded>
                 Ingresar
               </v-btn>
             </v-card-actions>
@@ -37,7 +37,7 @@
               <br />
             </v-card-text>
             <v-card-actions>
-              <v-btn color="blue" class="mx-auto" dark rounded> Ingresar </v-btn>
+              <v-btn color="blue" class="mx-auto px-4" dark rounded> Ingresar </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -51,6 +51,8 @@ export default {
   data: () => ({
     show1: false,
     show2: false,
+    show: true,
+    expand2: false,
   }),
   methods: {
     showCatalogues() {
@@ -59,3 +61,13 @@ export default {
   },
 };
 </script>
+<style scoped>
+.ptop {
+  padding-top: 7%;
+}
+@media (max-width: 1350px) {
+  .ptop {
+    padding-top: 2%;
+  }
+}
+</style>

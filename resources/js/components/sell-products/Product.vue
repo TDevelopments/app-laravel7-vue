@@ -18,7 +18,7 @@
         </div>
       </div> -->
       <!-- .col-md-12 end -->
-      <v-row class="row">
+      <v-row class="ro">
         <!-- Product #1 -->
         <v-col sm="6" md="3" cols="12" v-for="(p, pindex) in prodc" :key="pindex">
           <v-hover v-slot="{ hover }">
@@ -26,11 +26,14 @@
               :src="p.Picture[0].PicturePath"
               alt="Product"
               class="d-flex align-end"
-              max-height="400 "
-              contain
+              height="300"
               v-if="p.Picture.length != 0 && p.Picture != null"
             >
-              <div v-if="hover" class="d-flex mb-5 justify-center">
+              <div
+                v-if="hover"
+                class="d-flex pb-5 justify-center align-end hov"
+                style="height: 100%;"
+              >
                 <v-btn class="text-capitalize mx-1" color="#D22E2E" dark small elevation="0">
                   Add to Cart
                 </v-btn>
@@ -44,11 +47,14 @@
               src="https://i.pinimg.com/564x/61/f1/d9/61f1d99c883a79eccce91874c166ae06.jpg"
               alt="Product"
               class="d-flex align-end"
-              max-height="400 "
-              contain
+              height="300"
               v-else
             >
-              <div v-if="hover" class="d-flex mb-5 justify-center">
+              <div
+                v-if="hover"
+                class="d-flex pb-5 justify-center align-end hov"
+                style="height: 100%;"
+              >
                 <v-btn class="text-capitalize mx-1" color="#D22E2E" dark small elevation="0">
                   Add to Cart
                 </v-btn>
@@ -138,7 +144,9 @@ export default {
 </script>
 <style scope>
 @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500&display=swap');
-
+.ro {
+  display: flex;
+}
 .header-title {
   padding: 3% 10%;
   background-color: #f5f5f5;
@@ -160,6 +168,9 @@ export default {
 .show-btns {
   color: rgba(255, 255, 255, 1) !important;
   background-color: #d22e2e;
+}
+.hov {
+  background-color: rgba(0, 0, 0, 0.541) !important;
 }
 @media (max-width: 960px) {
   .p-page-new {

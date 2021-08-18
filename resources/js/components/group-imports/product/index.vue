@@ -1,118 +1,106 @@
 <template>
-  <v-dialog transition="dialog-bottom-transition" max-width="1200" v-model="show">
-    <v-toolbar color="primary" dark class="text-h6 mb-2">
-      Detalles del producto
-      <v-spacer></v-spacer>
-      <v-btn icon @click="show = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </v-toolbar>
+  <v-dialog transition="dialog-bottom-transition" max-width="1000" v-model="show">
     <v-card>
+      <v-toolbar color="primary" dark class="text-h6 mb-2">
+        Detalles del producto
+        <v-spacer></v-spacer>
+        <v-btn icon @click="show = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
       <v-card-text>
         <v-row>
           <v-col cols="12" sm="12" md="6" lg="6">
             <div class="text-center">
-              <v-zoomer
-                ref="zoomer"
-                style="width: 100%; height: 100%;"
-                :max-scale="10"
-                :zooming-elastic="false"
-                :zoomed.sync="zoomed"
-              >
-                <v-hover v-slot="{ hover }">
-                  <v-img
-                    contain
-                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    max-width="550"
-                    max-height="550"
-                    v-if="product.images == null || product.images.length == 0"
-                    class="text-center align-center"
-                  >
-                    <v-btn
-                      v-if="hover"
-                      color="#0D52D6"
-                      fab
-                      small
-                      dark
-                      @click="$refs.zoomer.zoomIn()"
-                    >
-                      <v-icon>mdi-magnify-plus</v-icon>
-                    </v-btn>
-                    <v-btn
-                      v-if="hover"
-                      color="#0D52D6"
-                      fab
-                      small
-                      dark
-                      @click="$refs.zoomer.zoomOut()"
-                    >
-                      <v-icon>mdi-magnify-minus</v-icon>
-                    </v-btn>
-                  </v-img>
-                  <v-img
-                    contain
-                    :src="product.images[model].path"
-                    v-else
-                    max-width="550"
-                    max-height="550"
-                    class="text-center align-center"
-                  >
-                    <v-btn
-                      v-if="hover"
-                      color="#0D52D6"
-                      fab
-                      small
-                      dark
-                      @click="$refs.zoomer.zoomIn()"
-                    >
-                      <v-icon>mdi-magnify-plus</v-icon>
-                    </v-btn>
-                    <v-btn
-                      v-if="hover"
-                      color="#0D52D6"
-                      fab
-                      small
-                      dark
-                      @click="$refs.zoomer.zoomOut()"
-                    >
-                      <v-icon>mdi-magnify-minus</v-icon>
-                    </v-btn>
-                  </v-img>
-                </v-hover>
-              </v-zoomer>
-            </div>
-            <v-sheet class="mx-auto" max-width="800">
-              <v-slide-group v-model="model" show-arrows>
-                <v-slide-item
+              <!-- <v-zoomer
+                  ref="zoomer"
+                  style="width: 552px; height: 400px;"
+                  :max-scale="10"
+                  :zooming-elastic="false"
+                  :zoomed.sync="zoomed"
+                > -->
+              <v-hover v-slot="{ hover }">
+                <v-img
+                  contain
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                  max-width="552"
+                  height="400"
                   v-if="product.images == null || product.images.length == 0"
-                  v-slot="{ active, toggle }"
+                  class="text-center align-center"
                 >
-                  <v-img
-                    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-                    max-width="90"
-                    max-height="90"
-                    contain
-                    class="m-1"
-                    @click="toggle"
-                  />
-                </v-slide-item>
-                <v-slide-item
+                  <v-btn v-if="hover" color="#0D52D6" fab small dark @click="$refs.zoomer.zoomIn()">
+                    <v-icon>mdi-magnify-plus</v-icon>
+                  </v-btn>
+                  <v-btn
+                    v-if="hover"
+                    color="#0D52D6"
+                    fab
+                    small
+                    dark
+                    @click="$refs.zoomer.zoomOut()"
+                  >
+                    <v-icon>mdi-magnify-minus</v-icon>
+                  </v-btn>
+                </v-img>
+                <v-img
+                  contain
+                  :src="product.images[model].path"
                   v-else
-                  v-slot="{ active, toggle }"
-                  v-for="(item, index) in product.images"
-                  :key="index"
+                  max-width="552"
+                  height="400"
+                  class="text-center align-center"
                 >
-                  <v-img
-                    :src="item.path"
-                    max-width="140"
-                    height="90"
-                    contain
-                    class="m-1"
-                    @click="toggle"
-                  />
-                </v-slide-item>
-              </v-slide-group>
-            </v-sheet>
+                  <v-btn v-if="hover" color="#0D52D6" fab small dark @click="$refs.zoomer.zoomIn()">
+                    <v-icon>mdi-magnify-plus</v-icon>
+                  </v-btn>
+                  <v-btn
+                    v-if="hover"
+                    color="#0D52D6"
+                    fab
+                    small
+                    dark
+                    @click="$refs.zoomer.zoomOut()"
+                  >
+                    <v-icon>mdi-magnify-minus</v-icon>
+                  </v-btn>
+                </v-img>
+              </v-hover>
+              <!-- </v-zoomer> -->
+            </div>
+            <div>
+              <v-sheet max-width="800">
+                <v-slide-group v-model="model" show-arrows>
+                  <v-slide-item
+                    v-if="product.images == null || product.images.length == 0"
+                    v-slot="{ active, toggle }"
+                  >
+                    <v-img
+                      src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                      max-width="90"
+                      height="90"
+                      contain
+                      class="m-1"
+                      @click="toggle"
+                    />
+                  </v-slide-item>
+                  <v-slide-item
+                    v-else
+                    v-slot="{ active, toggle }"
+                    v-for="(item, index) in product.images"
+                    :key="index"
+                  >
+                    <v-img
+                      :src="item.path"
+                      max-width="90"
+                      height="90"
+                      contain
+                      class="m-1"
+                      @click="toggle"
+                    />
+                  </v-slide-item>
+                </v-slide-group>
+              </v-sheet>
+            </div>
           </v-col>
           <v-col cols="12" sm="12" md="6" lg="6">
             <v-card-text>
@@ -200,12 +188,15 @@
                 </v-col>
               </v-row>
             </v-card-text>
-            <v-btn @click="show = false" style="position: absolute; right: 10px; bottom: 20px">
-              Cerrar
-            </v-btn>
           </v-col>
         </v-row>
       </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="show = false">
+          Cerrar
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
